@@ -164,5 +164,5 @@
 This project is licensed under MIT License, see [LICENSE](LICENSE) for more details.
 
 ## Credits:
-This mod would not be possible without the following open source repositories, This mod was orignally based off of Skytils 0.x<br>
+This mod would not be possible without the following open source repositories
 [NEU](https://github.com/NotEnoughUpdates/NotEnoughUpdates), [Skytils 0.x](https://github.com/Skytils/SkytilsMod/tree/0.x), [SBA](https://github.com/BiscuitDevelopment/SkyblockAddons)
