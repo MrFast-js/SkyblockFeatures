@@ -12,8 +12,8 @@ import mrfast.skyblockfeatures.SkyblockFeatures;
 import mrfast.skyblockfeatures.core.PricingData;
 import mrfast.skyblockfeatures.events.GuiContainerEvent;
 import mrfast.skyblockfeatures.events.GuiContainerEvent.TitleDrawnEvent;
-import mrfast.skyblockfeatures.utils.APIUtil;
-import mrfast.skyblockfeatures.utils.NumberUtil;
+import mrfast.skyblockfeatures.utils.APIUtils;
+
 import mrfast.skyblockfeatures.utils.Utils;
 import net.minecraft.client.gui.inventory.GuiChest;
 import net.minecraft.inventory.ContainerChest;
@@ -49,15 +49,15 @@ public class MissingTalismans {
                 thread = true;
                 new Thread(() -> {
                     String username = Utils.GetMC().thePlayer.getName();
-                    String uuid = APIUtil.getUUID(username);
+                    String uuid = APIUtils.getUUID(username);
                     // Find stats of latest profile
-                    String latestProfile = APIUtil.getLatestProfileID(uuid, "");
+                    String latestProfile = APIUtils.getLatestProfileID(uuid, "");
                     if (latestProfile == null) {
                         return;
                     };
                     
                     String profileURL = "https://sky.shiiyu.moe/api/v2/profile/"+username;
-                    JsonObject profileResponse = APIUtil.getJSONResponse(profileURL);
+                    JsonObject profileResponse = APIUtils.getJSONResponse(profileURL);
                     profileResponse = profileResponse.get("profiles").getAsJsonObject();
                     MissingTalismans = profileResponse.get(latestProfile).getAsJsonObject().get("data").getAsJsonObject().get("missingAccessories").getAsJsonObject().get("missing").getAsJsonArray();
                     thread = false;
@@ -98,7 +98,7 @@ public class MissingTalismans {
                     .sorted(Map.Entry.comparingByValue())
                     .forEachOrdered(x -> sortedMap.put(x.getKey(), x.getValue()));
                 for(String itemName:sortedMap.keySet()) {
-                    String price = ChatFormatting.GOLD+" ("+(NumberUtil.nf.format(sortedMap.get(itemName)))+")";
+                    String price = ChatFormatting.GOLD+" ("+(Utils.nf.format(sortedMap.get(itemName)))+")";
                     if(sortedMap.get(itemName)==0) price=ChatFormatting.RED+" No Price Found";
                     Utils.GetMC().fontRendererObj.drawStringWithShadow(itemName+price, 190, (index*(Utils.GetMC().fontRendererObj.FONT_HEIGHT+1)+10)-100, -1);
                     index++;

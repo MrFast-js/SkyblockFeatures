@@ -8,7 +8,7 @@ import net.minecraft.util.BlockPos;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
 import mrfast.skyblockfeatures.SkyblockFeatures;
-import mrfast.skyblockfeatures.utils.APIUtil;
+import mrfast.skyblockfeatures.utils.APIUtils;
 import mrfast.skyblockfeatures.utils.Utils;
 
 import java.text.NumberFormat;
@@ -69,17 +69,17 @@ public class NetworthCommand extends CommandBase {
 				uuid = player.getUniqueID().toString().replaceAll("[\\-]", "");
 			} else {
 				username = arg1[0];
-				uuid = APIUtil.getUUID(username);
+				uuid = APIUtils.getUUID(username);
 			}
 			Utils.SendMessage(EnumChatFormatting.GREEN + "Checking networth of " + EnumChatFormatting.DARK_GREEN + username+ChatFormatting.AQUA+" (Skycrypt API)");
 			
 			// Find stats of latest profile
-			String latestProfile = APIUtil.getLatestProfileID(uuid, key);
+			String latestProfile = APIUtils.getLatestProfileID(uuid, key);
 			if (latestProfile == null) return;
 			
 			String profileURL = "https://sky.shiiyu.moe/api/v2/profile/"+uuid;
 			System.out.println("Fetching profile... "+profileURL);
-			JsonObject profileResponse = APIUtil.getJSONResponse(profileURL);
+			JsonObject profileResponse = APIUtils.getJSONResponse(profileURL);
 
 			if (profileResponse.has("error")) {
 				String reason = profileResponse.get("error").getAsString();

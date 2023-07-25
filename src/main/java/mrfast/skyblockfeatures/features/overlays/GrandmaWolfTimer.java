@@ -7,7 +7,7 @@ import mrfast.skyblockfeatures.SkyblockFeatures;
 
 import mrfast.skyblockfeatures.gui.components.UIElement;
 import mrfast.skyblockfeatures.events.GuiContainerEvent;
-import mrfast.skyblockfeatures.utils.ItemUtil;
+import mrfast.skyblockfeatures.utils.ItemUtils;
 import mrfast.skyblockfeatures.utils.Utils;
 import mrfast.skyblockfeatures.gui.components.Point;
 import net.minecraft.client.Minecraft;
@@ -50,7 +50,7 @@ public class GrandmaWolfTimer {
                 if(event.slot.getHasStack()) {
                     ItemStack stack = event.slot.getStack();
                     if(stack.getDisplayName().contains("Grandma")) {
-                        List<String> lore = ItemUtil.getItemLore(stack);
+                        List<String> lore = ItemUtils.getItemLore(stack);
                         for(String line:lore) {
                             String raw = Utils.cleanColor(line);
                             if(!raw.contains("last")) continue;

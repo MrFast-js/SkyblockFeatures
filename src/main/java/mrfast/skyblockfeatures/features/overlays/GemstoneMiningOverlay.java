@@ -10,7 +10,7 @@ import mrfast.skyblockfeatures.SkyblockFeatures;
 
 import mrfast.skyblockfeatures.gui.components.UIElement;
 import mrfast.skyblockfeatures.events.SecondPassedEvent;
-import mrfast.skyblockfeatures.utils.NumberUtil;
+
 import mrfast.skyblockfeatures.core.PricingData;
 import mrfast.skyblockfeatures.core.SkyblockInfo;
 import mrfast.skyblockfeatures.utils.Utils;
@@ -100,7 +100,7 @@ public class GemstoneMiningOverlay {
                 String[] lines = {
                     ChatFormatting.LIGHT_PURPLE+""+ChatFormatting.BOLD+"Gemstone Mining Info",
                     ChatFormatting.LIGHT_PURPLE+" Time Spent Mining: "+ChatFormatting.GREEN+Utils.secondsToTime(seconds),
-                    ChatFormatting.LIGHT_PURPLE+" Gemstone Coins Per hour: §6"+NumberUtil.nf.format(total*12),
+                    ChatFormatting.LIGHT_PURPLE+" Gemstone Coins Per hour: §6"+Utils.nf.format(total*12),
                     ChatFormatting.LIGHT_PURPLE+" Pristine Count: §a"+gemstones.size()
                 };
                 int lineCount = 0;

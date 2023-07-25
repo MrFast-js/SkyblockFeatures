@@ -9,7 +9,7 @@ import mrfast.skyblockfeatures.SkyblockFeatures;
 import mrfast.skyblockfeatures.core.PricingData;
 import mrfast.skyblockfeatures.gui.components.UIElement;
 import mrfast.skyblockfeatures.events.SecondPassedEvent;
-import mrfast.skyblockfeatures.utils.NumberUtil;
+
 import mrfast.skyblockfeatures.utils.Utils;
 
 import net.minecraft.client.Minecraft;
@@ -123,14 +123,14 @@ public class IceTreasureTracker {
             if (this.getToggled() && Minecraft.getMinecraft().thePlayer != null && mc.theWorld != null && !hidden && SkyblockFeatures.locationString.contains("Glacial")) {
                 String[] lines = {
                     ChatFormatting.GREEN+"Time Elapsed: §r"+Utils.secondsToTime(totalSeconds),
-                    ChatFormatting.AQUA+"Treasures Mined: §r"+NumberUtil.nf.format(iceTreasuresMined),
-                    ChatFormatting.RED+"Red Gift: §r"+redGift+" §7("+NumberUtil.nf.format(redGiftTotal)+")",
-                    ChatFormatting.GREEN+"Green Gift: §r"+greenGift+" §7("+NumberUtil.nf.format(greenGiftTotal)+")",
-                    ChatFormatting.WHITE+"White Gift: §r"+whiteGift+" §7("+NumberUtil.nf.format(whiteGiftTotal)+")",
-                    ChatFormatting.LIGHT_PURPLE+"Fragment: §r"+fragment+" §7("+NumberUtil.nf.format(fragmentTotal)+")",
-                    ChatFormatting.GOLD+"Talisman: §r"+talisman+" §7("+NumberUtil.nf.format(talismanTotal)+")",
-                    ChatFormatting.BLUE+"Est. Coins/Hour: §6"+NumberUtil.nf.format(coinsPerHour),
-                    ChatFormatting.WHITE+"Total Value: §6"+NumberUtil.nf.format(totalMoney)
+                    ChatFormatting.AQUA+"Treasures Mined: §r"+Utils.nf.format(iceTreasuresMined),
+                    ChatFormatting.RED+"Red Gift: §r"+redGift+" §7("+Utils.nf.format(redGiftTotal)+")",
+                    ChatFormatting.GREEN+"Green Gift: §r"+greenGift+" §7("+Utils.nf.format(greenGiftTotal)+")",
+                    ChatFormatting.WHITE+"White Gift: §r"+whiteGift+" §7("+Utils.nf.format(whiteGiftTotal)+")",
+                    ChatFormatting.LIGHT_PURPLE+"Fragment: §r"+fragment+" §7("+Utils.nf.format(fragmentTotal)+")",
+                    ChatFormatting.GOLD+"Talisman: §r"+talisman+" §7("+Utils.nf.format(talismanTotal)+")",
+                    ChatFormatting.BLUE+"Est. Coins/Hour: §6"+Utils.nf.format(coinsPerHour),
+                    ChatFormatting.WHITE+"Total Value: §6"+Utils.nf.format(totalMoney)
                 };
                 int lineCount = 0;
                 for(String line:lines) {

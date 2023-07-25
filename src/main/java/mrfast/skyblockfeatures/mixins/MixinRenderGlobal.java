@@ -19,7 +19,7 @@ import mrfast.skyblockfeatures.SkyblockFeatures;
 import mrfast.skyblockfeatures.features.dungeons.DungeonsFeatures;
 import mrfast.skyblockfeatures.features.dungeons.Nametags;
 import mrfast.skyblockfeatures.utils.ItemRarity;
-import mrfast.skyblockfeatures.utils.ItemUtil;
+import mrfast.skyblockfeatures.utils.ItemUtils;
 import mrfast.skyblockfeatures.core.SkyblockInfo;
 import mrfast.skyblockfeatures.utils.Utils;
 import net.minecraft.client.Minecraft;
@@ -163,7 +163,7 @@ public abstract class MixinRenderGlobal {
                     // Item Glowing
                     boolean flag2 = (mc.thePlayer.getDistanceToEntity(entity) < 15.0F && entity instanceof EntityItem);
                     if (flag2 && SkyblockFeatures.config.glowingItems) {
-                        ItemRarity itemRarity = ItemUtil.getRarity(((EntityItem)entity).getEntityItem(), "");
+                        ItemRarity itemRarity = ItemUtils.getRarity(((EntityItem)entity).getEntityItem(), "");
                         outlineColor(itemRarity.getColor().getRGB());
                         renderManager.renderEntitySimple(entity, partialTicks);
                     } 

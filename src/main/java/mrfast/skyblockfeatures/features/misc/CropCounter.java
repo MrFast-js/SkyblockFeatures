@@ -13,7 +13,7 @@ import mrfast.skyblockfeatures.SkyblockFeatures;
 
 import mrfast.skyblockfeatures.gui.components.UIElement;
 import mrfast.skyblockfeatures.events.SecondPassedEvent;
-import mrfast.skyblockfeatures.utils.ItemUtil;
+import mrfast.skyblockfeatures.utils.ItemUtils;
 import mrfast.skyblockfeatures.utils.Utils;
 import mrfast.skyblockfeatures.gui.components.Point;
 
@@ -49,7 +49,7 @@ public class CropCounter {
             averageCropsValues.remove(0);
             System.out.println("removed index "+(0)+" new size:"+averageCropsValues.size());
         }
-        List<String> lore = ItemUtil.getItemLore(item);
+        List<String> lore = ItemUtils.getItemLore(item);
         for (int i = 0; i < lore.size(); i++) {
             String line = lore.get(i);
             if(line.contains("Counter: ")) {

@@ -25,9 +25,9 @@ import mrfast.skyblockfeatures.events.GuiContainerEvent.TitleDrawnEvent;
 import mrfast.skyblockfeatures.events.SlotClickedEvent;
 import mrfast.skyblockfeatures.events.DrawSignEvent;
 import mrfast.skyblockfeatures.events.SecondPassedEvent;
-import mrfast.skyblockfeatures.utils.APIUtil;
-import mrfast.skyblockfeatures.utils.ItemUtil;
-import mrfast.skyblockfeatures.utils.NumberUtil;
+import mrfast.skyblockfeatures.utils.APIUtils;
+import mrfast.skyblockfeatures.utils.ItemUtils;
+
 import mrfast.skyblockfeatures.utils.Utils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
@@ -71,7 +71,7 @@ public class AuctionFeatures {
 
             if(chestName.contains("Confirm Purchase") && buySlot) {
                 int pricePaid = 0;
-                for(String line:ItemUtil.getItemLore(inv.getStackInSlot(11))) {
+                for(String line:ItemUtils.getItemLore(inv.getStackInSlot(11))) {
                     if(!line.contains("Cost")) continue;
                     String numberOnly = Utils.cleanColor(line).replaceAll("[^0-9]", "");
                     if(numberOnly.length()>0) {
@@ -83,7 +83,7 @@ public class AuctionFeatures {
                     }
                 }
 
-                String uuid = ItemUtil.getItemUUID(inv.getStackInSlot(13));
+                String uuid = ItemUtils.getItemUUID(inv.getStackInSlot(13));
                 if(uuid!=null && pricePaid!=0) {
                     pricePaidMap.put(uuid, pricePaid);
                     saveConfig();
@@ -102,7 +102,7 @@ public class AuctionFeatures {
             int selectedSlot = 0;
             for(int i=0;i<=45;i+=9) {
                 ItemStack item = ch.getSlot(i).getStack();
-                List<String> lore = ItemUtil.getItemLore(item);
+                List<String> lore = ItemUtils.getItemLore(item);
                 for(String line:lore) {
                     if(line.contains("Currently")) selectedSlot = i;
                 }
@@ -136,7 +136,7 @@ public class AuctionFeatures {
         if (!Utils.inSkyblock || !SkyblockFeatures.usingNEU || Utils.GetMC().thePlayer == null || Utils.GetMC().thePlayer.openContainer == null) return;
         itemCount = 0;
         for(ItemStack stack:Utils.GetMC().thePlayer.openContainer.inventoryItemStacks) {
-            if(ItemUtil.getRarity(stack) != null) {
+            if(ItemUtils.getRarity(stack) != null) {
                 itemCount++;
             }
         }
@@ -163,12 +163,12 @@ public class AuctionFeatures {
                 int yHeight = (Utils.GetMC().currentScreen.height/8);
                 Utils.drawGraySquareWithBorder((Utils.GetMC().currentScreen.width/2)+60, yHeight, 6*("Suggested Listing Price: "+lowestBin.toString()).length(), 5*Utils.GetMC().fontRendererObj.FONT_HEIGHT,3);
                 Float priceToSellAt = (float) Math.round(((lowestBin*0.6+avgBin*0.4))*0.99);
-                String avgBinString = avgBin != null?ChatFormatting.GOLD+NumberUtil.nf.format(avgBin):ChatFormatting.RED+"Unknown";
-                String lowestBinString = lowestBin != null?ChatFormatting.GOLD+NumberUtil.nf.format(lowestBin):ChatFormatting.RED+"Unknown";
+                String avgBinString = avgBin != null?ChatFormatting.GOLD+Utils.nf.format(avgBin):ChatFormatting.RED+"Unknown";
+                String lowestBinString = lowestBin != null?ChatFormatting.GOLD+Utils.nf.format(lowestBin):ChatFormatting.RED+"Unknown";
                 String[] lines = {
                     ChatFormatting.WHITE+"Lowest BIN: "+lowestBinString,
                     ChatFormatting.WHITE+"Average BIN: "+avgBinString,
-                    ChatFormatting.WHITE+"Suggested Listing Price: "+ChatFormatting.GOLD+NumberUtil.nf.format(priceToSellAt),
+                    ChatFormatting.WHITE+"Suggested Listing Price: "+ChatFormatting.GOLD+Utils.nf.format(priceToSellAt),
                 };
                 int lineCount = 0;
                 for(String line:lines) {
@@ -211,7 +211,7 @@ public class AuctionFeatures {
                         int x = event.slot.xDisplayPosition;
                         int y = event.slot.yDisplayPosition;
                         float price = 0;
-                        for(String line : ItemUtil.getItemLore(stack)) {
+                        for(String line : ItemUtils.getItemLore(stack)) {
                             if(line.contains("bid:")) {
                                 String b = Utils.cleanColor(line);
                                 String a = b.replaceAll("[^0-9]", "");
@@ -240,7 +240,7 @@ public class AuctionFeatures {
                     if (event.slot.getHasStack()) {
                         ItemStack stack = event.slot.getStack();
                         float price = 0;
-                        for(String line : ItemUtil.getItemLore(stack)) {
+                        for(String line : ItemUtils.getItemLore(stack)) {
                             if(line.contains("bid:")) {
                                 String b = Utils.cleanColor(line);
                                 String a = b.replaceAll("[^0-9]", "");
@@ -248,7 +248,7 @@ public class AuctionFeatures {
                             }
                         }
                         String identifier = PricingData.getIdentifier(stack);
-                        String uuid = ItemUtil.getItemUUID(stack);
+                        String uuid = ItemUtils.getItemUUID(stack);
                         
                         if (identifier != null && price != 0 && PricingData.lowestBINs.containsKey(identifier)) {
                             Double BinValue = PricingData.lowestBINs.get(identifier)*stack.stackSize;
@@ -275,7 +275,7 @@ public class AuctionFeatures {
                     if (event.slot.getHasStack()) {
                         ItemStack stack = event.slot.getStack();
                         float price = 0;
-                        for(String line : ItemUtil.getItemLore(stack)) {
+                        for(String line : ItemUtils.getItemLore(stack)) {
                             if(line.contains("bid:")) {
                                 String b = Utils.cleanColor(line);
                                 String a = b.replaceAll("[^0-9]", "");
@@ -293,7 +293,7 @@ public class AuctionFeatures {
                             }
                         }
                         String identifier = PricingData.getIdentifier(stack);
-                        String uuid = ItemUtil.getItemUUID(stack);
+                        String uuid = ItemUtils.getItemUUID(stack);
 
                         if (identifier != null && price != 0) {
                             Double profit = (double) price;
@@ -331,7 +331,7 @@ public class AuctionFeatures {
                 if(profitData==null && !gettingData) {
                     gettingData = true;
                     new Thread(()->{
-                        profitData = APIUtil.getJSONResponse("https://sky.coflnet.com/api/flip/stats/player/"+APIUtil.getUUID(Utils.GetMC().thePlayer.getName())+"?days=7");
+                        profitData = APIUtils.getJSONResponse("https://sky.coflnet.com/api/flip/stats/player/"+APIUtils.getUUID(Utils.GetMC().thePlayer.getName())+"?days=7");
                     }).start();
                 }
                 if(profitData!=null) {
@@ -356,12 +356,12 @@ public class AuctionFeatures {
                     }
                     List<String> lines = new ArrayList<>();
 
-                    lines.add(ChatFormatting.WHITE+"7 Day Profit: "+ChatFormatting.GOLD+NumberUtil.nf.format(totalProfit));
+                    lines.add(ChatFormatting.WHITE+"7 Day Profit: "+ChatFormatting.GOLD+Utils.nf.format(totalProfit));
                     lines.add(ChatFormatting.WHITE+"Best Flip: ");
                     lines.add(" Item: "+bestFlip.get("itemName").getAsString().replace("âšš ", "").replace("Â", ""));
-                    lines.add(" Paid: "+ChatFormatting.LIGHT_PURPLE+NumberUtil.nf.format(bestFlip.get("pricePaid").getAsInt()));
-                    lines.add(" Sold: "+ChatFormatting.YELLOW+NumberUtil.nf.format(bestFlip.get("soldFor").getAsInt()));
-                    lines.add(" Profit: "+ChatFormatting.GREEN+NumberUtil.nf.format(bestFlip.get("profit").getAsInt()));
+                    lines.add(" Paid: "+ChatFormatting.LIGHT_PURPLE+Utils.nf.format(bestFlip.get("pricePaid").getAsInt()));
+                    lines.add(" Sold: "+ChatFormatting.YELLOW+Utils.nf.format(bestFlip.get("soldFor").getAsInt()));
+                    lines.add(" Profit: "+ChatFormatting.GREEN+Utils.nf.format(bestFlip.get("profit").getAsInt()));
 
                     Utils.drawGraySquareWithBorder(180, 5, 150, (int) (lines.size()*1.4*Utils.GetMC().fontRendererObj.FONT_HEIGHT),3);
                     
@@ -372,7 +372,7 @@ public class AuctionFeatures {
                     }
                 }
 
-                // Utils.SendMessage(ChatFormatting.GREEN+"In the past 7 days you have made "+ChatFormatting.GOLD+NumberUtil.nf.format(totalProfit)+ChatFormatting.GREEN+" coins!");
+                // Utils.SendMessage(ChatFormatting.GREEN+"In the past 7 days you have made "+ChatFormatting.GOLD+Utils.nf.format(totalProfit)+ChatFormatting.GREEN+" coins!");
             }
             // get price from when buying a auction
             if(chestName.contains("Auction View") && !chestName.contains("BIN")) {
@@ -381,7 +381,7 @@ public class AuctionFeatures {
                     if(inv.getStackInSlot(29).getDisplayName().contains("Collect Auction") && SkyblockFeatures.config.showPricePaid) {
                         boolean canCollectItem = false;
                         int pricePaid = 0;
-                        for(String line:ItemUtil.getItemLore(inv.getStackInSlot(29))) {
+                        for(String line:ItemUtils.getItemLore(inv.getStackInSlot(29))) {
                             if(Utils.cleanColor(line).contains("collect the item")) {
                                 canCollectItem=true;
                             } else {
@@ -397,7 +397,7 @@ public class AuctionFeatures {
                         }
     
                         if(canCollectItem && pricePaid!=0) {
-                            String uuid = ItemUtil.getItemUUID(inv.getStackInSlot(13));
+                            String uuid = ItemUtils.getItemUUID(inv.getStackInSlot(13));
                             if(uuid!=null) {
                                 pricePaidMap.put(uuid, pricePaid);
                                 saveConfig();
@@ -423,7 +423,7 @@ public class AuctionFeatures {
                             String endTime = ChatFormatting.RED+"Ended";
                             Double resellProfit = 0.0;
                             boolean hasTopBid = false;
-                            for(String line : ItemUtil.getItemLore(stack)) {
+                            for(String line : ItemUtils.getItemLore(stack)) {
                                 line = Utils.cleanColor(line);
                                 if(line.contains("bid:")) {
                                     cost = Integer.parseInt(Utils.cleanColor(line).replaceAll("[^0-9]", ""));
@@ -455,25 +455,25 @@ public class AuctionFeatures {
                                     }
                                 }
                                 cost = (int) Math.floor(cost);
-                                String avgBinString = avgBin != null?ChatFormatting.GOLD+NumberUtil.nf.format(avgBin):ChatFormatting.RED+"Unknown";
-                                String lowestBinString = lowestBin != null?ChatFormatting.GOLD+NumberUtil.nf.format(lowestBin):ChatFormatting.RED+"Unknown";
+                                String avgBinString = avgBin != null?ChatFormatting.GOLD+Utils.nf.format(avgBin):ChatFormatting.RED+"Unknown";
+                                String lowestBinString = lowestBin != null?ChatFormatting.GOLD+Utils.nf.format(lowestBin):ChatFormatting.RED+"Unknown";
                                 double putupTax = Math.floor(lowestBin*0.01);
                                 double collectAuctionTax = cost>=1000000?Math.floor(lowestBin*0.01):0;
                                 double totalTax = Math.floor(putupTax+collectAuctionTax);
                                 double profitAfterBid = cost>100000?resellProfit*0.95:resellProfit*0.9;
                                 // Add your bid into account
 
-                                String resellTax = collectAuctionTax>0?(NumberUtil.nf.format(totalTax))+ChatFormatting.GRAY+" (2%)":NumberUtil.nf.format(putupTax)+ChatFormatting.GRAY+" (1%)";
+                                String resellTax = collectAuctionTax>0?(Utils.nf.format(totalTax))+ChatFormatting.GRAY+" (2%)":Utils.nf.format(putupTax)+ChatFormatting.GRAY+" (1%)";
                                 List<String> lines = new ArrayList<>();
 
-                                lines.add(ChatFormatting.WHITE+"Item Price: "+ChatFormatting.GOLD+NumberUtil.nf.format(cost));
+                                lines.add(ChatFormatting.WHITE+"Item Price: "+ChatFormatting.GOLD+Utils.nf.format(cost));
                                 lines.add(ChatFormatting.WHITE+"Lowest BIN: "+lowestBinString);
                                 lines.add(ChatFormatting.WHITE+"Average BIN: "+avgBinString);
                                 lines.add(ChatFormatting.WHITE+"Taxes: "+ChatFormatting.GOLD+resellTax);
                                 lines.add(ChatFormatting.WHITE+"Ends: "+ChatFormatting.YELLOW+endTime);
                                 lines.add("");
-                                if(!hasTopBid) lines.add(ChatFormatting.WHITE+"Profit After Bid: "+resellColor+(NumberUtil.nf.format(Math.floor(profitAfterBid))));
-                                else lines.add(ChatFormatting.WHITE+"Resell Profit: "+resellColor+(NumberUtil.nf.format(Math.floor(resellProfit))));
+                                if(!hasTopBid) lines.add(ChatFormatting.WHITE+"Profit After Bid: "+resellColor+(Utils.nf.format(Math.floor(profitAfterBid))));
+                                else lines.add(ChatFormatting.WHITE+"Resell Profit: "+resellColor+(Utils.nf.format(Math.floor(resellProfit))));
 
                                 if(Manipulated) {
                                     lines.add("");
@@ -510,8 +510,8 @@ public class AuctionFeatures {
                             Double avgBin = PricingData.averageLowestBINs.get(auctionIdentifier)*stack.stackSize;
                             Utils.drawGraySquareWithBorder(180, 0, 6*("Suggested Listing Price: "+lowestBin.toString()).length(), 6*Utils.GetMC().fontRendererObj.FONT_HEIGHT,3);
                         
-                            String avgBinString = avgBin != null?ChatFormatting.GOLD+NumberUtil.nf.format(avgBin):ChatFormatting.RED+"Unknown";
-                            String lowestBinString = lowestBin != null?ChatFormatting.GOLD+NumberUtil.nf.format(lowestBin):ChatFormatting.RED+"Unknown";
+                            String avgBinString = avgBin != null?ChatFormatting.GOLD+Utils.nf.format(avgBin):ChatFormatting.RED+"Unknown";
+                            String lowestBinString = lowestBin != null?ChatFormatting.GOLD+Utils.nf.format(lowestBin):ChatFormatting.RED+"Unknown";
                             Float priceToSellAt = (float) Math.round(((lowestBin*0.6+avgBin*0.4))*0.99);
                             JsonObject auctionData = PricingData.getItemAuctionInfo(auctionIdentifier);
                             Integer volume = auctionData.get("sales").getAsInt();
@@ -526,7 +526,7 @@ public class AuctionFeatures {
                             String[] lines = {
                                 ChatFormatting.WHITE+"Lowest BIN: "+lowestBinString,
                                 ChatFormatting.WHITE+"Average BIN: "+avgBinString,
-                                ChatFormatting.WHITE+"Suggested Listing Price: "+ChatFormatting.GOLD+NumberUtil.nf.format(priceToSellAt),
+                                ChatFormatting.WHITE+"Suggested Listing Price: "+ChatFormatting.GOLD+Utils.nf.format(priceToSellAt),
                                 ChatFormatting.WHITE+"Estimated Time To Sell: "+ChatFormatting.GREEN+getTimeToSellFormat(salesPerHour),
                             };
                             int lineCount = 0;
@@ -549,7 +549,7 @@ public class AuctionFeatures {
 
                 for (Auction auction : selfItems) {
                     ItemStack stack = auction.stack;
-                    for(String line : ItemUtil.getItemLore(stack)) {
+                    for(String line : ItemUtils.getItemLore(stack)) {
                         line = Utils.cleanColor(line);
                         if(line.contains("Ended")) {
                             unclaimed++;
@@ -583,8 +583,8 @@ public class AuctionFeatures {
                     ChatFormatting.GREEN+""+(unclaimed/2)+ChatFormatting.WHITE+" Unclaimed",
                     ChatFormatting.RED+""+expired+ChatFormatting.WHITE+" Expired",
                     "",
-                    ChatFormatting.WHITE+"Coins to collect: "+ChatFormatting.GOLD+NumberUtil.nf.format(toCollect),
-                    ChatFormatting.WHITE+"Total Ask Value: "+ChatFormatting.GOLD+NumberUtil.nf.format(coins)
+                    ChatFormatting.WHITE+"Coins to collect: "+ChatFormatting.GOLD+Utils.nf.format(toCollect),
+                    ChatFormatting.WHITE+"Total Ask Value: "+ChatFormatting.GOLD+Utils.nf.format(coins)
                 };
                 int lineCount = 0;
                 for(String line:lines) {
@@ -600,7 +600,7 @@ public class AuctionFeatures {
                 List<String> winningAuctions = new ArrayList<String>();
                 for (Auction auction : selfItems) {
                     ItemStack stack = auction.stack;
-                    for(String line : ItemUtil.getItemLore(stack)) {
+                    for(String line : ItemUtils.getItemLore(stack)) {
                         line = Utils.cleanColor(line);
                         if(line.contains("Ended")) {
                             ended++;
@@ -627,8 +627,8 @@ public class AuctionFeatures {
                     ChatFormatting.GREEN+""+winning+ChatFormatting.WHITE+" Winning Auctions",
                     ChatFormatting.RED+""+losing+ChatFormatting.WHITE+" Losing Auctions",
                     "",
-                    ChatFormatting.WHITE+"Ended Auctions: "+ChatFormatting.GOLD+NumberUtil.nf.format(ended),
-                    ChatFormatting.WHITE+"Total Profit: "+ChatFormatting.GOLD+NumberUtil.nf.format(profit)
+                    ChatFormatting.WHITE+"Ended Auctions: "+ChatFormatting.GOLD+Utils.nf.format(ended),
+                    ChatFormatting.WHITE+"Total Profit: "+ChatFormatting.GOLD+Utils.nf.format(profit)
                 };
                 int lineCount = 0;
                 for(String line:lines) {

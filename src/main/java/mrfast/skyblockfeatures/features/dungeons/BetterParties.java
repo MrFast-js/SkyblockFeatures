@@ -7,7 +7,7 @@ import org.lwjgl.input.Keyboard;
 import mrfast.skyblockfeatures.SkyblockFeatures;
 import mrfast.skyblockfeatures.events.GuiContainerEvent.TitleDrawnEvent;
 import mrfast.skyblockfeatures.features.items.HideGlass;
-import mrfast.skyblockfeatures.utils.ItemUtil;
+import mrfast.skyblockfeatures.utils.ItemUtils;
 import mrfast.skyblockfeatures.utils.Utils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
@@ -84,7 +84,7 @@ public class BetterParties {
         String name = cont.getLowerChestInventory().getName();
         if(!SkyblockFeatures.config.betterpartys) return;
         if (!"Party Finder".equals(name) || hoverItemStack == null || HideGlass.isEmptyGlassPane(hoverItemStack)) return;
-        List<String> loreList = ItemUtil.getItemLore(hoverItemStack);
+        List<String> loreList = ItemUtils.getItemLore(hoverItemStack);
         int maxLineLength = 0;
         for(String line : loreList) {
             line = Utils.cleanColor(line);

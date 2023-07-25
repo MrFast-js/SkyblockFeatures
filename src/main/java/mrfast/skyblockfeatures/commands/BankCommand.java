@@ -9,7 +9,7 @@ import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
 import mrfast.skyblockfeatures.SkyblockFeatures;
 import mrfast.skyblockfeatures.features.dungeons.Reparty;
-import mrfast.skyblockfeatures.utils.APIUtil;
+import mrfast.skyblockfeatures.utils.APIUtils;
 import mrfast.skyblockfeatures.utils.Utils;
 
 import java.text.NumberFormat;
@@ -71,16 +71,16 @@ public class BankCommand extends CommandBase {
 			} else {
 				username = arg1[0];
 				player.addChatMessage(new ChatComponentText(EnumChatFormatting.GREEN + "Checking coins of " + EnumChatFormatting.DARK_GREEN + username));
-				uuid = APIUtil.getUUID(username);
+				uuid = APIUtils.getUUID(username);
 			}
 			
 			// Find stats of latest profile
-			String latestProfile = APIUtil.getLatestProfileID(uuid, key);
+			String latestProfile = APIUtils.getLatestProfileID(uuid, key);
 			if (latestProfile == null) return;
 			
 			String profileURL = "https://api.hypixel.net/skyblock/profile?profile=" + latestProfile;
 			System.out.println("Fetching profile...");
-			JsonObject profileResponse = APIUtil.getJSONResponse(profileURL);
+			JsonObject profileResponse = APIUtils.getJSONResponse(profileURL);
 			if (!profileResponse.get("success").getAsBoolean()) {
 				String reason = profileResponse.get("cause").getAsString();
 				player.addChatMessage(new ChatComponentText(EnumChatFormatting.RED + "Failed with reason: " + reason));

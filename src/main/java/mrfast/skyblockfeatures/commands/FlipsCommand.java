@@ -14,7 +14,7 @@ import net.minecraft.event.ClickEvent;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChatStyle;
 import net.minecraft.util.EnumChatFormatting;
-import mrfast.skyblockfeatures.utils.APIUtil;
+import mrfast.skyblockfeatures.utils.APIUtils;
 import mrfast.skyblockfeatures.utils.Utils;
 
 public class FlipsCommand extends CommandBase {
@@ -42,7 +42,7 @@ public class FlipsCommand extends CommandBase {
         } else {
             username = arg1[0];
         }
-        String uuid = APIUtil.getUUID(username);
+        String uuid = APIUtils.getUUID(username);
         try {
             Desktop.getDesktop().browse(new URI("https://sky.coflnet.com/player/"+uuid+"/flips"));
         } catch (Exception e) {

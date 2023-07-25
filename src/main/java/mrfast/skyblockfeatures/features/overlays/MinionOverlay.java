@@ -17,8 +17,8 @@ import mrfast.skyblockfeatures.SkyblockFeatures;
 import mrfast.skyblockfeatures.events.SlotClickedEvent;
 import mrfast.skyblockfeatures.events.GuiContainerEvent.TitleDrawnEvent;
 import mrfast.skyblockfeatures.utils.ItemRarity;
-import mrfast.skyblockfeatures.utils.ItemUtil;
-import mrfast.skyblockfeatures.utils.NumberUtil;
+import mrfast.skyblockfeatures.utils.ItemUtils;
+
 import mrfast.skyblockfeatures.core.PricingData;
 import mrfast.skyblockfeatures.core.SkyblockInfo;
 import mrfast.skyblockfeatures.utils.Utils;
@@ -55,7 +55,7 @@ public class MinionOverlay {
 
                     ItemStack stack = inv.getStackInSlot(slotId);
                     if (slotId == 4) {
-                        List<String> lore = ItemUtil.getItemLore(stack);
+                        List<String> lore = ItemUtils.getItemLore(stack);
                         for(int i=0;i<lore.size();i++) {
                             String line = Utils.cleanColor(lore.get(i));
                             if(line.contains("Actions:")) {
@@ -76,12 +76,12 @@ public class MinionOverlay {
                         if(stack.getDisplayName().contains("Block") && !stack.getDisplayName().contains("Snow")) {
                             continue;
                         }
-                        if(generating == null && ItemUtil.getRarity(stack) == ItemRarity.COMMON) {
+                        if(generating == null && ItemUtils.getRarity(stack) == ItemRarity.COMMON) {
                             generating = stack;
                         }
                     }
                 }
-                if(generating != null && ItemUtil.getRarity(generating) == ItemRarity.COMMON) {
+                if(generating != null && ItemUtils.getRarity(generating) == ItemRarity.COMMON) {
                     String identifier = PricingData.getIdentifier(generating);
                     if (identifier != null) {
                         Utils.drawGraySquareWithBorder(180, 0, 150, 8*Utils.GetMC().fontRendererObj.FONT_HEIGHT,3);
@@ -96,8 +96,8 @@ public class MinionOverlay {
                             String[] lines = {
                                 ChatFormatting.LIGHT_PURPLE+chestName,
                                 ChatFormatting.WHITE+"Time Between Actions: "+ChatFormatting.GREEN+secondsPerAction+"s",
-                                ChatFormatting.WHITE+"Coins Per Hour: "+ChatFormatting.GOLD+NumberUtil.nf.format(perHour),
-                                ChatFormatting.WHITE+"Total Value: "+ChatFormatting.GOLD+NumberUtil.formatDbl(totalValue),
+                                ChatFormatting.WHITE+"Coins Per Hour: "+ChatFormatting.GOLD+Utils.nf.format(perHour),
+                                ChatFormatting.WHITE+"Total Value: "+ChatFormatting.GOLD+Utils.formatNumber(totalValue),
                                 ChatFormatting.WHITE+"Last Collected: "+ChatFormatting.AQUA+duration
                             };
                             int lineCount = 0;

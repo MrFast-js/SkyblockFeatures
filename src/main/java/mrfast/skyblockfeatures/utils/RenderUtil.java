@@ -41,11 +41,7 @@ public class RenderUtil {
 
         double width = Math.max(1-(Utils.GetMC().thePlayer.getDistance(aabb.minX, aabb.minY, aabb.minZ)/10-2),2);
         RenderUtil.drawBoundingBox(aabb, color, partialTicks);
-
-        // GlStateManager.disableDepth();
         RenderUtil.drawOutlinedBoundingBox(aabb.offset(-0.001, -0.001, -0.001).expand(0.002, 0.002, 0.002), color, (float)width, partialTicks);
-        // GlStateManager.enableDepth();
-
         GlStateManager.depthMask(true);
         GlStateManager.enableTexture2D();
         GlStateManager.disableBlend();
@@ -217,11 +213,6 @@ public class RenderUtil {
 
         GlStateManager.pushMatrix();
         GlStateManager.translate(-realX, -realY, -realZ);
-        // GlStateManager.disableTexture2D();
-        // GlStateManager.enableBlend();
-        // GlStateManager.disableLighting();
-        // GlStateManager.disableAlpha();
-        // GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
 
         GlStateManager.enableBlend();
 		GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);

@@ -6,7 +6,7 @@ import mrfast.skyblockfeatures.SkyblockFeatures;
 import mrfast.skyblockfeatures.core.PricingData;
 import mrfast.skyblockfeatures.gui.components.UIElement;
 import mrfast.skyblockfeatures.events.SecondPassedEvent;
-import mrfast.skyblockfeatures.utils.NumberUtil;
+
 import mrfast.skyblockfeatures.utils.Utils;
 
 import net.minecraft.client.Minecraft;
@@ -164,14 +164,14 @@ public class AutomatonTracker {
             if (this.getToggled() && Minecraft.getMinecraft().thePlayer != null && mc.theWorld != null && !hidden) {
                 String[] lines = {
                     ChatFormatting.GREEN+"Time Elapsed: §r"+Utils.secondsToTime(totalSeconds),
-                    ChatFormatting.GREEN+"Automatons Killed: §r"+NumberUtil.nf.format(kills),
-                    ChatFormatting.BLUE+"Control Switch: §r"+Control+" §7("+NumberUtil.nf.format(ControlPrice)+")",
-                    ChatFormatting.BLUE+"FTX 3070: §r"+FTX+" §7("+NumberUtil.nf.format(FTXPrice)+")",
-                    ChatFormatting.BLUE+"Electron Transmitter: §r"+Electron+" §7("+NumberUtil.nf.format(ElectronPrice)+")",
-                    ChatFormatting.BLUE+"Robotron Reflector: §r"+Robotron+" §7("+NumberUtil.nf.format(RobotronPrice)+")",
-                    ChatFormatting.BLUE+"Superlite Motor: §r"+Superlite+" §7("+NumberUtil.nf.format(SuperlitePrice)+")",
-                    ChatFormatting.BLUE+"Synthetic Heart: §r"+Synthetic+" §7("+NumberUtil.nf.format(SyntheticPrice)+")",
-                    ChatFormatting.WHITE+"Total Value: §6"+NumberUtil.nf.format(total)
+                    ChatFormatting.GREEN+"Automatons Killed: §r"+Utils.nf.format(kills),
+                    ChatFormatting.BLUE+"Control Switch: §r"+Control+" §7("+Utils.nf.format(ControlPrice)+")",
+                    ChatFormatting.BLUE+"FTX 3070: §r"+FTX+" §7("+Utils.nf.format(FTXPrice)+")",
+                    ChatFormatting.BLUE+"Electron Transmitter: §r"+Electron+" §7("+Utils.nf.format(ElectronPrice)+")",
+                    ChatFormatting.BLUE+"Robotron Reflector: §r"+Robotron+" §7("+Utils.nf.format(RobotronPrice)+")",
+                    ChatFormatting.BLUE+"Superlite Motor: §r"+Superlite+" §7("+Utils.nf.format(SuperlitePrice)+")",
+                    ChatFormatting.BLUE+"Synthetic Heart: §r"+Synthetic+" §7("+Utils.nf.format(SyntheticPrice)+")",
+                    ChatFormatting.WHITE+"Total Value: §6"+Utils.nf.format(total)
                 };
                 int lineCount = 0;
                 for(String line:lines) {
@@ -190,7 +190,7 @@ public class AutomatonTracker {
                 ChatFormatting.BLUE+"Robotron Reflector: §r"+1,
                 ChatFormatting.BLUE+"Superlite Motor: §r"+3,
                 ChatFormatting.BLUE+"Synthetic Heart: §r"+6,
-                ChatFormatting.WHITE+"Total Value: §6"+NumberUtil.formatDbl(1231934)
+                ChatFormatting.WHITE+"Total Value: §6"+Utils.formatNumber(1231934)
             };
             int lineCount = 0;
             for(String line:lines) {

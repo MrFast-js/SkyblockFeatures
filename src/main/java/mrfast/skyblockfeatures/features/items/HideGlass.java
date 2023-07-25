@@ -13,7 +13,7 @@ import mrfast.skyblockfeatures.commands.getNbtCommand;
 import mrfast.skyblockfeatures.events.SlotClickedEvent;
 import mrfast.skyblockfeatures.events.GuiContainerEvent;
 import mrfast.skyblockfeatures.events.GuiContainerEvent.TitleDrawnEvent;
-import mrfast.skyblockfeatures.utils.ItemUtil;
+import mrfast.skyblockfeatures.utils.ItemUtils;
 import mrfast.skyblockfeatures.utils.Utils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiChest;
@@ -56,7 +56,7 @@ public class HideGlass {
             for(int i = 0; i < event.toolTip.size(); i++) {
                 String line = Utils.cleanColor(event.toolTip.get(i));
                 if(line.contains("minecraft:")) {
-                    event.toolTip.add(i+1,ChatFormatting.DARK_GRAY+"ID: "+ItemUtil.getSkyBlockItemID(event.itemStack));
+                    event.toolTip.add(i+1,ChatFormatting.DARK_GRAY+"ID: "+ItemUtils.getSkyBlockItemID(event.itemStack));
                     if(Utils.GetMC().thePlayer.getName().equals("Skyblock_Lobby")) {
                         if(Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)&&Keyboard.isKeyDown(Keyboard.KEY_LCONTROL)) {
                             NBTTagCompound tag = event.itemStack.getTagCompound();
@@ -64,7 +64,7 @@ public class HideGlass {
                                 event.toolTip.add(i+1,ChatFormatting.DARK_GRAY+"DATA: "+getNbtCommand.prettyPrintNBT(tag));
                             }
                         } else if(Keyboard.isKeyDown(Keyboard.KEY_LCONTROL)) {
-                            NBTTagCompound tag = ItemUtil.getExtraAttributes(event.itemStack);
+                            NBTTagCompound tag = ItemUtils.getExtraAttributes(event.itemStack);
                             if(tag!=null) {
                                 event.toolTip.add(i+1,ChatFormatting.DARK_GRAY+"DATA: "+getNbtCommand.prettyPrintNBT(tag));
                             }

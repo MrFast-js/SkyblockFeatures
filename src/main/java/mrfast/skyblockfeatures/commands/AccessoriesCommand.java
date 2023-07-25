@@ -14,7 +14,7 @@ import com.mojang.realmsclient.gui.ChatFormatting;
 
 import gg.essential.api.utils.GuiUtil;
 import mrfast.skyblockfeatures.SkyblockFeatures;
-import mrfast.skyblockfeatures.utils.APIUtil;
+import mrfast.skyblockfeatures.utils.APIUtils;
 import mrfast.skyblockfeatures.utils.Utils;
 import net.minecraft.client.gui.inventory.GuiChest;
 import net.minecraft.command.CommandBase;
@@ -74,15 +74,15 @@ public class AccessoriesCommand extends CommandBase {
 			String uuid;
 			username = arg1[0] != null?arg1[0]:Utils.GetMC().thePlayer.getName();
 			Utils.SendMessage(EnumChatFormatting.GREEN + "Checking Accessory Bag of " + EnumChatFormatting.DARK_GREEN + username);
-			uuid = APIUtil.getUUID(username);
+			uuid = APIUtils.getUUID(username);
 			
 			// Find stats of latest profile
-			String latestProfile = APIUtil.getLatestProfileID(uuid, key);
+			String latestProfile = APIUtils.getLatestProfileID(uuid, key);
 			if (latestProfile == null) return;
 
 			String profileURL = "https://api.hypixel.net/skyblock/profile?profile=" + latestProfile;
 			System.out.println("Fetching profile...");
-			JsonObject profileResponse = APIUtil.getJSONResponse(profileURL);
+			JsonObject profileResponse = APIUtils.getJSONResponse(profileURL);
 			System.out.println(profileResponse.toString()+"    "+profileURL);
 			if(profileResponse.toString().equals("{}")) {
 				Utils.SendMessage(EnumChatFormatting.RED + "Hypixel API is having problems!");

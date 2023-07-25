@@ -14,8 +14,8 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import mrfast.skyblockfeatures.SkyblockFeatures;
-import mrfast.skyblockfeatures.utils.APIUtil;
-import mrfast.skyblockfeatures.utils.ItemUtil;
+import mrfast.skyblockfeatures.utils.APIUtils;
+import mrfast.skyblockfeatures.utils.ItemUtils;
 import mrfast.skyblockfeatures.utils.Utils;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -49,8 +49,8 @@ public class PricingData {
     }
 
     public static String getIdentifier(ItemStack item) {
-        NBTTagCompound extraAttr = ItemUtil.getExtraAttributes(item);
-        String id = ItemUtil.getSkyBlockItemID(extraAttr);
+        NBTTagCompound extraAttr = ItemUtils.getExtraAttributes(item);
+        String id = ItemUtils.getSkyBlockItemID(extraAttr);
         if (id == null) return null;
         switch (id) {
             case "PET":
@@ -96,7 +96,7 @@ public class PricingData {
             reloadTimer.start();
             // Load average lowest binss
             new Thread(() -> {
-                JsonObject data = APIUtil.getJSONResponse(dataURL);
+                JsonObject data = APIUtils.getJSONResponse(dataURL);
                 for (Map.Entry<String, JsonElement> items : data.entrySet()) {
                     lowestBINs.put(items.getKey(), Math.floor(items.getValue().getAsDouble()));
                 }
@@ -117,7 +117,7 @@ public class PricingData {
             // Get bazaar prices
             if (bazaarPrices.size() == 0 && SkyblockFeatures.config.apiKey.length()>1) {
                 new Thread(() -> {
-                    JsonObject data = APIUtil.getJSONResponse("https://api.hypixel.net/skyblock/bazaar?key="+SkyblockFeatures.config.apiKey);
+                    JsonObject data = APIUtils.getJSONResponse("https://api.hypixel.net/skyblock/bazaar?key="+SkyblockFeatures.config.apiKey);
                     JsonObject products = data.get("products").getAsJsonObject();
                     for (Map.Entry<String, JsonElement> entry : products.entrySet()) {
                         if (entry.getValue().isJsonObject()) {
@@ -133,7 +133,7 @@ public class PricingData {
             // Get NPC sell prices
             if (npcSellPrices.size() == 0) {
                 new Thread(() -> {
-                    JsonObject data = APIUtil.getJSONResponse("https://api.hypixel.net/resources/skyblock/items");
+                    JsonObject data = APIUtils.getJSONResponse("https://api.hypixel.net/resources/skyblock/items");
                     JsonArray items = data.get("items").getAsJsonArray();
                     for (JsonElement item : items) {
                         JsonObject json = item.getAsJsonObject();

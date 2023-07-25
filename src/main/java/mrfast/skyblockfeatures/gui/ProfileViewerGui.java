@@ -4,27 +4,20 @@ import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.nio.charset.StandardCharsets;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 import java.util.Map.Entry;
+import java.util.Optional;
+import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
 import javax.imageio.ImageIO;
 
-import org.apache.commons.lang3.StringEscapeUtils;
-
-import java.util.UUID;
-
-import com.google.common.collect.Lists;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -41,11 +34,8 @@ import gg.essential.elementa.components.GradientComponent.GradientDirection;
 import gg.essential.elementa.components.ScrollComponent;
 import gg.essential.elementa.components.UIBlock;
 import gg.essential.elementa.components.UICircle;
-import gg.essential.elementa.components.UIImage;
 import gg.essential.elementa.components.UIRoundedRectangle;
 import gg.essential.elementa.components.UIText;
-import gg.essential.elementa.components.UIWrappedText;
-import gg.essential.elementa.components.inspector.Inspector;
 import gg.essential.elementa.constraints.CenterConstraint;
 import gg.essential.elementa.constraints.ChildBasedSizeConstraint;
 import gg.essential.elementa.constraints.PixelConstraint;
@@ -65,21 +55,18 @@ import mrfast.skyblockfeatures.SkyblockFeatures;
 import mrfast.skyblockfeatures.commands.FakePlayerCommand;
 import mrfast.skyblockfeatures.commands.InventoryCommand;
 import mrfast.skyblockfeatures.commands.InventoryCommand.Inventory;
-import mrfast.skyblockfeatures.core.PricingData;
 import mrfast.skyblockfeatures.commands.NetworthCommand;
+import mrfast.skyblockfeatures.core.PricingData;
 import mrfast.skyblockfeatures.gui.components.InventoryComponent;
 import mrfast.skyblockfeatures.gui.components.ItemStackComponent;
-import mrfast.skyblockfeatures.utils.APIUtil;
+import mrfast.skyblockfeatures.utils.APIUtils;
 import mrfast.skyblockfeatures.utils.ItemRarity;
-import mrfast.skyblockfeatures.utils.NumberUtil;
+
 import mrfast.skyblockfeatures.utils.Utils;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.InventoryBasic;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
-import net.minecraft.nbt.NBTTagString;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.fml.client.config.GuiUtils;
 
@@ -309,7 +296,7 @@ public class ProfileViewerGui extends WindowScreen {
 			System.out.println("Starting thread ");
 
             hypixelProfilesResponse = null;
-            String latestProfile = APIUtil.getLatestProfileID(uuidString, SkyblockFeatures.config.apiKey);
+            String latestProfile = APIUtils.getLatestProfileID(uuidString, SkyblockFeatures.config.apiKey);
             System.out.println("doing stuff part 2 "+uuidString);
             if (latestProfile == null) return;
             
@@ -318,9 +305,9 @@ public class ProfileViewerGui extends WindowScreen {
             String achievmentsURL = "https://api.hypixel.net/resources/achievements?uuid=" + uuidString;
 
             System.out.println("Fetching Hypixel profile...");
-            JsonObject profiles = APIUtil.getJSONResponse(profileURL);
-            JsonObject locationJson = APIUtil.getJSONResponse(locationURL);
-            achievmentsJson = APIUtil.getJSONResponse(achievmentsURL).get("achievements").getAsJsonObject();
+            JsonObject profiles = APIUtils.getJSONResponse(profileURL);
+            JsonObject locationJson = APIUtils.getJSONResponse(locationURL);
+            achievmentsJson = APIUtils.getJSONResponse(achievmentsURL).get("achievements").getAsJsonObject();
             
             Boolean playerOnline = locationJson.get("session").getAsJsonObject().get("online").getAsBoolean();
             if(playerOnline) {
@@ -431,7 +418,7 @@ public class ProfileViewerGui extends WindowScreen {
         }
         profiles = new JsonObject();
         new Thread(()->{
-            profiles = APIUtil.getJSONResponse("https://sky.shiiyu.moe/api/v2/profile/"+uuidString).get("profiles").getAsJsonObject();
+            profiles = APIUtils.getJSONResponse("https://sky.shiiyu.moe/api/v2/profile/"+uuidString).get("profiles").getAsJsonObject();
         }).start();;
         Integer sbLevelCurrXp = sbLevelXP%100;
         Integer sbLevelTotalXp = sbLevelXP;
@@ -512,7 +499,7 @@ public class ProfileViewerGui extends WindowScreen {
         Integer Bank = 0;
         JsonObject data = new JsonObject();
         data.add("data", ProfilePlayerResponse);
-        JsonObject networthResponse = APIUtil.getNetworthResponse(data);
+        JsonObject networthResponse = APIUtils.getNetworthResponse(data);
         List<String> networthTooltip = new ArrayList<>(Arrays.asList(EnumChatFormatting.RED + "Player has API disabled: "));
         String networth = ChatFormatting.RED+"API Disabled";
         if(networthResponse.has("data")) {
@@ -563,7 +550,7 @@ public class ProfileViewerGui extends WindowScreen {
             }
         }
 
-        // String avgSkill = NumberUtil.round(ProfilePlayerResponse.get("average_level_no_progress").getAsDouble(),2)+"";
+        // String avgSkill = Utils.round(ProfilePlayerResponse.get("average_level_no_progress").getAsDouble(),2)+"";
         // String joined = ProfilePlayerResponse.get("first_join").getAsJsonObject().get("text").getAsString();
         String pattern = "MMMM d yyyy";SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
         long joinedDate = ProfilePlayerResponse.get("first_join").getAsLong();
@@ -794,8 +781,8 @@ public class ProfileViewerGui extends WindowScreen {
 
         new ItemStackComponent(labelItem).setChildOf(greenCircle).setX(new CenterConstraint()).setY(new CenterConstraint());
 
-        String l1 = NumberUtil.formatDbl(v.longValue());
-        String l2 = NumberUtil.formatDbl(m.longValue());
+        String l1 = Utils.formatNumber(v.longValue());
+        String l2 = Utils.formatNumber(m.longValue());
         // Percent Values
         if(apiDisabled) {
             new UIText(ChatFormatting.RED+"Player has API Disabled").setChildOf(progressBarContainer)
@@ -1570,7 +1557,7 @@ public class ProfileViewerGui extends WindowScreen {
                     String aRarity = a.get("tier").getAsString();
                     String bRarity = b.get("tier").getAsString();
 
-                    return APIUtil.getPetRarity(bRarity)-APIUtil.getPetRarity(aRarity);
+                    return APIUtils.getPetRarity(bRarity)-APIUtils.getPetRarity(aRarity);
                 });
                 sortedPets.add(0, activePet);
                 for(JsonObject pet:sortedPets) {

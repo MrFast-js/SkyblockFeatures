@@ -14,7 +14,7 @@ import com.mojang.realmsclient.gui.ChatFormatting;
 
 import gg.essential.api.utils.GuiUtil;
 import mrfast.skyblockfeatures.SkyblockFeatures;
-import mrfast.skyblockfeatures.utils.APIUtil;
+import mrfast.skyblockfeatures.utils.APIUtils;
 import mrfast.skyblockfeatures.utils.Utils;
 import net.minecraft.client.gui.inventory.GuiChest;
 import net.minecraft.command.CommandBase;
@@ -79,17 +79,17 @@ public class InventoryCommand extends CommandBase {
 				uuid = player.getUniqueID().toString().replaceAll("[\\-]", "");
 			} else {
 				username = arg1[0];
-				uuid = APIUtil.getUUID(username);
+				uuid = APIUtils.getUUID(username);
 			}
 			Utils.SendMessage(EnumChatFormatting.GREEN + "Checking inventory of " + EnumChatFormatting.DARK_GREEN + username);
 			
 			// Find stats of latest profile
-			String latestProfile = APIUtil.getLatestProfileID(uuid, key);
+			String latestProfile = APIUtils.getLatestProfileID(uuid, key);
 			if (latestProfile == null) return;
 
 			String profileURL = "https://api.hypixel.net/skyblock/profile?profile=" + latestProfile;
 			System.out.println("Fetching profile...");
-			JsonObject profileResponse = APIUtil.getJSONResponse(profileURL);
+			JsonObject profileResponse = APIUtils.getJSONResponse(profileURL);
 			if(profileResponse.has("cause")) {
 				String reason = profileResponse.get("cause").getAsString();
 				Utils.SendMessage(EnumChatFormatting.RED + "Failed with reason: " + reason);

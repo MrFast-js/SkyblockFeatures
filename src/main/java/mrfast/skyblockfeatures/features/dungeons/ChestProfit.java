@@ -6,8 +6,8 @@ import java.util.HashMap;
 import mrfast.skyblockfeatures.SkyblockFeatures;
 import mrfast.skyblockfeatures.core.PricingData;
 import mrfast.skyblockfeatures.events.GuiContainerEvent.TitleDrawnEvent;
-import mrfast.skyblockfeatures.utils.ItemUtil;
-import mrfast.skyblockfeatures.utils.NumberUtil;
+import mrfast.skyblockfeatures.utils.ItemUtils;
+
 import mrfast.skyblockfeatures.utils.Utils;
 import net.minecraft.client.gui.inventory.GuiChest;
 import net.minecraft.client.renderer.GlStateManager;
@@ -30,7 +30,7 @@ public class ChestProfit {
                 int price = 0;
                 ItemStack openChest = inv.getStackInSlot(31);
                 if (openChest != null && openChest.getDisplayName().equals("§aOpen Reward Chest")) {
-                    for (String unclean : ItemUtil.getItemLore(openChest)) {
+                    for (String unclean : ItemUtils.getItemLore(openChest)) {
                         String line = Utils.cleanColor(unclean);
                         if (line.contains("FREE")) {
                             price = 0;
@@ -63,11 +63,11 @@ public class ChestProfit {
 
                     double profit = chestValue - price;
                     for (ItemStack item : items.keySet()) {
-                        String name = item.getDisplayName().contains("Enchanted")?ItemUtil.getItemLore(item).get(0):item.getDisplayName();
-                        lines.add(name + "§f: §a" + NumberUtil.nf.format(items.get(item)));
+                        String name = item.getDisplayName().contains("Enchanted")?ItemUtils.getItemLore(item).get(0):item.getDisplayName();
+                        lines.add(name + "§f: §a" + Utils.nf.format(items.get(item)));
                     }
                     lines.add("");
-                    lines.add("Profit: §" + (profit > 0 ? "a" : "c")+NumberUtil.nf.format(profit));
+                    lines.add("Profit: §" + (profit > 0 ? "a" : "c")+Utils.nf.format(profit));
                     
                     int lineCount = 0;
                     for(String line:lines) {

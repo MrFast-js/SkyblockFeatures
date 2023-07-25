@@ -12,7 +12,7 @@ import mrfast.skyblockfeatures.SkyblockFeatures;
 import mrfast.skyblockfeatures.gui.EditLocationsGui;
 import mrfast.skyblockfeatures.gui.ProfileViewerGui;
 import mrfast.skyblockfeatures.gui.TestGui;
-import mrfast.skyblockfeatures.utils.APIUtil;
+import mrfast.skyblockfeatures.utils.APIUtils;
 import mrfast.skyblockfeatures.utils.Utils;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.command.CommandBase;

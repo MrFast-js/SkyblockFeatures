@@ -6,7 +6,7 @@ import mrfast.skyblockfeatures.SkyblockFeatures;
 
 import mrfast.skyblockfeatures.gui.components.UIElement;
 import mrfast.skyblockfeatures.events.SecondPassedEvent;
-import mrfast.skyblockfeatures.utils.NumberUtil;
+
 import mrfast.skyblockfeatures.utils.Utils;
 
 import net.minecraft.client.Minecraft;
@@ -93,7 +93,7 @@ public class EnderNodeTracker {
             if (this.getToggled() && Minecraft.getMinecraft().thePlayer != null && mc.theWorld != null && !hidden) {
                 String[] lines = {
                     ChatFormatting.LIGHT_PURPLE+"Time Elapsed: §r"+Utils.secondsToTime(totalSeconds),
-                    ChatFormatting.AQUA+"Nodes Mined: §r"+NumberUtil.nf.format(enderNodesMined),
+                    ChatFormatting.AQUA+"Nodes Mined: §r"+Utils.nf.format(enderNodesMined),
                     ChatFormatting.RED+"Endermite Nest: §r"+nests,
                     ChatFormatting.BLUE+"Titanic Exp: §r"+titanic,
                     ChatFormatting.GREEN+"Grand Exp: §r"+grand,

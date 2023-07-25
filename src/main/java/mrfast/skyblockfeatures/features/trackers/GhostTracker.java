@@ -6,7 +6,7 @@ import mrfast.skyblockfeatures.SkyblockFeatures;
 
 import mrfast.skyblockfeatures.gui.components.UIElement;
 import mrfast.skyblockfeatures.events.SecondPassedEvent;
-import mrfast.skyblockfeatures.utils.NumberUtil;
+
 import mrfast.skyblockfeatures.core.PricingData;
 import mrfast.skyblockfeatures.core.SkyblockInfo;
 import mrfast.skyblockfeatures.utils.Utils;
@@ -133,7 +133,7 @@ public class GhostTracker {
                 if(!SkyblockInfo.getInstance().location.contains("Mist")) return;
                 String[] lines = {
                     ChatFormatting.GREEN+"Time Elapsed: §r"+Utils.secondsToTime(totalSeconds),
-                    ChatFormatting.GREEN+"Ghosts Killed: §r"+NumberUtil.nf.format(kills),
+                    ChatFormatting.GREEN+"Ghosts Killed: §r"+Utils.nf.format(kills),
                     ChatFormatting.BLUE+"Volta: §r"+Volta,
                     ChatFormatting.BLUE+"Sorrow: §r"+Sorrow,
                     ChatFormatting.GOLD+"Plasma: §r"+Plasma,

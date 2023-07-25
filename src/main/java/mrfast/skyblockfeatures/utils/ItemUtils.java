@@ -18,9 +18,8 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraftforge.common.util.Constants;
 
-public class ItemUtil {
+public class ItemUtils {
     private static final Pattern RARITY_PATTERN = Pattern.compile("(§[0-9a-f]§l§ka§r )?([§0-9a-fk-or]+)(?<rarity>[A-Z]+)");
-    private static final Pattern PET_PATTERN = Pattern.compile("§7\\[Lvl \\d+\\] (?<color>§[0-9a-fk-or]).+");
     public static final int NBT_INTEGER = 3;
     public static final int NBT_STRING = 8;
     public static final int NBT_LIST = 9;
@@ -63,7 +62,7 @@ public class ItemUtil {
             return null;
         }
 
-        if (!extraAttributes.hasKey("id", ItemUtil.NBT_STRING)) {
+        if (!extraAttributes.hasKey("id", ItemUtils.NBT_STRING)) {
             return null;
         }
 
@@ -80,7 +79,7 @@ public class ItemUtil {
             return null;
         }
 
-        if (!extraAttributes.hasKey("uuid", ItemUtil.NBT_STRING)) {
+        if (!extraAttributes.hasKey("uuid", ItemUtils.NBT_STRING)) {
             return null;
         }
 
@@ -133,11 +132,11 @@ public class ItemUtil {
      */
     public static List<String> getItemLore(ItemStack itemStack) {
         try {
-            if (itemStack.hasTagCompound() && itemStack.getTagCompound().hasKey("display", ItemUtil.NBT_COMPOUND)) {
+            if (itemStack.hasTagCompound() && itemStack.getTagCompound().hasKey("display", ItemUtils.NBT_COMPOUND)) {
                 NBTTagCompound display = itemStack.getTagCompound().getCompoundTag("display");
     
-                if (display.hasKey("Lore", ItemUtil.NBT_LIST)) {
-                    NBTTagList lore = display.getTagList("Lore", ItemUtil.NBT_STRING);
+                if (display.hasKey("Lore", ItemUtils.NBT_LIST)) {
+                    NBTTagList lore = display.getTagList("Lore", ItemUtils.NBT_STRING);
     
                     List<String> loreAsList = new ArrayList<>();
                     for (int lineNumber = 0; lineNumber < lore.tagCount(); lineNumber++) {
@@ -180,7 +179,6 @@ public class ItemUtil {
             String currentLine = lore.getStringTagAt(i);
 
             Matcher rarityMatcher = RARITY_PATTERN.matcher(currentLine);
-            Matcher petRarityMatcher = PET_PATTERN.matcher(name);
             if (rarityMatcher.find()) {
                 String rarity = rarityMatcher.group("rarity");
 
@@ -189,10 +187,6 @@ public class ItemUtil {
                         return itemRarity;
                     }
                 }
-            } else if (petRarityMatcher.find()) {
-                String color = petRarityMatcher.group("color");
-
-                return ItemRarity.byBaseColor(color);
             }
         }
 
@@ -219,7 +213,6 @@ public class ItemUtil {
             String currentLine = lore.getStringTagAt(i);
 
             Matcher rarityMatcher = RARITY_PATTERN.matcher(currentLine);
-            Matcher petRarityMatcher = PET_PATTERN.matcher(name);
             if (rarityMatcher.find()) {
                 String rarity = rarityMatcher.group("rarity");
 
@@ -228,10 +221,6 @@ public class ItemUtil {
                         return itemRarity;
                     }
                 }
-            } else if (petRarityMatcher.find()) {
-                String color = petRarityMatcher.group("color");
-
-                return ItemRarity.byBaseColor(color);
             }
         }
 
@@ -242,7 +231,7 @@ public class ItemUtil {
     
     public static double getEstimatedItemValue(ItemStack stack) {
         if(itemMap.size()==0) {
-            JsonArray items = APIUtil.getArrayResponse("https://raw.githubusercontent.com/Altpapier/SkyHelper-Networth/abb278d6be1e13b3204ccb05f47c5e8aaf614733/constants/items.json");
+            JsonArray items = APIUtils.getArrayResponse("https://raw.githubusercontent.com/Altpapier/SkyHelper-Networth/abb278d6be1e13b3204ccb05f47c5e8aaf614733/constants/items.json");
             for(int i=0;i<items.size();i++) {
                 JsonObject a = items.get(i).getAsJsonObject();
                 itemMap.put(a.get("id").getAsString(), a);
@@ -273,7 +262,7 @@ public class ItemUtil {
 
     public static Integer getEstimatedItemValue(NBTTagCompound ExtraAttributes) {
         if(itemMap.size()==0) {
-            JsonArray items = APIUtil.getArrayResponse("https://raw.githubusercontent.com/Altpapier/SkyHelper-Networth/abb278d6be1e13b3204ccb05f47c5e8aaf614733/constants/items.json");
+            JsonArray items = APIUtils.getArrayResponse("https://raw.githubusercontent.com/Altpapier/SkyHelper-Networth/abb278d6be1e13b3204ccb05f47c5e8aaf614733/constants/items.json");
             for(int i=0;i<items.size();i++) {
                 JsonObject a = items.get(i).getAsJsonObject();
                 itemMap.put(a.get("id").getAsString(), a);

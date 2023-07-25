@@ -32,7 +32,7 @@ import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
 
 
-public class APIUtil {
+public class APIUtils {
 
     public static CloseableHttpClient client = HttpClients.custom().setUserAgent("Mozilla/5.0").build();
 

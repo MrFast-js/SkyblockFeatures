@@ -9,7 +9,7 @@ import net.minecraft.util.BlockPos;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
 import mrfast.skyblockfeatures.SkyblockFeatures;
-import mrfast.skyblockfeatures.utils.APIUtil;
+import mrfast.skyblockfeatures.utils.APIUtils;
 import mrfast.skyblockfeatures.utils.Utils;
 
 import java.text.DecimalFormat;
@@ -67,16 +67,16 @@ public class DungeonsCommand extends CommandBase {
 			} else {
 				username = arg1[0];
 				player.addChatMessage(new ChatComponentText(EnumChatFormatting.GREEN + "Checking dungeon stats of " + EnumChatFormatting.DARK_GREEN + username));
-				uuid = APIUtil.getUUID(username);
+				uuid = APIUtils.getUUID(username);
 			}
 			
 			// Find stats of latest profile
-			String latestProfile = APIUtil.getLatestProfileID(uuid, key);
+			String latestProfile = APIUtils.getLatestProfileID(uuid, key);
 			if (latestProfile == null) return;
 			
 			String profileURL = "https://api.hypixel.net/skyblock/profile?profile=" + latestProfile;
 			System.out.println("Fetching profile...");
-			JsonObject profileResponse = APIUtil.getJSONResponse(profileURL);
+			JsonObject profileResponse = APIUtils.getJSONResponse(profileURL);
 			if(profileResponse.has("cause")) {
 				String reason = profileResponse.get("cause").getAsString();
 				player.addChatMessage(new ChatComponentText(EnumChatFormatting.RED + "Failed with reason: " + reason));
@@ -85,7 +85,7 @@ public class DungeonsCommand extends CommandBase {
 
 			String playerURL = "https://api.hypixel.net/player?uuid=" + uuid;
 			System.out.println("Fetching player data...");
-			JsonObject playerResponse = APIUtil.getJSONResponse(playerURL);
+			JsonObject playerResponse = APIUtils.getJSONResponse(playerURL);
 			if(playerResponse.has("cause")){
 				player.addChatMessage(new ChatComponentText(EnumChatFormatting.RED + "This player has not played on Hypixel."));
 			}

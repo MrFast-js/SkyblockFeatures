@@ -10,8 +10,8 @@ import com.mojang.realmsclient.gui.ChatFormatting;
 import mrfast.skyblockfeatures.SkyblockFeatures;
 import mrfast.skyblockfeatures.core.PricingData;
 import mrfast.skyblockfeatures.events.GuiContainerEvent;
-import mrfast.skyblockfeatures.utils.ItemUtil;
-import mrfast.skyblockfeatures.utils.NumberUtil;
+import mrfast.skyblockfeatures.utils.ItemUtils;
+
 import mrfast.skyblockfeatures.utils.Utils;
 import net.minecraft.client.gui.inventory.GuiChest;
 import net.minecraft.inventory.ContainerChest;
@@ -76,7 +76,7 @@ public class TradingOverlay {
                         value = PricingData.bazaarPrices.get(id);
                     }
                     else if(PricingData.lowestBINs.containsKey(id)) {
-                        value = ItemUtil.getEstimatedItemValue(inv.getStackInSlot(slotId))*inv.getStackInSlot(slotId).stackSize;
+                        value = ItemUtils.getEstimatedItemValue(inv.getStackInSlot(slotId))*inv.getStackInSlot(slotId).stackSize;
                     }
                     if(selfSlots.contains(slotId)) {
                         totalSelf+=value*(coins?1:inv.getStackInSlot(slotId).stackSize);
@@ -97,11 +97,11 @@ public class TradingOverlay {
     public void drawOtherPersonValue(Double total,HashMap<String,Double> items) {
         Utils.drawGraySquareWithBorder(180, 0, 150, (int) ((items.size()+3)*2*Utils.GetMC().fontRendererObj.FONT_HEIGHT),3);
                 
-        List<String> lines = new ArrayList<>(Arrays.asList(ChatFormatting.WHITE+"Total Value: "+ChatFormatting.GOLD+NumberUtil.formatDbl(total),""));
+        List<String> lines = new ArrayList<>(Arrays.asList(ChatFormatting.WHITE+"Total Value: "+ChatFormatting.GOLD+Utils.formatNumber(total),""));
         for(String itemName:items.keySet()) {
             String name = itemName;
             if(itemName.length()>21) name = itemName.substring(0, 20)+"..";
-            lines.add(name+" "+ChatFormatting.DARK_GRAY+ChatFormatting.ITALIC+"("+NumberUtil.formatDbl(items.get(itemName))+")");
+            lines.add(name+" "+ChatFormatting.DARK_GRAY+ChatFormatting.ITALIC+"("+Utils.formatNumber(items.get(itemName))+")");
         }
         int lineCount = 0;
         for(String line:lines) {
@@ -113,11 +113,11 @@ public class TradingOverlay {
     public void drawSelfPersonValue(Double total,HashMap<String,Double> items) {
         Utils.drawGraySquareWithBorder(-155, 0, 150, (int) ((items.size()+3)*2*Utils.GetMC().fontRendererObj.FONT_HEIGHT),3);
                 
-        List<String> lines = new ArrayList<>(Arrays.asList(ChatFormatting.WHITE+"Total Value: "+ChatFormatting.GOLD+NumberUtil.formatDbl(total),""));
+        List<String> lines = new ArrayList<>(Arrays.asList(ChatFormatting.WHITE+"Total Value: "+ChatFormatting.GOLD+Utils.formatNumber(total),""));
         for(String itemName:items.keySet()) {
             String name = itemName;
             if(itemName.length()>21) name = itemName.substring(0, 20)+"..";
-            lines.add(name+" "+ChatFormatting.DARK_GRAY+ChatFormatting.ITALIC+"("+NumberUtil.formatDbl(items.get(itemName))+")");
+            lines.add(name+" "+ChatFormatting.DARK_GRAY+ChatFormatting.ITALIC+"("+Utils.formatNumber(items.get(itemName))+")");
         }
         int lineCount = 0;
         for(String line:lines) {

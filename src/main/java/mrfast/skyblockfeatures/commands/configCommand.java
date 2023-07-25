@@ -13,7 +13,7 @@ import mrfast.skyblockfeatures.gui.EditLocationsGui;
 import mrfast.skyblockfeatures.gui.GuiManager;
 import mrfast.skyblockfeatures.gui.TestGui;
 import mrfast.skyblockfeatures.gui.components.Point;
-import mrfast.skyblockfeatures.utils.APIUtil;
+import mrfast.skyblockfeatures.utils.APIUtils;
 import mrfast.skyblockfeatures.utils.Utils;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.command.CommandBase;
@@ -77,7 +77,7 @@ public class configCommand extends CommandBase {
                 }
                 new Thread(() -> {
                     String apiKey = args[1];
-                    if (APIUtil.getJSONResponse("https://api.hypixel.net/key?key=" + apiKey).get("success").getAsBoolean()) {
+                    if (APIUtils.getJSONResponse("https://api.hypixel.net/key?key=" + apiKey).get("success").getAsBoolean()) {
                         SkyblockFeatures.config.apiKey = apiKey;
                         SkyblockFeatures.config.markDirty();
                         player.addChatMessage(new ChatComponentText("§a§l[SUCCESS] §8» §aYour Hypixel API key has been set to §f" + apiKey + "§a."));

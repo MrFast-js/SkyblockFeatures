@@ -27,8 +27,8 @@ import mrfast.skyblockfeatures.features.exoticAuctions.colors.PureColors;
 import mrfast.skyblockfeatures.features.exoticAuctions.colors.SpookyColors;
 import mrfast.skyblockfeatures.gui.components.Point;
 import mrfast.skyblockfeatures.gui.components.UIElement;
-import mrfast.skyblockfeatures.utils.APIUtil;
-import mrfast.skyblockfeatures.utils.NumberUtil;
+import mrfast.skyblockfeatures.utils.APIUtils;
+
 import mrfast.skyblockfeatures.utils.Utils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.event.ClickEvent;
@@ -121,7 +121,7 @@ public class ExoticAuctions {
             checkingForNewReloadTime = true;
             Utils.SendMessage(ChatFormatting.GREEN + "Wait 3 minutes for the Exotic Auctions to set up.");
             new Thread(() -> {
-                JsonObject startingData = APIUtil.getJSONResponse("https://api.hypixel.net/skyblock/auctions?page=0");
+                JsonObject startingData = APIUtils.getJSONResponse("https://api.hypixel.net/skyblock/auctions?page=0");
                 JsonArray startingProducts = startingData.get("auctions").getAsJsonArray();
                 String startingUUID = startingProducts.get(0).getAsJsonObject().get("uuid").getAsString();
         
@@ -129,7 +129,7 @@ public class ExoticAuctions {
                     Utils.setTimeout(() -> {
                         if (Utils.inDungeons || !SkyblockFeatures.config.exoticAuctionFinder || foundReloadTime) return;
         
-                        JsonObject data = APIUtil.getJSONResponse("https://api.hypixel.net/skyblock/auctions?page=0");
+                        JsonObject data = APIUtils.getJSONResponse("https://api.hypixel.net/skyblock/auctions?page=0");
                         JsonArray products = data.get("auctions").getAsJsonArray();
                         String currentUUID = products.get(0).getAsJsonObject().get("uuid").getAsString();
         
@@ -175,7 +175,7 @@ public class ExoticAuctions {
 
                     System.out.println("DAC searching for " + lengthOfSearch + " seconds low:" + lowestSecondFound + " high:" + highestSecondFound);
                     Utils.SendMessage(ChatFormatting.GRAY + "Scanning for auctions..");
-                    JsonObject startingData = APIUtil.getJSONResponse("https://api.hypixel.net/skyblock/auctions?page=0");
+                    JsonObject startingData = APIUtils.getJSONResponse("https://api.hypixel.net/skyblock/auctions?page=0");
                     JsonArray startingProducts = startingData.get("auctions").getAsJsonArray();
                     String startingUUID = startingProducts.get(0).getAsJsonObject().get("uuid").getAsString();
 
@@ -183,7 +183,7 @@ public class ExoticAuctions {
                         Utils.setTimeout(() -> {
                             if (Utils.inDungeons || !SkyblockFeatures.config.exoticAuctionFinder || apiUpdated) return;
 
-                            JsonObject data = APIUtil.getJSONResponse("https://api.hypixel.net/skyblock/auctions?page=0");
+                            JsonObject data = APIUtils.getJSONResponse("https://api.hypixel.net/skyblock/auctions?page=0");
                             JsonArray products = data.get("auctions").getAsJsonArray();
                             String currentUUID = products.get(0).getAsJsonObject().get("uuid").getAsString();
 
@@ -193,7 +193,7 @@ public class ExoticAuctions {
                                 int pages = data.get("totalPages").getAsInt();
 
                                 for (int b = 0; b < pages; b++) {
-                                    JsonObject data2 = APIUtil.getJSONResponse("https://api.hypixel.net/skyblock/auctions?page=" + b);
+                                    JsonObject data2 = APIUtils.getJSONResponse("https://api.hypixel.net/skyblock/auctions?page=" + b);
                                     JsonArray products2 = data2.get("auctions").getAsJsonArray();
                                     System.out.println("Checking page " + b + " size:" + products2.size());
                                     setDefaultArmorColors(products2);
@@ -237,13 +237,13 @@ public class ExoticAuctions {
                     int lengthOfSearch = Math.min(Math.max(highestSecondFound - lowestSecondFound, 8), 12);
                     System.out.println("EAS Searching for " + lengthOfSearch + " seconds low:" + lowestSecondFound + " high:" + highestSecondFound);
                     Utils.SendMessage(ChatFormatting.GRAY + "Scanning for auctions..");
-                    JsonObject startingData = APIUtil.getJSONResponse("https://api.hypixel.net/skyblock/auctions?page=0");
+                    JsonObject startingData = APIUtils.getJSONResponse("https://api.hypixel.net/skyblock/auctions?page=0");
                     JsonArray startingProducts = startingData.get("auctions").getAsJsonArray();
                     String startingUUID = startingProducts.get(0).getAsJsonObject().get("uuid").getAsString();
                     for (int i = 0; i < 100; i++) {
                         Utils.setTimeout(() -> {
                             if (Utils.inDungeons || !SkyblockFeatures.config.exoticAuctionFinder || apiUpdated) return;
-                            JsonObject data = APIUtil.getJSONResponse("https://api.hypixel.net/skyblock/auctions?page=0");
+                            JsonObject data = APIUtils.getJSONResponse("https://api.hypixel.net/skyblock/auctions?page=0");
                             JsonArray products = data.get("auctions").getAsJsonArray();
                             String currentUUID = products.get(0).getAsJsonObject().get("uuid").getAsString();
                             if (!currentUUID.equals(startingUUID) && !apiUpdated) {
@@ -251,7 +251,7 @@ public class ExoticAuctions {
                                 int pages = data.get("totalPages").getAsInt();
                                 System.out.println("Got a good instance, "+pages+" pages");
                                 for (int b = 0; b < pages; b++) {
-                                    JsonObject data2 = APIUtil.getJSONResponse("https://api.hypixel.net/skyblock/auctions?page=" + b);
+                                    JsonObject data2 = APIUtils.getJSONResponse("https://api.hypixel.net/skyblock/auctions?page=" + b);
                                     JsonArray products2 = data2.get("auctions").getAsJsonArray();
                                     doExoticStuff(products2);
                                 }
@@ -346,7 +346,7 @@ public class ExoticAuctions {
                     String hex = getHexFromDisplayColor(nbt.getTagList("i", 10).getCompoundTagAt(0).getCompoundTag("tag"));
 
                     if(isExotic(hex,skyblockItemID)!=null) {
-                        ExoticAuction exotic = new ExoticAuction(auctionId, hex, name,APIUtil.getName(sellerId), isExotic(hex,skyblockItemID), true,binPrice.intValue(),msTillEnd);
+                        ExoticAuction exotic = new ExoticAuction(auctionId, hex, name,APIUtils.getName(sellerId), isExotic(hex,skyblockItemID), true,binPrice.intValue(),msTillEnd);
                         c++;
                         sendAuctionToChat(exotic);
                     }
@@ -358,7 +358,7 @@ public class ExoticAuctions {
                     if(getHex(extraAttributes)==-1 || name.contains("✿")) continue;
                     String hex = getHexFromDisplayColor(nbt.getTagList("i", 10).getCompoundTagAt(0).getCompoundTag("tag"));
                     if(isExotic(hex,skyblockItemID)!=null) {
-                        ExoticAuction exotic = new ExoticAuction(auctionId, hex, name,APIUtil.getName(sellerId), isExotic(hex,skyblockItemID), false,binPrice.intValue(),msTillEnd);
+                        ExoticAuction exotic = new ExoticAuction(auctionId, hex, name,APIUtils.getName(sellerId), isExotic(hex,skyblockItemID), false,binPrice.intValue(),msTillEnd);
                         c++;
                         sendAuctionToChat(exotic);
                     }
@@ -369,7 +369,7 @@ public class ExoticAuctions {
 
     public void sendAuctionToChat(ExoticAuction exotic) {
         String buyType = exotic.bin?"BIN":"AUC";
-        String text = "\n§b[SBF] §7"+buyType+" §8| §7"+exotic.type.color+" §8| "+exotic.itemName+" §8| §a#"+exotic.hexcode+" §8| §e"+NumberUtil.formatDbl(exotic.price)+" §8| §e"+Utils.secondsToTime((int) (exotic.msTillEnd/1000));
+        String text = "\n§b[SBF] §7"+buyType+" §8| §7"+exotic.type.color+" §8| "+exotic.itemName+" §8| §a#"+exotic.hexcode+" §8| §e"+Utils.formatNumber(exotic.price)+" §8| §e"+Utils.secondsToTime((int) (exotic.msTillEnd/1000));
         IChatComponent message = new ChatComponentText(text);
         message.getChatStyle().setChatClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND,"/viewauction "+exotic.auctionId));
         message.getChatStyle().setChatHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ChatComponentText(ChatFormatting.GREEN+"/viewauction "+exotic.auctionId)));

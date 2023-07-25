@@ -1,10 +1,12 @@
 package mrfast.skyblockfeatures.utils;
 
 import java.awt.Color;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Random;
 import java.util.Timer;
@@ -51,6 +53,28 @@ public class Utils {
     public static Utils INSTANCE = new Utils();
     public Map<UUID, Boolean> glowingCache = new HashMap<>();
     static Random random = new Random();
+    public static final NumberFormat nf = NumberFormat.getInstance(Locale.US);
+
+    private static final String[] steps = new String[] {"", "K", "M", "B","T"};
+
+    public static String formatNumber(double number) {
+        int magnitudeIndex = 0;
+
+        while (number >= 1000) {
+            magnitudeIndex++;
+            number /= 1000;
+        }
+
+        String formattedNumber;
+
+        if (magnitudeIndex > 0 && Math.floor(number) == number) {
+            formattedNumber = String.valueOf((int) number);
+        } else {
+            formattedNumber = round(number, 1);
+        }
+
+        return formattedNumber + steps[magnitudeIndex];
+    }
     
     public static boolean isOnHypixel() {
         try {
@@ -216,6 +240,12 @@ public class Utils {
         time += sec + "s";
     
         return time.trim();
+    }
+
+    public static String round(double value, int precision) {
+        double scale = Math.pow(10, precision);
+        double roundedValue = Math.round(value * scale) / scale;
+        return String.valueOf(roundedValue);
     }
 
     public static String[] getListOfPlayerUsernames() {

@@ -24,8 +24,8 @@ import net.minecraft.util.BlockPos;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
 import mrfast.skyblockfeatures.SkyblockFeatures;
-import mrfast.skyblockfeatures.utils.APIUtil;
-import mrfast.skyblockfeatures.utils.ItemUtil;
+import mrfast.skyblockfeatures.utils.APIUtils;
+import mrfast.skyblockfeatures.utils.ItemUtils;
 import mrfast.skyblockfeatures.utils.Utils;
 
 public class ArmorCommand extends CommandBase {
@@ -82,16 +82,16 @@ public class ArmorCommand extends CommandBase {
 					party = true;
 				}
 				player.addChatMessage(new ChatComponentText(EnumChatFormatting.GREEN + "Checking armour of " + EnumChatFormatting.DARK_GREEN + username));
-				uuid = APIUtil.getUUID(username);
+				uuid = APIUtils.getUUID(username);
 			}
 			
 			// Find stats of latest profile
-			String latestProfile = APIUtil.getLatestProfileID(uuid, key);
+			String latestProfile = APIUtils.getLatestProfileID(uuid, key);
 			if (latestProfile == null) return;
 
 			String profileURL = "https://api.hypixel.net/skyblock/profile?profile=" + latestProfile;
 			System.out.println("Fetching profile...");
-			JsonObject profileResponse = APIUtil.getJSONResponse(profileURL);
+			JsonObject profileResponse = APIUtils.getJSONResponse(profileURL);
 			if (!profileResponse.get("success").getAsBoolean()) {
 				String reason = profileResponse.get("cause").getAsString();
 				player.addChatMessage(new ChatComponentText(EnumChatFormatting.RED + "Failed with reason: " + reason));
@@ -100,7 +100,7 @@ public class ArmorCommand extends CommandBase {
 
 			String playerURL = "https://api.hypixel.net/player?uuid=" + uuid;
 			System.out.println("Fetching player data...");
-			JsonObject playerResponse = APIUtil.getJSONResponse(playerURL);
+			JsonObject playerResponse = APIUtils.getJSONResponse(playerURL);
 			if(!playerResponse.get("success").getAsBoolean()){
 				String reason = profileResponse.get("cause").getAsString();
 				player.addChatMessage(new ChatComponentText(EnumChatFormatting.RED + "Failed with reason: " + reason));
@@ -137,8 +137,8 @@ public class ArmorCommand extends CommandBase {
 						NBTTagCompound display = item.getCompoundTag("tag").getCompoundTag("display");
 						String itemName = item.getCompoundTag("tag").getCompoundTag("display").getString("Name");
 						String itemLore = "";
-						if (display.hasKey("Lore", ItemUtil.NBT_LIST)) {
-							NBTTagList lore = display.getTagList("Lore", ItemUtil.NBT_STRING);
+						if (display.hasKey("Lore", ItemUtils.NBT_LIST)) {
+							NBTTagList lore = display.getTagList("Lore", ItemUtils.NBT_STRING);
 							
 							List<String> loreAsList = new ArrayList<>();
 							for (int lineNumber = 0; lineNumber < lore.tagCount(); lineNumber++) {
@@ -176,8 +176,8 @@ public class ArmorCommand extends CommandBase {
 					NBTTagCompound display = armourPiece.getCompoundTag("tag").getCompoundTag("display");
 					String armourPieceName = armourPiece.getCompoundTag("tag").getCompoundTag("display").getString("Name");
                     String armourPieceLore = "";
-                    if (display.hasKey("Lore", ItemUtil.NBT_LIST)) {
-                        NBTTagList lore = display.getTagList("Lore", ItemUtil.NBT_STRING);
+                    if (display.hasKey("Lore", ItemUtils.NBT_LIST)) {
+                        NBTTagList lore = display.getTagList("Lore", ItemUtils.NBT_STRING);
         
                         List<String> loreAsList = new ArrayList<>();
                         for (int lineNumber = 0; lineNumber < lore.tagCount(); lineNumber++) {

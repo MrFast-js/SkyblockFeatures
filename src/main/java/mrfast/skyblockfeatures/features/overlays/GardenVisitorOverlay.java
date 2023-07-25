@@ -8,8 +8,8 @@ import com.mojang.realmsclient.gui.ChatFormatting;
 import mrfast.skyblockfeatures.SkyblockFeatures;
 import mrfast.skyblockfeatures.core.PricingData;
 import mrfast.skyblockfeatures.events.GuiContainerEvent.TitleDrawnEvent;
-import mrfast.skyblockfeatures.utils.ItemUtil;
-import mrfast.skyblockfeatures.utils.NumberUtil;
+import mrfast.skyblockfeatures.utils.ItemUtils;
+
 import mrfast.skyblockfeatures.utils.Utils;
 import net.minecraft.client.gui.inventory.GuiChest;
 import net.minecraft.inventory.ContainerChest;
@@ -32,7 +32,7 @@ public class GardenVisitorOverlay {
                     Integer totalCost = 0;
                     Boolean gettingMaterials = true;
                     List<String> required = new ArrayList<>();
-                    for(String line:ItemUtil.getItemLore(item)) {
+                    for(String line:ItemUtils.getItemLore(item)) {
                         String rawline = Utils.cleanColor(line);
                         if(rawline.contains("Copper")) {
                             copperCount = Integer.parseInt(rawline.replaceAll("[^0-9]", ""));
@@ -57,9 +57,9 @@ public class GardenVisitorOverlay {
                     List<String> lines = new ArrayList<>();
                     lines.add(ChatFormatting.RED+"Items Required: ");
                     for(String requiredItem:required) lines.add(requiredItem);
-                    lines.add(ChatFormatting.RED+"Copper Reward: "+ChatFormatting.GOLD+NumberUtil.nf.format(copperCount));
-                    lines.add(ChatFormatting.AQUA+"Cost to fill: "+ChatFormatting.GOLD+(totalCost!=0?NumberUtil.nf.format(totalCost):ChatFormatting.RED+"Unknown Price"));
-                    lines.add(ChatFormatting.RED+"Coins Per Copper: "+ChatFormatting.GOLD+NumberUtil.nf.format(totalCost/copperCount));
+                    lines.add(ChatFormatting.RED+"Copper Reward: "+ChatFormatting.GOLD+Utils.nf.format(copperCount));
+                    lines.add(ChatFormatting.AQUA+"Cost to fill: "+ChatFormatting.GOLD+(totalCost!=0?Utils.nf.format(totalCost):ChatFormatting.RED+"Unknown Price"));
+                    lines.add(ChatFormatting.RED+"Coins Per Copper: "+ChatFormatting.GOLD+Utils.nf.format(totalCost/copperCount));
 
                     Utils.drawGraySquareWithBorder(180, 0, 200, (int) (lines.size()*1.15*Utils.GetMC().fontRendererObj.FONT_HEIGHT),3);
                     for(String line:lines) {

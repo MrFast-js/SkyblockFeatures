@@ -26,9 +26,9 @@ import mrfast.skyblockfeatures.events.SlotClickedEvent;
 import mrfast.skyblockfeatures.events.GuiContainerEvent;
 import mrfast.skyblockfeatures.events.SecondPassedEvent;
 import mrfast.skyblockfeatures.features.items.HideGlass;
-import mrfast.skyblockfeatures.utils.APIUtil;
-import mrfast.skyblockfeatures.utils.ItemUtil;
-import mrfast.skyblockfeatures.utils.NumberUtil;
+import mrfast.skyblockfeatures.utils.APIUtils;
+import mrfast.skyblockfeatures.utils.ItemUtils;
+
 import mrfast.skyblockfeatures.core.SkyblockInfo;
 import mrfast.skyblockfeatures.utils.Utils;
 
@@ -199,7 +199,7 @@ public class AutoAuctionFlip {
         if(timeToReload == 40) {
             messageSent = 0;
             if((lowestSecondFound!=60 && highestSecondFound!=0)) {
-                Utils.SendMessage(ChatFormatting.GRAY+"Filtered out "+NumberUtil.nf.format((auctionsFilteredThrough-auctionsPassedFilteredThrough))+" auctions in the past 60s ");
+                Utils.SendMessage(ChatFormatting.GRAY+"Filtered out "+Utils.nf.format((auctionsFilteredThrough-auctionsPassedFilteredThrough))+" auctions in the past 60s ");
             }
         }
         if(timeToReload == 60) {
@@ -224,14 +224,14 @@ public class AutoAuctionFlip {
             checkingForNewReloadTime=true;
             Utils.SendMessage(ChatFormatting.GREEN+"Wait 3 minutes for the flipper to setup.");
             new Thread(()->{
-                JsonObject startingData = APIUtil.getJSONResponse("https://api.hypixel.net/skyblock/auctions?page=0");
+                JsonObject startingData = APIUtils.getJSONResponse("https://api.hypixel.net/skyblock/auctions?page=0");
                 JsonArray startingProducts = startingData.get("auctions").getAsJsonArray();
                 String startingUUID = startingProducts.get(0).getAsJsonObject().get("uuid").getAsString();
                 for(int i=0;i<60;i++) {
                     Utils.setTimeout(()->{
                         if(Utils.inDungeons || !SkyblockFeatures.config.autoAuctionFlip) return;
                         if(foundReloadTime) return;
-                        JsonObject data = APIUtil.getJSONResponse("https://api.hypixel.net/skyblock/auctions?page=0");
+                        JsonObject data = APIUtils.getJSONResponse("https://api.hypixel.net/skyblock/auctions?page=0");
                         JsonArray products = data.get("auctions").getAsJsonArray();
                         String currentUUID = products.get(0).getAsJsonObject().get("uuid").getAsString();
                         if(!currentUUID.equals(startingUUID)) {
@@ -273,7 +273,7 @@ public class AutoAuctionFlip {
 
                 System.out.println("Searching for "+lengthOfSearch+" seconds low:"+lowestSecondFound+" high:"+highestSecondFound);
                 Utils.SendMessage(ChatFormatting.GRAY+"Scanning for auctions..");
-                JsonObject startingData = APIUtil.getJSONResponse("https://api.hypixel.net/skyblock/auctions?page=0");
+                JsonObject startingData = APIUtils.getJSONResponse("https://api.hypixel.net/skyblock/auctions?page=0");
                 JsonArray startingProducts = startingData.get("auctions").getAsJsonArray();
                 String startingUUID = startingProducts.get(0).getAsJsonObject().get("uuid").getAsString();
                 for(int i=0;i<100;i++) {
@@ -281,14 +281,14 @@ public class AutoAuctionFlip {
                         if(apiUpdated) {
                             return;
                         }
-                        JsonObject data = APIUtil.getJSONResponse("https://api.hypixel.net/skyblock/auctions?page=0");
+                        JsonObject data = APIUtils.getJSONResponse("https://api.hypixel.net/skyblock/auctions?page=0");
                         JsonArray products = data.get("auctions").getAsJsonArray();
                         String currentUUID = products.get(0).getAsJsonObject().get("uuid").getAsString();
                         if(!currentUUID.equals(startingUUID) && !apiUpdated) {
                             apiUpdated = true;
                             int pages = data.get("totalPages").getAsInt();
                             for(int b=0;b<pages;b++) {
-                                JsonObject data2 = APIUtil.getJSONResponse("https://api.hypixel.net/skyblock/auctions?page="+b);
+                                JsonObject data2 = APIUtils.getJSONResponse("https://api.hypixel.net/skyblock/auctions?page="+b);
                                 JsonArray products2 = data2.get("auctions").getAsJsonArray();
                                 doAuctionFlipStuff(products2);
                             }
@@ -337,14 +337,14 @@ public class AutoAuctionFlip {
 
                         if(lowestBinPrice==null||avgBinPrice==null) continue;
 
-                        Integer estimatedPrice = ItemUtil.getEstimatedItemValue(extraAttributes);
+                        Integer estimatedPrice = ItemUtils.getEstimatedItemValue(extraAttributes);
                         String auctionId = itemData.get("uuid").toString().replaceAll("\"","");
                         Integer valueOfTheItem = (int) (SkyblockFeatures.config.autoFlipAddEnchAndStar?estimatedPrice:lowestBinPrice);
                         Integer percentage = (int) Math.floor(((valueOfTheItem/binPrice)-1)*100);
                         String[] lore = itemData.get("item_lore").getAsString().split("Â");
                         JsonObject auctionData = PricingData.getItemAuctionInfo(id);
-                        Double enchantValue = ItemUtil.getEnchantsWorth(extraAttributes);
-                        Double starValue = ItemUtil.getStarCost(extraAttributes);
+                        Double enchantValue = ItemUtils.getEnchantsWorth(extraAttributes);
+                        Double starValue = ItemUtils.getStarCost(extraAttributes);
                         Double profit = valueOfTheItem-binPrice;
                         boolean inBlacklist = false;
                         int volume = 20;
@@ -390,7 +390,7 @@ public class AutoAuctionFlip {
                             continue;
                         }
                         if(percentage<minPercent) {
-                            if(debugLogging) System.out.println(name+" Removed Because MinPerc Filter Perc:"+percentage+" "+NumberUtil.nf.format(binPrice)+" "+NumberUtil.nf.format(valueOfTheItem)+" "+auctionId); 
+                            if(debugLogging) System.out.println(name+" Removed Because MinPerc Filter Perc:"+percentage+" "+Utils.nf.format(binPrice)+" "+Utils.nf.format(valueOfTheItem)+" "+auctionId); 
                             continue;
                         }
                         if(profit<margin) {
@@ -418,11 +418,11 @@ public class AutoAuctionFlip {
                         
                         if(auctionData!=null) {
                             Auction auction = new Auction(auctionId, itemData, profit);
-                            String iprofit = NumberUtil.formatDbl(profit.longValue());
-                            String oPrice = NumberUtil.formatDbl(binPrice.longValue());
-                            String itemValue = NumberUtil.formatDbl(valueOfTheItem.longValue());
-                            String ePrice = NumberUtil.formatDbl(enchantValue.longValue());
-                            String sPrice = NumberUtil.formatDbl(starValue.longValue());
+                            String iprofit = Utils.formatNumber(profit.longValue());
+                            String oPrice = Utils.formatNumber(binPrice.longValue());
+                            String itemValue = Utils.formatNumber(valueOfTheItem.longValue());
+                            String ePrice = Utils.formatNumber(enchantValue.longValue());
+                            String sPrice = Utils.formatNumber(starValue.longValue());
                             Boolean dupe = false;
                             for(Auction auc:auctionFlips) if(auc.auctionId==auctionId) dupe = true;
                             if(dupe) continue;
@@ -463,12 +463,12 @@ public class AutoAuctionFlip {
                         Float margin = Float.parseFloat(SkyblockFeatures.config.autoAuctionFlipMargin);
                         Float minVolume = Float.parseFloat(SkyblockFeatures.config.autoAuctionFlipMinVolume);
                         Float minPercent = Float.parseFloat(SkyblockFeatures.config.autoAuctionFlipMinPercent);
-                        Integer estimatedPrice = ItemUtil.getEstimatedItemValue(extraAttributes);
+                        Integer estimatedPrice = ItemUtils.getEstimatedItemValue(extraAttributes);
                         Integer valueOfTheItem = (int) (SkyblockFeatures.config.autoFlipAddEnchAndStar?estimatedPrice:lowestBinPrice);
                         JsonObject auctionData = PricingData.getItemAuctionInfo(id);
                         String auctionId = itemData.get("uuid").toString().replaceAll("\"","");
-                        Double enchantValue = ItemUtil.getEnchantsWorth(extraAttributes);;
-                        Double starValue = ItemUtil.getStarCost(extraAttributes);
+                        Double enchantValue = ItemUtils.getEnchantsWorth(extraAttributes);;
+                        Double starValue = ItemUtils.getStarCost(extraAttributes);
                         boolean inBlacklist = false;
                         int volume = 20;
 
@@ -518,7 +518,7 @@ public class AutoAuctionFlip {
                             continue;
                         }
                         if(percentage<minPercent) {
-                            if(debugLogging) System.out.println(name+" Auction Removed Because MinPerc Filter Perc:"+percentage+" "+NumberUtil.nf.format(binPrice)+" "+NumberUtil.nf.format(valueOfTheItem)+" "+auctionId); 
+                            if(debugLogging) System.out.println(name+" Auction Removed Because MinPerc Filter Perc:"+percentage+" "+Utils.nf.format(binPrice)+" "+Utils.nf.format(valueOfTheItem)+" "+auctionId); 
                             continue;
                         }
                         if(profit<margin) {
@@ -550,11 +550,11 @@ public class AutoAuctionFlip {
                         
                         if(auctionData!=null) {
                             Auction auction = new Auction(auctionId, itemData, profit);
-                            String iprofit = NumberUtil.formatDbl(profit.longValue());
-                            String oPrice = NumberUtil.formatDbl(binPrice.longValue());
-                            String itemValue = NumberUtil.formatDbl(valueOfTheItem.longValue());
-                            String ePrice = NumberUtil.formatDbl(enchantValue.longValue());
-                            String sPrice = NumberUtil.formatDbl(starValue.longValue());
+                            String iprofit = Utils.formatNumber(profit.longValue());
+                            String oPrice = Utils.formatNumber(binPrice.longValue());
+                            String itemValue = Utils.formatNumber(valueOfTheItem.longValue());
+                            String ePrice = Utils.formatNumber(enchantValue.longValue());
+                            String sPrice = Utils.formatNumber(starValue.longValue());
                             Boolean dupe = false;
                             for(Auction auc:auctionFlips) if(auc.auctionId==auctionId) dupe = true;
                             if(dupe) continue;

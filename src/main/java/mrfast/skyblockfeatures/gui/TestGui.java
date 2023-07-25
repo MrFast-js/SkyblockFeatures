@@ -77,9 +77,6 @@ public class TestGui extends WindowScreen {
     Color editGuiUnhovered = SkyblockFeatures.config.editGuiUnhovered;
     Color editGuiHovered = SkyblockFeatures.config.editGuiHovered;
     
-    // #006DF0
-    // #B200F0
-    // #F01900
     Color clear = new Color(0,0,0,0);
     public TestGui(Boolean doAnimation) {
         super(ElementaVersion.V2);

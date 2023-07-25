@@ -14,9 +14,9 @@ import mrfast.skyblockfeatures.events.CheckRenderEntityEvent;
 import mrfast.skyblockfeatures.events.GuiContainerEvent;
 import mrfast.skyblockfeatures.events.GuiContainerEvent.TitleDrawnEvent;
 import mrfast.skyblockfeatures.events.PacketEvent;
-import mrfast.skyblockfeatures.utils.APIUtil;
-import mrfast.skyblockfeatures.utils.ItemUtil;
-import mrfast.skyblockfeatures.utils.NumberUtil;
+import mrfast.skyblockfeatures.utils.APIUtils;
+import mrfast.skyblockfeatures.utils.ItemUtils;
+
 import mrfast.skyblockfeatures.utils.RenderUtil;
 import mrfast.skyblockfeatures.core.SkyblockInfo;
 import mrfast.skyblockfeatures.utils.Utils;
@@ -136,13 +136,13 @@ public class MiscFeatures {
         try {
             if(Utils.GetMC().thePlayer.getHeldItem()!=null && SkyblockFeatures.config.teleportDestination) {
                 ItemStack item = Utils.GetMC().thePlayer.getHeldItem();
-                String id = ItemUtil.getSkyBlockItemID(item);
+                String id = ItemUtils.getSkyBlockItemID(item);
                 if(id!=null)
                 if(id.contains("ASPECT_OF_THE_END") || id.contains("ASPECT_OF_THE_VOID")) {
                     Double distance = 8.0;
                     Double etherDistance = 8.0;
                     Boolean hasEtherwarp = false;
-                    for(String line:ItemUtil.getItemLore(item)) {
+                    for(String line:ItemUtils.getItemLore(item)) {
                         line = Utils.cleanColor(line);
                         if(line.contains("Teleport")) {
                             try {
@@ -254,16 +254,16 @@ public class MiscFeatures {
                     
                     // Get UUID for Hypixel API requests
                     String username = chestName.substring(0, chestName.indexOf("'"));
-                    String uuid = APIUtil.getUUID(username);
+                    String uuid = APIUtils.getUUID(username);
                     // Find stats of latest profile
-                    String latestProfile = APIUtil.getLatestProfileID(uuid, key);
+                    String latestProfile = APIUtils.getLatestProfileID(uuid, key);
                     if (latestProfile == null) {
                         apiOff = true;
                         return;
                     };
                     
                     String profileURL = "https://sky.shiiyu.moe/api/v2/profile/"+username;
-                    JsonObject profileResponse = APIUtil.getJSONResponse(profileURL);
+                    JsonObject profileResponse = APIUtils.getJSONResponse(profileURL);
                     try {
                         profileResponse = profileResponse.get("profiles").getAsJsonObject();
                         JsonObject a = profileResponse.get(latestProfile).getAsJsonObject().get("data").getAsJsonObject();
@@ -284,9 +284,9 @@ public class MiscFeatures {
             }
 
             if(gotNetworth) {
-                lines.add(ChatFormatting.WHITE+"Networth: "+ChatFormatting.GOLD+NumberUtil.nf.format(Math.floor(networth)));
+                lines.add(ChatFormatting.WHITE+"Networth: "+ChatFormatting.GOLD+Utils.nf.format(Math.floor(networth)));
                 lines.add(ChatFormatting.WHITE+"Skill Avg: "+ChatFormatting.GOLD+averageSkill);
-                lines.add(ChatFormatting.WHITE+"Senither Weight: "+ChatFormatting.GOLD+NumberUtil.nf.format(senitherWeight));
+                lines.add(ChatFormatting.WHITE+"Senither Weight: "+ChatFormatting.GOLD+Utils.nf.format(senitherWeight));
                 lines.add(ChatFormatting.WHITE+"Discord: "+ChatFormatting.BLUE+discord);
             } else if(!apiOff) {
                 lines.add(ChatFormatting.WHITE+"Networth: "+ChatFormatting.RED+"Loading.");

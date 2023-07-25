@@ -15,7 +15,7 @@ import mrfast.skyblockfeatures.SkyblockFeatures;
 import mrfast.skyblockfeatures.events.GuiContainerEvent;
 import mrfast.skyblockfeatures.gui.components.Point;
 import mrfast.skyblockfeatures.gui.components.UIElement;
-import mrfast.skyblockfeatures.utils.ItemUtil;
+import mrfast.skyblockfeatures.utils.ItemUtils;
 import mrfast.skyblockfeatures.utils.RenderUtil;
 import mrfast.skyblockfeatures.utils.Utils;
 import net.minecraft.block.BlockSkull;
@@ -200,7 +200,7 @@ public class DungeonsFeatures {
         ItemStack stack = event.slot.getStack();
         int x = event.slot.xDisplayPosition;
         int y = event.slot.yDisplayPosition;
-        String n = ItemUtil.getSkyBlockItemID(stack);
+        String n = ItemUtils.getSkyBlockItemID(stack);
         String i = Utils.cleanColor(stack.getDisplayName());
 
         if(SkyblockFeatures.config.highlightTrash && n!=null && i!=null) {

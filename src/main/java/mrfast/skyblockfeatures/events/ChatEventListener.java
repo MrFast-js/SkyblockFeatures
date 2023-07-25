@@ -17,8 +17,8 @@ import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import mrfast.skyblockfeatures.SkyblockFeatures;
-import mrfast.skyblockfeatures.utils.APIUtil;
-import mrfast.skyblockfeatures.utils.ItemUtil;
+import mrfast.skyblockfeatures.utils.APIUtils;
+import mrfast.skyblockfeatures.utils.ItemUtils;
 import mrfast.skyblockfeatures.utils.Utils;
 
 import java.io.ByteArrayInputStream;
@@ -114,14 +114,14 @@ public class ChatEventListener {
                     String username;
                     String uuid;
                     username = args[3];
-                    uuid = APIUtil.getUUID(username);
+                    uuid = APIUtils.getUUID(username);
                     
                     // Find stats of latest profile
-                    String latestProfile = APIUtil.getLatestProfileID(uuid, key);
+                    String latestProfile = APIUtils.getLatestProfileID(uuid, key);
                     if (latestProfile == null) return;
         
                     String profileURL = "https://api.hypixel.net/skyblock/profile?profile=" + latestProfile;
-                    JsonObject profileResponse = APIUtil.getJSONResponse(profileURL);
+                    JsonObject profileResponse = APIUtils.getJSONResponse(profileURL);
                     if (!profileResponse.get("success").getAsBoolean()) {
                         String reason = profileResponse.get("cause").getAsString();
                         Utils.SendMessage(EnumChatFormatting.RED + "Failed with reason: " + reason);
@@ -130,7 +130,7 @@ public class ChatEventListener {
         
                     String playerURL = "https://api.hypixel.net/player?uuid=" + uuid;
                     System.out.println("Fetching player data...");
-                    JsonObject playerResponse = APIUtil.getJSONResponse(playerURL);
+                    JsonObject playerResponse = APIUtils.getJSONResponse(playerURL);
                     if(!playerResponse.get("success").getAsBoolean()){
                         String reason = profileResponse.get("cause").getAsString();
                         Utils.SendMessage(EnumChatFormatting.RED + "Failed with reason: " + reason);
@@ -167,8 +167,8 @@ public class ChatEventListener {
                                 NBTTagCompound display = item.getCompoundTag("tag").getCompoundTag("display");
                                 String itemName = item.getCompoundTag("tag").getCompoundTag("display").getString("Name");
                                 String itemLore = "";
-                                if (display.hasKey("Lore", ItemUtil.NBT_LIST)) {
-                                    NBTTagList lore = display.getTagList("Lore", ItemUtil.NBT_STRING);
+                                if (display.hasKey("Lore", ItemUtils.NBT_LIST)) {
+                                    NBTTagList lore = display.getTagList("Lore", ItemUtils.NBT_STRING);
                     
                                     List<String> loreAsList = new ArrayList<>();
                                     for (int lineNumber = 0; lineNumber < lore.tagCount(); lineNumber++) {
@@ -206,8 +206,8 @@ public class ChatEventListener {
                             NBTTagCompound display = armourPiece.getCompoundTag("tag").getCompoundTag("display");
                             String armourPieceName = armourPiece.getCompoundTag("tag").getCompoundTag("display").getString("Name");
                             String armourPieceLore = "";
-                            if (display.hasKey("Lore", ItemUtil.NBT_LIST)) {
-                                NBTTagList lore = display.getTagList("Lore", ItemUtil.NBT_STRING);
+                            if (display.hasKey("Lore", ItemUtils.NBT_LIST)) {
+                                NBTTagList lore = display.getTagList("Lore", ItemUtils.NBT_STRING);
                 
                                 List<String> loreAsList = new ArrayList<>();
                                 for (int lineNumber = 0; lineNumber < lore.tagCount(); lineNumber++) {

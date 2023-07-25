@@ -6,8 +6,8 @@ import java.util.HashMap;
 import mrfast.skyblockfeatures.SkyblockFeatures;
 import mrfast.skyblockfeatures.events.GuiContainerEvent.TitleDrawnEvent;
 import mrfast.skyblockfeatures.features.dungeons.Reparty;
-import mrfast.skyblockfeatures.utils.ItemUtil;
-import mrfast.skyblockfeatures.utils.NumberUtil;
+import mrfast.skyblockfeatures.utils.ItemUtils;
+
 import mrfast.skyblockfeatures.utils.Utils;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.inventory.Slot;
@@ -25,7 +25,7 @@ public class CollectionOverlay {
             ItemStack itemStack = slot.getStack();
             if(itemStack==null) continue;
             boolean nextLine = false;
-            for (String line : ItemUtil.getItemLore(itemStack)) {
+            for (String line : ItemUtils.getItemLore(itemStack)) {
                 if(line.contains("Co-op Contributions")) {
                     nextLine = true;
                     continue;

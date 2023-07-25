@@ -9,8 +9,8 @@ import mrfast.skyblockfeatures.core.PricingData;
 import mrfast.skyblockfeatures.events.SecondPassedEvent;
 import mrfast.skyblockfeatures.events.GuiContainerEvent.TitleDrawnEvent;
 import mrfast.skyblockfeatures.gui.GuiManager;
-import mrfast.skyblockfeatures.utils.ItemUtil;
-import mrfast.skyblockfeatures.utils.NumberUtil;
+import mrfast.skyblockfeatures.utils.ItemUtils;
+
 import mrfast.skyblockfeatures.utils.Utils;
 import net.minecraft.client.gui.inventory.GuiChest;
 import net.minecraft.inventory.ContainerChest;
@@ -69,9 +69,9 @@ public class ComposterOverlay {
                 Double fuelUsagePerHour = costReduction*compostPerHour*2000.0;
                 Double organicUsagePerHour = costReduction*compostPerHour*4000.0;
 
-                Integer currentFuelStorage = Integer.parseInt((Utils.cleanColor(ItemUtil.getItemLore(inv.getStackInSlot(7)).get(0).split("/")[0])).replaceAll("[^0-9]", ""));
+                Integer currentFuelStorage = Integer.parseInt((Utils.cleanColor(ItemUtils.getItemLore(inv.getStackInSlot(7)).get(0).split("/")[0])).replaceAll("[^0-9]", ""));
                 int timeTillFuelRunOut = (int) ((currentFuelStorage/fuelUsagePerHour)*60.0*60.0);
-                Integer currentMatStorage = Integer.parseInt((Utils.cleanColor(ItemUtil.getItemLore(inv.getStackInSlot(1)).get(0).split("/")[0])).replaceAll("[^0-9]", ""));
+                Integer currentMatStorage = Integer.parseInt((Utils.cleanColor(ItemUtils.getItemLore(inv.getStackInSlot(1)).get(0).split("/")[0])).replaceAll("[^0-9]", ""));
                 int timeTillMatRunOut = (int) ((currentMatStorage/organicUsagePerHour)*60.0*60.0);
 
                 if(currentFuelStorage>2000 && currentMatStorage>4000) {
@@ -87,9 +87,9 @@ public class ComposterOverlay {
                 String timeTillMatGone = Utils.secondsToTime(timeTillMatRunOut);
 
                 String[] lines = {
-                    ChatFormatting.WHITE+"Profit Per Compost: "+ChatFormatting.GOLD+NumberUtil.nf.format(profitPerCompost.intValue()),
-                    ChatFormatting.WHITE+"Profit Per Refill: "+ChatFormatting.GOLD+NumberUtil.nf.format(profitPerRefill.intValue()),
-                    ChatFormatting.WHITE+"Profit Per Hour: "+ChatFormatting.GOLD+NumberUtil.nf.format(profitPerHour.intValue()),
+                    ChatFormatting.WHITE+"Profit Per Compost: "+ChatFormatting.GOLD+Utils.nf.format(profitPerCompost.intValue()),
+                    ChatFormatting.WHITE+"Profit Per Refill: "+ChatFormatting.GOLD+Utils.nf.format(profitPerRefill.intValue()),
+                    ChatFormatting.WHITE+"Profit Per Hour: "+ChatFormatting.GOLD+Utils.nf.format(profitPerHour.intValue()),
                     ChatFormatting.WHITE+"Time Per Compost: "+ChatFormatting.GREEN+time,
                     ChatFormatting.WHITE+"Matter Runs Out: "+ChatFormatting.YELLOW+timeTillMatGone,
                     ChatFormatting.WHITE+"Fuel Runs Out: "+ChatFormatting.YELLOW+timeTillFuelGone
@@ -119,7 +119,7 @@ public class ComposterOverlay {
     }
 
     public double getTier(ItemStack stack) {
-        List<String> lore = ItemUtil.getItemLore(stack);
+        List<String> lore = ItemUtils.getItemLore(stack);
         Integer nextTier = 0;
         for(String line:lore) {
             line = Utils.cleanColor(line);

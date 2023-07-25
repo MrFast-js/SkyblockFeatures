@@ -6,7 +6,7 @@ import mrfast.skyblockfeatures.SkyblockFeatures;
 
 import mrfast.skyblockfeatures.gui.components.UIElement;
 import mrfast.skyblockfeatures.events.SecondPassedEvent;
-import mrfast.skyblockfeatures.utils.NumberUtil;
+
 import mrfast.skyblockfeatures.utils.Utils;
 
 import net.minecraft.client.Minecraft;
@@ -86,15 +86,15 @@ public class PowderTracker {
         @Override
         public void drawElement() {
             if (this.getToggled() && Minecraft.getMinecraft().thePlayer != null && mc.theWorld != null && !hidden && totalSeconds>0) {
-                String gemPowderPerHour = NumberUtil.nf.format(Math.floor((3600/totalSeconds)*gemstonePowderGained));
-                String mithrilPowderPerHour = NumberUtil.nf.format(Math.floor((3600/totalSeconds)*mithrilPowderGained));
+                String gemPowderPerHour = Utils.nf.format(Math.floor((3600/totalSeconds)*gemstonePowderGained));
+                String mithrilPowderPerHour = Utils.nf.format(Math.floor((3600/totalSeconds)*mithrilPowderGained));
 
                 String[] lines = {
                     ChatFormatting.BLUE+"Time Elapsed: §r"+Utils.secondsToTime(totalSeconds),
-                    ChatFormatting.AQUA+"Treasure Chest Found: §r"+NumberUtil.nf.format(treasureChestsFound),
-                    ChatFormatting.LIGHT_PURPLE+"Gemstone Powder: §r"+NumberUtil.nf.format(gemstonePowderGained),
+                    ChatFormatting.AQUA+"Treasure Chest Found: §r"+Utils.nf.format(treasureChestsFound),
+                    ChatFormatting.LIGHT_PURPLE+"Gemstone Powder: §r"+Utils.nf.format(gemstonePowderGained),
                     ChatFormatting.LIGHT_PURPLE+"Gemstone Powder Per Hour: §r"+gemPowderPerHour,
-                    ChatFormatting.DARK_GREEN+"Mithril Powder: §r"+NumberUtil.nf.format(mithrilPowderGained),
+                    ChatFormatting.DARK_GREEN+"Mithril Powder: §r"+Utils.nf.format(mithrilPowderGained),
                     ChatFormatting.DARK_GREEN+"Gemstone Powder Per Hour: §r"+mithrilPowderPerHour,
                 };
                 int lineCount = 0;
@@ -107,14 +107,14 @@ public class PowderTracker {
         @Override
         public void drawElementExample() {
             if(mc.thePlayer == null || !Utils.inSkyblock) return;
-            String gemPowderPerHour = NumberUtil.nf.format(Math.floor((3600/345)*10203));
-            String mithrilPowderPerHour = NumberUtil.nf.format(Math.floor((3600/345)*12932));
+            String gemPowderPerHour = Utils.nf.format(Math.floor((3600/345)*10203));
+            String mithrilPowderPerHour = Utils.nf.format(Math.floor((3600/345)*12932));
             String[] lines = {
                 ChatFormatting.BLUE+"Time Elapsed: §r"+Utils.secondsToTime(378),
-                ChatFormatting.AQUA+"Treasure Chest Found: §r"+NumberUtil.nf.format(20),
-                ChatFormatting.LIGHT_PURPLE+"Gemstone Powder: §r"+NumberUtil.nf.format(10203),
+                ChatFormatting.AQUA+"Treasure Chest Found: §r"+Utils.nf.format(20),
+                ChatFormatting.LIGHT_PURPLE+"Gemstone Powder: §r"+Utils.nf.format(10203),
                 ChatFormatting.LIGHT_PURPLE+"Gemstone Powder/Hour: §r"+gemPowderPerHour,
-                ChatFormatting.DARK_GREEN+"Mithril Powder: §r"+NumberUtil.nf.format(12932),
+                ChatFormatting.DARK_GREEN+"Mithril Powder: §r"+Utils.nf.format(12932),
                 ChatFormatting.DARK_GREEN+"Mithril Powder/Hour: §r"+mithrilPowderPerHour,
             };
             int lineCount = 0;

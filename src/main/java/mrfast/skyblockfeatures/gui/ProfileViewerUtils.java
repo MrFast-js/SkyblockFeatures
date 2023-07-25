@@ -2,7 +2,6 @@ package mrfast.skyblockfeatures.gui;
 
 import java.awt.Color;
 import java.awt.image.BufferedImage;
-import java.nio.charset.StandardCharsets;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -29,7 +28,6 @@ import gg.essential.elementa.utils.Vector2f;
 import mrfast.skyblockfeatures.gui.ProfileViewerGui.SkillInfo;
 import mrfast.skyblockfeatures.gui.ProfileViewerGui.hotmUpgrade;
 import mrfast.skyblockfeatures.gui.components.ItemStackComponent;
-import mrfast.skyblockfeatures.utils.NumberUtil;
 import mrfast.skyblockfeatures.utils.Utils;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -53,7 +51,7 @@ public class ProfileViewerUtils {
         double percent = Math.round((output.currentXp.doubleValue()/output.totalXp.doubleValue())*10000d)/100d;
         output.hover = new ArrayList<>(Arrays.asList(
             ChatFormatting.GREEN+skillName,
-            ChatFormatting.GRAY+"Progress: "+ChatFormatting.YELLOW+""+nf.format(output.currentXp)+""+ChatFormatting.GOLD+"/"+ChatFormatting.YELLOW+""+NumberUtil.formatDbl(output.totalXp)+" "+ChatFormatting.GRAY+"("+percent+"%)",
+            ChatFormatting.GRAY+"Progress: "+ChatFormatting.YELLOW+""+nf.format(output.currentXp)+""+ChatFormatting.GOLD+"/"+ChatFormatting.YELLOW+""+Utils.formatNumber(output.totalXp)+" "+ChatFormatting.GRAY+"("+percent+"%)",
             ChatFormatting.GRAY+"Total XP: "+ChatFormatting.YELLOW+nf.format(xp)
         ));
         System.out.println(skillName+" "+output.level+" "+output.currentXp+" "+output.totalXp);

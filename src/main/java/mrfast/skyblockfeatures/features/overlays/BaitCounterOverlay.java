@@ -18,8 +18,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
 import mrfast.skyblockfeatures.events.SecondPassedEvent;
-import mrfast.skyblockfeatures.utils.APIUtil;
-import mrfast.skyblockfeatures.utils.NumberUtil;
+import mrfast.skyblockfeatures.utils.APIUtils;
+
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import mrfast.skyblockfeatures.gui.components.Point;
 public class BaitCounterOverlay {
@@ -46,13 +46,13 @@ public class BaitCounterOverlay {
                 if (key.equals("")) return;
                 
                 // Get UUID for Hypixel API requests
-                String uuid = APIUtil.getUUID(Utils.GetMC().thePlayer.getName());;
-                String latestProfile = APIUtil.getLatestProfileID(uuid, key);
+                String uuid = APIUtils.getUUID(Utils.GetMC().thePlayer.getName());;
+                String latestProfile = APIUtils.getLatestProfileID(uuid, key);
                 if (latestProfile == null) return;
 
                 String profileURL = "https://api.hypixel.net/skyblock/profile?profile=" + latestProfile;
                 System.out.println("Fetching profile...");
-                JsonObject profileResponse = APIUtil.getJSONResponse(profileURL);
+                JsonObject profileResponse = APIUtils.getJSONResponse(profileURL);
                 if(profileResponse.toString().equals("{}")) {
                     Utils.SendMessage(EnumChatFormatting.RED + "Hypixel API is having problems!");
                     return;
@@ -96,7 +96,7 @@ public class BaitCounterOverlay {
                 Utils.drawTextWithStyle3(" "+ChatFormatting.RED+"Loading..", 0, index*(Utils.GetMC().fontRendererObj.FONT_HEIGHT+1)+10);
             }
             for(String baitName:typesOfBait.keySet()) {
-                Utils.drawTextWithStyle3(" "+baitName+ChatFormatting.DARK_GRAY+" x"+NumberUtil.nf.format(typesOfBait.get(baitName)), 0, index*(Utils.GetMC().fontRendererObj.FONT_HEIGHT+1)+10);
+                Utils.drawTextWithStyle3(" "+baitName+ChatFormatting.DARK_GRAY+" x"+Utils.nf.format(typesOfBait.get(baitName)), 0, index*(Utils.GetMC().fontRendererObj.FONT_HEIGHT+1)+10);
                 index++;
             }
         }
