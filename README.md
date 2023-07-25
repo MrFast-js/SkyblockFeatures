@@ -45,14 +45,7 @@
         <li>Crystal Hollows Treasure Chest Solver</li>
         <li>3 Weirdo Solver</li>
         <li>Blaze Solver</li>
-        <li>Ice Fill Solver</li>
-        <li>Silverfish Ice Solver</li>
-        <li>Boulder Solver</li>
-        <li>Tic Tac Toe Solver</li>
-        <li>Quiz Solver</li>
-        <li>Waterboard Solver</li>
         <li>Teleport Pad Solver</li>
-        <li>Puzzler Solver</li>
         <li>Chronomotron & Ultrasequencer Solver</li>
     </ul>
 </details>
@@ -171,5 +164,5 @@
 This project is licensed under MIT License, see [LICENSE](LICENSE) for more details.
 
 ## Credits:
-This mod would not be possible without the following open source repositories, This mod was orignally based off of Skytils 0.x<br>
+This mod would not be possible without the following open source repositories
 [NEU](https://github.com/NotEnoughUpdates/NotEnoughUpdates), [Skytils 0.x](https://github.com/Skytils/SkytilsMod/tree/0.x), [SBA](https://github.com/BiscuitDevelopment/SkyblockAddons)
