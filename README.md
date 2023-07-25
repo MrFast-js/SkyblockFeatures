@@ -45,14 +45,7 @@
         <li>Crystal Hollows Treasure Chest Solver</li>
         <li>3 Weirdo Solver</li>
         <li>Blaze Solver</li>
-        <li>Ice Fill Solver</li>
-        <li>Silverfish Ice Solver</li>
-        <li>Boulder Solver</li>
-        <li>Tic Tac Toe Solver</li>
-        <li>Quiz Solver</li>
-        <li>Waterboard Solver</li>
         <li>Teleport Pad Solver</li>
-        <li>Puzzler Solver</li>
         <li>Chronomotron & Ultrasequencer Solver</li>
     </ul>
 </details>
