@@ -1,0 +1,105 @@
+// Java 8, Gradle 6.9
+plugins {
+    id "net.minecraftforge.gradle.forge" version "FG_2.1-SNAPSHOT"
+    id "org.spongepowered.mixin" version "d5f9873d60"
+    id "java"
+}
+
+apply plugin: 'net.minecraftforge.gradle.forge'
+apply plugin: 'org.spongepowered.mixin'
+apply plugin: 'java'
+
+version = "1.2.6-BETA"
+group = "mrfast.skyblockfeatures"
+archivesBaseName = "Skyblock-Features"
+
+compileJava.options.encoding = 'UTF-8'
+
+sourceSets {
+    main {
+        output.resourcesDir = java.outputDir
+    }
+}
+
+minecraft {
+    version = "1.8.9-11.15.1.2318-1.8.9"
+    runDir = "run"
+    mappings = "stable_22"
+    makeObfSourceJar = false
+    clientRunArgs += '--tweakClass gg.essential.loader.stage0.EssentialSetupTweaker'
+    clientRunArgs += '--mixin mixins.skyblockfeatures.json'
+}
+
+repositories {
+    mavenCentral()
+    maven { url "https://repo.spongepowered.org/repository/maven-public/" }
+    maven { url "https://repo.sk1er.club/repository/maven-public" }
+    maven { url "https://jitpack.io/" }
+}
+
+
+configurations {
+    packageLib
+    implementation.extendsFrom(packageLib)
+}
+
+
+dependencies {
+    packageLib "gg.essential:loader-launchwrapper:1.1.1"
+    implementation "gg.essential:essential-1.8.9-forge:11520+gf8b441d20"
+
+    implementation "org.spongepowered:mixin:0.7.11-SNAPSHOT"
+    packageLib("org.spongepowered:mixin:0.7.11-SNAPSHOT") 
+    annotationProcessor("org.spongepowered:mixin:0.7.11-SNAPSHOT")
+}
+
+mixin {
+    add sourceSets.main, "mixins.skyblockfeatures.refmap.json"
+}
+
+jar {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    manifest.attributes(
+            "ForceLoadAsMod": true,
+            "MixinConfigs": "mixins.skyblockfeatures.json",
+            "FMLAT": "mrfast_at.cfg",
+            "ModSide": "CLIENT",
+            "TweakClass": "gg.essential.loader.stage0.EssentialSetupTweaker",
+            "TweakOrder": "0"
+    )
+    from {
+        configurations.packageLib.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+    destinationDir = file("C:/Users/jedij/AppData/Roaming/.minecraft/mods")
+}
+
+
+processResources
+{
+    // this will ensure that this task is redone when the versions change.
+    inputs.property "version", project.version
+    inputs.property "mcversion", project.minecraft.version
+
+    // replace stuff in mcmod.info, nothing else
+    from(sourceSets.main.resources.srcDirs) {
+        include 'mcmod.info'
+
+        // replace version and mcversion
+        expand 'version':project.version, 'mcversion':project.minecraft.version
+    }
+    // copy everything else, thats not the mcmod.info
+    from(sourceSets.main.resources.srcDirs) {
+        exclude 'mcmod.info'
+    }
+}
+
+println 'Attempting to compile SBF at \u001B[33m'+(new Date())+"\u001B[0m"
+
+// Runs a script once built to crash my game so i can quickly restart with updated version
+task finalize {
+    doLast {
+        println 'Mod Compiled at \u001B[33m'+(new Date())+"\u001B[0m"
+        Runtime.getRuntime().exec("cmd /c start \"\" finish.bat");
+    }
+}
+build.finalizedBy(finalize)

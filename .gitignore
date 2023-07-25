@@ -1,0 +1,13 @@
+# you can skip this first one if it is not already excluded by prior patterns
+
+.gradle/
+
+libs/
+
+bin/
+
+build/
+
+.vscode/
+
+finish.bat

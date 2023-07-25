@@ -1,0 +1,16 @@
+[
+  {
+    "modid": "skyblockfeatures",
+    "name": "Skyblock Features",
+    "description": "A Hypixel Skyblock mod that adds unique features that other mods dont have. '/sf' for help",
+    "version": "${version}",
+    "mcversion": "${mcversion}",
+    "url": "https://github.com/MrFast-js/SkyblockFeatures",
+    "updateUrl": "https://github.com/MrFast-js/SkyblockFeatures/releases/latest",
+    "authorList": ["MrFast"],
+    "credits": "",
+    "logoFile": "logo.png",
+    "screenshots": [],
+    "dependencies": []
+  }
+]
