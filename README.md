@@ -20,7 +20,10 @@
     </a>
 </div>
 
-*B simple 1.8.9 Forge Hypixel Skyblock mod that adds features that are not commonly found in other mods but are very useful*
+*A simple 1.8.9 Forge Hypixel Skyblock mod that adds features that are not commonly found in other mods but are very useful*
+
+<br><span style='color:green'>Note this mod was orignally based off a [Skytils Fork](https://github.com/Skytils/SkytilsMod/tree/0.x) (im legally required to say this)</span>
+
 
 **For Beta Releases, Suggestions, and Support join the discord! https://discord.gg/MDTEAjbNw8**
 **Gui Scale Normal Reccomended**
