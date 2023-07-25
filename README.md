@@ -21,7 +21,7 @@
 </div>
 
 *E Simple 1.8.9 Forge Hypixel Skyblock mod that adds features that are not commonly found in other mods but are very useful*
-<!-- Changes have happened -->
+<!-- But i want this to be added -->
 **For Beta Releases, Suggestions, and Support join the discord! https://discord.gg/MDTEAjbNw8**
 **Gui Scale Normal Reccomended**
 
