@@ -155,7 +155,7 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 
-@Mod(modid = SkyblockFeatures.MODID, name = SkyblockFeatures.MOD_NAME, version = "1.2.4", acceptedMinecraftVersions = "[1.8.9]", clientSideOnly = true)
+@Mod(modid = SkyblockFeatures.MODID, name = SkyblockFeatures.MOD_NAME, version = "1.2.6", acceptedMinecraftVersions = "[1.8.9]", clientSideOnly = true)
 public class SkyblockFeatures {
     public static final String MODID = "skyblockfeatures";
     public static final String MOD_NAME = "skyblockfeatures";
