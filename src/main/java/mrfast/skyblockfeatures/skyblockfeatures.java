@@ -159,8 +159,7 @@ import net.minecraftforge.fml.common.gameevent.TickEvent;
 public class SkyblockFeatures {
     public static final String MODID = "skyblockfeatures";
     public static final String MOD_NAME = "skyblockfeatures";
-    public static String newAPIKey = "5c47ad45-09e6-4267-8a6a-fe1bcdcf8ced";
-    public static String oldAPIKey = "a31515ff-cf53-4f25-8f7c-e0fa3f12a530";
+    // Skyblock Features Produciton API key
 
     public static String VERSION = "Loading";
     public static final Minecraft mc = Minecraft.getMinecraft();
@@ -305,10 +304,7 @@ public class SkyblockFeatures {
                 break;
             }
         }
-        // Swap over old API keys to new application based ones
-        if(SkyblockFeatures.config.apiKey!=oldAPIKey) {
-            SkyblockFeatures.config.apiKey = oldAPIKey;
-        }
+
         SkyblockFeatures.config.timeStartedUp++;
         System.out.println("You have started Skyblock Features up "+SkyblockFeatures.config.timeStartedUp+" times!");
     }
