@@ -160,7 +160,7 @@ public class SkyblockFeatures {
     public static final String MODID = "skyblockfeatures";
     public static final String MOD_NAME = "skyblockfeatures";
     // Skyblock Features Produciton API key
-
+    public static String API_KEY = "68f8f3dd-bb03-4ee8-9135-8f6ce023b88a";
     public static String VERSION = "Loading";
     public static final Minecraft mc = Minecraft.getMinecraft();
 
@@ -304,6 +304,7 @@ public class SkyblockFeatures {
                 break;
             }
         }
+        if(config.apiKey!=API_KEY) config.apiKey = API_KEY;
 
         SkyblockFeatures.config.timeStartedUp++;
         System.out.println("You have started Skyblock Features up "+SkyblockFeatures.config.timeStartedUp+" times!");
