@@ -155,7 +155,7 @@ public class FishingHelper {
         if(event.packet instanceof S2APacketParticles) {
             S2APacketParticles packet = (S2APacketParticles) event.packet;
             EnumParticleTypes type = packet.getParticleType();
-            if(SkyblockInfo.getInstance().location.contains("Volcano")) {
+            if(SkyblockInfo.getInstance().location.contains("olcano")) {
                 Entity hook = null;
                 for(Entity entity:Utils.GetMC().theWorld.loadedEntityList) {
                     if(entity instanceof EntityFishHook) {
