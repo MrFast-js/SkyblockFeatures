@@ -371,7 +371,7 @@ public class Utils {
         GlStateManager.disableLighting();
 		RenderHelper.disableStandardItemLighting();
 		GlStateManager.disableTexture2D();
-		GlStateManager.disableBlend(); //disabled means no opacity
+		GlStateManager.enableBlend(); //disabled means no opacity
 		GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
         
 		Vector2f vec = new Vector2f(x2 - x1, y2 - y1);

@@ -199,11 +199,8 @@ public class MetalDetectorSolver {
         if(center == null) return;
         GlStateManager.disableDepth();
         if(bestPos != null) {
-            AxisAlignedBB aabb2 = new AxisAlignedBB(bestPos.xCoord+center.xCoord, bestPos.yCoord+center.yCoord, bestPos.zCoord+center.zCoord, bestPos.xCoord+center.xCoord, bestPos.yCoord+center.yCoord+100, bestPos.zCoord+center.zCoord);
-            RenderUtil.drawOutlinedFilledBoundingBox(aabb2, new Color(0x00FFFF), event.partialTicks);
-
-            AxisAlignedBB aabb = new AxisAlignedBB(bestPos.xCoord+center.xCoord-0.5, bestPos.yCoord+center.yCoord, bestPos.zCoord+center.zCoord-0.5, bestPos.xCoord+center.xCoord+0.5, bestPos.yCoord+center.yCoord+1, bestPos.zCoord+center.zCoord+0.5);
-            RenderUtil.drawOutlinedFilledBoundingBox(aabb, new Color(0x00FFFF), event.partialTicks);
+            BlockPos pos = new BlockPos(bestPos.xCoord+center.xCoord, bestPos.yCoord+center.yCoord, bestPos.zCoord+center.zCoord);
+            RenderUtil.drawWaypoint(pos, new Color(0x00FFFF),ChatFormatting.GOLD+"Treasure", event.partialTicks);
         }
         GlStateManager.enableDepth();
     }

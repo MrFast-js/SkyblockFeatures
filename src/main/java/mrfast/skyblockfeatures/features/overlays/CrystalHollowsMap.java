@@ -146,6 +146,7 @@ public class CrystalHollowsMap {
                         GlStateManager.popMatrix();
 
                         GlStateManager.pushMatrix();
+                        
                         for(int i=1;i<playerBreadcrumbs.size();i++) {
                             if(i<playerBreadcrumbs.size()-1) {
                                 Vector2d p1 = playerBreadcrumbs.get(i);

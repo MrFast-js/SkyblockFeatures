@@ -63,53 +63,56 @@ public class RenderUtil {
         double x = pos.getX() + 0.5 - Utils.GetMC().getRenderManager().viewerPosX;
         double y = pos.getY() - Utils.GetMC().getRenderManager().viewerPosY;
         double z = pos.getZ() + 0.5 - Utils.GetMC().getRenderManager().viewerPosZ;
-
+    
         FontRenderer fontRenderer = Minecraft.getMinecraft().fontRendererObj;
         double distance = Minecraft.getMinecraft().thePlayer.getDistanceSq(pos.getX(), pos.getY(), pos.getZ());
-        double scaleFactor = 0.005 * Math.sqrt(distance);  // Scale the text based on distance
-
+        double scaleFactor = 0.005 * Math.sqrt(distance); // Adjust the scaleFactor as needed for proper text size
+    
         GlStateManager.pushMatrix();
         GlStateManager.pushAttrib();
-        
+    
+        GlStateManager.disableLighting(); // Disable lighting temporarily
+        GlStateManager.disableDepth(); // Disable depth testing for the background rectangle
+        GlStateManager.disableTexture2D(); // Disable texture for the background rectangle
+        GlStateManager.enableBlend(); // Enable blending for transparency
+        GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+    
         GlStateManager.translate(x, y, z);
         GlStateManager.rotate(-Utils.GetMC().getRenderManager().playerViewY, 0.0F, 1.0F, 0.0F);
         GlStateManager.rotate(Utils.GetMC().getRenderManager().playerViewX, 1.0F, 0.0F, 0.0F);
         GlStateManager.scale(-scaleFactor, -scaleFactor, scaleFactor);
-        GlStateManager.disableLighting();
-        GlStateManager.enableBlend();
-        GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
-
-        // Render the dark background rectangle
+    
+        // Background rectangle
+        Tessellator tessellator = Tessellator.getInstance();
+        WorldRenderer worldrenderer = tessellator.getWorldRenderer();
         int stringWidth = fontRenderer.getStringWidth(text);
         int padding = 2;
         int rectWidth = stringWidth + padding * 2;
         int rectHeight = 8 + padding * 2;
-
-        Tessellator tessellator = Tessellator.getInstance();
-        WorldRenderer worldrenderer = tessellator.getWorldRenderer();
+        int alpha = 160;
         worldrenderer.begin(7, DefaultVertexFormats.POSITION_COLOR);
-        worldrenderer.pos(-rectWidth / 2, -1, 0).color(0.0F, 0.0F, 0.0F, 0.5F).endVertex();
-        worldrenderer.pos(-rectWidth / 2, rectHeight - 1, 0).color(0.0F, 0.0F, 0.0F, 0.5F).endVertex();
-        worldrenderer.pos(rectWidth / 2, rectHeight - 1, 0).color(0.0F, 0.0F, 0.0F, 0.5F).endVertex();
-        worldrenderer.pos(rectWidth / 2, -1, 0).color(0.0F, 0.0F, 0.0F, 0.5F).endVertex();
+        worldrenderer.pos(-rectWidth / 2, -1, 0).color(0, 0, 0, alpha).endVertex();
+        worldrenderer.pos(-rectWidth / 2, rectHeight - 1, 0).color(0, 0, 0, alpha).endVertex();
+        worldrenderer.pos(rectWidth / 2, rectHeight - 1, 0).color(0, 0, 0, alpha).endVertex();
+        worldrenderer.pos(rectWidth / 2, -1, 0).color(0, 0, 0, alpha).endVertex();
         tessellator.draw();
-
-        // Render the text
+    
         GlStateManager.enableTexture2D();
-        fontRenderer.drawString(text, -stringWidth / 2, padding, 0xFFFFFF);
-
-        // Render the distance
+        fontRenderer.drawString(text, -fontRenderer.getStringWidth(text) / 2, padding, 0xFFFFFF);
+    
         String distanceText = "(" + (int) Math.sqrt(distance) + "m)";
         int distanceWidth = fontRenderer.getStringWidth(distanceText);
         fontRenderer.drawString(distanceText, -(distanceWidth / 2), (int) (padding + rectHeight - 1), 0xFFFFFF);
-
-        GlStateManager.popAttrib();
-        GlStateManager.enableLighting();
+    
+        GlStateManager.enableDepth();
         GlStateManager.disableBlend();
-        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+    
+        GlStateManager.popAttrib();
         GlStateManager.popMatrix();
+    
+        GlStateManager.enableLighting(); // Restore lighting settings
     }
-
+    
 
 
     public static void draw3DString(Vec3 pos, String text, int color, float partialTicks) {
@@ -129,10 +132,10 @@ public class RenderUtil {
         GlStateManager.rotate(-renderManager.playerViewY, 0f, 1f, 0f);
         GlStateManager.rotate(renderManager.playerViewX, 1f, 0f, 0f);
         GlStateManager.scale(-f1, -f1, -f1);
-        GlStateManager.enableBlend();
+        // GlStateManager.enableBlend();
+                GlStateManager.disableBlend();
         GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
         mc.fontRendererObj.drawString(text, -width, 0, color);
-        GlStateManager.disableBlend();
         GlStateManager.popMatrix();
     }
 
