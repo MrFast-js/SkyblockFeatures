@@ -961,8 +961,8 @@ public class Config extends Vigilant {
             type = PropertyType.SWITCH,
             name = "Crimson Isles Map",
             description = "Show a map of the Crimson Isles",
-            category = "Miscellaneous",
-            subcategory = "Item Price Info"
+            category = "Quality of Life",
+            subcategory = "Crimson Isle"
     )
     public boolean crimsonsIslesMap = false;
 
@@ -1318,6 +1318,15 @@ public class Config extends Vigilant {
     public String autoAuctionFlipMinPercent = "5";
 
     @Property(
+            type = PropertyType.TEXT,
+            name = "Max Amount Of Auctions",
+            description = "The max amount of flips to be show to you, this will prevent lag. §3(Numbers Only)",
+            category = "§1§rAuction house",
+            subcategory = "BIN Flipper Settings"
+    )
+    public String autoAuctionFlipMaxAuc = "5";
+
+    @Property(
             type = PropertyType.SWITCH,
             name = "Make Purse Max Amount",
             description = "Make the amount of money you can spend on an auction equal to your purse.",
@@ -1423,7 +1432,7 @@ public class Config extends Vigilant {
             name = "Exotic Auctions Finder",
             description = "Shows you auctions of exotic, fairy, crystal, spooky dyed armor status.",
             category = "§1§rAuction house",
-            subcategory = "Exotic Finder Settings"
+            subcategory = "\u00A71\u00A7rExotic Finder Settings"
     )
     public boolean exoticAuctionFinder = false;
 
@@ -1432,7 +1441,7 @@ public class Config extends Vigilant {
             name = "Include Fairy Dyed",
             description = "Shows you auctions of fairy dyed armor status.",
             category = "§1§rAuction house",
-            subcategory = "Exotic Finder Settings"
+            subcategory = "\u00A71\u00A7rExotic Finder Settings"
     )
     public boolean fairyExotics = true;
 
@@ -1441,7 +1450,7 @@ public class Config extends Vigilant {
             name = "Include Bleached",
             description = "Shows you auctions of bleached armor status.",
             category = "§1§rAuction house",
-            subcategory = "Exotic Finder Settings"
+            subcategory = "\u00A71\u00A7rExotic Finder Settings"
     )
     public boolean bleachedExotics = true;
 
@@ -1450,7 +1459,7 @@ public class Config extends Vigilant {
             name = "Include Crystal Dyed",
             description = "Shows you auctions of crystal dyed armor status.",
             category = "§1§rAuction house",
-            subcategory = "Exotic Finder Settings"
+            subcategory = "\u00A71\u00A7rExotic Finder Settings"
     )
     public boolean crystalExotics = true;
 
@@ -1459,7 +1468,7 @@ public class Config extends Vigilant {
             name = "Include Spooky Dyed",
             description = "Shows you auctions of spooky armor status.",
             category = "§1§rAuction house",
-            subcategory = "Exotic Finder Settings"
+            subcategory = "\u00A71\u00A7rExotic Finder Settings"
     )
     public boolean spookyExotics = true;
 
@@ -1468,7 +1477,7 @@ public class Config extends Vigilant {
             name = "Include Exotics",
             description = "Shows you auctions of non orignal dyed armor status.",
             category = "§1§rAuction house",
-            subcategory = "Exotic Finder Settings"
+            subcategory = "\u00A71\u00A7rExotic Finder Settings"
     )
     public boolean exoticsExotics = true;
 

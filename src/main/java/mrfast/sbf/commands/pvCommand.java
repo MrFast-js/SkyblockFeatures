@@ -11,7 +11,7 @@ import gg.essential.api.utils.GuiUtil;
 import mrfast.sbf.SkyblockFeatures;
 import mrfast.sbf.gui.EditLocationsGui;
 import mrfast.sbf.gui.ProfileViewerGui;
-import mrfast.sbf.gui.TestGui;
+import mrfast.sbf.gui.ConfigGui;
 import mrfast.sbf.utils.APIUtils;
 import mrfast.sbf.utils.Utils;
 import net.minecraft.client.entity.EntityPlayerSP;

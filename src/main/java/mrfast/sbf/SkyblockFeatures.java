@@ -21,16 +21,11 @@ import org.apache.logging.log4j.Logger;
 import org.lwjgl.input.Keyboard;
 
 import gg.essential.api.EssentialAPI;
-import mrfast.sbf.commands.AccessoriesCommand;
-import mrfast.sbf.commands.ArmorCommand;
-import mrfast.sbf.commands.BankCommand;
 import mrfast.sbf.commands.DungeonsCommand;
 import mrfast.sbf.commands.FakePlayerCommand;
 import mrfast.sbf.commands.FlipsCommand;
 import mrfast.sbf.commands.GetkeyCommand;
 import mrfast.sbf.commands.InventoryCommand;
-import mrfast.sbf.commands.NetworthCommand;
-import mrfast.sbf.commands.PathTracerCommand;
 import mrfast.sbf.commands.RepartyCommand;
 import mrfast.sbf.commands.ShrugCommand;
 import mrfast.sbf.commands.SkyCommand;
@@ -316,20 +311,15 @@ public class SkyblockFeatures {
         commands.add(new getNbtCommand());
         commands.add(new SkyCommand());
         commands.add(new configCommand());
-        commands.add(new AccessoriesCommand());
         commands.add(new TerminalCommand());
         commands.add(new ShrugCommand());
         commands.add(new FlipsCommand());
-        commands.add(new BankCommand());
-        commands.add(new ArmorCommand());
         commands.add(new InventoryCommand());
         commands.add(new GetkeyCommand());
         commands.add(new DungeonsCommand());
         commands.add(new RepartyCommand());
         commands.add(new sidebarCommand());
-        commands.add(new PathTracerCommand());
         commands.add(new FakePlayerCommand());
-        commands.add(new NetworthCommand());
         commands.add(new pvCommand());
 
         for (ICommand command : commands) {

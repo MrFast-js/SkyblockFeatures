@@ -31,6 +31,7 @@ import gg.essential.elementa.UIComponent;
 import gg.essential.elementa.WindowScreen;
 import gg.essential.elementa.components.GradientComponent;
 import gg.essential.elementa.components.GradientComponent.GradientDirection;
+import gg.essential.elementa.components.inspector.Inspector;
 import gg.essential.elementa.components.ScrollComponent;
 import gg.essential.elementa.components.UIBlock;
 import gg.essential.elementa.components.UICircle;
@@ -54,7 +55,6 @@ import kotlin.Unit;
 import mrfast.sbf.SkyblockFeatures;
 import mrfast.sbf.commands.FakePlayerCommand;
 import mrfast.sbf.commands.InventoryCommand;
-import mrfast.sbf.commands.NetworthCommand;
 import mrfast.sbf.commands.InventoryCommand.Inventory;
 import mrfast.sbf.core.PricingData;
 import mrfast.sbf.gui.components.InventoryComponent;
@@ -358,7 +358,7 @@ public class ProfileViewerGui extends WindowScreen {
         }
 
         if(initial) {
-            // new Inspector(getWindow()).setChildOf(getWindow());
+            new Inspector(getWindow()).setChildOf(getWindow());
 
             drawSideButton(sideButtonContainer,"General",()->{
                 loadCategory("General");
@@ -494,8 +494,8 @@ public class ProfileViewerGui extends WindowScreen {
 
         UIComponent generalInfoContainer = new UIBlock(clear).setY(new SiblingConstraint(20f)).setX(new PixelConstraint(0f)).setWidth(new RelativeConstraint(1f)).setHeight(new RelativeConstraint(0.175f)).setChildOf(statsAreaContainer);
 
-        Integer Purse = 0;
-        Integer Bank = 0;
+        long Purse = 0;
+        long Bank = 0;
         JsonObject data = new JsonObject();
         data.add("data", ProfilePlayerResponse);
         JsonObject networthResponse = APIUtils.getNetworthResponse(data);
@@ -510,15 +510,15 @@ public class ProfileViewerGui extends WindowScreen {
             {
                 if(!networthJson.get("purse").isJsonNull()) Purse = networthJson.get("purse").getAsInt();
                 if(!networthJson.get("bank").isJsonNull()) Bank = networthJson.get("bank").getAsInt();
-                Integer Armor = 0; 
-                Integer Wardrobe = 0; 
-                Integer Inventory = 0;
-                Integer accessories = 0;
-                Integer enderchest = 0; 
-                Integer Sacks = 0;
-                Integer pets = 0;
-                Integer total = 0;
-                Integer irl = 0;
+                long Armor = 0; 
+                long Wardrobe = 0; 
+                long Inventory = 0;
+                long accessories = 0;
+                long enderchest = 0; 
+                long Sacks = 0;
+                long pets = 0;
+                long total = 0;
+                long irl = 0;
 
                 try {Armor = networthCategorys.get("armor").getAsJsonObject().get("total").getAsInt();} catch (NullPointerException e) {}
                 try {Wardrobe = networthCategorys.get("wardrobe_inventory").getAsJsonObject().get("total").getAsInt();} catch (NullPointerException e) {}
@@ -536,15 +536,15 @@ public class ProfileViewerGui extends WindowScreen {
                     EnumChatFormatting.GREEN + "Total Networth: " + EnumChatFormatting.GOLD + nf.format(total),
                     EnumChatFormatting.GREEN + "IRL Worth: " + EnumChatFormatting.DARK_GREEN+"$" + nf.format(irl),
                     "",
-                    EnumChatFormatting.GREEN + "Purse: " + EnumChatFormatting.GOLD + nf.format(Purse) + NetworthCommand.percentOf(Purse,total),
-                    EnumChatFormatting.GREEN + "Bank: " + EnumChatFormatting.GOLD + nf.format(Bank) + NetworthCommand.percentOf(Bank,total),
-                    EnumChatFormatting.GREEN + "Sacks: " + EnumChatFormatting.GOLD + nf.format(Sacks) + NetworthCommand.percentOf(Sacks,total),
-                    EnumChatFormatting.GREEN + "Armor: " + EnumChatFormatting.GOLD + nf.format(Armor) + NetworthCommand.percentOf(Armor,total),
-                    EnumChatFormatting.GREEN + "Wardrobe: " + EnumChatFormatting.GOLD + nf.format(Wardrobe) + NetworthCommand.percentOf(Wardrobe,total),
-                    EnumChatFormatting.GREEN + "Inventory: " + EnumChatFormatting.GOLD + nf.format(Inventory) + NetworthCommand.percentOf(Inventory,total),
-                    EnumChatFormatting.GREEN + "Enderchest: " + EnumChatFormatting.GOLD + nf.format(enderchest) + NetworthCommand.percentOf(enderchest,total),
-                    EnumChatFormatting.GREEN + "Accessories: " + EnumChatFormatting.GOLD + nf.format(accessories) + NetworthCommand.percentOf(accessories,total),
-                    EnumChatFormatting.GREEN + "Pets: " + EnumChatFormatting.GOLD + nf.format(pets)+NetworthCommand.percentOf(pets,total)
+                    EnumChatFormatting.GREEN + "Purse: " + EnumChatFormatting.GOLD + nf.format(Purse) + Utils.percentOf(Purse,total),
+                    EnumChatFormatting.GREEN + "Bank: " + EnumChatFormatting.GOLD + nf.format(Bank) + Utils.percentOf(Bank,total),
+                    EnumChatFormatting.GREEN + "Sacks: " + EnumChatFormatting.GOLD + nf.format(Sacks) + Utils.percentOf(Sacks,total),
+                    EnumChatFormatting.GREEN + "Armor: " + EnumChatFormatting.GOLD + nf.format(Armor) + Utils.percentOf(Armor,total),
+                    EnumChatFormatting.GREEN + "Wardrobe: " + EnumChatFormatting.GOLD + nf.format(Wardrobe) + Utils.percentOf(Wardrobe,total),
+                    EnumChatFormatting.GREEN + "Inventory: " + EnumChatFormatting.GOLD + nf.format(Inventory) + Utils.percentOf(Inventory,total),
+                    EnumChatFormatting.GREEN + "Enderchest: " + EnumChatFormatting.GOLD + nf.format(enderchest) + Utils.percentOf(enderchest,total),
+                    EnumChatFormatting.GREEN + "Accessories: " + EnumChatFormatting.GOLD + nf.format(accessories) + Utils.percentOf(accessories,total),
+                    EnumChatFormatting.GREEN + "Pets: " + EnumChatFormatting.GOLD + nf.format(pets)+Utils.percentOf(pets,total)
                 ));
             }
         }

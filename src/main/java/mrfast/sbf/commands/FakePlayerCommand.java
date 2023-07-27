@@ -37,6 +37,7 @@ public class FakePlayerCommand extends CommandBase {
 
     EntityOtherPlayerMP fakePlayer = null;
     static Minecraft mc = Utils.GetMC();
+    
 	@Override
 	public void processCommand(ICommandSender arg0, String[] args) throws CommandException {
         if(fakePlayer != null) {

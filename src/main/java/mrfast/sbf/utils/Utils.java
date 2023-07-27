@@ -75,6 +75,21 @@ public class Utils {
 
         return formattedNumber + steps[magnitudeIndex];
     }
+
+    public static String percentOf(Double num,Double OutOf) {
+		double lowPercent = num/OutOf;
+		double percent = Math.floor(lowPercent*10000)/100;
+		return ChatFormatting.GRAY+" ("+percent+"%)";
+	}
+	public static String percentOf(long num, long outOf) {
+		double percent = (double) num / outOf * 100;
+		return ChatFormatting.GRAY + " (" + String.format("%.2f", percent) + "%)";
+	}
+	public static String percentOf(Integer num,Integer OutOf) {
+		Double lowPercent = num.doubleValue()/OutOf.doubleValue();
+		Double percent = Math.floor(lowPercent*10000)/100;
+		return ChatFormatting.GRAY+" ("+percent+"%)";
+	}
     
     public static boolean isOnHypixel() {
         try {

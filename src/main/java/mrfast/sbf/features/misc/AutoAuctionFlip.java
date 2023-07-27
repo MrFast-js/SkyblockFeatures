@@ -73,16 +73,6 @@ public class AutoAuctionFlip {
             this.item_Data=itemData;
         }
     }
-
-    public class TotalAuction {
-        String name = "";
-        Double price = 0d;
-
-        public TotalAuction(String name,Double price) {
-            this.price=price;
-            this.name=name;
-        }
-    }
     
     @SubscribeEvent
 	public void onClick(SlotClickedEvent event) {
@@ -312,7 +302,8 @@ public class AutoAuctionFlip {
     public void doAuctionFlipStuff(JsonArray products) {
         for(JsonElement entry : products) {
             // Limit number of mesages added because it will crash game if it gets overloaded
-            if(messageSent>50) continue;
+            Float max = Float.parseFloat(SkyblockFeatures.config.autoAuctionFlipMinPercent);
+            if(messageSent>max) continue;
             if(entry.isJsonObject()) {
                 JsonObject itemData = entry.getAsJsonObject();
                 // Bin Flip
@@ -426,6 +417,7 @@ public class AutoAuctionFlip {
                             auctionFlips.add(auction);
 
                             IChatComponent message = new ChatComponentText("\n"+ChatFormatting.AQUA+"[SBF] "+ChatFormatting.GRAY+"BIN FLIP "+name+" "+ChatFormatting.GREEN+oPrice+" -> "+itemValue+" (+"+iprofit+" "+ChatFormatting.DARK_RED+percentage+"%"+ChatFormatting.GREEN+") "+
+                            
                             ChatFormatting.GRAY+"Vol: "+ChatFormatting.AQUA+(auctionData.get("sales").getAsInt())+" sales/day"+
                             (enchantValue>0?(ChatFormatting.GRAY+" Ench: "+ChatFormatting.AQUA+ePrice):"")+
                             (starValue>0?(ChatFormatting.GRAY+" Stars: "+ChatFormatting.AQUA+sPrice):""));

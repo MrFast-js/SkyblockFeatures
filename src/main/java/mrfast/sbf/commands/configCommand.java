@@ -11,7 +11,7 @@ import gg.essential.api.utils.GuiUtil;
 import mrfast.sbf.SkyblockFeatures;
 import mrfast.sbf.gui.EditLocationsGui;
 import mrfast.sbf.gui.GuiManager;
-import mrfast.sbf.gui.TestGui;
+import mrfast.sbf.gui.ConfigGui;
 import mrfast.sbf.gui.components.Point;
 import mrfast.sbf.utils.APIUtils;
 import mrfast.sbf.utils.Utils;
@@ -54,7 +54,7 @@ public class configCommand extends CommandBase {
         EntityPlayerSP player = (EntityPlayerSP) sender;
         if (args.length == 0) {
             // GuiUtil.open(Objects.requireNonNull(skyblockfeatures.config.gui()));
-            GuiUtil.open(new TestGui(true));
+            GuiUtil.open(new ConfigGui(true));
             return;
         }
         String subcommand = args[0].toLowerCase(Locale.ENGLISH);
@@ -88,7 +88,7 @@ public class configCommand extends CommandBase {
                 }).start();
                 break;
             case "config":
-                GuiUtil.open(new TestGui(true));
+                GuiUtil.open(new ConfigGui(true));
                 break;
             case "help":
                 player.addChatMessage(new ChatComponentText("§9➜ Skyblock Features Commands and Info" + "\n" +

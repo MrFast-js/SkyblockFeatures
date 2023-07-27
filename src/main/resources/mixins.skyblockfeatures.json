@@ -1,6 +1,6 @@
 {
   "compatibilityLevel": "JAVA_8",
-  "package": "mrfast.skyblockfeatures.mixins",
+  "package": "mrfast.sbf.mixins",
   "refmap": "mixins.skyblockfeatures.refmap.json",
   "minVersion": "0.8",
   "mixins": [
