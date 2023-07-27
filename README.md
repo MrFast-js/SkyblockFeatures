@@ -28,7 +28,7 @@
 #### Quick Start Guide
 - Download mod from [releases](https://github.com/MrFast-js/SkyblockFeatures/releases/latest) tab
 - Put mod into mods folder and start up game
-- Type '/sbf' for config
+- Type '**/sbf**' for config
 
 <img src='https://i.imgur.com/VIdpwua.jpg'/>
 <h2 align='center'>Profile Viewer</h2>
