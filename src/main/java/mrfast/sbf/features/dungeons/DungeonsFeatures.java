@@ -57,16 +57,6 @@ public class DungeonsFeatures {
     public static Entity livid = null;
 
     @SubscribeEvent
-    public void onWorldChanges2(WorldEvent.Load event) {
-        try {
-            foundLivid = false;
-            livid = null;
-        } catch (Exception e) {
-
-        }
-    }
-
-    @SubscribeEvent
     public void onRender3D(RenderWorldLastEvent event) {
         if(!Utils.inDungeons) return;
         if(SkyblockFeatures.config.highlightBats) {
@@ -104,17 +94,15 @@ public class DungeonsFeatures {
     
     @SubscribeEvent
     public void onWorldChanges(WorldEvent.Load event) {
-        try {
-            count = 0;
-            dungeonFloor = null;
-            hasBossSpawned = false;
-            bloodguy = null;
-            blessings.clear();
-            livid = null;
-            foundLivid = false;
-        } catch (Exception e) {
-            // TODO: handle exception
-        }
+        count = 0;
+        dungeonFloor = null;
+        hasBossSpawned = false;
+        bloodguy = null;
+        blessings.clear();
+        livid = null;
+        foundLivid = false;
+        foundLivid = false;
+        livid = null;
     }
 
     String delimiter = EnumChatFormatting.AQUA.toString() + EnumChatFormatting.STRIKETHROUGH.toString() + "" + EnumChatFormatting.BOLD + "--------------------------------------";
