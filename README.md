@@ -1,6 +1,6 @@
 <img src='https://user-images.githubusercontent.com/78495381/210632546-691f468d-f4e7-4b82-b1ff-8ea37591d957.png' href='' onclick=''/>
 
-<div align="">
+<div align="center">
     <!-- release -->
     <a href="https://github.com/MrFast-js/SkyblockFeatures/releases/latest" target="_blank">
         <img src="https://img.shields.io/github/v/release/MrFast-js/SkyblockFeatures?include_prereleases&label=Latest&logo=Github&logoColor=FFFFFF&color=04aed9&style=for-the-badge" alt="release">
