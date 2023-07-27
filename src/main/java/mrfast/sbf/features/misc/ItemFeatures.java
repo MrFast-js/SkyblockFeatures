@@ -30,6 +30,7 @@ public class ItemFeatures {
         NBTTagCompound extraAttr = ItemUtils.getExtraAttributes(item);
         String itemId = ItemUtils.getSkyBlockItemID(extraAttr);
         String itemUUID = ItemUtils.getItemUUID(item);
+
         if (itemId != null) {
             if (SkyblockFeatures.config.egg) {
                 NBTTagCompound extraAttributes = ItemUtils.getExtraAttributes(item);
@@ -41,13 +42,13 @@ public class ItemFeatures {
                     }
                 }
             }
+            
             if(AuctionFeatures.items.containsKey(item) && SkyblockFeatures.config.showPricePaid) {
                 long price = Math.round(AuctionFeatures.items.get(item));
                 String color = price>0?ChatFormatting.GREEN+"":ChatFormatting.RED+"";
                 event.toolTip.add("§6BIN Flip Profit: "+color+Utils.nf.format(price));
             }
-        }
-        if (itemId != null) {
+            
             if(SkyblockFeatures.config.showPriceInfoOnShift) {
                 if(!Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
                     event.toolTip.add("§e§l[SHIFT To Reveal Info]");
