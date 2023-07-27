@@ -163,7 +163,7 @@
     </ul>
 </details>
 
-#### Cool Commands:
+## Cool Commands:
 - **/vm** (*Change the item view model*)
 - **/terminal** (*Allows you to practice a f7 dungeon terminal*)
 - **/sky** \<name\> (*gives the link for someone's skyleamoe*)
