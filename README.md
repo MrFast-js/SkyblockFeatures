@@ -19,11 +19,11 @@
 <!--         <img src="https://img.shields.io/github/downloads/MrFast-js/SkyblockFeatures/total?label=Downloads&logo=Github&logoColor=FFFFFF&color=04aed9&style=for-the-badge" alt="downloads"> -->
     </a>
 </div>
+<br><br>
 
 *A Simple 1.8.9 Forge Hypixel Skyblock mod that adds features that are not commonly found in other mods but are very useful*
 
 **For Beta Releases, Suggestions, and Support join the discord! https://discord.gg/MDTEAjbNw8**
-<br>**Gui Scale Normal Reccomended**
 
 ![-----------------------------------------------------](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png)
 
