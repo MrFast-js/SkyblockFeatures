@@ -82,6 +82,7 @@
     <h3>Mining</h3>
     <ul>
         <li>Commissions Tracker</li>
+        <li>Metal Detector Solver</li>
         <li>Crystal Hollows Map (Maps out explored caves)</li>
     </ul>
 </details>
@@ -149,6 +150,16 @@
         <li>Bin Flipper</li>
         <li>Auction Flipper</li>
         <li>Exotic Armor Finder</li>
+    </ul>
+</details>
+
+<details>
+    <summary>Rift</summary>
+    <h3>Rift</h3>
+    <ul>
+        <li>Enigma Soul Waypoints</li>
+        <li>Mirror verse puzzle solvers</li>
+        <li>Minikloon Hacking Solver</li>
     </ul>
 </details>
 
