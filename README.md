@@ -58,7 +58,6 @@
     <summary>Dungeons</summary>
     <h3>Dungeons</h3>
     <ul>
-        <li>Dungeon Blocks</li>
         <li>Crypt Display</li>
         <li>Highlight Dungeon Bats</li>
         <li>Better Dungeon Nametags</li>
