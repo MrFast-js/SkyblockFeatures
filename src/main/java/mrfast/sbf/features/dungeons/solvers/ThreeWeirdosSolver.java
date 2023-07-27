@@ -21,21 +21,24 @@ public class ThreeWeirdosSolver {
                               "The reward isn't in any of our chests",
                               "Both of them are telling the truth."};
     TileEntity answerChest = null;
+    
     @SubscribeEvent(priority = EventPriority.HIGHEST, receiveCanceled = true)
     public void onChatMesaage(ClientChatReceivedEvent event) {
         if (!Utils.inDungeons || event.type == 2) return;
         String message = Utils.cleanColor(event.message.getUnformattedText());
         // §e[NPC] §cLino§f: The reward is in my chest!
         for(String riddleAnswer:riddleAnswers) {
-            if(message.contains(riddleAnswer)) {
-                String npcName = message.substring(6, message.indexOf(":"));
-                for(Entity entity:Utils.GetMC().theWorld.loadedEntityList) {
-                    if(entity instanceof EntityArmorStand && entity.getCustomNameTag().contains(npcName)) {
-                        for(TileEntity tileEntity:Utils.GetMC().theWorld.loadedTileEntityList) {
-                            if(entity.getDistance(tileEntity.getPos().getX(),tileEntity.getPos().getY(),tileEntity.getPos().getZ())<0.75) {
-                                answerChest = tileEntity;
-                            }
-                        }
+            if(!message.contains(riddleAnswer)) continue;
+          
+            String npcName = message.substring(6, message.indexOf(":"));
+            for(Entity entity:Utils.GetMC().theWorld.loadedEntityList) {
+                if(!(entity instanceof EntityArmorStand && entity.getCustomNameTag().contains(npcName))) continue;
+              
+                for(TileEntity tileEntity:Utils.GetMC().theWorld.loadedTileEntityList) {
+                    BlockPos pos = tileEntity.getPos();
+                    Double dist = entity.getDistance(pos.getX(),pos.getY(),pos.getZ());
+                    if(dist<0.75) {
+                        answerChest = tileEntity;
                     }
                 }
             }
