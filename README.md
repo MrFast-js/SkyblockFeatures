@@ -1,6 +1,6 @@
 <img src='https://user-images.githubusercontent.com/78495381/210632546-691f468d-f4e7-4b82-b1ff-8ea37591d957.png' href='' onclick=''/>
 
-<div align="center">
+<div align="">
     <!-- release -->
     <a href="https://github.com/MrFast-js/SkyblockFeatures/releases/latest" target="_blank">
         <img src="https://img.shields.io/github/v/release/MrFast-js/SkyblockFeatures?include_prereleases&label=Latest&logo=Github&logoColor=FFFFFF&color=04aed9&style=for-the-badge" alt="release">
@@ -23,18 +23,24 @@
 *A Simple 1.8.9 Forge Hypixel Skyblock mod that adds features that are not commonly found in other mods but are very useful*
 
 **For Beta Releases, Suggestions, and Support join the discord! https://discord.gg/MDTEAjbNw8**
-**Gui Scale Normal Reccomended**
+<br>**Gui Scale Normal Reccomended**
 
-#### Quick Start Guide
+![-----------------------------------------------------](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png)
+
+### Quick Start Guide
 - Download mod from [releases](https://github.com/MrFast-js/SkyblockFeatures/releases/latest) tab
 - Put mod into mods folder and start up game
 - Type '**/sbf**' for config
 
 <img src='https://i.imgur.com/VIdpwua.jpg'/>
-<h2 align='center'>Profile Viewer</h2>
+
+![-----------------------------------------------------](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png)
+
+<h2 align=''>Profile Viewer</h2>
 <img src='https://github.com/MrFast-js/SkyblockFeatures/assets/78495381/527cdb01-6f26-41b4-8525-6d4aa0c8c6dd'/>
 
-<h1 align="center">Top Feature List</h1>
+![-----------------------------------------------------](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png)
+<h1 align="">Top Feature List</h1>
 <details>
     <summary>Solvers</summary>
     <h3>Solvers</h3>
@@ -163,6 +169,7 @@
     </ul>
 </details>
 
+![-----------------------------------------------------](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png)
 ## Cool Commands:
 - **/vm** (*Change the item view model*)
 - **/terminal** (*Allows you to practice a f7 dungeon terminal*)
@@ -173,10 +180,11 @@
 - **/flips** \<name\> (*Shows a players auction flipping info*) *Provided by [Cofl](https://sky.coflnet.com/)*
 - **/networth** \<name\> (*Shows you a players networth*) *Provided by [Skycrypt](https://sky.shiiyu.moe/) API*
 
+![-----------------------------------------------------](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png)
 ## License
-
 This project is licensed under GNU General Public License v3.0 License, see [LICENSE](LICENSE) for more details.
 
+![-----------------------------------------------------](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png)
 ## Credits:
 This mod would not be possible without 
 [NEU](https://github.com/NotEnoughUpdates/NotEnoughUpdates), [Skytils 0.x](https://github.com/Skytils/SkytilsMod/tree/0.x), [SBA](https://github.com/BiscuitDevelopment/SkyblockAddons)
