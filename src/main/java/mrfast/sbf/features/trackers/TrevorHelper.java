@@ -7,6 +7,7 @@ import com.mojang.realmsclient.gui.ChatFormatting;
 
 import mrfast.sbf.SkyblockFeatures;
 import mrfast.sbf.core.SkyblockInfo;
+import mrfast.sbf.events.SecondPassedEvent;
 import mrfast.sbf.gui.GuiManager;
 import mrfast.sbf.utils.RenderUtil;
 import mrfast.sbf.utils.TabListUtils;
@@ -37,8 +38,8 @@ public class TrevorHelper {
     HashMap<String,BlockPos> biomeLocations = new HashMap<>();
     boolean animalKilled = false;
     @SubscribeEvent
-    public void onWorldChange(WorldEvent.Load event) {
-        if(!SkyblockFeatures.config.trevorHelper) return;
+    public void onWorldChange(SecondPassedEvent event) {
+        if(!SkyblockFeatures.config.trevorHelper || biomeLocations.size()>0 || !Utils.inSkyblock) return;
         tracking = null;
         biomeLocations.put("Settlement", new BlockPos(167,76,-377));
         biomeLocations.put("Gorge", new BlockPos(282,46,-488));
