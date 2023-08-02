@@ -124,11 +124,15 @@ public class ItemUtils {
 
         return null;
     }
-
+    private static HashMap<String, ItemStack> itemDataCache = new HashMap<>();
     public static ItemStack getSkyblockItem(String id) {
+        if(itemDataCache.containsKey(id)) {
+            System.out.println("Cache ask:"+id+" get:"+itemDataCache.get(id).getDisplayName());
+            return itemDataCache.get(id).copy();
+        }
         JsonObject itemObj = APIUtils.getJSONResponse("https://raw.githubusercontent.com/NotEnoughUpdates/NotEnoughUpdates-REPO/master/items/"+id+".json");
         ItemStack stack = parseJsonToItemStack(itemObj.toString());
-        
+        itemDataCache.put(id, stack.copy());
         return stack;
     }
 

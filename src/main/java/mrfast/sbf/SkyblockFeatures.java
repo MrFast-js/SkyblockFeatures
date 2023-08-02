@@ -113,6 +113,7 @@ import mrfast.sbf.features.trackers.IceTreasureTracker;
 import mrfast.sbf.features.trackers.PowderTracker;
 import mrfast.sbf.features.trackers.TrevorHelper;
 import mrfast.sbf.gui.GuiManager;
+import mrfast.sbf.gui.ProfileViewerGui;
 import mrfast.sbf.gui.ProfileViewerUtils;
 import mrfast.sbf.utils.CapeUtils;
 import mrfast.sbf.utils.Utils;
@@ -290,7 +291,6 @@ public class SkyblockFeatures {
             }
         }
         if(config.apiKey!=API_KEY) config.apiKey = API_KEY;
-
         SkyblockFeatures.config.timeStartedUp++;
         System.out.println("You have started Skyblock Features up "+SkyblockFeatures.config.timeStartedUp+" times!");
     }
@@ -339,25 +339,24 @@ public class SkyblockFeatures {
 
     @SubscribeEvent
     public void onTick(TickEvent.ClientTickEvent event) {
-       
         SkyblockFeatures.config.autoAuctionFlipMargin = SkyblockFeatures.config.autoAuctionFlipMargin.replaceAll("[^0-9]", "");
         if (event.phase != TickEvent.Phase.START) return;
         // Small items
         if(start) {
-            smallItems = SkyblockFeatures.config.smallItems;
+            smallItems = config.smallItems;
             start = false;
         } else {
-            if(smallItems && !SkyblockFeatures.config.smallItems) {
-                SkyblockFeatures.config.armX = 0;
-                SkyblockFeatures.config.armY = 0;
-                SkyblockFeatures.config.armZ = 0;
+            if(smallItems && !config.smallItems) {
+                config.armX = 0;
+                config.armY = 0;
+                config.armZ = 0;
             }
-            if(!smallItems && SkyblockFeatures.config.smallItems) {
-                SkyblockFeatures.config.armX = 30;
-                SkyblockFeatures.config.armY = -5;
-                SkyblockFeatures.config.armZ = -60;
+            if(!smallItems && config.smallItems) {
+                config.armX = 30;
+                config.armY = -5;
+                config.armZ = -60;
             }
-            smallItems = SkyblockFeatures.config.smallItems;
+            smallItems = config.smallItems;
         }
         if (mc.thePlayer != null && sendMessageQueue.size() > 0 && System.currentTimeMillis() - lastChatMessage > 200) {
             String msg = sendMessageQueue.pollFirst();

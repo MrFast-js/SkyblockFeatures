@@ -77,7 +77,7 @@ public class APIUtils {
         String rank = "§7";
         if(json.has("mostRecentMonthlyPackageRank")) rank = json.get("mostRecentMonthlyPackageRank").getAsString();
         else if(json.has("newPackageRank")) rank = json.get("newPackageRank").getAsString();
-        return convertRank(rank)+APIUtils.getName(uuid);
+        return convertRank(rank)+json.get("displayname").getAsString();
     }
 
     public static String convertRank(String rank) {

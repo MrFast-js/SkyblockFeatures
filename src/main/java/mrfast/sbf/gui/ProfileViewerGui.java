@@ -1487,7 +1487,7 @@ public class ProfileViewerGui extends WindowScreen {
             {// Farming
                 new UIText(ChatFormatting.YELLOW+""+ChatFormatting.BOLD+"Farming").setChildOf(farmingContainer).setY(new SiblingConstraint(4f)).setX(new CenterConstraint()).setTextScale(new PixelConstraint(2f));
                 Integer pelts = 0;
-                if(ProfilePlayerResponse.get("trapper_quest").getAsJsonObject().has("pelt_count")) pelts = ProfilePlayerResponse.get("trapper_quest").getAsJsonObject().get("pelt_count").getAsInt();
+                if(ProfilePlayerResponse.has("trapper_quest")) if(ProfilePlayerResponse.get("trapper_quest").getAsJsonObject().has("pelt_count")) pelts = ProfilePlayerResponse.get("trapper_quest").getAsJsonObject().get("pelt_count").getAsInt();
                 JsonObject contests = ProfilePlayerResponse.get("jacob2").getAsJsonObject().get("contests").getAsJsonObject();
                 JsonObject medals = ProfilePlayerResponse.get("jacob2").getAsJsonObject().get("medals_inv").getAsJsonObject();
                 Integer contestsAttended = contests.entrySet().size();
@@ -1632,9 +1632,9 @@ public class ProfileViewerGui extends WindowScreen {
     private int itemSpacing = 5; // Adjust this value as needed
     private int maxItemsPerRow = 11; // Adjust this value as needed
 
-    private JsonObject collectionsData = null;
-    private HashMap<String, JsonObject> categoryDataCache = new HashMap<>();
-    private UIComponent statsAreaContainerNew;
+    private static JsonObject collectionsData = null;
+    private static HashMap<String, JsonObject> categoryDataCache = new HashMap<>();
+    private static UIComponent statsAreaContainerNew;
 
     public void loadCollectionsCategories() {
         System.out.println("Loading collections");
@@ -1652,8 +1652,6 @@ public class ProfileViewerGui extends WindowScreen {
             String[] categories = {"Farming", "Mining", "Combat", "Foraging", "Fishing", "Rift"};
             int totalHeight = 0;
 
-            JsonArray collectionTiers = ProfilePlayerResponse.get("unlocked_coll_tiers").getAsJsonArray();
-
             for (String category : categories) {
                 if (!collectionsData.get("success").getAsBoolean()) {
                     System.out.println("Error: ");
@@ -1661,7 +1659,7 @@ public class ProfileViewerGui extends WindowScreen {
                 }
 
                 JsonObject collections = collectionsData.get("collections").getAsJsonObject();
-                
+
                 JsonObject categoryObject = categoryDataCache.computeIfAbsent(category, key -> collections.get(key.toUpperCase()).getAsJsonObject());
 
                 UIComponent categoryComponent = new UIBlock(clear)
@@ -1743,6 +1741,7 @@ public class ProfileViewerGui extends WindowScreen {
             if (itemId.equals("MUSHROOM_COLLECTION")) itemId = "BROWN_MUSHROOM";
             
             ItemStack stack = ItemUtils.getSkyblockItem(itemId);
+
             List<String> lore = new ArrayList<>();
             List<CoopCollector> collectors = new ArrayList<>();
             JsonObject members = ProfileResponse.get("members").getAsJsonObject();
@@ -1752,7 +1751,7 @@ public class ProfileViewerGui extends WindowScreen {
                 if(!coopNames.containsKey(member.getKey())) {
                     String formattedName = APIUtils.getHypixelRank(member.getKey());
                     coopNames.put(member.getKey(), formattedName);
-                }
+                }   
 
 
                 Integer value = 0;
@@ -1775,7 +1774,7 @@ public class ProfileViewerGui extends WindowScreen {
                 lore.add(stringProgressBar(total,(int) (rank.untilNext+total)));
             }
             lore.add("");
-            lore.add("§7Co-op Contributions:");
+            lore.add("§7Contributions:");
 
             for (CoopCollector collector : collectors) {
                 lore.add(collector.username+"§7: §e"+Utils.nf.format(collector.total));
