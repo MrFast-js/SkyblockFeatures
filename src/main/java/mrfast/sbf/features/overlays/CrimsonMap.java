@@ -70,7 +70,7 @@ public class CrimsonMap {
         public void drawElement() {
             try {
                 if(SkyblockInfo.getInstance().getLocation()==null) return;
-                if (loaded && Minecraft.getMinecraft().thePlayer != null && Utils.inSkyblock && Minecraft.getMinecraft().theWorld != null && SkyblockFeatures.config.crimsonsIslesMap && SkyblockInfo.getInstance().getLocation().equals("crimson_isle")) {
+                if (loaded && Minecraft.getMinecraft().thePlayer != null && Utils.inSkyblock && Minecraft.getMinecraft().theWorld != null && SkyblockFeatures.config.crimsonsIslesMap && SkyblockInfo.getInstance().map.equals("Crimson Isle")) {
                     GlStateManager.pushMatrix(); 
                         GlStateManager.enableBlend();
                         GlStateManager.color(1, 1, 1, 1);

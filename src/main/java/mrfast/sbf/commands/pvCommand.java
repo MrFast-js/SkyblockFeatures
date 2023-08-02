@@ -52,10 +52,16 @@ public class pvCommand extends CommandBase {
     public void processCommand(ICommandSender sender, String[] args) throws CommandException {
         if (args.length == 0) {
             String username = Utils.GetMC().thePlayer.getName();
+
             Utils.SendMessage(ChatFormatting.YELLOW+"Opening "+username+"'s Profile "+ChatFormatting.GRAY+"(This may take a second)");
             GuiUtil.open(new ProfileViewerGui(true,username));
             return;
         } else {
+            String playerUuid = FakePlayerCommand.getUUID(args[0]);
+            if(playerUuid==null) {
+                Utils.SendMessage(ChatFormatting.RED+"This player doesn't exist or has never played Skyblock");
+                return;
+            }
             Utils.SendMessage(ChatFormatting.YELLOW+"Opening "+args[0]+"'s Profile "+ChatFormatting.GRAY+"(This may take a second)");
             GuiUtil.open(new ProfileViewerGui(true,args[0]));
         }

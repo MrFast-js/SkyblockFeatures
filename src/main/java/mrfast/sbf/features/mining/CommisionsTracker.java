@@ -123,7 +123,7 @@ public class CommisionsTracker {
     if(str.contains("Golden Goblin Slayer")) return 1;
     if(str.contains("Goblin Slayer")) return 100;
     if(str.contains("Powder Ghast Puncher")) return 5;
-    if(str.contains("Star Century Puncher")) return 10;
+    if(str.contains("Star Sentry Puncher")) return 10;
     if(str.contains("2x Mithril Powder Collector")) return 500;
 
     if(str.contains("Raffle")) {

@@ -93,6 +93,16 @@ public class HideGlass {
     
     @SubscribeEvent
     public void onSlotClick(SlotClickedEvent event) {
+        if(Utils.GetMC().thePlayer.getName().equals("Skyblock_Lobby")) {
+            if(Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)&&Keyboard.isKeyDown(Keyboard.KEY_LCONTROL)) {
+                event.setCanceled(true);
+                System.out.println("-====================================-");
+                for (String itemLore : ItemUtils.getItemLore(event.slot.getStack())) {
+                    System.out.println(itemLore);
+                }
+                System.out.println("-====================================-");
+            }
+        }
         if(event.inventoryName.contains(ChatFormatting.GREEN+"✯")) {
             if(event.inventoryName.contains("Correct Panes")) {
                 for(int slot : TerminalCommand.paneSlots) {

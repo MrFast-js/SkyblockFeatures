@@ -3,6 +3,7 @@ package mrfast.sbf.gui;
 import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.net.HttpURLConnection;
+import java.net.URI;
 import java.net.URL;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
@@ -15,6 +16,7 @@ import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CountDownLatch;
 
 import javax.imageio.ImageIO;
 
@@ -26,6 +28,7 @@ import com.mojang.realmsclient.gui.ChatFormatting;
 
 import gg.essential.api.EssentialAPI;
 import gg.essential.api.gui.EmulatedPlayerBuilder;
+import gg.essential.api.utils.GuiUtil;
 import gg.essential.elementa.ElementaVersion;
 import gg.essential.elementa.UIComponent;
 import gg.essential.elementa.WindowScreen;
@@ -61,12 +64,13 @@ import mrfast.sbf.gui.components.InventoryComponent;
 import mrfast.sbf.gui.components.ItemStackComponent;
 import mrfast.sbf.utils.APIUtils;
 import mrfast.sbf.utils.ItemRarity;
+import mrfast.sbf.utils.ItemUtils;
 import mrfast.sbf.utils.Utils;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.InventoryBasic;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.fml.client.config.GuiUtils;
 
 
@@ -77,6 +81,7 @@ public class ProfileViewerGui extends WindowScreen {
     static HashMap<UIComponent,List<String>> generalHoverables = new HashMap<>();
     static HashMap<UIComponent,List<String>> HOTMHoverables = new HashMap<>();
     static HashMap<UIComponent,List<String>> petHoverables = new HashMap<>();
+
     String playerLocation = "";
     String selectedProfileUUID = "";
     GameProfile profile = null;
@@ -193,20 +198,13 @@ public class ProfileViewerGui extends WindowScreen {
 
     public static UIComponent box = null;
     UIComponent statsAreaContainer = null;
-    int screenHeight = Utils.GetMC().currentScreen.height;
-    double fontScale = screenHeight/540d;
+    static int screenHeight = Utils.GetMC().currentScreen.height;
+    static double fontScale = screenHeight/540d;
     String uuidString = "";
     public static Color clear = new Color(0,0,0,0);
-    
     public ProfileViewerGui(Boolean doAnimation,String username) {
         super(ElementaVersion.V2);
-        
-        // Utils.SendMessage("STAGE 4");
-        String playerUuid = FakePlayerCommand.getUUID(username);
-        if(playerUuid==null) {
-            Utils.SendMessage(ChatFormatting.RED+"This player doesn't exist or has never played Skyblock");
-            return;
-        }
+
         UUID uuid = UUID.fromString(FakePlayerCommand.getUUID(username));
 
         profile = new GameProfile(uuid, username);
@@ -225,15 +223,13 @@ public class ProfileViewerGui extends WindowScreen {
                     .setChildOf(getWindow())
                     .enableEffect(new ScissorEffect())
                     .setColor(mainBackground);
-
+            float guiWidth = box.getWidth();
+            float guiHeight = box.getHeight();
             new ShadowIcon(new ResourceImageFactory("/assets/skyblockfeatures/gui/largeOutline.png",false),false).setChildOf(box)
                 .setX(new PixelConstraint(0f))
                 .setY(new PixelConstraint(0f))
                 .setWidth(new RelativeConstraint(1f))
                 .setHeight(new RelativeConstraint(1f));
-            
-            float guiWidth = box.getWidth();
-            float guiHeight = box.getHeight();
             
             UIComponent titleArea = new UIBlock().setColor(clear).setChildOf(box)
                 .setX(new CenterConstraint())
@@ -307,25 +303,28 @@ public class ProfileViewerGui extends WindowScreen {
             JsonObject profiles = APIUtils.getJSONResponse(profileURL);
             JsonObject locationJson = APIUtils.getJSONResponse(locationURL);
             achievmentsJson = APIUtils.getJSONResponse(achievmentsURL).get("achievements").getAsJsonObject();
-            
             Boolean playerOnline = locationJson.get("session").getAsJsonObject().get("online").getAsBoolean();
             if(playerOnline) {
                 String location = locationJson.get("session").getAsJsonObject().get("mode").getAsString();
-                String formattedLocation = Utils.convertToTitleCase(location);
+                String formattedLocation = Utils.convertIdToLocation(location);
                 playerLocation = ChatFormatting.GREEN+formattedLocation;
             } else {
                 playerLocation = ChatFormatting.RED+"OFFLINE";
-            }
+            } 
 
             if(profiles.has("cause")) {
                 System.out.println(profiles.get("cause").getAsString());
                 return;
             }
             hypixelProfilesResponse = profiles.get("profiles").getAsJsonArray();
+
             try {
+                System.out.println("Finding Current Profile");
                 hypixelProfilesResponse.forEach((profile)->{
+                    System.out.println(profile.getAsJsonObject().get("profile_id").getAsString()+" vs "+latestProfile);
                     if(profile.getAsJsonObject().get("profile_id").getAsString().equals(latestProfile)) {
                         String cuteName = profile.getAsJsonObject().get("cute_name").getAsString();
+                        System.out.println("Loading Current Profile");
                         loadProfile(cuteName,true);
                     }
                 });
@@ -356,7 +355,6 @@ public class ProfileViewerGui extends WindowScreen {
             lastSelectedButton = generalButton;
             ProfileViewerUtils.animateX(lastSelectedButton, 0f);
         }
-
         if(initial) {
             new Inspector(getWindow()).setChildOf(getWindow());
 
@@ -374,6 +372,9 @@ public class ProfileViewerGui extends WindowScreen {
             });
             drawSideButton(sideButtonContainer,"Dungeons",()->{
                 loadCategory("Dungeons");
+            });
+            drawSideButton(sideButtonContainer,"Collections",()->{
+                loadCategory("Collections");
             });
             drawSideButton(sideButtonContainer,"Crimson",()->{
                 // loadCategory("Crimson");
@@ -418,9 +419,9 @@ public class ProfileViewerGui extends WindowScreen {
         profiles = new JsonObject();
         new Thread(()->{
             profiles = APIUtils.getJSONResponse("https://sky.shiiyu.moe/api/v2/profile/"+uuidString).get("profiles").getAsJsonObject();
-        }).start();;
+        }).start();
+
         Integer sbLevelCurrXp = sbLevelXP%100;
-        Integer sbLevelTotalXp = sbLevelXP;
         Integer sbLevel = (int) Math.floor(sbLevelXP/100);
 
         setSkills(ProfilePlayerResponse);
@@ -493,23 +494,23 @@ public class ProfileViewerGui extends WindowScreen {
         drawProgressbar(vampireSlayer.currentXp,vampireSlayer.totalXp,statsAreaRight,"Vampire "+vampireSlayer.level,new ItemStack(Items.wooden_sword),vampireSlayer.hover);
 
         UIComponent generalInfoContainer = new UIBlock(clear).setY(new SiblingConstraint(20f)).setX(new PixelConstraint(0f)).setWidth(new RelativeConstraint(1f)).setHeight(new RelativeConstraint(0.175f)).setChildOf(statsAreaContainer);
-
         long Purse = 0;
         long Bank = 0;
+        try {Purse = (long) ProfilePlayerResponse.get("coin_purse").getAsDouble();} catch (Exception e) {}
+        try {Bank = (long) ProfileResponse.get("banking").getAsJsonObject().get("balance").getAsDouble();} catch (Exception e) {}
+
         JsonObject data = new JsonObject();
         data.add("data", ProfilePlayerResponse);
         JsonObject networthResponse = APIUtils.getNetworthResponse(data);
-        List<String> networthTooltip = new ArrayList<>(Arrays.asList(EnumChatFormatting.RED + "Player has API disabled: "));
+        List<String> networthTooltip = new ArrayList<>(Arrays.asList(ChatFormatting.RED + "Player has API disabled: "));
         String networth = ChatFormatting.RED+"API Disabled";
         if(networthResponse.has("data")) {
             JsonObject networthJson = networthResponse.get("data").getAsJsonObject();
             JsonObject networthCategorys = networthJson.get("categories").getAsJsonObject();
             
-            networth = nf.format(networthJson.get("networth").getAsLong());
+            networth = nf.format(networthJson.get("networth").getAsLong()+Purse+Bank);
 
             {
-                if(!networthJson.get("purse").isJsonNull()) Purse = networthJson.get("purse").getAsInt();
-                if(!networthJson.get("bank").isJsonNull()) Bank = networthJson.get("bank").getAsInt();
                 long Armor = 0; 
                 long Wardrobe = 0; 
                 long Inventory = 0;
@@ -527,24 +528,24 @@ public class ProfileViewerGui extends WindowScreen {
                 try {enderchest = networthCategorys.get("enderchest").getAsJsonObject().get("total").getAsInt();} catch (NullPointerException e) {}
                 try {Sacks = networthJson.get("sacks").getAsInt();} catch (NullPointerException e) {}
                 try {pets = networthCategorys.get("pets").getAsJsonObject().get("total").getAsInt();} catch (NullPointerException e) {}
-                try {total = networthJson.get("networth").getAsInt();} catch (NullPointerException e) {}
+                try {total = networthJson.get("networth").getAsInt()+Purse+Bank;} catch (NullPointerException e) {}
                 
 
                 if(PricingData.bazaarPrices.get("BOOSTER_COOKIE")!=null) irl = (int) ((total/PricingData.bazaarPrices.get("BOOSTER_COOKIE"))*2.4);
 
                 networthTooltip = new ArrayList<>(Arrays.asList(
-                    EnumChatFormatting.GREEN + "Total Networth: " + EnumChatFormatting.GOLD + nf.format(total),
-                    EnumChatFormatting.GREEN + "IRL Worth: " + EnumChatFormatting.DARK_GREEN+"$" + nf.format(irl),
+                    ChatFormatting.GREEN + "Total Networth: " + ChatFormatting.GOLD + nf.format(total),
+                    ChatFormatting.GREEN + "IRL Worth: " + ChatFormatting.DARK_GREEN+"$" + nf.format(irl),
                     "",
-                    EnumChatFormatting.GREEN + "Purse: " + EnumChatFormatting.GOLD + nf.format(Purse) + Utils.percentOf(Purse,total),
-                    EnumChatFormatting.GREEN + "Bank: " + EnumChatFormatting.GOLD + nf.format(Bank) + Utils.percentOf(Bank,total),
-                    EnumChatFormatting.GREEN + "Sacks: " + EnumChatFormatting.GOLD + nf.format(Sacks) + Utils.percentOf(Sacks,total),
-                    EnumChatFormatting.GREEN + "Armor: " + EnumChatFormatting.GOLD + nf.format(Armor) + Utils.percentOf(Armor,total),
-                    EnumChatFormatting.GREEN + "Wardrobe: " + EnumChatFormatting.GOLD + nf.format(Wardrobe) + Utils.percentOf(Wardrobe,total),
-                    EnumChatFormatting.GREEN + "Inventory: " + EnumChatFormatting.GOLD + nf.format(Inventory) + Utils.percentOf(Inventory,total),
-                    EnumChatFormatting.GREEN + "Enderchest: " + EnumChatFormatting.GOLD + nf.format(enderchest) + Utils.percentOf(enderchest,total),
-                    EnumChatFormatting.GREEN + "Accessories: " + EnumChatFormatting.GOLD + nf.format(accessories) + Utils.percentOf(accessories,total),
-                    EnumChatFormatting.GREEN + "Pets: " + EnumChatFormatting.GOLD + nf.format(pets)+Utils.percentOf(pets,total)
+                    ChatFormatting.GREEN + "Purse: " + ChatFormatting.GOLD + nf.format(Purse) + Utils.percentOf(Purse,total),
+                    ChatFormatting.GREEN + "Bank: " + ChatFormatting.GOLD + nf.format(Bank) + Utils.percentOf(Bank,total),
+                    ChatFormatting.GREEN + "Sacks: " + ChatFormatting.GOLD + nf.format(Sacks) + Utils.percentOf(Sacks,total),
+                    ChatFormatting.GREEN + "Armor: " + ChatFormatting.GOLD + nf.format(Armor) + Utils.percentOf(Armor,total),
+                    ChatFormatting.GREEN + "Wardrobe: " + ChatFormatting.GOLD + nf.format(Wardrobe) + Utils.percentOf(Wardrobe,total),
+                    ChatFormatting.GREEN + "Inventory: " + ChatFormatting.GOLD + nf.format(Inventory) + Utils.percentOf(Inventory,total),
+                    ChatFormatting.GREEN + "Enderchest: " + ChatFormatting.GOLD + nf.format(enderchest) + Utils.percentOf(enderchest,total),
+                    ChatFormatting.GREEN + "Accessories: " + ChatFormatting.GOLD + nf.format(accessories) + Utils.percentOf(accessories,total),
+                    ChatFormatting.GREEN + "Pets: " + ChatFormatting.GOLD + nf.format(pets)+Utils.percentOf(pets,total)
                 ));
             }
         }
@@ -704,6 +705,7 @@ public class ProfileViewerGui extends WindowScreen {
         box.addChild(statsAreaContainer);
 
         titleText.setTextScale(new PixelConstraint((float) (4.0*fontScale)));
+        loadCollectionsCategories();
     }
     
     
@@ -722,7 +724,7 @@ public class ProfileViewerGui extends WindowScreen {
         Float value = v.floatValue();
         Float max = m.floatValue();;
 
-        System.out.println("Value: "+value+" Max: "+max+" "+label);
+        // System.out.println("Value: "+value+" Max: "+max+" "+label);
         UIComponent container = new UIBlock(clear).setChildOf(statsArea)
             .setWidth(new RelativeConstraint(1f))
             .setHeight(new RelativeConstraint(0.12f))
@@ -1074,8 +1076,9 @@ public class ProfileViewerGui extends WindowScreen {
             .setX(new PixelConstraint(8f))
             .setY(new SiblingConstraint(2.2f))
             .setWidth(new RelativeConstraint(2f))
-            .setHeight(new RelativeConstraint(0.12f))
+            .setHeight(new RelativeConstraint(0.10f))
             .setChildOf(sideButtonContainer);
+
         new UIRoundedRectangle(8f)
             .setColor(new Color(0x191919))
             .setX(new CenterConstraint())
@@ -1083,6 +1086,7 @@ public class ProfileViewerGui extends WindowScreen {
             .setWidth(new RelativeConstraint(0.99f))
             .setHeight(new RelativeConstraint(0.96f))
             .setChildOf(container);
+
         UIComponent insideTextContainer = new UIRoundedRectangle(8f)
             .setColor(clear)
             .setX(new PixelConstraint(0f))
@@ -1126,6 +1130,7 @@ public class ProfileViewerGui extends WindowScreen {
         Utils.SendMessage("Loading "+categoryName);
         statsAreaContainer.clearChildren();
         selectedCategory = categoryName;
+
         if(categoryName.equals("Inventories")) {
             if(ProfilePlayerResponse.has("inv_contents")) {
                 { // Inventory, armor, equipment, wardrope 
@@ -1470,8 +1475,8 @@ public class ProfileViewerGui extends WindowScreen {
                     new UIText(g+"Tier: "+bold+hotmTier+"/7").setY(new SiblingConstraint(2f)).setChildOf(left);
                     new UIText(g+"Token Of The Mountain: "+bold+(tokensSpent)+"/17").setY(new SiblingConstraint(2f)).setChildOf(left);
                     new UIText(g+"Peak Of The Mountain: "+bold+potm+"/7").setY(new SiblingConstraint(2f)).setChildOf(left);
-                    new UIText(g+"Mithril Powder: "+ChatFormatting.GREEN+bold+nf.format(mithrilPowder)).setY(new SiblingConstraint(2f)).setChildOf(left);
-                    new UIText(g+"Gemstone Powder: "+ChatFormatting.LIGHT_PURPLE+bold+nf.format(gemstonePowder)).setY(new SiblingConstraint(2f)).setChildOf(left);
+                    new UIText(g+"Mithril Powder: "+ChatFormatting.DARK_GREEN+ChatFormatting.BOLD+nf.format(mithrilPowder)).setY(new SiblingConstraint(2f)).setChildOf(left);
+                    new UIText(g+"Gemstone Powder: "+ChatFormatting.LIGHT_PURPLE+ChatFormatting.BOLD+nf.format(gemstonePowder)).setY(new SiblingConstraint(2f)).setChildOf(left);
 
                     String pickaxeAbility = "None";
                     try {pickaxeAbility = Utils.convertToTitleCase(miningCore.get("selected_pickaxe_ability").getAsString());} catch (Exception e) {}
@@ -1581,7 +1586,7 @@ public class ProfileViewerGui extends WindowScreen {
                         }
                     });
                     
-                    String name = ProfileViewerUtils.cleanWeirdCharacters(pet.get("display_name").getAsString());
+                    String name = pet.get("display_name").getAsString();
                     int lvl = pet.get("level").getAsJsonObject().get("level").getAsInt();
                     String coloredName = "AA";
                     String tier = pet.get("tier").getAsString();
@@ -1610,6 +1615,10 @@ public class ProfileViewerGui extends WindowScreen {
             }).start();;
         }
         
+        if(categoryName.equals("Collections")) {
+            setCollectionsScreen();
+        }
+        
         if(categoryName.equals("Crimson")) {
             
         }
@@ -1619,18 +1628,271 @@ public class ProfileViewerGui extends WindowScreen {
         }
     }
 
+    private int itemWidth = 20; // Adjust this value as needed
+    private int itemSpacing = 5; // Adjust this value as needed
+    private int maxItemsPerRow = 11; // Adjust this value as needed
+
+    private JsonObject collectionsData = null;
+    private HashMap<String, JsonObject> categoryDataCache = new HashMap<>();
+    private UIComponent statsAreaContainerNew;
+
+    public void loadCollectionsCategories() {
+        System.out.println("Loading collections");
+
+        if (collectionsData == null) {
+            // Fetch the collections data only if it's not already cached
+            collectionsData = APIUtils.getJSONResponse("https://api.hypixel.net/resources/skyblock/collections").getAsJsonObject();
+        }
+
+        statsAreaContainerNew = new UIBlock(Color.red)
+            .setWidth(new RelativeConstraint(0.75f))
+            .setHeight(new RelativeConstraint(0.75f));
+
+        new Thread(() -> {
+            String[] categories = {"Farming", "Mining", "Combat", "Foraging", "Fishing", "Rift"};
+            int totalHeight = 0;
+
+            JsonArray collectionTiers = ProfilePlayerResponse.get("unlocked_coll_tiers").getAsJsonArray();
+
+            for (String category : categories) {
+                if (!collectionsData.get("success").getAsBoolean()) {
+                    System.out.println("Error: ");
+                    return;
+                }
+
+                JsonObject collections = collectionsData.get("collections").getAsJsonObject();
+                
+                JsonObject categoryObject = categoryDataCache.computeIfAbsent(category, key -> collections.get(key.toUpperCase()).getAsJsonObject());
+
+                UIComponent categoryComponent = new UIBlock(clear)
+                        .setChildOf(statsAreaContainerNew)
+                        .setY(new SiblingConstraint(10f))
+                        .setHeight(new PixelConstraint(20f))
+                        .setWidth(new RelativeConstraint(1f));
+
+                new UIText(category, true)
+                        .setChildOf(categoryComponent)
+                        .setTextScale(new PixelConstraint((float) (fontScale * 1.3f)))
+                        .setX(new PixelConstraint(0f))
+                        .setY(new PixelConstraint(0f));
+
+                UIComponent container = new UIBlock(clear)
+                        .setChildOf(categoryComponent)
+                        .setY(new SiblingConstraint(3f))
+                        .setHeight(new RelativeConstraint(1f))
+                        .setWidth(new RelativeConstraint(1f));
+
+                int categoryHeight = loadCollectionsCategory(categoryObject, container);
+                categoryComponent.setHeight(new PixelConstraint(categoryHeight + 23));
+                totalHeight += categoryHeight + 23; // Add 23 to account for the height of the category header
+            }
+
+            statsAreaContainerNew.setHeight(new PixelConstraint(totalHeight)); // Set the parent component's height
+            System.out.println("LOADED COLLECTIONS");
+        }).start();
+    }
+
+    public void setCollectionsScreen() {
+        statsAreaContainer.clearChildren();
+        statsAreaContainer.addChild(new UIText("§cLoading..", true).setY(new CenterConstraint()).setX(new CenterConstraint()));
+        
+        new Thread(()->{
+            while(statsAreaContainerNew.getChildren().size()<7) {
+                if(statsAreaContainerNew.getChildren().size()==6) {
+                    statsAreaContainer.clearChildren();
+                    statsAreaContainerNew.getChildren().forEach((e)->{
+                        statsAreaContainer.addChild(e);
+                    });
+                    break;
+                }
+            }
+        }).start();
+    }
+
+    HashMap<String,String> coopNames = new HashMap<>();
+    public class CoopCollector {
+        int total;
+        String username;
+        
+        public CoopCollector(String u,int t) {
+            total = t;
+            username = u;
+        }
+    }
+    public int loadCollectionsCategory(JsonObject category, UIComponent component) {
+        JsonObject items = category.get("items").getAsJsonObject();
+
+        int numRows = (int) Math.ceil((double) items.entrySet().size() / maxItemsPerRow);
+        int totalHeight = numRows * (20 + itemSpacing) - itemSpacing; // Calculate total height for all rows
+
+        int xStart = 0;
+        int yStart = 0; // Initial y-position
+        int rowWidth = 0; // Keep track of the current row's width
+        int index = 0;
+        int row = 0;
+
+        for (Entry<String, JsonElement> item : items.entrySet()) {
+            if (index >= maxItemsPerRow) {
+                // Move to the next row
+                rowWidth = 0; // Reset the current row's width
+                index = 0;
+                row++;
+            }
+
+            String itemId = item.getKey().replaceAll(":", "-");
+            if (itemId.equals("MUSHROOM_COLLECTION")) itemId = "BROWN_MUSHROOM";
+            
+            ItemStack stack = ItemUtils.getSkyblockItem(itemId);
+            List<String> lore = new ArrayList<>();
+            List<CoopCollector> collectors = new ArrayList<>();
+            JsonObject members = ProfileResponse.get("members").getAsJsonObject();
+            Double total = 0d;
+
+            for(Entry<String, JsonElement> member:members.entrySet()) {
+                if(!coopNames.containsKey(member.getKey())) {
+                    String formattedName = APIUtils.getHypixelRank(member.getKey());
+                    coopNames.put(member.getKey(), formattedName);
+                }
+
+
+                Integer value = 0;
+                try {
+                    value = member.getValue().getAsJsonObject().get("collection").getAsJsonObject().get(item.getKey()).getAsInt();
+                } catch (Exception e) {
+                    // TODO: handle exception
+                }
+                total+=value;
+                collectors.add(new CoopCollector(coopNames.get(member.getKey()),value));
+            }
+            CollectionTier rank = getCollectionTier(item.getValue().getAsJsonObject(),total);
+            collectors.sort((a,b)->{return b.total-a.total;});
+            String itemName = Utils.cleanColor(stack.getDisplayName());
+            // lore.add("");
+            lore.add("§7Total Collected: §e"+Utils.nf.format(total));
+            if(!rank.maxed) {
+                lore.add("");
+                lore.add("§7Progress to "+itemName+" "+(rank.tier+1)+": §e"+(Math.floor(total/(rank.untilNext+total)*1000)/10)+"§6%");
+                lore.add(stringProgressBar(total,(int) (rank.untilNext+total)));
+            }
+            lore.add("");
+            lore.add("§7Co-op Contributions:");
+
+            for (CoopCollector collector : collectors) {
+                lore.add(collector.username+"§7: §e"+Utils.nf.format(collector.total));
+            }
+
+            // Calculate the position for the current item
+            int xPos = xStart + rowWidth;
+            int yPos = yStart + row * (20 + itemSpacing);
+            Color color = new Color(100, 100, 100, 200);
+            if(rank.maxed) color = new Color(218,165,32,200);
+            
+            UIComponent backgroundSlot = new UIRoundedRectangle(3f)
+                    .setChildOf(component)
+                    .setHeight(new PixelConstraint(20f))
+                    .setWidth(new PixelConstraint(itemWidth))
+                    .setX(new PixelConstraint(xPos))
+                    .setY(new PixelConstraint(yPos))
+                    .setColor(color);
+            
+            stack = ItemUtils.updateLore(stack, lore);
+
+            stack.setStackDisplayName("§e"+itemName+" "+rank.tier);
+            
+            UIComponent itemStackComponent = new ItemStackComponent(stack)
+                    .setHeight(new PixelConstraint(20f))
+                    .setWidth(new PixelConstraint(itemWidth))
+                    .setX(new CenterConstraint())
+                    .setY(new CenterConstraint());
+                
+            backgroundSlot.addChild(itemStackComponent);
+
+            // Update the current row's width and index for the next item
+            rowWidth += itemWidth + itemSpacing;
+            index++;
+        }
+
+        return totalHeight;
+    }
+
+    public String stringProgressBar(Double total2,Integer total) {
+        Double percent = (double) (total2/total);
+        String progessed = "§2§l§m §2§l§m ";
+        String unprogessed = "§f§l§m §f§l§m ";
+        int times = (int) (percent*20);
+        String out = "";
+        for(int i=0;i<20;i++) {
+            if(i<times) out+=progessed;
+            else {
+                out+=unprogessed;
+            }
+        }
+        return out+"§r §e"+Utils.nf.format(total2)+"§6/§e"+Utils.formatNumber(total);
+    }
+
+    public class CollectionTier {
+        boolean maxed;
+        int tier;
+        int untilNext;
+        Double progress;
+        CollectionTier(boolean maxed,int tier,int untilNext,Double progress) {
+            this.maxed=maxed;
+            this.tier=tier;
+            this.untilNext=untilNext;
+            this.progress=progress;
+        }
+    }
+    public CollectionTier getCollectionTier(JsonObject itemObj, Double total) {
+        JsonArray tiers = itemObj.get("tiers").getAsJsonArray();
+        Integer maxTiers = itemObj.get("maxTiers").getAsInt();
+        boolean maxed = false;
+        int tier = -1;
+        int untilNext = -1;
+        Double progress = 0.0;
+
+        for (int i = 0; i < tiers.size(); i++) {
+            JsonObject tierObj = tiers.get(i).getAsJsonObject();
+            int amountRequired = tierObj.get("amountRequired").getAsInt();
+
+            if (total >= amountRequired) {
+                if (i == maxTiers-1) {
+                    // Maxed out the last tier
+                    maxed = true;
+                    tier = i + 1;
+                    untilNext = -1;
+                    progress = 1.0;
+                } else {
+                    // Reached a tier, but not maxed
+                    maxed = false;
+                    tier = i + 1;
+                    untilNext = (int) (tiers.get(i + 1).getAsJsonObject().get("amountRequired").getAsInt() - total);
+                    progress = (double) (total - amountRequired) / (double) (untilNext);
+                }
+            } else {
+                // Not yet reached this tier
+                tier = i;
+                untilNext = (int) (amountRequired - total);
+                progress = (double) total / (double) (amountRequired);
+                break;
+            }
+        }
+
+        return new CollectionTier(maxed, tier, untilNext, progress);
+    }
+
+
     public static List<String> parseLore(String lore) {
         List<String> loreList = new ArrayList<>();
         String[] loreRows = lore.split("<span class=\"lore-row wrap\">");
     
         for (String loreRow : loreRows) {
             String cleanedLoreRow = ProfileViewerUtils.cleanLoreRow(loreRow);
-            if(ProfileViewerUtils.cleanWeirdCharacters(cleanedLoreRow).contains("-----") || ProfileViewerUtils.cleanWeirdCharacters(cleanedLoreRow).contains("MAX LEVEL")) {
-                loreList.add(ProfileViewerUtils.cleanWeirdCharacters(cleanedLoreRow));
+            if(cleanedLoreRow.contains("-----") || cleanedLoreRow.contains("MAX LEVEL")) {
+                loreList.add(cleanedLoreRow);
                 break;
             } else
             if (!cleanedLoreRow.isEmpty()) {
-                String[] splitLore = splitLongLoreRow(ProfileViewerUtils.cleanWeirdCharacters(cleanedLoreRow));
+                String[] splitLore = splitLongLoreRow(cleanedLoreRow);
                 loreList.addAll(Arrays.asList(splitLore));
             }
         }

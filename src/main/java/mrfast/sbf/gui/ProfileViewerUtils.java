@@ -49,11 +49,19 @@ public class ProfileViewerUtils {
         output.totalXp = nextLevelXP(output.level,skillName);
 
         double percent = Math.round((output.currentXp.doubleValue()/output.totalXp.doubleValue())*10000d)/100d;
-        output.hover = new ArrayList<>(Arrays.asList(
-            ChatFormatting.GREEN+skillName,
-            ChatFormatting.GRAY+"Progress: "+ChatFormatting.YELLOW+""+nf.format(output.currentXp)+""+ChatFormatting.GOLD+"/"+ChatFormatting.YELLOW+""+Utils.formatNumber(output.totalXp)+" "+ChatFormatting.GRAY+"("+percent+"%)",
-            ChatFormatting.GRAY+"Total XP: "+ChatFormatting.YELLOW+nf.format(xp)
-        ));
+        if(output.totalXp.doubleValue()!=0) {
+            output.hover = new ArrayList<>(Arrays.asList(
+                ChatFormatting.GREEN+skillName,
+                ChatFormatting.GRAY+"Progress: "+ChatFormatting.YELLOW+""+nf.format(output.currentXp)+""+ChatFormatting.GOLD+"/"+ChatFormatting.YELLOW+""+Utils.formatNumber(output.totalXp)+" "+ChatFormatting.GRAY+"("+percent+"%)",
+                ChatFormatting.GRAY+"Total XP: "+ChatFormatting.YELLOW+nf.format(xp)
+            ));
+        } else {
+            output.hover = new ArrayList<>(Arrays.asList(
+                ChatFormatting.GREEN+skillName,
+                ChatFormatting.GRAY+"Progress: "+ChatFormatting.GOLD+"MAXED",
+                ChatFormatting.GRAY+"Total XP: "+ChatFormatting.YELLOW+nf.format(xp)
+            ));
+        }
         System.out.println(skillName+" "+output.level+" "+output.currentXp+" "+output.totalXp);
         return output;
     }
@@ -223,7 +231,6 @@ public class ProfileViewerUtils {
     }
 
     public static UIComponent createPet(CompletableFuture<BufferedImage> texture,int lvl, String petName,List<String> tooltip, Color color) {
-        petName = ProfileViewerUtils.cleanWeirdCharacters(petName);
         UIComponent background =  new UIRoundedRectangle(5f).setColor(color).setWidth(new PixelConstraint(128f/5)).setHeight(new PixelConstraint(128f/5));;
         new UIImage(texture).setChildOf(background).setX(new CenterConstraint()).setY(new CenterConstraint()).setWidth(new PixelConstraint(128f/5)).setHeight(new PixelConstraint(120f/5));
         new UIText("LVL "+lvl).setChildOf(background).setY(new SiblingConstraint(2f)).setX(new CenterConstraint()).setTextScale(new PixelConstraint(0.5f));
@@ -294,16 +301,6 @@ public class ProfileViewerUtils {
                         .replaceAll("\\);'>", "")
                         .replaceAll("</span>", "")
                         .replaceAll("<span>", "");
-    }
-    static String cleanWeirdCharacters(String a) {
-        a = a.replace("âšš ", "").replaceAll("Â", "")
-                .replaceAll("â�¤", "❤").replaceAll("âœ¦", "✦").replaceAll("â¸•", "⸕").replaceAll("â˜ ", "☠")
-                .replaceAll("â˜¯", "☯").replaceAll("â˜‚", "☂").replaceAll("âœ¯", "☯").replaceAll("â˜¯", "☯")
-                .replaceAll("â«½", "⫽").replaceAll("â�ˆ", "❈").replaceAll("âœŽ", 	"s").replaceAll("â™£", "♣")
-                .replaceAll("â��", "❁").replaceAll("â�¤", "❈").replaceAll("â��", "✚").replaceAll("â˜˜", "☘")
-                .replaceAll("§fâ�", "❂").replaceAll("Î±", "α").replaceAll("âœ", "✦").replaceAll("âš”", "⚔")
-                .replaceAll("â˜ ", "✚");
-        return a;
     }
 
     public static void loadToolTips() {

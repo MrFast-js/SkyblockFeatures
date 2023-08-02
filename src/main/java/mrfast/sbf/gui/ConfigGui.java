@@ -19,6 +19,7 @@ import gg.essential.elementa.UIComponent;
 import gg.essential.elementa.WindowScreen;
 import gg.essential.elementa.components.ScrollComponent;
 import gg.essential.elementa.components.UIBlock;
+import gg.essential.elementa.components.UIImage;
 import gg.essential.elementa.components.UIRoundedRectangle;
 import gg.essential.elementa.components.UIText;
 import gg.essential.elementa.components.UIWrappedText;
@@ -54,6 +55,8 @@ public class ConfigGui extends WindowScreen {
     public static HashMap<Property, Object> valueMap = new HashMap<>();
     public static String selectedCatagory = "General";
     public String searchQuery = "";
+    static Boolean furfSkyThemed = false;
+
     @Override
 	public void onScreenClose() {
 		SkyblockFeatures.config.markDirty();
@@ -82,7 +85,7 @@ public class ConfigGui extends WindowScreen {
     public ConfigGui(Boolean doAnimation) {
         super(ElementaVersion.V2);
         reloadAllCatagories();
-        
+        furfSkyThemed = SkyblockFeatures.config.furfSkyThemed;
         int screenHeight = Utils.GetMC().currentScreen.height;
         UIComponent box = new UIRoundedRectangle(10f)
             .setX(new CenterConstraint())
@@ -92,7 +95,9 @@ public class ConfigGui extends WindowScreen {
             .setChildOf(getWindow())
             .setColor(mainBackground)
             .enableEffect(new ScissorEffect());
-        new ShadowIcon(new ResourceImageFactory("/assets/skyblockfeatures/gui/largeOutline.png",false),false).setChildOf(box)
+        
+        String outlinePath = furfSkyThemed?"/assets/skyblockfeatures/gui/largeOutlineFurf.png":"/assets/skyblockfeatures/gui/largeOutline.png";
+        UIImage.ofResourceCached(outlinePath).setChildOf(box)
             .setX(new PixelConstraint(0f))
             .setY(new PixelConstraint(0f))
             .setWidth(new RelativeConstraint(1f))
@@ -158,7 +163,7 @@ public class ConfigGui extends WindowScreen {
             .setY(new PixelConstraint(titleArea.getHeight()))
             .enableEffect(new ScissorEffect())
             .setWidth(new PixelConstraint(0.75f*guiWidth))
-            .setHeight(new PixelConstraint(((0.85f*guiHeight)-1)));
+            .setHeight(new PixelConstraint(((0.85f*guiHeight)-(furfSkyThemed?6:1))));
         loadedFeaturesList.clearChildren();
         reloadFeatures(loadedFeaturesList,guiHeight,guiWidth,fontScale);
 
@@ -222,12 +227,26 @@ public class ConfigGui extends WindowScreen {
             });
         }
 
-        UIComponent editGuiButton = new UIRoundedRectangle(10f).setColor(editGuiUnhovered)
-            .setX(new PixelConstraint(0.15f*0.25f*guiWidth))
-            .setY(new PixelConstraint(0.90f*guiHeight))
-            .setHeight(new PixelConstraint(0.85f*0.10f*guiHeight))
-            .setWidth(new PixelConstraint(0.70f*0.25f*guiWidth))
-            .setChildOf(sidebarArea);
+        UIComponent editGuiButton;
+
+        // Check if the image should be used or not
+        if (furfSkyThemed) {
+            editGuiButton = new ShadowIcon(new ResourceImageFactory("/assets/skyblockfeatures/gui/button.png", true), false)
+                    .setChildOf(sidebarArea)
+                    .setX(new RelativeConstraint(0.04f))
+                    .setWidth(new PixelConstraint(118f))
+                    .setHeight(new PixelConstraint(32f))
+                    .setY(new RelativeConstraint(0.88f));
+        } else {
+            editGuiButton = new UIRoundedRectangle(10f)
+                    .setColor(editGuiUnhovered)
+                    .setX(new PixelConstraint(0.15f * 0.25f * guiWidth))
+                    .setY(new PixelConstraint(0.90f * guiHeight))
+                    .setHeight(new PixelConstraint(0.85f * 0.10f * guiHeight))
+                    .setWidth(new PixelConstraint(0.70f * 0.25f * guiWidth))
+                    .setChildOf(sidebarArea);
+        }
+        
         new UIText("Edit Gui Locations").setColor(editGuiText).setChildOf(editGuiButton)
             .setTextScale(new PixelConstraint((float) fontScale))
             .setX(new CenterConstraint())
@@ -387,7 +406,8 @@ public class ConfigGui extends WindowScreen {
                     if((!feature.name().toLowerCase().contains(searchQuery) && !feature.description().toLowerCase().contains(searchQuery)) || feature.hidden()) {
                         continue;
                     }
-                    UIComponent border = new ShadowIcon(new ResourceImageFactory("/assets/skyblockfeatures/gui/outline.png",false),false).setChildOf(loadedFeaturesList)
+                    String outlinePath = furfSkyThemed?"/assets/skyblockfeatures/gui/outlineFurf.png":"/assets/skyblockfeatures/gui/outline.png";
+                    UIComponent border = UIImage.ofResourceCached(outlinePath).setChildOf(loadedFeaturesList)
                         .setX(new CenterConstraint())
                         .setWidth(new RelativeConstraint(0.92f))
                         .setY(new PixelConstraint(yOffset+Margin));

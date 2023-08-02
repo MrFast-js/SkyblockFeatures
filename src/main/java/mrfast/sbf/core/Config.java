@@ -583,8 +583,17 @@ public class Config extends Vigilant {
     )
     public boolean customFont = false;
 
+    @Property(
+            type = PropertyType.SWITCH,
+            name = "§6§lFurfSky§r Themed",
+            description = "Uses §6§lFurfSky§r textures for the Gui",
+            category = "§2§rCustomization",
+            subcategory = "§1§rGui"
+    )
+    public boolean furfSkyThemed = false;
+
     @Property(type = PropertyType.COLOR,name = "Gui Lines",description = "",category = "§2§rCustomization",subcategory = "§1§rGui")
-    public Color guiLines = new Color(0x808080);
+    public Color guiLines = new Color(0x000000);
 
     @Property(type = PropertyType.COLOR,name = "Selected Category Text",description = "",category = "§2§rCustomization",subcategory = "§1§rGui")
     public Color selectedCategory = new Color(0x02A9EA);
@@ -1432,7 +1441,7 @@ public class Config extends Vigilant {
             name = "Exotic Auctions Finder",
             description = "Shows you auctions of exotic, fairy, crystal, spooky dyed armor status.",
             category = "§1§rAuction house",
-            subcategory = "\u00A71\u00A7rExotic Finder Settings"
+            subcategory = "§1§rExotic Finder Settings"
     )
     public boolean exoticAuctionFinder = false;
 
@@ -1441,7 +1450,7 @@ public class Config extends Vigilant {
             name = "Include Fairy Dyed",
             description = "Shows you auctions of fairy dyed armor status.",
             category = "§1§rAuction house",
-            subcategory = "\u00A71\u00A7rExotic Finder Settings"
+            subcategory = "§1§rExotic Finder Settings"
     )
     public boolean fairyExotics = true;
 
@@ -1450,7 +1459,7 @@ public class Config extends Vigilant {
             name = "Include Bleached",
             description = "Shows you auctions of bleached armor status.",
             category = "§1§rAuction house",
-            subcategory = "\u00A71\u00A7rExotic Finder Settings"
+            subcategory = "§1§rExotic Finder Settings"
     )
     public boolean bleachedExotics = true;
 
@@ -1459,7 +1468,7 @@ public class Config extends Vigilant {
             name = "Include Crystal Dyed",
             description = "Shows you auctions of crystal dyed armor status.",
             category = "§1§rAuction house",
-            subcategory = "\u00A71\u00A7rExotic Finder Settings"
+            subcategory = "§1§rExotic Finder Settings"
     )
     public boolean crystalExotics = true;
 
@@ -1468,7 +1477,7 @@ public class Config extends Vigilant {
             name = "Include Spooky Dyed",
             description = "Shows you auctions of spooky armor status.",
             category = "§1§rAuction house",
-            subcategory = "\u00A71\u00A7rExotic Finder Settings"
+            subcategory = "§1§rExotic Finder Settings"
     )
     public boolean spookyExotics = true;
 
@@ -1477,7 +1486,7 @@ public class Config extends Vigilant {
             name = "Include Exotics",
             description = "Shows you auctions of non orignal dyed armor status.",
             category = "§1§rAuction house",
-            subcategory = "\u00A71\u00A7rExotic Finder Settings"
+            subcategory = "§1§rExotic Finder Settings"
     )
     public boolean exoticsExotics = true;
 

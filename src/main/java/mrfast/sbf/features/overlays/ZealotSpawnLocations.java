@@ -110,7 +110,7 @@ public class ZealotSpawnLocations {
     @SubscribeEvent
     public void onEntityJoinWorld(EntityJoinWorldEvent event) {
         if(Utils.GetMC().theWorld == null || Utils.GetMC().thePlayer == null || SkyblockInfo.getInstance().getLocation()==null) return;
-        if(SkyblockFeatures.config.showZealotSpawns && Utils.inSkyblock && SkyblockInfo.getInstance().getLocation().equals("combat_3")) {
+        if(SkyblockFeatures.config.showZealotSpawns && Utils.inSkyblock && SkyblockInfo.getInstance().map.equals("The End")) {
             for(Entity entity:Utils.GetMC().theWorld.loadedEntityList) {
                 if(entity instanceof EntityArmorStand && !zealots.contains(entity) && SkyblockInfo.getInstance().location.contains("Dragons Nest")) {
                     if(entity.getCustomNameTag().contains("Zealot")) {

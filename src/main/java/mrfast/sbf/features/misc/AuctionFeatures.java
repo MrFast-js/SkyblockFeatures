@@ -313,7 +313,7 @@ public class AuctionFeatures {
             }
         }
     }
-    static HashMap<String,Integer> pricePaidMap = new HashMap<>();
+    public static HashMap<String,Integer> pricePaidMap = new HashMap<>();
     static File pricePaidFile = null;
     JsonObject profitData = null;
     boolean gettingData = false;

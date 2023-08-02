@@ -18,7 +18,7 @@ public class SlayerFeatures {
     @SubscribeEvent
     public void onRenderWorld(RenderWorldLastEvent event) {
         if(Utils.GetMC().theWorld == null || Utils.GetMC().thePlayer == null || SkyblockInfo.getInstance().getLocation()==null) return;
-        if(!SkyblockFeatures.config.highlightBeacons && !SkyblockInfo.getInstance().getLocation().equals("combat_3")) return;
+        if(!SkyblockFeatures.config.highlightBeacons && !SkyblockInfo.getInstance().map.equals("The End")) return;
 
         for(TileEntity e:Utils.GetMC().theWorld.loadedTileEntityList) {
             if(e instanceof TileEntityBeacon) {

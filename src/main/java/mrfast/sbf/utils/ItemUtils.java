@@ -8,12 +8,17 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import mrfast.sbf.core.PricingData;
+import net.minecraft.init.Items;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.JsonToNBT;
+import net.minecraft.nbt.NBTException;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraftforge.common.util.Constants;
@@ -120,6 +125,86 @@ public class ItemUtils {
         return null;
     }
 
+    public static ItemStack getSkyblockItem(String id) {
+        JsonObject itemObj = APIUtils.getJSONResponse("https://raw.githubusercontent.com/NotEnoughUpdates/NotEnoughUpdates-REPO/master/items/"+id+".json");
+        ItemStack stack = parseJsonToItemStack(itemObj.toString());
+        
+        return stack;
+    }
+
+    public class CustomItemData {
+        public String internalname;
+        public String itemid;
+        public String displayname;
+        public String clickcommand;
+        public int damage;
+        public String nbttag;
+        public String modver;
+        public List<String> lore;
+        public String infoType;
+        public List<String> info;
+        public String crafttext;
+    }
+
+    public static ItemStack parseJsonToItemStack(String json) {
+        Gson gson = new Gson();
+        CustomItemData itemData = gson.fromJson(json, CustomItemData.class);
+        int meta = 0;
+        if(itemData.internalname.contains("-")) {
+            meta = Integer.parseInt(itemData.internalname.split("-")[1]);
+        }
+
+        Item item = Item.getByNameOrId(itemData.itemid);
+
+        if (item == null) {
+            return null; // Return null if the item is not found by the itemid
+        }
+
+        ItemStack itemStack = new ItemStack(item,1,meta);
+        NBTTagCompound nbtTagCompound = new NBTTagCompound();
+
+        try {
+            NBTTagCompound nbtTag = JsonToNBT.getTagFromJson(itemData.nbttag);
+            nbtTagCompound.merge(nbtTag);
+        } catch (NBTException e) {
+            e.printStackTrace();
+        }
+
+        // Apply other NBT data to the item stack
+        nbtTagCompound.setString("display", "{\"Lore\":" + gson.toJson(itemData.lore) + ",\"Name\":\"" + itemData.displayname + "\"}");
+        nbtTagCompound.setString("ExtraAttributes", "{\"id\":\"" + itemData.internalname + "\"}");
+        nbtTagCompound.setByte("HideFlags", (byte) 254);
+        // System.out.println(json);
+        itemStack.setTagCompound(nbtTagCompound);
+        itemStack.setStackDisplayName(itemData.displayname);
+        return itemStack;
+    }
+
+
+    public static ItemStack updateLore(ItemStack itemStack, List<String> lore2) {
+        NBTTagCompound itemNbt = itemStack.getTagCompound();
+        if (itemNbt == null) {
+            itemNbt = new NBTTagCompound();
+        }
+
+        NBTTagCompound displayNbt = itemNbt.getCompoundTag("display");
+        if (!displayNbt.hasKey("Lore")) {
+            displayNbt.setTag("Lore", new NBTTagList());
+        }
+
+        NBTTagList loreList = displayNbt.getTagList("Lore", 8);
+        for (String lore : lore2) {
+            loreList.appendTag(new net.minecraft.nbt.NBTTagString(lore));
+        }
+
+        displayNbt.setTag("Lore", loreList);
+        itemNbt.setTag("display", displayNbt);
+        itemStack.setTagCompound(itemNbt);
+
+        return itemStack;
+    }
+
+
 
     /**
      * Returns a string list containing the nbt lore of an ItemStack, or
@@ -206,7 +291,6 @@ public class ItemUtils {
         }
 
         NBTTagList lore = display.getTagList("Lore", Constants.NBT.TAG_STRING);
-        String name = display.getString("Name");
 
         // Determine the item's rarity
         for (int i = 0; i < lore.tagCount(); i++) {
@@ -227,16 +311,17 @@ public class ItemUtils {
         // If the item doesn't have a valid rarity, return null
         return ItemRarity.COMMON;
     }
-    static HashMap<String,JsonObject> itemMap = new HashMap<>();
+    public static HashMap<String,JsonObject> skyhelperItemMap = new HashMap<>();
     
     public static double getEstimatedItemValue(ItemStack stack) {
-        if(itemMap.size()==0) {
+        if(skyhelperItemMap.size()==0) {
             JsonArray items = APIUtils.getArrayResponse("https://raw.githubusercontent.com/Altpapier/SkyHelper-Networth/abb278d6be1e13b3204ccb05f47c5e8aaf614733/constants/items.json");
             for(int i=0;i<items.size();i++) {
                 JsonObject a = items.get(i).getAsJsonObject();
-                itemMap.put(a.get("id").getAsString(), a);
+                skyhelperItemMap.put(a.get("id").getAsString(), a);
             }
         }
+
         String id = PricingData.getIdentifier(stack);
         NBTTagCompound ExtraAttributes = getExtraAttributes(stack);
         double total = 0;
@@ -261,11 +346,11 @@ public class ItemUtils {
     }
 
     public static Integer getEstimatedItemValue(NBTTagCompound ExtraAttributes) {
-        if(itemMap.size()==0) {
+        if(skyhelperItemMap.size()==0) {
             JsonArray items = APIUtils.getArrayResponse("https://raw.githubusercontent.com/Altpapier/SkyHelper-Networth/abb278d6be1e13b3204ccb05f47c5e8aaf614733/constants/items.json");
             for(int i=0;i<items.size();i++) {
                 JsonObject a = items.get(i).getAsJsonObject();
-                itemMap.put(a.get("id").getAsString(), a);
+                skyhelperItemMap.put(a.get("id").getAsString(), a);
             }
         }
         String id = ExtraAttributes.getString("id");
@@ -334,7 +419,7 @@ public class ItemUtils {
             } else {
                 return 0;
             }
-            JsonArray upgradeCosts = itemMap.get(id).get("upgrade_costs").getAsJsonArray();
+            JsonArray upgradeCosts = skyhelperItemMap.get(id).get("upgrade_costs").getAsJsonArray();
             for(int i=0;i<stars;i++) {
                 JsonElement b = upgradeCosts.get(i).getAsJsonArray().get(0);
                 totalEssence+=b.getAsJsonObject().get("amount").getAsInt();

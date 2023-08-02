@@ -7,7 +7,9 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Scanner;
 
@@ -53,13 +55,13 @@ public class APIUtils {
                 int statusCode = response.getStatusLine().getStatusCode();
 
                 if (statusCode == 200) {
-                    try (BufferedReader in = new BufferedReader(new InputStreamReader(entity.getContent()))) {
+                    try (BufferedReader in = new BufferedReader(new InputStreamReader(entity.getContent(),StandardCharsets.UTF_8))) {
                         Gson gson = new Gson();
-                        System.out.println("sending full");
+                        // System.out.println("sending full");
                         return gson.fromJson(in, JsonObject.class);
                     }
                 } else {
-                    Utils.SendMessage("non 200 is " + statusCode);
+                    Utils.SendMessage(EnumChatFormatting.RED+"Unexpected Server Response: " + statusCode);
                 }
                 response.close();
             }
@@ -68,6 +70,31 @@ public class APIUtils {
             ex.printStackTrace();
         }
         return new JsonObject();
+    }
+
+    public static String getHypixelRank(String uuid) {
+        JsonObject json = APIUtils.getJSONResponse("https://api.hypixel.net/player?uuid="+uuid).get("player").getAsJsonObject();
+        String rank = "§7";
+        if(json.has("mostRecentMonthlyPackageRank")) rank = json.get("mostRecentMonthlyPackageRank").getAsString();
+        else if(json.has("newPackageRank")) rank = json.get("newPackageRank").getAsString();
+        return convertRank(rank)+APIUtils.getName(uuid);
+    }
+
+    public static String convertRank(String rank) {
+        switch (rank) {
+            case "VIP":
+                return "§a[VIP] ";
+            case "VIP_PLUS":
+                return "§a[VIP§6+§a] ";
+            case "MVP":
+                return "§b[MVP] ";
+            case "MVP_PLUS":
+                return "§b[MVP§c+§b] ";
+            case "SUPERSTAR":
+                return "§6[MVP§c++§6] ";
+            default:
+                return "§7";
+        }
     }
 
     // public static void getPetObject(JsonObject pet) {
@@ -168,8 +195,8 @@ public class APIUtils {
             } else {
                 // player.addChatMessage(new ChatComponentText(EnumChatFormatting.RED + "Request failed. HTTP Error Code: " + response.getStatusLine().getStatusCode()));
             }
-        } catch (IOException | URISyntaxException ex) {
-            player.addChatMessage(new ChatComponentText(EnumChatFormatting.RED + "An error has occured."));
+        } catch (Exception ex) {
+            player.addChatMessage(new ChatComponentText(EnumChatFormatting.RED + "An error has occured. "));
             // ex.printStackTrace();
         }
         return new JsonArray();
@@ -185,13 +212,13 @@ public class APIUtils {
         return null;
     }
     private static Gson gson = new Gson();
+
     public static String getName(String uuid) {
         try {
-            try (Scanner scanner = new Scanner(new URL("https://api.mojang.com/user/profile/" + uuid).openStream(), "UTF-8").useDelimiter("\\A")) {
-                String json = scanner.next();
-                JsonArray array = gson.fromJson(json, JsonArray.class);
-                return array.get(array.size() - 1).getAsJsonObject().get("name").getAsString();
-            }
+            JsonObject json = getJSONResponse("https://api.mojang.com/user/profile/"+uuid);
+            if(json.has("error")) return null;
+            
+            return json.get("name").getAsString();
         } catch (Exception e) {
             return null;
         }
@@ -223,6 +250,12 @@ public class APIUtils {
                 cuteName = profileJSON.get("cute_name").getAsString();
                 break;
             }
+        }
+        if(latestProfile=="") {
+            System.out.println("No currentt profile found, selecting first");
+            JsonObject profileJSON = profilesArray.get(0).getAsJsonObject();
+            latestProfile = profileJSON.get("profile_id").getAsString();
+            cuteName = profileJSON.get("cute_name").getAsString();
         }
         System.out.println("LATEST PROFILE: " + latestProfile + " " + cuteName);
         return latestProfile;

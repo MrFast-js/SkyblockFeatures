@@ -58,13 +58,11 @@ public class FakePlayerCommand extends CommandBase {
         try {
             String UUIDJson = IOUtils.toString(new URL(url), StandardCharsets.UTF_8);
             if (UUIDJson.isEmpty()) {
-                return "invalid name";
+                return null;
             }
             JsonObject UUIDObject = (JsonObject)parser.parse(UUIDJson);
             return reformatUuid(UUIDObject.get("id").toString());
-        }
-        catch (Exception e) {
-            e.printStackTrace();
+        } catch (Exception e) {
             return null;
         }
     }

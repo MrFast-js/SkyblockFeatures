@@ -38,6 +38,11 @@ public class SkyblockInfo {
             if (isJsonLikeMessage(chatMessage)) {
                 event.setCanceled(true);
                 System.out.println("FOUND JSON MESSAGE: "+chatMessage);
+                if(chatMessage.contains("limbo")) {
+                    Utils.setTimeout(()->{
+                       Minecraft.getMinecraft().thePlayer.sendChatMessage("/locraw");
+                    }, 2000);
+                }
                 parseMap(chatMessage);
             }
         } catch (Exception e) {

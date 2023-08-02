@@ -22,6 +22,7 @@ import com.mojang.realmsclient.gui.ChatFormatting;
 
 import gg.essential.elementa.components.UIRoundedRectangle;
 import gg.essential.universal.UMatrixStack;
+import mrfast.sbf.gui.ProfileViewerUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.network.NetworkPlayerInfo;
 import net.minecraft.client.renderer.GlStateManager;
@@ -163,11 +164,8 @@ public class Utils {
                 result.append(firstCharacter.toUpperCase()).append(remainingCharacters);
             }
         }
-        System.out.println(input+" "+result.toString());
         return result.toString();
     }
-
-
 
 	static int[] dungeonsXPPerLevel = {0, 50, 75, 110, 160, 230, 330, 470, 670, 950, 1340, 1890, 2665, 3760, 5260, 7380, 10300, 14400,
 									  20000, 27600, 38000, 52500, 71500, 97000, 132000, 180000, 243000, 328000, 445000, 600000, 800000,
@@ -380,6 +378,31 @@ public class Utils {
                 code.run();
             }
         }, ms);
+    }
+
+    public static String convertIdToLocation(String id) {
+        switch (id) {
+            case "dynamic":
+                return "Private Island";
+            case "winter":
+                return "Jerry's Workshop";
+            case "mining_1":
+                return "Gold Mine";
+            case "mining_2":
+                return "Deep Caverns";
+            case "mining_3":
+                return "Dwarven Mines";
+            case "combat_1":
+                return "Spider's Den";
+            case "combat_3":
+                return "The End";
+            case "farming_1":
+                return "The Farming Islands";
+            case "foraging_1":
+                return "The Park";    
+            default:
+                return Utils.convertToTitleCase(id);
+        }
     }
 
     public static void drawLine(int x1, int y1, int x2, int y2,Color color,float width) {
