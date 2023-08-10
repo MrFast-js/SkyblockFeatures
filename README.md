@@ -1,4 +1,4 @@
-<img src='https://user-images.githubusercontent.com/78495381/210632546-691f468d-f4e7-4b82-b1ff-8ea37591d957.png' href='' onclick=''/>
+<div align="center"><img src='https://user-images.githubusercontent.com/78495381/210632546-691f468d-f4e7-4b82-b1ff-8ea37591d957.png'/></div>
 
 <div align="center">
     <!-- release -->
@@ -25,7 +25,7 @@
 
 **For Beta Releases, Suggestions, and Support join the discord! https://discord.gg/MDTEAjbNw8**
 
-![-----------------------------------------------------](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png)
+<div align="center"><img src='https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png'/></div>
 
 ### Quick Start Guide
 - Download mod from [releases](https://github.com/MrFast-js/SkyblockFeatures/releases/latest) tab
@@ -34,12 +34,12 @@
 
 <img src='https://i.imgur.com/VIdpwua.jpg'/>
 
-![-----------------------------------------------------](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png)
+<div align="center"><img src='https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png'/></div>
 
 <h2 align=''>Profile Viewer</h2>
 <img src='https://github.com/MrFast-js/SkyblockFeatures/assets/78495381/527cdb01-6f26-41b4-8525-6d4aa0c8c6dd'/>
 
-![-----------------------------------------------------](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png)
+<div align="center"><img src='https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png'/></div>
 <h1 align="">Top Feature List</h1>
 <details>
     <summary>Solvers</summary>
@@ -168,7 +168,8 @@
     </ul>
 </details>
 
-![-----------------------------------------------------](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png)
+<div align="center"><img src='https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png'/></div>
+
 ## Cool Commands:
 - **/vm** (*Change the item view model*)
 - **/terminal** (*Allows you to practice a f7 dungeon terminal*)
@@ -179,11 +180,13 @@
 - **/flips** \<name\> (*Shows a players auction flipping info*) *Provided by [Cofl](https://sky.coflnet.com/)*
 - **/networth** \<name\> (*Shows you a players networth*) *Provided by [Skycrypt](https://sky.shiiyu.moe/) API*
 
-![-----------------------------------------------------](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png)
+<div align="center"><img src='https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png'/></div>
+
 ## License
 This project is licensed under GNU General Public License v3.0 License, see [LICENSE](LICENSE) for more details.
 
-![-----------------------------------------------------](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png)
+<div align="center"><img src='https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png'/></div>
+
 ## Credits:
 This mod would not be possible without 
 [NEU](https://github.com/NotEnoughUpdates/NotEnoughUpdates), [Skytils 0.x](https://github.com/Skytils/SkytilsMod/tree/0.x), [SBA](https://github.com/BiscuitDevelopment/SkyblockAddons)
