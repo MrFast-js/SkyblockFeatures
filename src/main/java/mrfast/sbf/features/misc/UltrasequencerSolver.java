@@ -8,6 +8,7 @@ import mrfast.sbf.SkyblockFeatures;
 import mrfast.sbf.events.SlotClickedEvent;
 import mrfast.sbf.events.GuiContainerEvent.TitleDrawnEvent;
 import mrfast.sbf.features.items.HideGlass;
+import mrfast.sbf.utils.ItemUtils;
 import mrfast.sbf.utils.Utils;
 import net.minecraft.client.gui.inventory.GuiChest;
 import net.minecraft.inventory.ContainerChest;
@@ -43,7 +44,9 @@ public class UltrasequencerSolver {
                         String itemName = Utils.cleanColor(invSlots.get(i).getStack().getDisplayName());
                         if (itemName.matches("\\d+")) {
                             int number = Integer.parseInt(itemName);
+                            if(HideGlass.isEmptyGlassPane(invSlots.get(i).getStack())) continue;
                             clickInOrderSlots[number - 1] = invSlots.get(i);
+                            if(HideGlass.isEmptyGlassPane(null))
                             answers.put(invSlots.get(i), invSlots.get(i).getStack());
                         }
                     }
@@ -59,9 +62,9 @@ public class UltrasequencerSolver {
             ContainerChest chest = (ContainerChest) Utils.GetMC().thePlayer.openContainer;
             String chestName = chest.getLowerChestInventory().getDisplayName().getUnformattedText().trim();
             if (chestName.startsWith("Ultrasequencer (")) {
-                if(HideGlass.isEmptyGlassPane(event.slot.getStack())) event.setCanceled(true);
-
                 try {
+                    if(HideGlass.isEmptyGlassPane(event.slot.getStack())) event.setCanceled(true);
+
                     int slotInt = Integer.parseInt(Utils.cleanColor(event.slot.getStack().getDisplayName()).replaceAll("[^0-9]", ""));
                     if(slotInt!=clickIndex) event.setCanceled(true);
                     else {

@@ -26,10 +26,7 @@ public abstract class UIElement {
     }
 
     public void setPos(float x, float y) {
-        this.pos = new Point(x, y,false);
-    }
-    public void setRawPos(float x, float y) {
-        this.pos = new Point(x,y,true);
+        this.pos = new Point(x, y);
     }
 
     public String getName() {

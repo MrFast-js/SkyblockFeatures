@@ -90,7 +90,7 @@ public class PricingData {
 
     @SubscribeEvent
     public void onTick(TickEvent.ClientTickEvent event) {
-        if (event.phase != TickEvent.Phase.START || !Utils.inSkyblock) return;
+        if (event.phase != TickEvent.Phase.START || !Utils.inSkyblock || Utils.GetMC().theWorld==null) return;
         if (reloadTimer.getTime() >= 90000 || !reloadTimer.isStarted()) {
             if(reloadTimer.getTime() >= 90000) reloadTimer.reset();
             reloadTimer.start();
@@ -133,7 +133,7 @@ public class PricingData {
             // Get NPC sell prices
             if (npcSellPrices.size() == 0) {
                 new Thread(() -> {
-                    JsonObject data = APIUtils.getJSONResponse("https://api.hypixel.net/resources/skyblock/items");
+                    JsonObject data = APIUtils.getJSONResponse("https://api.hypixel.net/resources/skyblock/items#NpcSellPrices");
                     JsonArray items = data.get("items").getAsJsonArray();
                     for (JsonElement item : items) {
                         JsonObject json = item.getAsJsonObject();

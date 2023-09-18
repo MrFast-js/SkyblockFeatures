@@ -46,7 +46,6 @@ public class CropCounter {
         ticks++;
         if(averageCropsValues.size()>0 && ticks >= 10 && averageCropsValues.size()>5) {
             averageCropsValues.remove(0);
-            System.out.println("removed index "+(0)+" new size:"+averageCropsValues.size());
         }
         List<String> lore = ItemUtils.getItemLore(item);
         for (int i = 0; i < lore.size(); i++) {
@@ -61,7 +60,6 @@ public class CropCounter {
                         oldCount = counter;
                     } else {
                         averageCropsValues.add((counter-oldCount)*2);
-                        System.out.println("added "+((counter-oldCount)*2)+" new size:"+averageCropsValues.size());
                         oldCount = counter;
                     }
                 }

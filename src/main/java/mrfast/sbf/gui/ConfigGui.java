@@ -222,6 +222,7 @@ public class ConfigGui extends WindowScreen {
                 if(!catagoryName.equals(selectedCatagory)) ExampleCatagory.setColor(defaultCategory);
             });
             ExampleCatagory.onMouseClickConsumer((event)->{
+                if(selectedCatagory==catagoryName) return;
                 selectedCatagory = catagoryName;
                 LoadCatagory(catagoryName);
             });

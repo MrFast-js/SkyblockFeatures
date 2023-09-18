@@ -11,6 +11,8 @@ import mrfast.sbf.gui.components.UIElement;
 import mrfast.sbf.utils.Utils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraft.client.multiplayer.ServerData;
+import net.minecraft.client.network.OldServerPinger;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.ResourceLocation;
@@ -32,6 +34,7 @@ public class CrimsonMap {
             locations.clear();
             loaded = false;
             ticks = 0;
+           
             start = false;
             if(Minecraft.getMinecraft().thePlayer != null && Minecraft.getMinecraft().theWorld != null && SkyblockFeatures.config.dwarvenMinesMap) {
                 start = true;
@@ -62,7 +65,7 @@ public class CrimsonMap {
     }   
     public static class CrimsonIslesMap extends UIElement {
         public CrimsonIslesMap() {
-            super("Crimson Isles Map", new Point(0, 5));
+            super("Crimson Isles Map", new Point(0, 5f));
             SkyblockFeatures.GUIMANAGER.registerElement(this);
         }
 
@@ -140,7 +143,7 @@ public class CrimsonMap {
 
         @Override
         public boolean getToggled() {
-            return SkyblockFeatures.config.dwarvenMinesMap && Utils.inSkyblock;
+            return SkyblockFeatures.config.crimsonsIslesMap && Utils.inSkyblock;
         }
 
         @Override

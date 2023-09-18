@@ -127,7 +127,7 @@ public class GhostTracker {
         @Override
         public void drawElement() {
             if (this.getToggled() && Minecraft.getMinecraft().thePlayer != null && mc.theWorld != null && !hidden) {
-                if(!SkyblockInfo.getInstance().location.contains("Mist")) return;
+                if(!SkyblockInfo.getInstance().localLocation.contains("Mist")) return;
                 String[] lines = {
                     ChatFormatting.GREEN+"Time Elapsed: §r"+Utils.secondsToTime(totalSeconds),
                     ChatFormatting.GREEN+"Ghosts Killed: §r"+Utils.nf.format(kills),

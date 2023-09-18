@@ -62,8 +62,8 @@ public class TrevorHelper {
         }
         if(msg.contains("animal near the ")) {
             Utils.setTimeout(()->{
-                Utils.SendMessage(ChatFormatting.AQUA+"Biome location marked with beacon.");
-                GuiManager.createTitle(ChatFormatting.AQUA+"Marked Biome", 20);
+                Utils.SendMessage(ChatFormatting.GOLD+"Biome location marked with beacon.");
+                GuiManager.createTitle(ChatFormatting.GOLD+"Marked Biome", 20);
                 Utils.setTimeout(()->{
                     if(location.contains("Oasis") || location.contains("Settlement")) {
                         ChatComponentText message = new ChatComponentText(EnumChatFormatting.GREEN+""+EnumChatFormatting.BOLD + " [WARP]");
@@ -74,7 +74,7 @@ public class TrevorHelper {
                         
                         Utils.SendMessage(
                             new ChatComponentText("")
-                            .appendText(ChatFormatting.AQUA+"Location Near Spawn!")
+                            .appendText(ChatFormatting.GOLD+"Location Near Spawn!")
                             .appendSibling(message)
                         );
                     }
@@ -91,11 +91,11 @@ public class TrevorHelper {
             
             Utils.SendMessage(
                 new ChatComponentText("")
-                .appendText(ChatFormatting.AQUA+"Marked Trevor!")
+                .appendText(ChatFormatting.GOLD+"Marked Trevor!")
                 .appendSibling(message)
             );
 
-            GuiManager.createTitle(ChatFormatting.AQUA+"Marked Trevor", 20);
+            GuiManager.createTitle(ChatFormatting.GOLD+"Marked Trevor", 20);
         }
     }
 
@@ -135,10 +135,7 @@ public class TrevorHelper {
             if(location.contains(loc) && !animalKilled) {
                 BlockPos pos = biomeLocations.get(loc);
                 GlStateManager.disableDepth();
-                AxisAlignedBB box = new AxisAlignedBB(pos.getX()-0.1+0.5, pos.getY()+1, pos.getZ()-0.1+0.5, pos.getX()+0.1+0.5, pos.getY()+200, pos.getZ()+0.1+0.5);
-                RenderUtil.drawOutlinedFilledBoundingBox(box, new Color(0x00FFFF), event.partialTicks);
-                box = new AxisAlignedBB(pos.getX(), pos.getY(), pos.getZ(), pos.getX()+1, pos.getY()+1, pos.getZ()+1);
-                RenderUtil.drawOutlinedFilledBoundingBox(box, new Color(0x00FFFF), event.partialTicks);
+                RenderUtil.drawWaypoint(pos, new Color(0x00FFFF),ChatFormatting.GOLD+loc, event.partialTicks);
                 GlStateManager.enableDepth();
             }
         }
@@ -147,17 +144,12 @@ public class TrevorHelper {
             RenderUtil.drawOutlinedFilledBoundingBox(box, new Color(0xBB00FF), event.partialTicks);
             box = new AxisAlignedBB(tracking.posX-0.1, tracking.posY, tracking.posZ-0.1, tracking.posX+0.1, tracking.posY+15, tracking.posZ+0.1);
             RenderUtil.drawOutlinedFilledBoundingBox(box, new Color(0xBB00FF), event.partialTicks);
-            if(tracking.isDead) {
-                tracking = null;
-            }
+            if(tracking.isDead) tracking = null;
         }
         if(animalKilled) {
             BlockPos pos = new BlockPos(287,101,-571);
             GlStateManager.disableDepth();
-            AxisAlignedBB box = new AxisAlignedBB(pos.getX()-0.1+0.5, pos.getY(), pos.getZ()-0.1+0.5, pos.getX()+0.1+0.5, pos.getY()+200, pos.getZ()+0.1+0.5);
-            RenderUtil.drawOutlinedFilledBoundingBox(box, new Color(0x00FFFF), event.partialTicks);
-            box = new AxisAlignedBB(pos.getX(), pos.getY(), pos.getZ(), pos.getX()+1, pos.getY()+1, pos.getZ()+1);
-            RenderUtil.drawOutlinedFilledBoundingBox(box, new Color(0x00FFFF), event.partialTicks);
+            RenderUtil.drawWaypoint(pos, new Color(0x00FFFF),ChatFormatting.GOLD+"Trevor", event.partialTicks);
             GlStateManager.enableDepth();
         }
     }

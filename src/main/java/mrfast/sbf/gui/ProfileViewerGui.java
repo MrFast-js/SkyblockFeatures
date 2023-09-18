@@ -17,6 +17,7 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.imageio.ImageIO;
 
@@ -40,6 +41,7 @@ import gg.essential.elementa.components.UIBlock;
 import gg.essential.elementa.components.UICircle;
 import gg.essential.elementa.components.UIRoundedRectangle;
 import gg.essential.elementa.components.UIText;
+import gg.essential.elementa.components.UIWrappedText;
 import gg.essential.elementa.constraints.CenterConstraint;
 import gg.essential.elementa.constraints.ChildBasedSizeConstraint;
 import gg.essential.elementa.constraints.PixelConstraint;
@@ -81,6 +83,7 @@ public class ProfileViewerGui extends WindowScreen {
     static HashMap<UIComponent,List<String>> generalHoverables = new HashMap<>();
     static HashMap<UIComponent,List<String>> HOTMHoverables = new HashMap<>();
     static HashMap<UIComponent,List<String>> petHoverables = new HashMap<>();
+    static HashMap<UIComponent,List<String>> dungeonHoverables = new HashMap<>();
 
     String playerLocation = "";
     String selectedProfileUUID = "";
@@ -95,31 +98,16 @@ public class ProfileViewerGui extends WindowScreen {
         getWindow().draw(matrixStack);
         mouseXFloat = mouseX;
         mouseYFloat = mouseY;
+        HashMap<UIComponent, List<String>> hoverables = null;
+
+        if(selectedCategory.equals("General")) hoverables = generalHoverables;
+        if(selectedCategory.equals("Skills")) hoverables = HOTMHoverables;
+        if(selectedCategory.equals("Pets")) hoverables = petHoverables;
+        if(selectedCategory.equals("Dungeons")) hoverables = dungeonHoverables;
+        
         try {
-            if(selectedCategory.equals("General")) {
-                for(Entry<UIComponent, List<String>> entry:generalHoverables.entrySet()) {
-                    if(entry.getKey().isHovered()) {
-                        renderTooltip = entry.getValue();
-                    }
-                }
-            }
-        } catch (Exception e) {
-            // TODO: handle exception
-        }
-        try {
-            if(selectedCategory.equals("Skills")) {
-                for(Entry<UIComponent, List<String>> entry:HOTMHoverables.entrySet()) {
-                    if(entry.getKey().isHovered()) {
-                        renderTooltip = entry.getValue();
-                    }
-                }
-            }
-        } catch (Exception e) {
-            // TODO: handle exception
-        }
-        try {
-            if(selectedCategory.equals("Pets")) {
-                for(Entry<UIComponent, List<String>> entry:petHoverables.entrySet()) {
+            if(hoverables!=null) {
+                for(Entry<UIComponent, List<String>> entry:hoverables.entrySet()) {
                     if(entry.getKey().isHovered()) {
                         renderTooltip = entry.getValue();
                     }
@@ -152,23 +140,24 @@ public class ProfileViewerGui extends WindowScreen {
         }
     }
     // Skills
-    SkillInfo blazeSlayer = new SkillInfo(0,0,0,null);
-    SkillInfo vampireSlayer = new SkillInfo(0,0,0,null);
-    SkillInfo wolfSlayer = new SkillInfo(0,0,0,null);
-    SkillInfo emanSlayer = new SkillInfo(0,0,0,null);
-    SkillInfo spiderSlayer = new SkillInfo(0,0,0,null);
-    SkillInfo zombieSlayer = new SkillInfo(0,0,0,null);
-    SkillInfo farmingLevel = new SkillInfo(0,0,0,null);
-    SkillInfo miningLevel = new SkillInfo(0,0,0,null);
-    SkillInfo combatLevel = new SkillInfo(0,0,0,null);
-    SkillInfo foragingLevel = new SkillInfo(0,0,0,null);
-    SkillInfo fishingLevel = new SkillInfo(0,0,0,null);
-    SkillInfo enchantingLevel = new SkillInfo(0,0,0,null);
-    SkillInfo alchemyLevel = new SkillInfo(0,0,0,null);
-    SkillInfo tamingLevel = new SkillInfo(0,0,0,null);
-    SkillInfo carpentryLevel = new SkillInfo(0,0,0,null);
-    SkillInfo socialLevel = new SkillInfo(0,0,0,null);
-    SkillInfo runecraftingLevel = new SkillInfo(0,0,0,null);
+    static boolean skillApiDisabled = false;
+    static SkillInfo blazeSlayer = new SkillInfo(0,0,0,null);
+    static SkillInfo vampireSlayer = new SkillInfo(0,0,0,null);
+    static SkillInfo wolfSlayer = new SkillInfo(0,0,0,null);
+    static SkillInfo emanSlayer = new SkillInfo(0,0,0,null);
+    static SkillInfo spiderSlayer = new SkillInfo(0,0,0,null);
+    static SkillInfo zombieSlayer = new SkillInfo(0,0,0,null);
+    static SkillInfo farmingLevel = new SkillInfo(0,0,0,null);
+    static SkillInfo miningLevel = new SkillInfo(0,0,0,null);
+    static SkillInfo combatLevel = new SkillInfo(0,0,0,null);
+    static SkillInfo foragingLevel = new SkillInfo(0,0,0,null);
+    static SkillInfo fishingLevel = new SkillInfo(0,0,0,null);
+    static SkillInfo enchantingLevel = new SkillInfo(0,0,0,null);
+    static SkillInfo alchemyLevel = new SkillInfo(0,0,0,null);
+    static SkillInfo tamingLevel = new SkillInfo(0,0,0,null);
+    static SkillInfo carpentryLevel = new SkillInfo(0,0,0,null);
+    static SkillInfo socialLevel = new SkillInfo(0,0,0,null);
+    static SkillInfo runecraftingLevel = new SkillInfo(0,0,0,null);
 
     public static class SkillInfo {
         public Integer level;
@@ -202,15 +191,15 @@ public class ProfileViewerGui extends WindowScreen {
     static double fontScale = screenHeight/540d;
     String uuidString = "";
     public static Color clear = new Color(0,0,0,0);
-    public ProfileViewerGui(Boolean doAnimation,String username) {
+    public ProfileViewerGui(Boolean doAnimation,String username,String profileString) {
         super(ElementaVersion.V2);
 
         UUID uuid = UUID.fromString(FakePlayerCommand.getUUID(username));
 
         profile = new GameProfile(uuid, username);
-        // This sets the skin from the uuid
-        // Utils.SendMessage("STAGE 5");
+        selectedCategory = "";
 
+        // This sets the skin from the uuid
         Utils.GetMC().getSessionService().fillProfileProperties(profile, true);
 
         uuidString = uuid.toString().replaceAll("-","");
@@ -293,14 +282,14 @@ public class ProfileViewerGui extends WindowScreen {
             hypixelProfilesResponse = null;
             String latestProfile = APIUtils.getLatestProfileID(uuidString, SkyblockFeatures.config.apiKey);
             System.out.println("doing stuff part 2 "+uuidString);
-            if (latestProfile == null) return;
-            
-            String locationURL = "https://api.hypixel.net/status?uuid="+uuidString;
-            String profileURL = "https://api.hypixel.net/skyblock/profiles?uuid=" + uuidString;
-            String achievmentsURL = "https://api.hypixel.net/resources/achievements?uuid=" + uuidString;
+            if (profileString.equals("auto") && latestProfile == null) return;
+            String locationURL = "https://api.hypixel.net/status?uuid="+uuidString+"#GetLocationPV";
+            String profileURL = "https://api.hypixel.net/skyblock/profiles?uuid=" + uuidString+"#GetProfilePV";
+            String achievmentsURL = "https://api.hypixel.net/resources/achievements?uuid=" + uuidString+"#getAchievmentsPV";
 
             System.out.println("Fetching Hypixel profile...");
             JsonObject profiles = APIUtils.getJSONResponse(profileURL);
+            
             JsonObject locationJson = APIUtils.getJSONResponse(locationURL);
             achievmentsJson = APIUtils.getJSONResponse(achievmentsURL).get("achievements").getAsJsonObject();
             Boolean playerOnline = locationJson.get("session").getAsJsonObject().get("online").getAsBoolean();
@@ -310,7 +299,7 @@ public class ProfileViewerGui extends WindowScreen {
                 playerLocation = ChatFormatting.GREEN+formattedLocation;
             } else {
                 playerLocation = ChatFormatting.RED+"OFFLINE";
-            } 
+            }
 
             if(profiles.has("cause")) {
                 System.out.println(profiles.get("cause").getAsString());
@@ -319,22 +308,62 @@ public class ProfileViewerGui extends WindowScreen {
             hypixelProfilesResponse = profiles.get("profiles").getAsJsonArray();
 
             try {
-                System.out.println("Finding Current Profile");
-                hypixelProfilesResponse.forEach((profile)->{
-                    System.out.println(profile.getAsJsonObject().get("profile_id").getAsString()+" vs "+latestProfile);
-                    if(profile.getAsJsonObject().get("profile_id").getAsString().equals(latestProfile)) {
-                        String cuteName = profile.getAsJsonObject().get("cute_name").getAsString();
-                        System.out.println("Loading Current Profile");
-                        loadProfile(cuteName,true);
+                System.out.println("Finding Current/specified Profile");
+                AtomicBoolean found = new AtomicBoolean(false);
+                hypixelProfilesResponse.forEach((profile)-> {
+                    String cuteName = profile.getAsJsonObject().get("cute_name").getAsString();
+                    if(profileString.equals("auto")) {
+                        System.out.println(profile.getAsJsonObject().get("profile_id").getAsString()+" vs "+latestProfile);
+                        if(profile.getAsJsonObject().get("profile_id").getAsString().equals(latestProfile)) {
+                            System.out.println("Loading Current Profile");
+                            loadProfile(cuteName,true);
+                            found.set(true);
+                        }
+                    } else {
+                        System.out.println(profile.getAsJsonObject().get("profile_id").getAsString()+" vs "+profileString);
+                        if(profile.getAsJsonObject().get("profile_id").getAsString().equals(profileString)) {
+                            System.out.println("Loading specified Profile");
+                            loadProfile(cuteName,true);
+                            found.set(true);
+                        }
                     }
                 });
+                if(!found.get()) {
+                    displayError("We couldn't find this player's profile. It's possible they have been removed from the co-op.");
+                }
             } catch (Exception e) {
                 // TODO: handle exception
             }
-            
         }).start();
     }
-    
+
+    public void displayError(String error) {
+        cleanBox();
+        selectedCategory = "error";
+        
+        new UIWrappedText(ChatFormatting.RED + error)
+            .setTextScale(new PixelConstraint(2f))
+            .setChildOf(box)
+            .setX(new CenterConstraint())
+            .setY(new CenterConstraint());
+    }
+
+    public void cleanBox() {
+        box.clearChildren();
+        box = new UIRoundedRectangle(10f)
+            .setX(new CenterConstraint())
+            .setY(new CenterConstraint())
+            .setWidth(new RelativeConstraint(0.70f))
+            .setHeight(new RelativeConstraint(0.70f))
+            .setChildOf(getWindow())
+            .setColor(clear);
+        new ShadowIcon(new ResourceImageFactory("/assets/skyblockfeatures/gui/largeOutline.png",false),false).setChildOf(box)
+            .setX(new PixelConstraint(0f))
+            .setY(new PixelConstraint(0f))
+            .setWidth(new RelativeConstraint(1f))
+            .setHeight(new RelativeConstraint(1f));
+    }
+
     UIComponent sideButtonContainer = new UIRoundedRectangle(5f)
             .setColor(clear)
             .setX(new RelativeConstraint(0.03f))
@@ -344,12 +373,14 @@ public class ProfileViewerGui extends WindowScreen {
             .enableEffect(new ScissorEffect())
             .setChildOf(getWindow());
     JsonObject profiles = new JsonObject();
+    static String lastProfileID = "";
     public void loadProfile(String cute_name,Boolean initial) {
-        System.out.println("Loading Profile "+cute_name);
+        System.out.println("Loading Profile "+cute_name+ " initial: "+initial);
         generalHoverables.clear();
         petHoverables.clear();
         HOTMHoverables.clear();
         selectedCategory = "General";
+
         if(generalButton!=null) {
             ProfileViewerUtils.animateX(lastSelectedButton, 8f);
             lastSelectedButton = generalButton;
@@ -386,10 +417,11 @@ public class ProfileViewerGui extends WindowScreen {
             });
         }
 
-        box.clearChildren();
         String profileUUID = null;
         cute_name = Utils.cleanColor(cute_name);
         List<String> profileList = new ArrayList<>();
+        List<String> coopMemberList = new ArrayList<>();
+        Thread loadUsernamesThread=null;
 
         for(JsonElement profile : hypixelProfilesResponse) {
             JsonObject profileObject = profile.getAsJsonObject();
@@ -400,17 +432,57 @@ public class ProfileViewerGui extends WindowScreen {
             }
             if(profileObject.get("cute_name").getAsString().equals(cute_name)) {
                 profileUUID = profileObject.get("profile_id").getAsString();
+                // loadUsernamesThread = new Thread(()->{
+                    System.out.println("Adding members..");
+                    for(Entry<String, JsonElement> entry:profileObject.get("members").getAsJsonObject().entrySet()) {
+                        
+                        // System.out.println("Fetching Hypixel profile...");
+                        // String profileURL = "https://api.hypixel.net/skyblock/profiles?uuid=" + entry.getKey();
+                        // JsonObject response = APIUtils.getJSONResponse(profileURL);
+                        // JsonArray profiles = null;
+                        // if(response!=null) {
+                        //    profiles = response.get("profiles").getAsJsonArray();
+                        // }
+                        // boolean foundProfile = false;
+                        // for(int i=0;i<profiles.size();i++) {
+                        //     JsonObject thing = profiles.get(i).getAsJsonObject();
+                        //     if(thing.getAsJsonObject().get("profile_id").getAsString().equals(selectedProfileUUID)) {
+                        //         foundProfile = true;
+                        //     }
+                        // }
+                        // if(!foundProfile) continue;
+                        String username = APIUtils.getName(entry.getKey());
+                        System.out.println("Adding username: "+username);
+                        coopMemberList.add(username);
+                    }
+                // });
+                // loadUsernamesThread.start();
             }
         }
+        // if (loadUsernamesThread != null) {
+        //     try {
+        //         loadUsernamesThread.join(); // Wait for the memberThread to complete
+        //     } catch (InterruptedException e) {
+        //         // Handle the exception if needed
+        //     }
+        // }
+        
+
         if(profileUUID==null) return;
         selectedProfileUUID = profileUUID;
         
-        hypixelProfilesResponse.forEach((profile)->{
-            if(profile.getAsJsonObject().get("profile_id").getAsString().equals(selectedProfileUUID)) {
-                ProfilePlayerResponse = profile.getAsJsonObject().get("members").getAsJsonObject().get(uuidString).getAsJsonObject();
-                ProfileResponse = profile.getAsJsonObject();
-            }
-        });
+        if(selectedProfileUUID != lastProfileID) {
+            hypixelProfilesResponse.forEach((profile)->{
+                if(profile.getAsJsonObject().get("profile_id").getAsString().equals(selectedProfileUUID)) {
+                    ProfilePlayerResponse = profile.getAsJsonObject().get("members").getAsJsonObject().get(uuidString).getAsJsonObject();
+                    ProfileResponse = profile.getAsJsonObject();
+                }
+            });
+            lastProfileID = selectedProfileUUID;
+        }
+        
+        resetSkillsAndSlayers();
+        setSkillsAndSlayers(ProfilePlayerResponse);
 
         int sbLevelXP = 0;
         if(ProfilePlayerResponse.has("leveling")) {
@@ -418,26 +490,13 @@ public class ProfileViewerGui extends WindowScreen {
         }
         profiles = new JsonObject();
         new Thread(()->{
-            profiles = APIUtils.getJSONResponse("https://sky.shiiyu.moe/api/v2/profile/"+uuidString).get("profiles").getAsJsonObject();
+            profiles = APIUtils.getJSONResponse("https://sky.shiiyu.moe/api/v2/profile/"+uuidString+"#skycryptForPV").get("profiles").getAsJsonObject();
         }).start();
 
         Integer sbLevelCurrXp = sbLevelXP%100;
         Integer sbLevel = (int) Math.floor(sbLevelXP/100);
 
-        setSkills(ProfilePlayerResponse);
-
-        box = new UIRoundedRectangle(10f)
-            .setX(new CenterConstraint())
-            .setY(new CenterConstraint())
-            .setWidth(new RelativeConstraint(0.70f))
-            .setHeight(new RelativeConstraint(0.70f))
-            .setChildOf(getWindow())
-            .setColor(clear);
-        new ShadowIcon(new ResourceImageFactory("/assets/skyblockfeatures/gui/largeOutline.png",false),false).setChildOf(box)
-            .setX(new PixelConstraint(0f))
-            .setY(new PixelConstraint(0f))
-            .setWidth(new RelativeConstraint(1f))
-            .setHeight(new RelativeConstraint(1f));
+        cleanBox();
         float guiWidth = box.getWidth();
         float guiHeight = box.getHeight();
         double fontScale = screenHeight/540d;
@@ -472,26 +531,26 @@ public class ProfileViewerGui extends WindowScreen {
         UIComponent statsAreaMid = new UIBlock(clear).setX(new PixelConstraint(0.25f*guiWidth)).setY(new PixelConstraint((0.09f*guiHeight)-1)).setChildOf(statsAreaContainer).setWidth(new PixelConstraint(0.75f*guiWidth*0.30f)).setHeight(new PixelConstraint(((0.35f*guiHeight)-1)));
         UIComponent statsAreaRight = new UIBlock(clear).setX(new PixelConstraint(0.50f*guiWidth)).setY(new PixelConstraint((0.09f*guiHeight)-1)).setChildOf(statsAreaContainer).setWidth(new PixelConstraint(0.75f*guiWidth*0.30f)).setHeight(new PixelConstraint(((0.35f*guiHeight)-1)));
         
-        drawProgressbar(sbLevelCurrXp,100,statsAreaTop,"Level "+sbLevel,new ItemStack(Items.diamond),null);
-        drawProgressbar(tamingLevel.currentXp,tamingLevel.totalXp,statsAreaLeft,"Taming "+tamingLevel.level,new ItemStack(Items.spawn_egg),tamingLevel.hover);
-        drawProgressbar(miningLevel.currentXp,miningLevel.totalXp,statsAreaLeft,"Mining "+miningLevel.level,new ItemStack(Items.iron_pickaxe),miningLevel.hover);
-        drawProgressbar(foragingLevel.currentXp,foragingLevel.totalXp,statsAreaLeft,"Foraging "+foragingLevel.level,new ItemStack(Blocks.sapling),foragingLevel.hover);
-        drawProgressbar(enchantingLevel.currentXp,enchantingLevel.totalXp,statsAreaLeft,"Enchanting "+enchantingLevel.level,new ItemStack(Blocks.enchanting_table),enchantingLevel.hover);
-        drawProgressbar(carpentryLevel.currentXp,carpentryLevel.totalXp,statsAreaLeft,"Carpentry "+carpentryLevel.level,new ItemStack(Blocks.crafting_table),carpentryLevel.hover);
-        drawProgressbar(socialLevel.currentXp,socialLevel.totalXp,statsAreaLeft,"Social "+socialLevel.level,new ItemStack(Items.emerald),socialLevel.hover);
+        drawProgressbar(sbLevelCurrXp,100,statsAreaTop,"Level "+sbLevel,new ItemStack(Items.diamond),null, false);
+        drawProgressbar(tamingLevel.currentXp,tamingLevel.totalXp,statsAreaLeft,"Taming "+tamingLevel.level,new ItemStack(Items.spawn_egg),tamingLevel.hover,true);
+        drawProgressbar(miningLevel.currentXp,miningLevel.totalXp,statsAreaLeft,"Mining "+miningLevel.level,new ItemStack(Items.iron_pickaxe),miningLevel.hover,true);
+        drawProgressbar(foragingLevel.currentXp,foragingLevel.totalXp,statsAreaLeft,"Foraging "+foragingLevel.level,new ItemStack(Blocks.sapling),foragingLevel.hover, true);
+        drawProgressbar(enchantingLevel.currentXp,enchantingLevel.totalXp,statsAreaLeft,"Enchanting "+enchantingLevel.level,new ItemStack(Blocks.enchanting_table),enchantingLevel.hover,true);
+        drawProgressbar(carpentryLevel.currentXp,carpentryLevel.totalXp,statsAreaLeft,"Carpentry "+carpentryLevel.level,new ItemStack(Blocks.crafting_table),carpentryLevel.hover,true);
+        drawProgressbar(socialLevel.currentXp,socialLevel.totalXp,statsAreaLeft,"Social "+socialLevel.level,new ItemStack(Items.emerald),socialLevel.hover,true);
 
-        drawProgressbar(farmingLevel.currentXp,farmingLevel.totalXp,statsAreaMid,"Farming "+farmingLevel.level,new ItemStack(Items.golden_hoe),farmingLevel.hover);
-        drawProgressbar(combatLevel.currentXp,combatLevel.totalXp,statsAreaMid,"Combat "+combatLevel.level,new ItemStack(Items.stone_sword),combatLevel.hover);
-        drawProgressbar(fishingLevel.currentXp,fishingLevel.totalXp,statsAreaMid,"Fishing "+fishingLevel.level,new ItemStack(Items.fishing_rod),fishingLevel.hover);
-        drawProgressbar(alchemyLevel.currentXp,alchemyLevel.totalXp,statsAreaMid,"Alchemy "+alchemyLevel.level,new ItemStack(Items.potionitem),alchemyLevel.hover);
-        drawProgressbar(runecraftingLevel.currentXp,runecraftingLevel.totalXp,statsAreaMid,"Runecrafting "+runecraftingLevel.level,new ItemStack(Items.magma_cream),runecraftingLevel.hover);
+        drawProgressbar(farmingLevel.currentXp,farmingLevel.totalXp,statsAreaMid,"Farming "+farmingLevel.level,new ItemStack(Items.golden_hoe),farmingLevel.hover,true);
+        drawProgressbar(combatLevel.currentXp,combatLevel.totalXp,statsAreaMid,"Combat "+combatLevel.level,new ItemStack(Items.stone_sword),combatLevel.hover,true);
+        drawProgressbar(fishingLevel.currentXp,fishingLevel.totalXp,statsAreaMid,"Fishing "+fishingLevel.level,new ItemStack(Items.fishing_rod),fishingLevel.hover,true);
+        drawProgressbar(alchemyLevel.currentXp,alchemyLevel.totalXp,statsAreaMid,"Alchemy "+alchemyLevel.level,new ItemStack(Items.potionitem),alchemyLevel.hover,true);
+        drawProgressbar(runecraftingLevel.currentXp,runecraftingLevel.totalXp,statsAreaMid,"Runecrafting "+runecraftingLevel.level,new ItemStack(Items.magma_cream),runecraftingLevel.hover,true);
 
-        drawProgressbar(zombieSlayer.currentXp,zombieSlayer.totalXp,statsAreaRight,"Rev "+zombieSlayer.level,new ItemStack(Items.rotten_flesh),zombieSlayer.hover);
-        drawProgressbar(spiderSlayer.currentXp,spiderSlayer.totalXp,statsAreaRight,"Tara "+spiderSlayer.level,new ItemStack(Items.spider_eye),spiderSlayer.hover);
-        drawProgressbar(wolfSlayer.currentXp,wolfSlayer.totalXp,statsAreaRight,"Sven "+wolfSlayer.level,new ItemStack(Items.bone),wolfSlayer.hover);
-        drawProgressbar(emanSlayer.currentXp,emanSlayer.totalXp,statsAreaRight,"Eman "+emanSlayer.level,new ItemStack(Items.ender_pearl),emanSlayer.hover);
-        drawProgressbar(blazeSlayer.currentXp,blazeSlayer.totalXp,statsAreaRight,"Blaze "+blazeSlayer.level,new ItemStack(Items.blaze_rod),blazeSlayer.hover);
-        drawProgressbar(vampireSlayer.currentXp,vampireSlayer.totalXp,statsAreaRight,"Vampire "+vampireSlayer.level,new ItemStack(Items.wooden_sword),vampireSlayer.hover);
+        drawProgressbar(zombieSlayer.currentXp,zombieSlayer.totalXp,statsAreaRight,"Rev "+zombieSlayer.level,new ItemStack(Items.rotten_flesh),zombieSlayer.hover, false);
+        drawProgressbar(spiderSlayer.currentXp,spiderSlayer.totalXp,statsAreaRight,"Tara "+spiderSlayer.level,new ItemStack(Items.spider_eye),spiderSlayer.hover, false);
+        drawProgressbar(wolfSlayer.currentXp,wolfSlayer.totalXp,statsAreaRight,"Sven "+wolfSlayer.level,new ItemStack(Items.bone),wolfSlayer.hover, false);
+        drawProgressbar(emanSlayer.currentXp,emanSlayer.totalXp,statsAreaRight,"Eman "+emanSlayer.level,new ItemStack(Items.ender_pearl),emanSlayer.hover, false);
+        drawProgressbar(blazeSlayer.currentXp,blazeSlayer.totalXp,statsAreaRight,"Blaze "+blazeSlayer.level,new ItemStack(Items.blaze_rod),blazeSlayer.hover, false);
+        drawProgressbar(vampireSlayer.currentXp,vampireSlayer.totalXp,statsAreaRight,"Vampire "+vampireSlayer.level,new ItemStack(Items.wooden_sword),vampireSlayer.hover, false);
 
         UIComponent generalInfoContainer = new UIBlock(clear).setY(new SiblingConstraint(20f)).setX(new PixelConstraint(0f)).setWidth(new RelativeConstraint(1f)).setHeight(new RelativeConstraint(0.175f)).setChildOf(statsAreaContainer);
         long Purse = 0;
@@ -504,6 +563,7 @@ public class ProfileViewerGui extends WindowScreen {
         JsonObject networthResponse = APIUtils.getNetworthResponse(data);
         List<String> networthTooltip = new ArrayList<>(Arrays.asList(ChatFormatting.RED + "Player has API disabled: "));
         String networth = ChatFormatting.RED+"API Disabled";
+
         if(networthResponse.has("data")) {
             JsonObject networthJson = networthResponse.get("data").getAsJsonObject();
             JsonObject networthCategorys = networthJson.get("categories").getAsJsonObject();
@@ -517,19 +577,20 @@ public class ProfileViewerGui extends WindowScreen {
                 long accessories = 0;
                 long enderchest = 0; 
                 long Sacks = 0;
+                long Storage = 0;
                 long pets = 0;
                 long total = 0;
                 long irl = 0;
 
-                try {Armor = networthCategorys.get("armor").getAsJsonObject().get("total").getAsInt();} catch (NullPointerException e) {}
-                try {Wardrobe = networthCategorys.get("wardrobe_inventory").getAsJsonObject().get("total").getAsInt();} catch (NullPointerException e) {}
-                try {networthCategorys.get("inventory").getAsJsonObject().get("total").getAsInt();} catch (NullPointerException e) {}
-                try {accessories = networthCategorys.get("talismans").getAsJsonObject().get("total").getAsInt();} catch (NullPointerException e) {}
-                try {enderchest = networthCategorys.get("enderchest").getAsJsonObject().get("total").getAsInt();} catch (NullPointerException e) {}
-                try {Sacks = networthJson.get("sacks").getAsInt();} catch (NullPointerException e) {}
-                try {pets = networthCategorys.get("pets").getAsJsonObject().get("total").getAsInt();} catch (NullPointerException e) {}
-                try {total = networthJson.get("networth").getAsInt()+Purse+Bank;} catch (NullPointerException e) {}
-                
+                try {Armor = networthCategorys.get("armor").getAsJsonObject().get("total").getAsLong();} catch (NullPointerException e) {}
+                try {Wardrobe = networthCategorys.get("wardrobe_inventory").getAsJsonObject().get("total").getAsLong();} catch (NullPointerException e) {}
+                try {Inventory = networthCategorys.get("inventory").getAsJsonObject().get("total").getAsLong();} catch (NullPointerException e) {}
+                try {accessories = networthCategorys.get("talismans").getAsJsonObject().get("total").getAsLong();} catch (NullPointerException e) {}
+                try {Storage = networthCategorys.get("storage").getAsJsonObject().get("total").getAsLong();} catch (NullPointerException e) {}
+                try {enderchest = networthCategorys.get("enderchest").getAsJsonObject().get("total").getAsLong();} catch (NullPointerException e) {}
+                try {Sacks = networthJson.get("sacks").getAsLong();} catch (NullPointerException e) {}
+                try {pets = networthCategorys.get("pets").getAsJsonObject().get("total").getAsLong();} catch (NullPointerException e) {}
+                try {total = networthJson.get("networth").getAsLong()+Purse+Bank;} catch (NullPointerException e) {}
 
                 if(PricingData.bazaarPrices.get("BOOSTER_COOKIE")!=null) irl = (int) ((total/PricingData.bazaarPrices.get("BOOSTER_COOKIE"))*2.4);
 
@@ -537,15 +598,16 @@ public class ProfileViewerGui extends WindowScreen {
                     ChatFormatting.GREEN + "Total Networth: " + ChatFormatting.GOLD + nf.format(total),
                     ChatFormatting.GREEN + "IRL Worth: " + ChatFormatting.DARK_GREEN+"$" + nf.format(irl),
                     "",
-                    ChatFormatting.GREEN + "Purse: " + ChatFormatting.GOLD + nf.format(Purse) + Utils.percentOf(Purse,total),
-                    ChatFormatting.GREEN + "Bank: " + ChatFormatting.GOLD + nf.format(Bank) + Utils.percentOf(Bank,total),
-                    ChatFormatting.GREEN + "Sacks: " + ChatFormatting.GOLD + nf.format(Sacks) + Utils.percentOf(Sacks,total),
-                    ChatFormatting.GREEN + "Armor: " + ChatFormatting.GOLD + nf.format(Armor) + Utils.percentOf(Armor,total),
-                    ChatFormatting.GREEN + "Wardrobe: " + ChatFormatting.GOLD + nf.format(Wardrobe) + Utils.percentOf(Wardrobe,total),
-                    ChatFormatting.GREEN + "Inventory: " + ChatFormatting.GOLD + nf.format(Inventory) + Utils.percentOf(Inventory,total),
-                    ChatFormatting.GREEN + "Enderchest: " + ChatFormatting.GOLD + nf.format(enderchest) + Utils.percentOf(enderchest,total),
-                    ChatFormatting.GREEN + "Accessories: " + ChatFormatting.GOLD + nf.format(accessories) + Utils.percentOf(accessories,total),
-                    ChatFormatting.GREEN + "Pets: " + ChatFormatting.GOLD + nf.format(pets)+Utils.percentOf(pets,total)
+                    ChatFormatting.GREEN + "Purse: " + ChatFormatting.GOLD + Utils.formatNumber(Purse) + Utils.percentOf(Purse,total),
+                    ChatFormatting.GREEN + "Bank: " + ChatFormatting.GOLD + Utils.formatNumber(Bank) + Utils.percentOf(Bank,total),
+                    ChatFormatting.GREEN + "Sacks: " + ChatFormatting.GOLD + Utils.formatNumber(Sacks) + Utils.percentOf(Sacks,total),
+                    ChatFormatting.GREEN + "Armor: " + ChatFormatting.GOLD + Utils.formatNumber(Armor) + Utils.percentOf(Armor,total),
+                    ChatFormatting.GREEN + "Wardrobe: " + ChatFormatting.GOLD + Utils.formatNumber(Wardrobe) + Utils.percentOf(Wardrobe,total),
+                    ChatFormatting.GREEN + "Storage: " + ChatFormatting.GOLD + Utils.formatNumber(Storage) + Utils.percentOf(Storage,total),
+                    ChatFormatting.GREEN + "Inventory: " + ChatFormatting.GOLD + Utils.formatNumber(Inventory) + Utils.percentOf(Inventory,total),
+                    ChatFormatting.GREEN + "Enderchest: " + ChatFormatting.GOLD + Utils.formatNumber(enderchest) + Utils.percentOf(enderchest,total),
+                    ChatFormatting.GREEN + "Accessories: " + ChatFormatting.GOLD + Utils.formatNumber(accessories) + Utils.percentOf(accessories,total),
+                    ChatFormatting.GREEN + "Pets: " + ChatFormatting.GOLD + Utils.formatNumber(pets)+Utils.percentOf(pets,total)
                 ));
             }
         }
@@ -569,18 +631,18 @@ public class ProfileViewerGui extends WindowScreen {
         UIComponent midRow = new UIBlock(clear).setWidth(new RelativeConstraint(1f)).setY(new SiblingConstraint(2f)).setChildOf(generalInfoContainer).setHeight(new RelativeConstraint(0.15f));   
         UIComponent lastRow = new UIBlock(clear).setWidth(new RelativeConstraint(1f)).setY(new SiblingConstraint(2f)).setChildOf(generalInfoContainer).setHeight(new RelativeConstraint(0.15f));   
 
-        
-        new UIText(g+"Current Area: "+bold+playerLocation).setX(new PixelConstraint(0)).setChildOf(topRow);
-        new UIText(g+"Joined: "+bold+joinedString).setX(new SiblingConstraint(10f)).setChildOf(topRow);
+        new UIText(g+"Profile Name: "+bold+Utils.convertToTitleCase(cute_name)).setX(new SiblingConstraint(10f)).setChildOf(topRow);
+
         new UIText(g+"Profile Type: "+profileType).setX(new SiblingConstraint(10f)).setChildOf(topRow);
+        new UIText(g+"Joined: "+bold+joinedString).setX(new SiblingConstraint(10f)).setChildOf(topRow);
+
+        new UIText(g+"Current Area: "+bold+playerLocation.trim()).setX(new PixelConstraint(0)).setChildOf(midRow);
 
         UIComponent networthComponent = new UIText(g+"Networth: "+bold+networth).setX(new SiblingConstraint(10f)).setChildOf(midRow);
         generalHoverables.put(networthComponent, networthTooltip);
 
-        new UIText(g+"Fairy Souls: "+bold+fairySouls)                .setX(new SiblingConstraint(10f)).setChildOf(midRow);
-
-        // new UIText(g+"Senither Weight: "+bold+senWeight)             .setX(new SiblingConstraint(10f)).setChildOf(lastRow);
-        // new UIText(g+"Lily Weight: "+bold+lilyWeight)                .setX(new SiblingConstraint(10f)).setChildOf(lastRow);
+        new UIText(g+"Bank: "+bold+Utils.formatNumber(Bank)).setX(new SiblingConstraint(10f)).setChildOf(midRow);
+        new UIText(g+"Fairy Souls: "+bold+fairySouls).setX(new SiblingConstraint(10f)).setChildOf(lastRow);
 
         // Side bar on the left that holds the catagories
         UIComponent sidebarArea = new UIBlock()
@@ -601,15 +663,34 @@ public class ProfileViewerGui extends WindowScreen {
             .setHeight(new RelativeConstraint(0.75f))
             .setWidth(new RelativeConstraint(0.75f));
 
+        System.out.println("-------MEMBERS-----------");
+        coopMemberList.forEach((e)->{
+            System.out.println("User: "+e);
+        });
+        System.out.println("------------------------");
+
+        DropDownComponent coopSelector = (DropDownComponent) new DropDownComponent(coopMemberList.indexOf(profile.getName()), coopMemberList,coopMemberList.size())
+            .setChildOf(sidebarArea)
+            .setWidth(new RelativeConstraint(0.60f))
+            .setX(new CenterConstraint())
+            .setY(new RelativeConstraint(0.88f));
+
         DropDownComponent profileSelector = (DropDownComponent) new DropDownComponent(profileList.indexOf(ChatFormatting.GREEN+cute_name), profileList,profileList.size())
             .setChildOf(sidebarArea)
-            .setWidth(new RelativeConstraint(0.5f))
+            .setWidth(new RelativeConstraint(0.50f))
             .setX(new CenterConstraint())
-            .setY(new SiblingConstraint(10f));
+            .setY(new RelativeConstraint(0.94f));
  
         profileSelector.getSelectedText().onSetValue((value)->{
             ProfileViewerUtils.animateX(lastSelectedButton, 8f);
             loadProfile(value,false);
+            return Unit.INSTANCE;
+        });
+
+        coopSelector.getSelectedText().onSetValue((value)->{
+            ProfileViewerUtils.animateX(lastSelectedButton, 8f);
+            System.out.println("Loading PROFILEEE: "+value+" "+selectedProfileUUID);
+            GuiUtil.open(new ProfileViewerGui(false,value,selectedProfileUUID));
             return Unit.INSTANCE;
         });
 
@@ -717,7 +798,7 @@ public class ProfileViewerGui extends WindowScreen {
      * @param labelItem
      * @param hover hover text
      */
-    public static void drawProgressbar(Integer v, Integer m,UIComponent statsArea,String label,ItemStack labelItem,List<String> hover) {
+    public static void drawProgressbar(Integer v, Integer m,UIComponent statsArea,String label,ItemStack labelItem,List<String> hover,Boolean skill) {
         if(m==null) m = 0;
         if(v==null) v = 0;
 
@@ -754,8 +835,7 @@ public class ProfileViewerGui extends WindowScreen {
             .enableEffect(new ScissorEffect())
             .setX(new CenterConstraint())
             .setChildOf(progressBarContainer);
-        Boolean maxed = value>=max;
-        Boolean apiDisabled = value==0;
+        Boolean maxed = value>=max && value!=0;
 
         Color color = maxed?new Color(255,191,0):new Color(0x0baa51);
 
@@ -765,16 +845,19 @@ public class ProfileViewerGui extends WindowScreen {
             .setWidth(new RelativeConstraint(percent))
             .setHeight(new RelativeConstraint(1f))
             .setX(new PixelConstraint(0f));
-        UIComponent a = new GradientComponent(new Color(0,0,0,150), new Color(0,0,0,0),GradientDirection.LEFT_TO_RIGHT)
+
+        UIComponent gradient = new GradientComponent(new Color(0,0,0,150), new Color(0,0,0,0),GradientDirection.LEFT_TO_RIGHT)
             .setWidth(new RelativeConstraint(0.1f))
             .setHeight(new RelativeConstraint(1f))
             .setX(new PixelConstraint(5f))
             .setChildOf(progressBarContainer);
 
         Color colorCircle = maxed?new Color(0xdd980e):new Color(0x0bca51);
-        if(apiDisabled) {
+
+        if(skill && skillApiDisabled) {
             colorCircle = new Color(0x5B5351);
         }
+
         UIComponent greenCircle = new UICircle(10f, colorCircle)
             .setChildOf(progressBarContainer)
             .setX(new PixelConstraint(5f));
@@ -784,12 +867,14 @@ public class ProfileViewerGui extends WindowScreen {
 
         String l1 = Utils.formatNumber(v.longValue());
         String l2 = Utils.formatNumber(m.longValue());
+
         // Percent Values
-        if(apiDisabled) {
+        if(skill && skillApiDisabled) {
             new UIText(ChatFormatting.RED+"Player has API Disabled").setChildOf(progressBarContainer)
                 .setX(new CenterConstraint())
                 .setY(new CenterConstraint());
         }
+
         else if(!maxed) {
             new UIText(l1+" / "+l2+" XP").setChildOf(progressBarContainer)
                 .setX(new CenterConstraint())
@@ -799,13 +884,13 @@ public class ProfileViewerGui extends WindowScreen {
                 .setX(new CenterConstraint())
                 .setY(new CenterConstraint());
         }
-        
     }
     
-    public void setSkills(JsonObject userObject) {
-        if(userObject==null) return;
-        System.out.println("Settings default skills");
+    public void resetSkillsAndSlayers() {
+        System.out.println("Resetting Skills & Slayers");
+        skillApiDisabled = false;
 
+        // Reset Skills
         tamingLevel = new SkillInfo(0,0,0,null);
         farmingLevel = new SkillInfo(0,0,0,null);
         miningLevel = new SkillInfo(0,0,0,null);
@@ -817,13 +902,24 @@ public class ProfileViewerGui extends WindowScreen {
         socialLevel = new SkillInfo(0,0,0,null);
         runecraftingLevel = new SkillInfo(0,0,0,null);
         carpentryLevel = new SkillInfo(0,0,0,null);
-        System.out.println("Settings skill experience ");
+
+        // Reset slayers
+        zombieSlayer = new SkillInfo(0,0,0,null);
+        spiderSlayer = new SkillInfo(0,0,0,null);
+        blazeSlayer = new SkillInfo(0,0,0,null);
+        emanSlayer = new SkillInfo(0,0,0,null);
+        wolfSlayer = new SkillInfo(0,0,0,null);
+        vampireSlayer = new SkillInfo(0,0,0,null);
+    }
+
+    public void setSkillsAndSlayers(JsonObject userObject) {
+        if(userObject==null) return;
+
+        System.out.println("Updating Skills");
         try {
             if (userObject.has("experience_skill_taming")) {
                 double tamingXp = userObject.get("experience_skill_taming").getAsDouble();
-                System.out.println("Setting Taming "+userObject.get("experience_skill_taming"));
                 tamingLevel = ProfileViewerUtils.getSkillInfo(tamingXp, "Taming");
-                System.out.println("Set Taming "+userObject.get("experience_skill_taming"));
             }
             if (userObject.has("experience_skill_farming")) {
                 double farmingXp = userObject.get("experience_skill_farming").getAsDouble();
@@ -869,205 +965,14 @@ public class ProfileViewerGui extends WindowScreen {
             e.printStackTrace();
             // TODO: handle exception
         }
+        if(tamingLevel.totalXp==0 && farmingLevel.totalXp==0 && miningLevel.totalXp==0 && combatLevel.totalXp==0 && foragingLevel.totalXp==0 && fishingLevel.totalXp==0) {
+            skillApiDisabled = true;
+        }
         System.out.println("set skill experience");
 
-        System.out.println("Settings slayer experience");
-        JsonObject slayersObject = userObject.get("slayer_bosses").getAsJsonObject();
-        try {
-            Integer[] tierPrices = {2000, 7500, 20000, 50000,100000};
-
-            if(slayersObject.has("zombie")) {
-                JsonObject obj = slayersObject.get("zombie").getAsJsonObject();
-                int xp = obj.get("xp").getAsInt();
-                int level = ProfileViewerUtils.getCurrentSlayerLevel(xp, "zombie");
-
-                int[] tiers = new int[5];
-                String[] tierNames = { "Tier I", "Tier II", "Tier III", "Tier IV", "Tier V" };
-                int totalCost = 0;
-                for (int i = 0; i < tiers.length; i++) {
-                    try {
-                        tiers[i] = obj.get("boss_kills_tier_" + i).getAsInt();
-                        if(tiers[i]>0) {
-                            totalCost+=tierPrices[i]*tiers[i];
-                        }
-                    } catch (Exception e) {
-                        // Handle exception
-                    }
-                }
-
-                List<String> hover = new ArrayList<>();
-                hover.add(ChatFormatting.RED + "Revenent Horror");
-                for (int i = 0; i < tiers.length; i++) {
-                    hover.add(ChatFormatting.GRAY + tierNames[i] + ": " + ChatFormatting.YELLOW + tiers[i]);
-                }
-                hover.add(ChatFormatting.GOLD + "Coins Spent: " + ChatFormatting.YELLOW + nf.format(totalCost));
-
-                int nextXp = ProfileViewerUtils.getNextSlayerLevelXP(xp, "zombie");
-                zombieSlayer = new SkillInfo(level, nextXp, xp, hover);
-            }
-
-            if(slayersObject.has("spider")) {
-                String slayerType = "spider";
-                JsonObject obj = slayersObject.get(slayerType).getAsJsonObject();
-                int xp = obj.get("xp").getAsInt();
-                int level = ProfileViewerUtils.getCurrentSlayerLevel(xp, slayerType);
-
-                String[] tierNames = { "Tier I", "Tier II", "Tier III", "Tier IV"};
-                int[] tiers = new int[tierNames.length];
-                int totalCost = 0;
-                for (int i = 0; i < tiers.length; i++) {
-                    try {
-                        tiers[i] = obj.get("boss_kills_tier_" + i).getAsInt();
-                        if(tiers[i]>0) {
-                            totalCost+=tierPrices[i]*tiers[i];
-                        }
-                    } catch (Exception e) {
-                        // Handle exception
-                    }
-                }
-
-                List<String> hover = new ArrayList<>();
-                hover.add(ChatFormatting.RED + "Tarantula Broodfather");
-                for (int i = 0; i < tiers.length; i++) {
-                    hover.add(ChatFormatting.GRAY + tierNames[i] + ": " + ChatFormatting.YELLOW + tiers[i]);
-                }
-                hover.add(ChatFormatting.GOLD + "Coins Spent: " + ChatFormatting.YELLOW + nf.format(totalCost));
-                
-                int nextXp = ProfileViewerUtils.getNextSlayerLevelXP(xp, slayerType);
-                spiderSlayer = new SkillInfo(level, nextXp, xp, hover);
-            }
-
-            if(slayersObject.has("wolf")) {
-                String slayerType = "wolf";
-                JsonObject obj = slayersObject.get(slayerType).getAsJsonObject();
-                int xp = obj.get("xp").getAsInt();
-                int level = ProfileViewerUtils.getCurrentSlayerLevel(xp, slayerType);
-
-                String[] tierNames = { "Tier I", "Tier II", "Tier III", "Tier IV"};
-                int[] tiers = new int[tierNames.length];
-                int totalCost = 0;
-                for (int i = 0; i < tiers.length; i++) {
-                    try {
-                        tiers[i] = obj.get("boss_kills_tier_" + i).getAsInt();
-                        if(tiers[i]>0) {
-                            totalCost+=tierPrices[i]*tiers[i];
-                        }
-                    } catch (Exception e) {
-                        // Handle exception
-                    }
-                }
-
-                List<String> hover = new ArrayList<>();
-                hover.add(ChatFormatting.RED + "Sven Packmaster");
-                for (int i = 0; i < tiers.length; i++) {
-                    hover.add(ChatFormatting.GRAY + tierNames[i] + ": " + ChatFormatting.YELLOW + tiers[i]);
-                }
-                hover.add(ChatFormatting.GOLD + "Coins Spent: " + ChatFormatting.YELLOW + nf.format(totalCost));
-
-                int nextXp = ProfileViewerUtils.getNextSlayerLevelXP(xp, slayerType);
-                wolfSlayer = new SkillInfo(level, nextXp, xp, hover);
-            }
-
-            if(slayersObject.has("enderman")) {
-                String slayerType = "enderman";
-                JsonObject obj = slayersObject.get(slayerType).getAsJsonObject();
-                int xp = obj.get("xp").getAsInt();
-                int level = ProfileViewerUtils.getCurrentSlayerLevel(xp, slayerType);
-
-                String[] tierNames = { "Tier I", "Tier II", "Tier III", "Tier IV"};
-                int[] tiers = new int[tierNames.length];
-                int totalCost = 0;
-                for (int i = 0; i < tiers.length; i++) {
-                    try {
-                        tiers[i] = obj.get("boss_kills_tier_" + i).getAsInt();
-                        if(tiers[i]>0) {
-                            totalCost+=tierPrices[i]*tiers[i];
-                        }
-                    } catch (Exception e) {
-                        // Handle exception
-                    }
-                }
-
-                List<String> hover = new ArrayList<>();
-                hover.add(ChatFormatting.RED + "Enderman");
-                for (int i = 0; i < tiers.length; i++) {
-                    hover.add(ChatFormatting.GRAY + tierNames[i] + ": " + ChatFormatting.YELLOW + tiers[i]);
-                }
-                hover.add(ChatFormatting.GOLD + "Coins Spent: " + ChatFormatting.YELLOW + nf.format(totalCost));
-
-                int nextXp = ProfileViewerUtils.getNextSlayerLevelXP(xp, slayerType);
-                emanSlayer = new SkillInfo(level, nextXp, xp, hover);
-            }
-
-            if(slayersObject.has("blaze")) {
-                String slayerType = "blaze";
-                JsonObject obj = slayersObject.get(slayerType).getAsJsonObject();
-                int xp = obj.get("xp").getAsInt();
-                int level = ProfileViewerUtils.getCurrentSlayerLevel(xp, slayerType);
-
-                String[] tierNames = { "Tier I", "Tier II", "Tier III", "Tier IV"};
-                int[] tiers = new int[tierNames.length];
-                int totalCost = 0;
-                for (int i = 0; i < tiers.length; i++) {
-                    try {
-                        tiers[i] = obj.get("boss_kills_tier_" + i).getAsInt();
-                        if(tiers[i]>0) {
-                            totalCost+=tierPrices[i]*tiers[i];
-                        }
-                    } catch (Exception e) {
-                        // Handle exception
-                    }
-                }
-
-                List<String> hover = new ArrayList<>();
-                hover.add(ChatFormatting.RED + "Blaze");
-                for (int i = 0; i < tiers.length; i++) {
-                    hover.add(ChatFormatting.GRAY + tierNames[i] + ": " + ChatFormatting.YELLOW + tiers[i]);
-                }
-                hover.add(ChatFormatting.GOLD + "Coins Spent: " + ChatFormatting.YELLOW + nf.format(totalCost));
-
-                int nextXp = ProfileViewerUtils.getNextSlayerLevelXP(xp, slayerType);
-                blazeSlayer = new SkillInfo(level, nextXp, xp, hover);
-            }
-
-            if(slayersObject.has("vampire")) {
-                String slayerType = "vampire";
-                JsonObject obj = slayersObject.get(slayerType).getAsJsonObject();
-                int xp = obj.get("xp").getAsInt();
-                int level = ProfileViewerUtils.getCurrentSlayerLevel(xp, slayerType);
-
-                String[] tierNames = { "Tier I", "Tier II", "Tier III", "Tier IV","Tier V"};
-                int[] tiers = new int[tierNames.length];
-                int totalCost = 0;
-                for (int i = 0; i < tiers.length; i++) {
-                    try {
-                        tiers[i] = obj.get("boss_kills_tier_" + i).getAsInt();
-                        if(tiers[i]>0) {
-                            totalCost+=tierPrices[i]*tiers[i];
-                        }
-                    } catch (Exception e) {
-                        // Handle exception
-                    }
-                }
-
-                List<String> hover = new ArrayList<>();
-                hover.add(ChatFormatting.RED + "Vampire");
-                for (int i = 0; i < tiers.length; i++) {
-                    hover.add(ChatFormatting.GRAY + tierNames[i] + ": " + ChatFormatting.YELLOW + tiers[i]);
-                }
-                hover.add(ChatFormatting.GOLD + "Coins Spent: " + ChatFormatting.YELLOW + nf.format(totalCost));
-
-                int nextXp = ProfileViewerUtils.getNextSlayerLevelXP(xp, slayerType);
-                vampireSlayer = new SkillInfo(level, nextXp, xp, hover);
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            // TODO: handle exception
-        }
-        System.out.println("set slayer experience");
-
+        ProfileViewerUtils.setSlayerSkills(userObject);
     }
+
     UIComponent lastSelectedButton = null;
     UIComponent generalButton = null;
     public void drawSideButton(UIComponent sideButtonContainer, String buttonText, Runnable runnable) {
@@ -1127,7 +1032,6 @@ public class ProfileViewerGui extends WindowScreen {
 
     public void loadCategory(String categoryName) {
         categoryName = Utils.cleanColor(categoryName);
-        Utils.SendMessage("Loading "+categoryName);
         statsAreaContainer.clearChildren();
         selectedCategory = categoryName;
 
@@ -1218,9 +1122,45 @@ public class ProfileViewerGui extends WindowScreen {
                             index++;
                         }
                     }
-                    UIComponent container =  new UIBlock(clear)
+                    UIComponent topContainer =  new UIBlock(clear)
                         .setWidth(new RelativeConstraint(1f))
                         .setY(new SiblingConstraint(15f))
+                        .setChildOf(statsAreaContainer)
+                        .setHeight(new RelativeConstraint(0.15f));
+
+                    new UIText("Accessories", true)
+                            .setChildOf(topContainer)
+                            .setTextScale(new PixelConstraint((float) (fontScale * 1.3f)))
+                            .setX(new CenterConstraint())
+                            .setY(new PixelConstraint(0f));
+                    
+                    String selectedPower = "None";
+                    try {
+                        selectedPower = ProfilePlayerResponse.get("accessory_bag_storage").getAsJsonObject().get("selected_power").getAsString();
+                    } catch (Exception e) {
+                        // TODO: handle exception
+                    }
+                    new UIText(ChatFormatting.GRAY+"Selected Power: "+ChatFormatting.GREEN+Utils.convertToTitleCase(selectedPower), true)
+                                .setChildOf(topContainer)
+                                .setTextScale(new PixelConstraint((float) (fontScale)))
+                                .setX(new CenterConstraint())
+                                .setY(new SiblingConstraint(2f));
+
+                    int magicPower = 0;
+                    try{
+                        magicPower = ProfilePlayerResponse.get("accessory_bag_storage").getAsJsonObject().get("highest_magical_power").getAsInt();
+                    } catch (Exception e) {
+                        // TODO: handle exception
+                    }
+                    new UIText(ChatFormatting.GRAY+"Magic Power: "+ChatFormatting.GOLD+magicPower, true)
+                        .setChildOf(topContainer)
+                        .setTextScale(new PixelConstraint((float) (fontScale)))
+                        .setX(new CenterConstraint())
+                        .setY(new SiblingConstraint(2f));
+
+                    UIComponent container =  new UIBlock(clear)
+                        .setWidth(new RelativeConstraint(1f))
+                        .setY(new SiblingConstraint(0f))
                         .setChildOf(statsAreaContainer)
                         .setHeight(new RelativeConstraint(0.33f));
 
@@ -1373,12 +1313,12 @@ public class ProfileViewerGui extends WindowScreen {
                 try {nextMageXp = mageClass.get("xpForNext").getAsInt();} catch (Exception e) {}
                 try {nextTankXp = tankClass.get("xpForNext").getAsInt();} catch (Exception e) {}
 
-                drawProgressbar(catacombsLevel.get("xpCurrent").getAsInt(),nextCataXp,statsAreaLeft,"Catacombs "+catacombsLevel.get("level").getAsInt(),new ItemStack(Items.skull),null);
-                drawProgressbar(archerClass.get("xpCurrent").getAsInt(),nextArchXp,statsAreaLeft,"Archer "+archerClass.get("level").getAsInt(),new ItemStack(Items.bow),null);
-                drawProgressbar(healerClass.get("xpCurrent").getAsInt(),nextHealXp,statsAreaLeft,"Healer "+healerClass.get("level").getAsInt(),new ItemStack(Items.potionitem),null);
-                drawProgressbar(mageClass.get("xpCurrent").getAsInt(),nextMageXp,statsAreaRight,"Mage "+mageClass.get("level").getAsInt(),new ItemStack(Items.blaze_rod),null);
-                drawProgressbar(berserkClass.get("xpCurrent").getAsInt(),nextBersXp,statsAreaRight,"Berserk "+berserkClass.get("level").getAsInt(),new ItemStack(Items.iron_sword),null);
-                drawProgressbar(tankClass.get("xpCurrent").getAsInt(),nextTankXp,statsAreaRight,"Tank "+tankClass.get("level").getAsInt(),new ItemStack(Items.leather_chestplate),null);
+                drawProgressbar(catacombsLevel.get("xpCurrent").getAsInt(),nextCataXp,statsAreaLeft,"Catacombs "+catacombsLevel.get("level").getAsInt(),new ItemStack(Items.skull),null,false);
+                drawProgressbar(archerClass.get("xpCurrent").getAsInt(),nextArchXp,statsAreaLeft,"Archer "+archerClass.get("level").getAsInt(),new ItemStack(Items.bow),null,false);
+                drawProgressbar(healerClass.get("xpCurrent").getAsInt(),nextHealXp,statsAreaLeft,"Healer "+healerClass.get("level").getAsInt(),new ItemStack(Items.potionitem),null,false);
+                drawProgressbar(mageClass.get("xpCurrent").getAsInt(),nextMageXp,statsAreaRight,"Mage "+mageClass.get("level").getAsInt(),new ItemStack(Items.blaze_rod),null,false);
+                drawProgressbar(berserkClass.get("xpCurrent").getAsInt(),nextBersXp,statsAreaRight,"Berserk "+berserkClass.get("level").getAsInt(),new ItemStack(Items.iron_sword),null,false);
+                drawProgressbar(tankClass.get("xpCurrent").getAsInt(),nextTankXp,statsAreaRight,"Tank "+tankClass.get("level").getAsInt(),new ItemStack(Items.leather_chestplate),null,false);
                 
                 UIComponent container =  new UIBlock(clear)
                     .setWidth(new RelativeConstraint(1f))
@@ -1410,10 +1350,16 @@ public class ProfileViewerGui extends WindowScreen {
                 new UIText(g+ChatFormatting.YELLOW+"Undead Essence: "+bold+nf.format(essences.get("undead").getAsInt())).setY(new SiblingConstraint(3f)).setChildOf(right);
                 new UIText(g+ChatFormatting.DARK_AQUA+"Diamond Essence: "+bold+nf.format(essences.get("diamond").getAsInt())).setY(new SiblingConstraint(3f)).setChildOf(right);
                 new UIText(g+ChatFormatting.GOLD+"Gold Essence: "+bold+nf.format(essences.get("gold").getAsInt())).setY(new SiblingConstraint(3f)).setChildOf(right);
+                
+                totalDungeonRuns = 0;
 
                 addDungeonFloors(catacombs);
                 addDungeonFloors(mastermode);
-                
+
+                Double averageSecrets = Math.round((secrets.doubleValue()/totalDungeonRuns.doubleValue())*100.0)/100.0;
+                UIComponent avgSecretComponent = new UIText(g+"Average Secrets Per Run: "+bold+nf.format(averageSecrets)).setY(new SiblingConstraint(3f)).setChildOf(left);
+
+                dungeonHoverables.put(avgSecretComponent, new ArrayList<>(Arrays.asList(ChatFormatting.RED + "This is an estimate because the secret count is combined across profiles")));
             } catch (Exception e) {
                 e.printStackTrace();
                 // TODO: handle exception
@@ -1515,10 +1461,15 @@ public class ProfileViewerGui extends WindowScreen {
             {// Fishing
                 new UIText(ChatFormatting.YELLOW+""+ChatFormatting.BOLD+"Fishing").setChildOf(fishingContainer).setY(new SiblingConstraint(4f)).setX(new CenterConstraint()).setTextScale(new PixelConstraint(2f));
                 int caught = 0;
+                int treasure = 0;
                 if(ProfilePlayerResponse.get("trophy_fish").getAsJsonObject().has("total_caught")) {
                     caught = ProfilePlayerResponse.get("trophy_fish").getAsJsonObject().get("total_caught").getAsInt();
                 }
+                if(ProfilePlayerResponse.has("fishing_treasure_caught")) {
+                    treasure = ProfilePlayerResponse.get("fishing_treasure_caught").getAsInt();
+                }
                 new UIText(g+"Trophy Fish Caught: "+bold+caught).setY(new SiblingConstraint(2f)).setChildOf(fishingContainer);
+                new UIText(g+"Treasures Found: "+bold+treasure).setY(new SiblingConstraint(2f)).setChildOf(fishingContainer);
             }
         }
         
@@ -1641,7 +1592,7 @@ public class ProfileViewerGui extends WindowScreen {
 
         if (collectionsData == null) {
             // Fetch the collections data only if it's not already cached
-            collectionsData = APIUtils.getJSONResponse("https://api.hypixel.net/resources/skyblock/collections").getAsJsonObject();
+            collectionsData = APIUtils.getJSONResponse("https://api.hypixel.net/resources/skyblock/collections#CollectionsForPV").getAsJsonObject();
         }
 
         statsAreaContainerNew = new UIBlock(Color.red)
@@ -1684,8 +1635,9 @@ public class ProfileViewerGui extends WindowScreen {
                 categoryComponent.setHeight(new PixelConstraint(categoryHeight + 23));
                 totalHeight += categoryHeight + 23; // Add 23 to account for the height of the category header
             }
-
+            
             statsAreaContainerNew.setHeight(new PixelConstraint(totalHeight)); // Set the parent component's height
+
             System.out.println("LOADED COLLECTIONS");
         }).start();
     }
@@ -1696,6 +1648,7 @@ public class ProfileViewerGui extends WindowScreen {
         
         new Thread(()->{
             while(statsAreaContainerNew.getChildren().size()<7) {
+                if(!selectedCategory.equals("Collections")) break;
                 if(statsAreaContainerNew.getChildren().size()==6) {
                     statsAreaContainer.clearChildren();
                     statsAreaContainerNew.getChildren().forEach((e)->{
@@ -1751,7 +1704,7 @@ public class ProfileViewerGui extends WindowScreen {
                 if(!coopNames.containsKey(member.getKey())) {
                     String formattedName = APIUtils.getHypixelRank(member.getKey());
                     coopNames.put(member.getKey(), formattedName);
-                }   
+                }
 
 
                 Integer value = 0;
@@ -1763,21 +1716,24 @@ public class ProfileViewerGui extends WindowScreen {
                 total+=value;
                 collectors.add(new CoopCollector(coopNames.get(member.getKey()),value));
             }
-            CollectionTier rank = getCollectionTier(item.getValue().getAsJsonObject(),total);
             collectors.sort((a,b)->{return b.total-a.total;});
+
+            CollectionTier rank = getCollectionTier(item.getValue().getAsJsonObject(),total);
             String itemName = Utils.cleanColor(stack.getDisplayName());
-            // lore.add("");
+
             lore.add("§7Total Collected: §e"+Utils.nf.format(total));
+            
             if(!rank.maxed) {
                 lore.add("");
                 lore.add("§7Progress to "+itemName+" "+(rank.tier+1)+": §e"+(Math.floor(total/(rank.untilNext+total)*1000)/10)+"§6%");
                 lore.add(stringProgressBar(total,(int) (rank.untilNext+total)));
             }
+
             lore.add("");
             lore.add("§7Contributions:");
 
             for (CoopCollector collector : collectors) {
-                lore.add(collector.username+"§7: §e"+Utils.nf.format(collector.total));
+                lore.add(collector.username+"§7: §e"+Utils.nf.format(collector.total)+Utils.percentOf(collector.total, total.intValue()));
             }
 
             // Calculate the position for the current item
@@ -1933,6 +1889,7 @@ public class ProfileViewerGui extends WindowScreen {
         }
     }
 
+    Integer totalDungeonRuns = 0;
 
     public void addDungeonFloors(JsonObject mode) {
         JsonObject floors = mode.get("floors").getAsJsonObject();
@@ -1996,15 +1953,17 @@ public class ProfileViewerGui extends WindowScreen {
             try {
                 if(!masterMode) {
                     Integer timesPlayed = floorStats.get("times_played").getAsInt();
+                    totalDungeonRuns += timesPlayed; 
                     new UIText(g + "  Times Played: " + bold + timesPlayed)
                         .setY(new SiblingConstraint(6f))
                         .setChildOf(box);
                 }
             } catch (Exception e) {
                 // TODO: handle exception
-            }
+            }   
             try {
                 Integer timesPlayed = floorStats.get("tier_completions").getAsInt();
+                totalDungeonRuns += timesPlayed;
                 new UIText(g + "  Times Completed: " + bold + timesPlayed)
                     .setY(new SiblingConstraint(2f))
                     .setChildOf(box);

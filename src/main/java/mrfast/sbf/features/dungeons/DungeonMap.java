@@ -36,6 +36,8 @@ import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class DungeonMap {
+    public static final ResourceLocation map = new ResourceLocation("skyblockfeatures","map/DungeonMap.png");
+
 	static String self = "";
 	static double selfHeadPositionX = 0;
 	static double selfHeadPositionY = 0;
@@ -434,7 +436,7 @@ public class DungeonMap {
     public static class DungeonMapMove extends UIElement {
 
         public DungeonMapMove() {
-            super("DungeonMap", new Point(0, 5));
+            super("DungeonMap", new Point(0, 0f));
             SkyblockFeatures.GUIMANAGER.registerElement(this);
         }
 
@@ -445,10 +447,16 @@ public class DungeonMap {
         }
         
 
-        @Override
+		@Override
         public void drawElementExample() {
-            if(mc.thePlayer == null) return;
-			Utils.drawTextWithStyle3(ChatFormatting.GREEN+"Dungeon Map", 50, 50);
+            GlStateManager.pushMatrix();
+                GlStateManager.enableBlend();
+                GlStateManager.color(1, 1, 1, 1);
+                GlStateManager.pushMatrix();
+                    Utils.GetMC().getTextureManager().bindTexture(map);
+                    Utils.drawTexturedRect(0, 0, 512/4,512/4, 0, 1, 0, 1, GL11.GL_NEAREST);
+                GlStateManager.popMatrix();
+            GlStateManager.popMatrix();
         }
 
         @Override

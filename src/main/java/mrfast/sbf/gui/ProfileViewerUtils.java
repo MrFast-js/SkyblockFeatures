@@ -62,7 +62,6 @@ public class ProfileViewerUtils {
                 ChatFormatting.GRAY+"Total XP: "+ChatFormatting.YELLOW+nf.format(xp)
             ));
         }
-        System.out.println(skillName+" "+output.level+" "+output.currentXp+" "+output.totalXp);
         return output;
     }
 
@@ -677,5 +676,204 @@ public class ProfileViewerUtils {
                 }
             }
         }
+    }
+
+
+    public static void setSlayerSkills(JsonObject userObject) {
+        System.out.println("Settings slayer experience");
+        JsonObject slayersObject = userObject.get("slayer_bosses").getAsJsonObject();
+        try {
+            Integer[] tierPrices = {2000, 7500, 20000, 50000,100000};
+
+            if(slayersObject.has("zombie")) {
+                JsonObject obj = slayersObject.get("zombie").getAsJsonObject();
+                int xp = obj.get("xp").getAsInt();
+                int level = ProfileViewerUtils.getCurrentSlayerLevel(xp, "zombie");
+
+                int[] tiers = new int[5];
+                String[] tierNames = { "Tier I", "Tier II", "Tier III", "Tier IV", "Tier V" };
+                int totalCost = 0;
+                for (int i = 0; i < tiers.length; i++) {
+                    try {
+                        tiers[i] = obj.get("boss_kills_tier_" + i).getAsInt();
+                        if(tiers[i]>0) {
+                            totalCost+=tierPrices[i]*tiers[i];
+                        }
+                    } catch (Exception e) {
+                        // Handle exception
+                    }
+                }
+
+                List<String> hover = new ArrayList<>();
+                hover.add(ChatFormatting.RED + "Revenent Horror");
+                for (int i = 0; i < tiers.length; i++) {
+                    hover.add(ChatFormatting.GRAY + tierNames[i] + ": " + ChatFormatting.YELLOW + tiers[i]);
+                }
+                hover.add(ChatFormatting.GOLD + "Coins Spent: " + ChatFormatting.YELLOW + nf.format(totalCost));
+
+                int nextXp = ProfileViewerUtils.getNextSlayerLevelXP(xp, "zombie");
+                ProfileViewerGui.zombieSlayer = new SkillInfo(level, nextXp, xp, hover);
+            }
+
+            if(slayersObject.has("spider")) {
+                String slayerType = "spider";
+                JsonObject obj = slayersObject.get(slayerType).getAsJsonObject();
+                int xp = obj.get("xp").getAsInt();
+                int level = ProfileViewerUtils.getCurrentSlayerLevel(xp, slayerType);
+
+                String[] tierNames = { "Tier I", "Tier II", "Tier III", "Tier IV"};
+                int[] tiers = new int[tierNames.length];
+                int totalCost = 0;
+                for (int i = 0; i < tiers.length; i++) {
+                    try {
+                        tiers[i] = obj.get("boss_kills_tier_" + i).getAsInt();
+                        if(tiers[i]>0) {
+                            totalCost+=tierPrices[i]*tiers[i];
+                        }
+                    } catch (Exception e) {
+                        // Handle exception
+                    }
+                }
+
+                List<String> hover = new ArrayList<>();
+                hover.add(ChatFormatting.RED + "Tarantula Broodfather");
+                for (int i = 0; i < tiers.length; i++) {
+                    hover.add(ChatFormatting.GRAY + tierNames[i] + ": " + ChatFormatting.YELLOW + tiers[i]);
+                }
+                hover.add(ChatFormatting.GOLD + "Coins Spent: " + ChatFormatting.YELLOW + nf.format(totalCost));
+                
+                int nextXp = ProfileViewerUtils.getNextSlayerLevelXP(xp, slayerType);
+                ProfileViewerGui.spiderSlayer = new SkillInfo(level, nextXp, xp, hover);
+            }
+
+            if(slayersObject.has("wolf")) {
+                String slayerType = "wolf";
+                JsonObject obj = slayersObject.get(slayerType).getAsJsonObject();
+                int xp = obj.get("xp").getAsInt();
+                int level = ProfileViewerUtils.getCurrentSlayerLevel(xp, slayerType);
+
+                String[] tierNames = { "Tier I", "Tier II", "Tier III", "Tier IV"};
+                int[] tiers = new int[tierNames.length];
+                int totalCost = 0;
+                for (int i = 0; i < tiers.length; i++) {
+                    try {
+                        tiers[i] = obj.get("boss_kills_tier_" + i).getAsInt();
+                        if(tiers[i]>0) {
+                            totalCost+=tierPrices[i]*tiers[i];
+                        }
+                    } catch (Exception e) {
+                        // Handle exception
+                    }
+                }
+
+                List<String> hover = new ArrayList<>();
+                hover.add(ChatFormatting.RED + "Sven Packmaster");
+                for (int i = 0; i < tiers.length; i++) {
+                    hover.add(ChatFormatting.GRAY + tierNames[i] + ": " + ChatFormatting.YELLOW + tiers[i]);
+                }
+                hover.add(ChatFormatting.GOLD + "Coins Spent: " + ChatFormatting.YELLOW + nf.format(totalCost));
+
+                int nextXp = ProfileViewerUtils.getNextSlayerLevelXP(xp, slayerType);
+                ProfileViewerGui.wolfSlayer = new SkillInfo(level, nextXp, xp, hover);
+            }
+
+            if(slayersObject.has("enderman")) {
+                String slayerType = "enderman";
+                JsonObject obj = slayersObject.get(slayerType).getAsJsonObject();
+                int xp = obj.get("xp").getAsInt();
+                int level = ProfileViewerUtils.getCurrentSlayerLevel(xp, slayerType);
+
+                String[] tierNames = { "Tier I", "Tier II", "Tier III", "Tier IV"};
+                int[] tiers = new int[tierNames.length];
+                int totalCost = 0;
+                for (int i = 0; i < tiers.length; i++) {
+                    try {
+                        tiers[i] = obj.get("boss_kills_tier_" + i).getAsInt();
+                        if(tiers[i]>0) {
+                            totalCost+=tierPrices[i]*tiers[i];
+                        }
+                    } catch (Exception e) {
+                        // Handle exception
+                    }
+                }
+
+                List<String> hover = new ArrayList<>();
+                hover.add(ChatFormatting.RED + "Enderman");
+                for (int i = 0; i < tiers.length; i++) {
+                    hover.add(ChatFormatting.GRAY + tierNames[i] + ": " + ChatFormatting.YELLOW + tiers[i]);
+                }
+                hover.add(ChatFormatting.GOLD + "Coins Spent: " + ChatFormatting.YELLOW + nf.format(totalCost));
+
+                int nextXp = ProfileViewerUtils.getNextSlayerLevelXP(xp, slayerType);
+                ProfileViewerGui.emanSlayer = new SkillInfo(level, nextXp, xp, hover);
+            }
+
+            if(slayersObject.has("blaze")) {
+                String slayerType = "blaze";
+                JsonObject obj = slayersObject.get(slayerType).getAsJsonObject();
+                int xp = obj.get("xp").getAsInt();
+                int level = ProfileViewerUtils.getCurrentSlayerLevel(xp, slayerType);
+
+                String[] tierNames = { "Tier I", "Tier II", "Tier III", "Tier IV"};
+                int[] tiers = new int[tierNames.length];
+                int totalCost = 0;
+                for (int i = 0; i < tiers.length; i++) {
+                    try {
+                        tiers[i] = obj.get("boss_kills_tier_" + i).getAsInt();
+                        if(tiers[i]>0) {
+                            totalCost+=tierPrices[i]*tiers[i];
+                        }
+                    } catch (Exception e) {
+                        // Handle exception
+                    }
+                }
+
+                List<String> hover = new ArrayList<>();
+                hover.add(ChatFormatting.RED + "Blaze");
+                for (int i = 0; i < tiers.length; i++) {
+                    hover.add(ChatFormatting.GRAY + tierNames[i] + ": " + ChatFormatting.YELLOW + tiers[i]);
+                }
+                hover.add(ChatFormatting.GOLD + "Coins Spent: " + ChatFormatting.YELLOW + nf.format(totalCost));
+
+                int nextXp = ProfileViewerUtils.getNextSlayerLevelXP(xp, slayerType);
+                ProfileViewerGui.blazeSlayer = new SkillInfo(level, nextXp, xp, hover);
+            }
+
+            if(slayersObject.has("vampire")) {
+                String slayerType = "vampire";
+                JsonObject obj = slayersObject.get(slayerType).getAsJsonObject();
+                int xp = obj.get("xp").getAsInt();
+                int level = ProfileViewerUtils.getCurrentSlayerLevel(xp, slayerType);
+
+                String[] tierNames = { "Tier I", "Tier II", "Tier III", "Tier IV","Tier V"};
+                int[] tiers = new int[tierNames.length];
+                int totalCost = 0;
+                for (int i = 0; i < tiers.length; i++) {
+                    try {
+                        tiers[i] = obj.get("boss_kills_tier_" + i).getAsInt();
+                        if(tiers[i]>0) {
+                            totalCost+=tierPrices[i]*tiers[i];
+                        }
+                    } catch (Exception e) {
+                        // Handle exception
+                    }
+                }
+
+                List<String> hover = new ArrayList<>();
+                hover.add(ChatFormatting.RED + "Vampire");
+                for (int i = 0; i < tiers.length; i++) {
+                    hover.add(ChatFormatting.GRAY + tierNames[i] + ": " + ChatFormatting.YELLOW + tiers[i]);
+                }
+                hover.add(ChatFormatting.GOLD + "Coins Spent: " + ChatFormatting.YELLOW + nf.format(totalCost));
+
+                int nextXp = ProfileViewerUtils.getNextSlayerLevelXP(xp, slayerType);
+                ProfileViewerGui.vampireSlayer = new SkillInfo(level, nextXp, xp, hover);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            // TODO: handle exception
+        }
+        System.out.println("set slayer experience");
     }
 }

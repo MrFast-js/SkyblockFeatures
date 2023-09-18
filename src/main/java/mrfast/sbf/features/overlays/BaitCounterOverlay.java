@@ -47,7 +47,7 @@ public class BaitCounterOverlay {
                 String latestProfile = APIUtils.getLatestProfileID(uuid, key);
                 if (latestProfile == null) return;
 
-                String profileURL = "https://api.hypixel.net/skyblock/profile?profile=" + latestProfile;
+                String profileURL = "https://api.hypixel.net/skyblock/profile?profile=" + latestProfile+"#BaitDisplay";
                 System.out.println("Fetching profile...");
                 JsonObject profileResponse = APIUtils.getJSONResponse(profileURL);
                 if(profileResponse.toString().equals("{}")) {

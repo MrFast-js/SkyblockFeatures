@@ -6,6 +6,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
+import com.mojang.realmsclient.gui.ChatFormatting;
+
 import mrfast.sbf.SkyblockFeatures;
 import mrfast.sbf.core.SkyblockInfo;
 import mrfast.sbf.gui.components.Point;
@@ -67,10 +69,15 @@ public class ZealotSpawnLocations {
             new BlockPos(-526, 38, -317)
         )
     );
+
+    static String loc = "";
+    static Boolean inNest = false;
     @SubscribeEvent
     public void onRender(RenderWorldLastEvent event) {
         if(!SkyblockFeatures.config.showZealotSpawns) return;
-        if(SkyblockInfo.getInstance().location.contains("Dragons Nest")) {
+        loc = SkyblockInfo.getInstance().localLocation;
+        inNest = loc.contains("Dragons Nest");
+        if(inNest) {
             for(BlockPos pos:zealotSpawns) {
                 if(pos != null) {
                     Color color = canSpawnZealots? new Color(0x55FF55):new Color(0xFF5555);
@@ -78,7 +85,7 @@ public class ZealotSpawnLocations {
                 }
             }
         }
-        if(SkyblockInfo.getInstance().location.contains("Bruiser")) {
+        if(loc.contains("Zealot Bruiser Hideout")) {
             for(BlockPos pos:bruiserSpawns) {
                 if(pos != null) {
                     Color color = canSpawnBruisers? new Color(0x55FF55):new Color(0xFF5555);
@@ -87,7 +94,7 @@ public class ZealotSpawnLocations {
             }
         }
         // Track Spawn locations
-        // if(SkyblockInfo.getInstance().location.contains("Bruiser")) {
+        // if(SkyblockInfo.getInstance().localLocation.contains("Bruiser")) {
         //     for(Entity e:bruisers.keySet()) {
         //         BlockPos pos = bruisers.get(e);
         //         MiscFeatures.drawParticleESP(
@@ -104,21 +111,21 @@ public class ZealotSpawnLocations {
     public HashMap<Entity,BlockPos> bruisers = new HashMap<>();
     
 
-    boolean canSpawnZealots = false;
-    boolean canSpawnBruisers = false;
+    static boolean canSpawnZealots = false;
+    static boolean canSpawnBruisers = false;
 
     @SubscribeEvent
     public void onEntityJoinWorld(EntityJoinWorldEvent event) {
         if(Utils.GetMC().theWorld == null || Utils.GetMC().thePlayer == null || SkyblockInfo.getInstance().getLocation()==null) return;
         if(SkyblockFeatures.config.showZealotSpawns && Utils.inSkyblock && SkyblockInfo.getInstance().map.equals("The End")) {
             for(Entity entity:Utils.GetMC().theWorld.loadedEntityList) {
-                if(entity instanceof EntityArmorStand && !zealots.contains(entity) && SkyblockInfo.getInstance().location.contains("Dragons Nest")) {
+                if(entity instanceof EntityArmorStand && !zealots.contains(entity) && inNest) {
                     if(entity.getCustomNameTag().contains("Zealot")) {
                         zealots.add(entity);
                         startZealotTimer = true;
                     }
                 }
-                if(entity instanceof EntityArmorStand && SkyblockInfo.getInstance().location.contains("Bruiser") && bruisers.get(entity) == null) {
+                if(entity instanceof EntityArmorStand && loc.contains("Zealot Bruiser Hideout") && bruisers.get(entity) == null) {
                     if(entity.getCustomNameTag().contains("Bruiser")) {
                         bruisers.put(entity, entity.getPosition());
                         startBruiserTimer = true;
@@ -135,18 +142,18 @@ public class ZealotSpawnLocations {
     public static int zealotTicks = 0;
     public static int zealotHalfseconds = 20;
     public static boolean startZealotTimer = false;
-    public static  String zealotDisplay = EnumChatFormatting.LIGHT_PURPLE + "Zealot Spawn: " + "10s";
+    public static  String zealotDisplay = EnumChatFormatting.LIGHT_PURPLE + "Zealot Spawn: "+ChatFormatting.DARK_PURPLE+ "10s";
 
     public static int bruiserTicks = 0;
     public static int bruiserHalfseconds = 20;
     public static boolean startBruiserTimer = false;
-    public static  String bruiserDisplay = EnumChatFormatting.LIGHT_PURPLE + "Bruiser Spawn: " + "10s";
+    public static  String bruiserDisplay = "";
     private static final Minecraft mc = Minecraft.getMinecraft();
     RenderManager renderManager = mc.getRenderManager();
     
     @SubscribeEvent
     public void onSeconds(TickEvent.ClientTickEvent event) {
-        if(Utils.inSkyblock && startZealotTimer && SkyblockInfo.getInstance().location.contains("Dragons Nest") && SkyblockFeatures.config.showZealotSpawns) {
+        if(Utils.inSkyblock && startZealotTimer && inNest && SkyblockFeatures.config.showZealotSpawns) {
             zealotTicks++;
             if (zealotTicks % 20 == 0) {
                 zealotTicks = 0;
@@ -161,9 +168,9 @@ public class ZealotSpawnLocations {
             } else {
                 canSpawnZealots = false;
             }
-            zealotDisplay = EnumChatFormatting.LIGHT_PURPLE + "Zealot Spawn: "+zealotHalfseconds/2+"s";
+            zealotDisplay = EnumChatFormatting.LIGHT_PURPLE + "Zealot Spawn: "+ChatFormatting.DARK_PURPLE+zealotHalfseconds/2+"s";
         };
-        if(Utils.inSkyblock && startBruiserTimer && SkyblockInfo.getInstance().location.contains("Bruiser Hideout") && SkyblockFeatures.config.showZealotSpawns) {
+        if(Utils.inSkyblock && startBruiserTimer && loc.contains("Zealot Bruiser Hideout") && SkyblockFeatures.config.showZealotSpawns) {
             bruiserTicks++;
             if (bruiserTicks % 20 == 0) {
                 bruiserTicks = 0;
@@ -178,7 +185,7 @@ public class ZealotSpawnLocations {
             } else {
                 canSpawnBruisers = false;
             }
-            bruiserDisplay = EnumChatFormatting.LIGHT_PURPLE + "Bruiser Spawn: "+bruiserHalfseconds/2+"s";
+            bruiserDisplay = EnumChatFormatting.LIGHT_PURPLE + "Bruiser Spawn: "+ChatFormatting.DARK_PURPLE+bruiserHalfseconds/2+"s";
         };
     
     }
@@ -195,7 +202,7 @@ public class ZealotSpawnLocations {
         @Override
         public void drawElement() {
             if(mc.thePlayer == null || !Utils.inSkyblock) return;
-            if (this.getToggled() && Minecraft.getMinecraft().thePlayer != null && mc.theWorld != null && (SkyblockInfo.getInstance().location.contains("Dragons Nest") || SkyblockInfo.getInstance().location.contains("Bruiser Hideout"))) {
+            if (this.getToggled() && Minecraft.getMinecraft().thePlayer != null && mc.theWorld != null && (inNest||loc.contains("Zealot Bruiser Hideout"))) {
                 mc.fontRendererObj.drawStringWithShadow(zealotDisplay, 0, 0, 0xFFFFFF);
                 mc.fontRendererObj.drawStringWithShadow(bruiserDisplay, 0, (float) (Utils.GetMC().fontRendererObj.FONT_HEIGHT+0.1), 0xFFFFFF);
             }
@@ -219,7 +226,7 @@ public class ZealotSpawnLocations {
 
         @Override
         public int getWidth() {
-            return 12 + Utils.GetMC().fontRendererObj.getStringWidth(bruiserDisplay);
+            return 12 + Utils.GetMC().fontRendererObj.getStringWidth(zealotDisplay);
         }
     }
 }

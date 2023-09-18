@@ -39,7 +39,14 @@ public class APIUtils {
     public static CloseableHttpClient client = HttpClients.custom().setUserAgent("Mozilla/5.0").build();
 
     public static JsonObject getJSONResponse(String urlString) {
-        System.out.println("Sending request to " + urlString);
+        if(urlString.contains("#")) {
+            String url = urlString.split("#")[0];
+            String reason = urlString.split("#")[1];
+            System.out.println("Sending request to " + url+" Reason: "+reason);
+        } else {
+            System.out.println("Sending request to " + urlString);
+        }
+
         EntityPlayer player = Minecraft.getMinecraft().thePlayer;
         try {
             HttpGet request = new HttpGet(new URL(urlString).toURI());
@@ -71,12 +78,16 @@ public class APIUtils {
         }
         return new JsonObject();
     }
-
+    public static HashMap<String,String> rankCache = new HashMap<>();
     public static String getHypixelRank(String uuid) {
-        JsonObject json = APIUtils.getJSONResponse("https://api.hypixel.net/player?uuid="+uuid).get("player").getAsJsonObject();
+        if(rankCache.containsKey(uuid)) return rankCache.get(uuid);
+
+        JsonObject json = APIUtils.getJSONResponse("https://api.hypixel.net/player?uuid="+uuid+"#getHypixelRank").get("player").getAsJsonObject();
         String rank = "§7";
         if(json.has("mostRecentMonthlyPackageRank")) rank = json.get("mostRecentMonthlyPackageRank").getAsString();
         else if(json.has("newPackageRank")) rank = json.get("newPackageRank").getAsString();
+
+        rankCache.put(uuid, convertRank(rank)+json.get("displayname").getAsString());
         return convertRank(rank)+json.get("displayname").getAsString();
     }
 
@@ -211,13 +222,15 @@ public class APIUtils {
         }
         return null;
     }
-    private static Gson gson = new Gson();
 
+    public static HashMap<String,String> nameCache = new HashMap<>();
     public static String getName(String uuid) {
+        if(nameCache.containsKey(uuid)) return nameCache.get(uuid);
         try {
             JsonObject json = getJSONResponse("https://api.mojang.com/user/profile/"+uuid);
             if(json.has("error")) return null;
             
+            nameCache.put(uuid, json.get("name").getAsString());
             return json.get("name").getAsString();
         } catch (Exception e) {
             return null;

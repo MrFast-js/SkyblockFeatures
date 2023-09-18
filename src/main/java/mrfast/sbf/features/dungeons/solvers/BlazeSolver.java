@@ -133,7 +133,7 @@ public class BlazeSolver {
                     RenderUtil.drawOutlinedFilledBoundingBox(aabb, new Color(0xFFFF00), event.partialTicks);
                 }
                 // Draw line to next blaze
-                if(nextBlaze !=null && currentBlaze !=null) {
+                if(nextBlaze !=null && currentBlaze !=null && nextBlaze.getPositionVector() !=null && currentBlaze.getPositionVector()!=null) {
                     RenderUtil.draw3DLine(currentBlaze.getPositionVector(), nextBlaze.getPositionVector(), 0, new Color(0x00FFFF), event.partialTicks);
                 }
             }

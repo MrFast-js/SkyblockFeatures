@@ -33,6 +33,7 @@ import mrfast.sbf.commands.TerminalCommand;
 import mrfast.sbf.commands.ViewModelCommand;
 import mrfast.sbf.commands.configCommand;
 import mrfast.sbf.commands.getNbtCommand;
+import mrfast.sbf.commands.pingCommand;
 import mrfast.sbf.commands.pvCommand;
 import mrfast.sbf.commands.sidebarCommand;
 import mrfast.sbf.core.Config;
@@ -61,6 +62,7 @@ import mrfast.sbf.features.dungeons.solvers.CreeperSolver;
 import mrfast.sbf.features.dungeons.solvers.LividFinder;
 import mrfast.sbf.features.dungeons.solvers.TeleportPadSolver;
 import mrfast.sbf.features.dungeons.solvers.ThreeWeirdosSolver;
+import mrfast.sbf.features.dungeons.solvers.WaterBoardSolver;
 import mrfast.sbf.features.events.JerryTimer;
 import mrfast.sbf.features.events.MayorJerry;
 import mrfast.sbf.features.events.MythologicalEvent;
@@ -266,6 +268,7 @@ public class SkyblockFeatures {
             new HighlightCropArea(),
             new MythologicalEvent(),
             new TeleportPadSolver(),
+            new WaterBoardSolver(),
             new ShadowAssasinFeatures(),
             new ComposterOverlay(),
             new SlayerFeatures(),
@@ -318,6 +321,7 @@ public class SkyblockFeatures {
         commands.add(new GetkeyCommand());
         commands.add(new DungeonsCommand());
         commands.add(new RepartyCommand());
+        commands.add(new pingCommand());
         commands.add(new sidebarCommand());
         commands.add(new FakePlayerCommand());
         commands.add(new pvCommand());
@@ -383,6 +387,7 @@ public class SkyblockFeatures {
             lastChatMessage = System.currentTimeMillis();
         }
     }
+    
     GuiScreen lastGui = null;
     @SubscribeEvent
     public void onClientTick(TickEvent.ClientTickEvent event) {

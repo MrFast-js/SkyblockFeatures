@@ -51,8 +51,8 @@ public class TeleportPadSolver {
 
             BlockPos blockPos = playerPos.add(xOffset, 0, zOffset);
             Block block = Utils.GetMC().theWorld.getBlockState(blockPos).getBlock();
-            if(block instanceof BlockEndPortalFrame && !endportalFrames.contains(playerPos)) {
-                endportalFrames.add(playerPos.add(-xOffset, 0, -zOffset));
+            if(block instanceof BlockEndPortalFrame && !endportalFrames.contains(playerPos.add(xOffset, 0, zOffset))) {
+                endportalFrames.add(playerPos.add(xOffset, 0, zOffset));
             }
         }
 

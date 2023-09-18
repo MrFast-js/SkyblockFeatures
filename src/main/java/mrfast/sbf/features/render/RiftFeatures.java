@@ -102,8 +102,8 @@ public class RiftFeatures {
                 }
             }
         } catch (Exception e) {}
-        String location = Utils.cleanColor(SkyblockInfo.getInstance().location);
-        if(location.contains("Mirrorver") && SkyblockFeatures.config.riftMirrorverseHelper) {
+        String location = Utils.cleanColor(SkyblockInfo.getInstance().localLocation);
+        if(location.contains("Mirrorverse") && SkyblockFeatures.config.riftMirrorverseHelper) {
             // Laser puzzle
             if(Utils.GetMC().thePlayer.getPosition().getX()<-297) {
                 BlockPos pos = new BlockPos(Math.floor(Utils.GetMC().thePlayer.posX), Math.floor(Utils.GetMC().thePlayer.posY-1), Math.floor(Utils.GetMC().thePlayer.posZ));

@@ -10,6 +10,7 @@ import org.lwjgl.opengl.Display;
 import mrfast.sbf.SkyblockFeatures;
 import mrfast.sbf.gui.components.MoveableFeature;
 import mrfast.sbf.gui.components.UIElement;
+import mrfast.sbf.utils.Utils;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ScaledResolution;
@@ -41,13 +42,17 @@ public class EditLocationsGui extends GuiScreen {
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
         onMouseMove(mouseX, mouseY);
-        this.drawGradientRect(0, 0, this.width, this.height, new Color(0,0, 0,50).getRGB(), new Color(0,0, 0,200).getRGB());
+        this.drawGradientRect(0, 0, this.width, this.height, new Color(0, 0, 0, 50).getRGB(), new Color(0, 0, 0, 200).getRGB());
         for (GuiButton button : this.buttonList) {
             if (button instanceof MoveableFeature) {
                 if (((MoveableFeature) button).element.getToggled()) {
-                    MoveableFeature MoveableFeature = (MoveableFeature) button;
+                    MoveableFeature moveableFeature = (MoveableFeature) button;
                     GlStateManager.pushMatrix();
-                    GlStateManager.translate(MoveableFeature.x, MoveableFeature.y, 0);
+
+                    int screenWidth = Utils.GetMC().displayWidth;
+                    int screenHeight = Utils.GetMC().displayHeight;
+                    GlStateManager.translate(moveableFeature.x * screenWidth, moveableFeature.y * screenHeight, 0);
+
                     button.drawButton(this.mc, mouseX, mouseY);
                     GlStateManager.popMatrix();
                 }
@@ -68,8 +73,8 @@ public class EditLocationsGui extends GuiScreen {
             float floatMouseX = Mouse.getX() / minecraftScale;
             float floatMouseY = (mc.displayHeight - Mouse.getY()) / minecraftScale;
 
-            xOffset = floatMouseX - dragging.getX();
-            yOffset = floatMouseY - dragging.getY();
+            xOffset = floatMouseX - dragging.getX() * Utils.GetMC().displayWidth;
+            yOffset = floatMouseY - dragging.getY() * Utils.GetMC().displayHeight;
         }
     }
 
@@ -98,7 +103,7 @@ public class EditLocationsGui extends GuiScreen {
             prevX = x;
             prevY = y;
 
-            dragging.setRawPos(x, y);
+            dragging.setPos(x/Utils.GetMC().displayWidth, y/Utils.GetMC().displayHeight);
         }
     }
 

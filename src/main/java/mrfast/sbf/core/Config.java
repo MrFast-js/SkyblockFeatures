@@ -129,6 +129,15 @@ public class Config extends Vigilant {
     public boolean blazeSolver = false;
 
     @Property(
+        type = PropertyType.SWITCH,
+        name = "Water Board Solver",
+        description = "Highlights the correct levers to flip to solve for the water puzzle.",
+        category = "§1§rDungeons",
+        subcategory = "Solvers"
+    )
+    public boolean WaterBoardSolver = false;
+
+    @Property(
             type = PropertyType.SWITCH,
             name = "Teleport Pad Solver",
             description = "Highlights teleport pads that you have stepped on",
@@ -938,15 +947,6 @@ public class Config extends Vigilant {
             subcategory = "Map"
     )
     public boolean dwarvenMinesMap = false;
-
-    @Property(
-            type = PropertyType.SWITCH,
-            name = "Puzzler Solver",
-            description = "Shows which block to mine for Puzzler.",
-            category = "Mining",
-            subcategory = "Solvers"
-    )
-    public boolean puzzlerSolver = false;
 
     @Property(
             type = PropertyType.SWITCH,

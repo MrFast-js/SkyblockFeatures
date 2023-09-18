@@ -105,7 +105,7 @@ public class MiscFeatures {
                 }
             }
             
-            if(!dupe && type == EnumParticleTypes.SPELL_MOB && SkyblockInfo.getInstance().location.contains("Glowing")) {
+            if(!dupe && type == EnumParticleTypes.SPELL_MOB && SkyblockInfo.getInstance().localLocation.contains("Glowing")) {
                 particles.add(pos);
             }
         }
@@ -191,7 +191,7 @@ public class MiscFeatures {
                 RenderUtil.draw3DStringWithShadow(tnt.getPositionVector().addVector(0, 1.5, 0), ChatFormatting.GREEN+""+tntExistTimes.get(tnt).toString(), 0xFFFFFF, event.partialTicks);
             }
         }
-        if(SkyblockInfo.getInstance().location.contains("Glowing") && SkyblockFeatures.config.highlightMushrooms) {
+        if(SkyblockInfo.getInstance().localLocation.contains("Glowing") && SkyblockFeatures.config.highlightMushrooms) {
             try {
                 for(Vec3 packet:particles) {
                     Color color = new Color(0x55FF55);
@@ -261,7 +261,7 @@ public class MiscFeatures {
                         return;
                     };
                     
-                    String profileURL = "https://sky.shiiyu.moe/api/v2/profile/"+username;
+                    String profileURL = "https://sky.shiiyu.moe/api/v2/profile/"+username+"#extraProfileInfo";
                     JsonObject profileResponse = APIUtils.getJSONResponse(profileURL);
                     try {
                         profileResponse = profileResponse.get("profiles").getAsJsonObject();

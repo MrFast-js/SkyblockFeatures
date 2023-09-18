@@ -3,11 +3,16 @@ package mrfast.sbf.commands;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
+import net.minecraft.event.HoverEvent;
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.ChatStyle;
 import net.minecraft.util.EnumChatFormatting;
 
 import java.awt.*;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
+
+import com.mojang.realmsclient.gui.ChatFormatting;
 
 import mrfast.sbf.SkyblockFeatures;
 import mrfast.sbf.utils.Utils;
@@ -44,7 +49,6 @@ public class GetkeyCommand extends CommandBase {
 	    
 	    clipboard.setContents(stringSelection, null);
 		Utils.SendMessage(EnumChatFormatting.GREEN + "Your set API key is " + EnumChatFormatting.DARK_GREEN + SkyblockFeatures.config.apiKey);
-
 	}
 
 }

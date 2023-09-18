@@ -1,24 +1,61 @@
 package mrfast.sbf.core;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import com.mojang.realmsclient.gui.ChatFormatting;
 
+import mrfast.sbf.events.PacketEvent;
 import mrfast.sbf.utils.ScoreboardUtil;
 import mrfast.sbf.utils.Utils;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.ServerData;
+import net.minecraft.network.NetworkManager;
+import net.minecraft.network.Packet;
+import net.minecraft.network.play.client.C00PacketKeepAlive;
+import net.minecraft.network.play.client.C03PacketPlayer;
+import net.minecraft.network.play.client.C0FPacketConfirmTransaction;
+import net.minecraft.network.play.client.C16PacketClientStatus;
+import net.minecraft.network.play.client.C16PacketClientStatus.EnumState;
+import net.minecraft.network.play.server.S00PacketKeepAlive;
+import net.minecraft.network.play.server.S02PacketChat;
+import net.minecraft.network.play.server.S03PacketTimeUpdate;
+import net.minecraft.network.play.server.S04PacketEntityEquipment;
+import net.minecraft.network.play.server.S06PacketUpdateHealth;
+import net.minecraft.network.play.server.S0BPacketAnimation;
+import net.minecraft.network.play.server.S0FPacketSpawnMob;
+import net.minecraft.network.play.server.S13PacketDestroyEntities;
+import net.minecraft.network.play.server.S14PacketEntity;
+import net.minecraft.network.play.server.S18PacketEntityTeleport;
+import net.minecraft.network.play.server.S1CPacketEntityMetadata;
+import net.minecraft.network.play.server.S20PacketEntityProperties;
+import net.minecraft.network.play.server.S23PacketBlockChange;
+import net.minecraft.network.play.server.S29PacketSoundEffect;
+import net.minecraft.network.play.server.S2APacketParticles;
+import net.minecraft.network.play.server.S32PacketConfirmTransaction;
+import net.minecraft.network.play.server.S37PacketStatistics;
+import net.minecraft.network.play.server.S38PacketPlayerListItem;
+import net.minecraft.network.play.server.S3BPacketScoreboardObjective;
+import net.minecraft.network.play.server.S3EPacketTeams;
+import net.minecraft.network.play.server.S47PacketPlayerListHeaderFooter;
+import net.minecraft.network.status.client.C00PacketServerQuery;
+import net.minecraft.network.status.server.S00PacketServerInfo;
+import net.minecraft.network.status.server.S01PacketPong;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
 import net.minecraftforge.event.world.WorldEvent;
-import net.minecraftforge.event.world.WorldEvent.Load;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 import net.minecraftforge.fml.common.gameevent.TickEvent.PlayerTickEvent;
 import net.minecraftforge.fml.common.registry.GameData;
 
 public class SkyblockInfo {
     private static SkyblockInfo instance;
     public String location = "";
+    public String localLocation = "";
     public String map = "";
     public int coins = 0;
 
@@ -29,16 +66,46 @@ public class SkyblockInfo {
         return instance;
     }
 
+    private static long startTime;
+    private static boolean waitingForResponse = false;
+
+    public static void getPing(String serverIp) {
+        ServerData test = new ServerData("Hi there", serverIp, false);
+       
+        sendServerQuery(test);
+    }
+
+    private static void sendServerQuery(ServerData serverData) {
+        NetworkManager networkManager = Minecraft.getMinecraft().getNetHandler().getNetworkManager();
+        C16PacketClientStatus queryPacket = new C16PacketClientStatus(EnumState.REQUEST_STATS);
+ 
+        // Record the start time
+        startTime = System.currentTimeMillis();
+
+        // Send the query packet to the server
+        networkManager.sendPacket(queryPacket);
+
+        // Set waitingForResponse to true to avoid sending multiple queries in one tick
+        waitingForResponse = true;
+    }
+
+    @SubscribeEvent
+    public void onPacket(PacketEvent.ReceiveEvent event) {
+        if(waitingForResponse && event.packet instanceof S37PacketStatistics) {
+            waitingForResponse = false;
+            Utils.playSound("random.orb", 0.1);
+            Utils.SendMessage(ChatFormatting.GREEN+"Your current ping is "+ChatFormatting.YELLOW+(System.currentTimeMillis()-startTime)+"ms");
+        }
+    }
+
     @SubscribeEvent
     public void onChatReceived(ClientChatReceivedEvent event) {
         if(Utils.GetMC().theWorld==null) return;
         try {
             String chatMessage = event.message.getUnformattedText();
-            if(chatMessage.contains("You are sending commands too fast")) event.setCanceled(true);
             if (isJsonLikeMessage(chatMessage)) {
                 event.setCanceled(true);
-                System.out.println("FOUND JSON MESSAGE: "+chatMessage);
-                if(chatMessage.contains("limbo")) {
+                if(chatMessage.contains("limbo") && Utils.inSkyblock) {
                     Utils.setTimeout(()->{
                        Minecraft.getMinecraft().thePlayer.sendChatMessage("/locraw");
                     }, 2000);
@@ -50,33 +117,44 @@ public class SkyblockInfo {
         }
         
     }
-    private boolean worldJustLoaded = false;
+    
+    private static boolean worldJustLoaded = false;
+
     @SubscribeEvent
-    public void onWorldLoad(Load event) {
-        this.worldJustLoaded = true;
+    public void onWorldLoad(WorldEvent.Load event) {
+        worldJustLoaded = true;
         location = "";
         map = "";
-
     }
 
     int ticks = 0;
 
     @SubscribeEvent
     public void onTick(ClientTickEvent event) {
-        if(Utils.GetMC().theWorld==null) return;
-        if(worldJustLoaded) ticks++;
-        if(ticks>=80 && worldJustLoaded) {
+        if (event.phase != Phase.END) {
+            return; // Only run on the client side at the end of a tick
+        }
+
+        if (Utils.GetMC().theWorld == null) {
+            return;
+        }
+
+        if (worldJustLoaded) {
+            ticks++;
+        }
+
+        if (ticks >= 80 && worldJustLoaded && Utils.isOnHypixel()) {
             ticks = 0;
             worldJustLoaded = false;
             Minecraft.getMinecraft().thePlayer.sendChatMessage("/locraw");
         }
+
         try {
             parseCoinsAndLocation();
         } catch (Exception e) {
-            // TODO: handle exception
+            // Handle exceptions
         }
     }
-
     private void parseCoinsAndLocation() {
         for (String entry : ScoreboardUtil.getSidebarLines()) {
             entry = Utils.cleanColor(entry);
@@ -87,6 +165,7 @@ public class SkyblockInfo {
             } else if (entry.contains("ф")) {
                 location = entry.substring(2, entry.length());
             }
+            localLocation=location.replaceAll("[^a-zA-Z0-9\\s]", "");
         }
     }
 

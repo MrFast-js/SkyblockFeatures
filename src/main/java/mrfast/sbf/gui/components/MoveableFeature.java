@@ -11,8 +11,8 @@ public class MoveableFeature extends GuiButton {
     public UIElement element;
     public float x;
     public float y;
-    public float xWidth;
-    public float yHeight;
+    public float Width;
+    public float Height;
 
     public MoveableFeature(UIElement element) {
         super(-1, 0, 0, null);
@@ -28,14 +28,21 @@ public class MoveableFeature extends GuiButton {
     private void updateLocations() {
         x = element.getX();
         y = element.getY();
-        xWidth = x + element.getWidth();
-        yHeight = y + element.getHeight();
+        Width = element.getWidth();
+        Height = element.getHeight();
     }
 
     @Override
     public void drawButton(Minecraft mc, int mouseX, int mouseY) {
         updateLocations();
-        hovered = mouseX >= x && mouseY >= y && mouseX < xWidth && mouseY < yHeight;
+        int screenWidth = Utils.GetMC().displayWidth;
+        int screenHeight = Utils.GetMC().displayHeight;
+        Float actualX =screenWidth*x;
+        Float actualY =screenHeight*y;
+        Float xWidth = actualX+element.getWidth();
+        Float yHeight = actualY+element.getHeight();
+
+        hovered = mouseX >= actualX && mouseY >= actualY && mouseX < xWidth && mouseY < yHeight;
         Color c = new Color(255, 255, 255, hovered ? 100 : 40);
         Utils.drawGraySquare(0, 0, element.getWidth() + 4, element.getHeight() + 4, 3, c);
 

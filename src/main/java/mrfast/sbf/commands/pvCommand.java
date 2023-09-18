@@ -54,7 +54,7 @@ public class pvCommand extends CommandBase {
             String username = Utils.GetMC().thePlayer.getName();
 
             Utils.SendMessage(ChatFormatting.YELLOW+"Opening "+username+"'s Profile "+ChatFormatting.GRAY+"(This may take a second)");
-            GuiUtil.open(new ProfileViewerGui(true,username));
+            GuiUtil.open(new ProfileViewerGui(true,username,"auto"));
             return;
         } else {
             String playerUuid = FakePlayerCommand.getUUID(args[0]);
@@ -63,7 +63,7 @@ public class pvCommand extends CommandBase {
                 return;
             }
             Utils.SendMessage(ChatFormatting.YELLOW+"Opening "+args[0]+"'s Profile "+ChatFormatting.GRAY+"(This may take a second)");
-            GuiUtil.open(new ProfileViewerGui(true,args[0]));
+            GuiUtil.open(new ProfileViewerGui(true,args[0],"auto"));
         }
     }
 }

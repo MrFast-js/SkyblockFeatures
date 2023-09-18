@@ -167,7 +167,7 @@ public abstract class MixinRenderGlobal {
                         outlineColor(itemRarity.getColor().getRGB());
                         renderManager.renderEntitySimple(entity, partialTicks);
                     } 
-                    if(entity instanceof EntityEnderman && mc.thePlayer.canEntityBeSeen(entity) && SkyblockInfo.getInstance().location.contains("Dragons Nest") && SkyblockFeatures.config.glowingZealots) {
+                    if(entity instanceof EntityEnderman && mc.thePlayer.canEntityBeSeen(entity) && SkyblockInfo.getInstance().localLocation.contains("Dragons Nest") && SkyblockFeatures.config.glowingZealots) {
                         renderManager.renderEntitySimple(entity, partialTicks);
                     }
                 }

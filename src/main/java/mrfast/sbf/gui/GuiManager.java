@@ -64,11 +64,11 @@ public class GuiManager {
             file = gson.fromJson(in, JsonObject.class);
             for (Map.Entry<String, JsonElement> e : file.entrySet()) {
                 try {
-                    Point pnt = new Point(e.getValue().getAsJsonObject().get("x").getAsFloat(), e.getValue().getAsJsonObject().get("y").getAsFloat(),true);
-                    if(pnt.getX()<0) pnt.x = 20;
-                    if(pnt.getY()<0) pnt.y = 20;
-                    if(pnt.getX()>Utils.GetMC().displayWidth+50) pnt.x = Utils.GetMC().displayWidth-20;
-                    if(pnt.getY()>Utils.GetMC().displayHeight+50) pnt.y = Utils.GetMC().displayHeight+30;
+                    Point pnt = new Point(e.getValue().getAsJsonObject().get("x").getAsFloat(), e.getValue().getAsJsonObject().get("y").getAsFloat());
+                    if(pnt.getX()<0) pnt.x = 0;
+                    if(pnt.getY()<0) pnt.y = 0;
+                    if(pnt.getX()>1) pnt.x = 0f;
+                    if(pnt.getY()>1) pnt.y = 0f;
                     GuiPositions.put(e.getKey(),pnt);
                 } catch (Exception exception) {
                     exception.printStackTrace();
@@ -82,7 +82,6 @@ public class GuiManager {
 
             }
         }
-        System.out.println("=======================================");
     }
 
     public static void saveConfig() {
@@ -105,12 +104,20 @@ public class GuiManager {
             try {
                 UIElement element = e.getValue();
                 GlStateManager.pushMatrix();
-                GlStateManager.translate(element.getX(), element.getY(), 0);
+                GlStateManager.translate((element.getX()*Utils.GetMC().displayWidth), (element.getY()*Utils.GetMC().displayHeight), 0);
                 GlStateManager.scale(1, 1, 0);
-                element.drawElement();
+
+                // if((element.getX()*Utils.GetMC().displayWidth)+element.getWidth()>Utils.GetMC().displayWidth) {
+                //     element.setPos((Utils.GetMC().displayWidth-element.getWidth()), element.getY());
+                // }
+                // if((Utils.GetMC().displayHeight*element.getY())+element.getHeight()>Utils.GetMC().displayHeight) {
+                //     element.setPos(element.getX(),(Utils.GetMC().displayHeight-element.getHeight())/Utils.GetMC().displayHeight);
+                // }
+
+                element.drawElement(); 
                 GlStateManager.popMatrix();
             } catch (Exception ex) {
-                // ex.printStackTrace();
+                ex.printStackTrace();
             }
         }
         renderTitles(event.resolution);
