@@ -68,7 +68,7 @@ public class APIUtils {
                         return gson.fromJson(in, JsonObject.class);
                     }
                 } else {
-                    Utils.SendMessage(EnumChatFormatting.RED+"Unexpected Server Response: " + statusCode);
+                    System.out.println(EnumChatFormatting.RED+"Unexpected Server Response: " + statusCode);
                 }
                 response.close();
             }

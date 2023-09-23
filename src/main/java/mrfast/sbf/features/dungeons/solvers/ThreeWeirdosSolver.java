@@ -6,6 +6,7 @@ import java.util.List;
 
 import com.mojang.realmsclient.gui.ChatFormatting;
 
+import mrfast.sbf.SkyblockFeatures;
 import mrfast.sbf.utils.RenderUtil;
 import mrfast.sbf.utils.Utils;
 import net.minecraft.block.Block;
@@ -38,40 +39,36 @@ public class ThreeWeirdosSolver {
     
     @SubscribeEvent(priority = EventPriority.HIGHEST, receiveCanceled = true)
     public void onChatMesaage(ClientChatReceivedEvent event) {
-        if (!Utils.inDungeons || event.type == 2) return;
+        if (!Utils.inDungeons || event.type == 2 || !SkyblockFeatures.config.ThreeWeirdosSolver) return;
         String message = Utils.cleanColor(event.message.getUnformattedText());
         // §e[NPC] §cLino§f: The reward is in my chest!
         for(String riddleAnswer:riddleAnswers) {
             if(!message.contains(riddleAnswer)) continue;
             
             String npcName = message.substring(6, message.indexOf(":"));
-            Utils.SendMessage(npcName+ChatFormatting.RESET+" has the reward!");
+            Utils.SendMessage(ChatFormatting.RED+""+ChatFormatting.BOLD+npcName+ChatFormatting.YELLOW+""+ChatFormatting.BOLD+" has the reward!");
             for(Entity entity:Utils.GetMC().theWorld.loadedEntityList) {
                 if(!(entity instanceof EntityArmorStand)) continue;
                 if(!entity.getCustomNameTag().contains(npcName)) continue;
-                
-                for(TileEntity tileEntity:Utils.GetMC().theWorld.loadedTileEntityList) {
-                    Utils.SendMessage("Got thing");
-                    BlockPos pos = tileEntity.getPos();
-                    int[][] directionOffsets = {
-                        {0, 1},    // North
-                        {-1, 0},   // West
-                        {1, 0},    // East
-                        {0, -1},   // South
-                    };
-                    for (int[] offset : directionOffsets) {
+                int[][] directionOffsets = {
+                    {0, 1},    // North
+                    {-1, 0},   // West
+                    {1, 0},    // East
+                    {0, -1},   // South
+                };
+                for (int[] offset : directionOffsets) {
 
-                        int xOffset = offset[0];
-                        int zOffset = offset[1];
-            
-                        BlockPos blockPos = pos.add(xOffset, 0, zOffset);
-                        Utils.SendMessage("Doing offset: "+blockPos.toString());
+                    int xOffset = offset[0];
+                    int zOffset = offset[1];
+        
+                    BlockPos blockPos = entity.getPosition().add(xOffset, 0, zOffset);
 
-                        checking.add(blockPos);
-                        Block block = Utils.GetMC().theWorld.getBlockState(blockPos).getBlock();
-                        if(block instanceof BlockChest) {
-                            answerChest=blockPos;
-                        }
+                    checking.add(blockPos);
+                    Block block = Utils.GetMC().theWorld.getBlockState(blockPos).getBlock();
+                    
+                    if(block instanceof BlockChest) {
+                        Utils.SendMessage("GOT CHEST");
+                        answerChest=blockPos;
                     }
                 }
             }
@@ -80,12 +77,8 @@ public class ThreeWeirdosSolver {
 
     @SubscribeEvent
     public void onRender(RenderWorldLastEvent event) {
-        if (!Utils.inDungeons || answerChest==null) return;
+        if (!Utils.inDungeons || answerChest==null || !SkyblockFeatures.config.ThreeWeirdosSolver) return;
         AxisAlignedBB aabb = new AxisAlignedBB(answerChest, answerChest.add(1, 1, 1));
         RenderUtil.drawOutlinedFilledBoundingBox(aabb,Color.CYAN,event.partialTicks);
-        for(BlockPos pos:checking) {
-            AxisAlignedBB aabb2 = new AxisAlignedBB(pos, pos.add(1, 1, 1));
-            RenderUtil.drawOutlinedFilledBoundingBox(aabb2,Color.RED,event.partialTicks);
-        }
     }
 }

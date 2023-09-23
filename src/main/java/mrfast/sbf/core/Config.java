@@ -138,6 +138,15 @@ public class Config extends Vigilant {
     public boolean WaterBoardSolver = false;
 
     @Property(
+        type = PropertyType.SWITCH,
+        name = "Three Weirdo Solver",
+        description = "Highlights the correct chest to solve for the riddle puzzle.",
+        category = "§1§rDungeons",
+        subcategory = "Solvers"
+    )
+    public boolean ThreeWeirdosSolver = false;
+
+    @Property(
             type = PropertyType.SWITCH,
             name = "Teleport Pad Solver",
             description = "Highlights teleport pads that you have stepped on",
