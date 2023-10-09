@@ -9,6 +9,7 @@ import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -18,6 +19,7 @@ import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.stream.Collectors;
 
 import javax.imageio.ImageIO;
 
@@ -189,7 +191,7 @@ public class ProfileViewerGui extends WindowScreen {
     UIComponent statsAreaContainer = null;
     static int screenHeight = Utils.GetMC().currentScreen.height;
     static double fontScale = screenHeight/540d;
-    String uuidString = "";
+    String playerUuid = "";
     public static Color clear = new Color(0,0,0,0);
     public ProfileViewerGui(Boolean doAnimation,String username,String profileString) {
         super(ElementaVersion.V2);
@@ -202,7 +204,7 @@ public class ProfileViewerGui extends WindowScreen {
         // This sets the skin from the uuid
         Utils.GetMC().getSessionService().fillProfileProperties(profile, true);
 
-        uuidString = uuid.toString().replaceAll("-","");
+        playerUuid = uuid.toString().replaceAll("-","");
         {
             box = new UIRoundedRectangle(10f)
                     .setX(new CenterConstraint())
@@ -280,12 +282,12 @@ public class ProfileViewerGui extends WindowScreen {
 			System.out.println("Starting thread ");
 
             hypixelProfilesResponse = null;
-            String latestProfile = APIUtils.getLatestProfileID(uuidString, SkyblockFeatures.config.apiKey);
-            System.out.println("doing stuff part 2 "+uuidString);
+            String latestProfile = APIUtils.getLatestProfileID(playerUuid, SkyblockFeatures.config.apiKey);
+            System.out.println("doing stuff part 2 "+playerUuid);
             if (profileString.equals("auto") && latestProfile == null) return;
-            String locationURL = "https://api.hypixel.net/status?uuid="+uuidString+"#GetLocationPV";
-            String profileURL = "https://api.hypixel.net/skyblock/profiles?uuid=" + uuidString+"#GetProfilePV";
-            String achievmentsURL = "https://api.hypixel.net/resources/achievements?uuid=" + uuidString+"#getAchievmentsPV";
+            String locationURL = "https://api.hypixel.net/status?uuid="+playerUuid+"#GetLocationPV";
+            String profileURL = "https://api.hypixel.net/skyblock/profiles?uuid=" + playerUuid+"#GetProfilePV";
+            String achievmentsURL = "https://api.hypixel.net/resources/achievements?uuid=" + playerUuid+"#getAchievmentsPV";
 
             System.out.println("Fetching Hypixel profile...");
             JsonObject profiles = APIUtils.getJSONResponse(profileURL);
@@ -387,7 +389,9 @@ public class ProfileViewerGui extends WindowScreen {
             ProfileViewerUtils.animateX(lastSelectedButton, 0f);
         }
         if(initial) {
-            new Inspector(getWindow()).setChildOf(getWindow());
+            if(Utils.isDeveloper()) {
+                new Inspector(getWindow()).setChildOf(getWindow());
+            }
 
             drawSideButton(sideButtonContainer,"General",()->{
                 loadCategory("General");
@@ -474,7 +478,7 @@ public class ProfileViewerGui extends WindowScreen {
         if(selectedProfileUUID != lastProfileID) {
             hypixelProfilesResponse.forEach((profile)->{
                 if(profile.getAsJsonObject().get("profile_id").getAsString().equals(selectedProfileUUID)) {
-                    ProfilePlayerResponse = profile.getAsJsonObject().get("members").getAsJsonObject().get(uuidString).getAsJsonObject();
+                    ProfilePlayerResponse = profile.getAsJsonObject().get("members").getAsJsonObject().get(playerUuid).getAsJsonObject();
                     ProfileResponse = profile.getAsJsonObject();
                 }
             });
@@ -490,7 +494,7 @@ public class ProfileViewerGui extends WindowScreen {
         }
         profiles = new JsonObject();
         new Thread(()->{
-            profiles = APIUtils.getJSONResponse("https://sky.shiiyu.moe/api/v2/profile/"+uuidString+"#skycryptForPV").get("profiles").getAsJsonObject();
+            profiles = APIUtils.getJSONResponse("https://sky.shiiyu.moe/api/v2/profile/"+playerUuid+"#skycryptForPV").get("profiles").getAsJsonObject();
         }).start();
 
         Integer sbLevelCurrXp = sbLevelXP%100;
@@ -560,20 +564,21 @@ public class ProfileViewerGui extends WindowScreen {
 
         JsonObject data = new JsonObject();
         data.add("data", ProfilePlayerResponse);
-        JsonObject networthResponse = APIUtils.getNetworthResponse(data);
-        List<String> networthTooltip = new ArrayList<>(Arrays.asList(ChatFormatting.RED + "Player has API disabled: "));
+        JsonObject networthResponse = APIUtils.getNetworthResponse(data,playerUuid,selectedProfileUUID);
+
+        List<String> networthTooltip = new ArrayList<>(Arrays.asList(ChatFormatting.RED + "Player has API disabled"));
         String networth = ChatFormatting.RED+"API Disabled";
 
         if(networthResponse.has("data")) {
             JsonObject networthJson = networthResponse.get("data").getAsJsonObject();
             JsonObject networthCategorys = networthJson.get("categories").getAsJsonObject();
             
-            networth = nf.format(networthJson.get("networth").getAsLong()+Purse+Bank);
 
             {
                 long Armor = 0; 
                 long Wardrobe = 0; 
                 long Inventory = 0;
+                long Museum = 0;
                 long accessories = 0;
                 long enderchest = 0; 
                 long Sacks = 0;
@@ -590,7 +595,8 @@ public class ProfileViewerGui extends WindowScreen {
                 try {enderchest = networthCategorys.get("enderchest").getAsJsonObject().get("total").getAsLong();} catch (NullPointerException e) {}
                 try {Sacks = networthJson.get("sacks").getAsLong();} catch (NullPointerException e) {}
                 try {pets = networthCategorys.get("pets").getAsJsonObject().get("total").getAsLong();} catch (NullPointerException e) {}
-                try {total = networthJson.get("networth").getAsLong()+Purse+Bank;} catch (NullPointerException e) {}
+                try {Museum = networthCategorys.get("museum").getAsLong();} catch (NullPointerException e) {}
+                try {total = networthJson.get("networth").getAsLong()+Purse+Bank+Museum;} catch (NullPointerException e) {}
 
                 if(PricingData.bazaarPrices.get("BOOSTER_COOKIE")!=null) irl = (int) ((total/PricingData.bazaarPrices.get("BOOSTER_COOKIE"))*2.4);
 
@@ -602,14 +608,21 @@ public class ProfileViewerGui extends WindowScreen {
                     ChatFormatting.GREEN + "Bank: " + ChatFormatting.GOLD + Utils.formatNumber(Bank) + Utils.percentOf(Bank,total),
                     ChatFormatting.GREEN + "Sacks: " + ChatFormatting.GOLD + Utils.formatNumber(Sacks) + Utils.percentOf(Sacks,total),
                     ChatFormatting.GREEN + "Armor: " + ChatFormatting.GOLD + Utils.formatNumber(Armor) + Utils.percentOf(Armor,total),
-                    ChatFormatting.GREEN + "Wardrobe: " + ChatFormatting.GOLD + Utils.formatNumber(Wardrobe) + Utils.percentOf(Wardrobe,total),
+                    ChatFormatting.GREEN + "Museum: " + ChatFormatting.GOLD + Utils.formatNumber(Museum) + Utils.percentOf(Museum,total),
                     ChatFormatting.GREEN + "Storage: " + ChatFormatting.GOLD + Utils.formatNumber(Storage) + Utils.percentOf(Storage,total),
+                    ChatFormatting.GREEN + "Wardrobe: " + ChatFormatting.GOLD + Utils.formatNumber(Wardrobe) + Utils.percentOf(Wardrobe,total),
                     ChatFormatting.GREEN + "Inventory: " + ChatFormatting.GOLD + Utils.formatNumber(Inventory) + Utils.percentOf(Inventory,total),
                     ChatFormatting.GREEN + "Enderchest: " + ChatFormatting.GOLD + Utils.formatNumber(enderchest) + Utils.percentOf(enderchest,total),
                     ChatFormatting.GREEN + "Accessories: " + ChatFormatting.GOLD + Utils.formatNumber(accessories) + Utils.percentOf(accessories,total),
                     ChatFormatting.GREEN + "Pets: " + ChatFormatting.GOLD + Utils.formatNumber(pets)+Utils.percentOf(pets,total)
                 ));
+                networth = nf.format(networthJson.get("networth").getAsLong()+Purse+Bank+Museum);
+
             }
+
+        } else {
+            System.out.println("No Networth Data!!" );
+            new ArrayList<>(Arrays.asList(ChatFormatting.RED + "Player has inventory API disabled"));
         }
 
         // String avgSkill = Utils.round(ProfilePlayerResponse.get("average_level_no_progress").getAsDouble(),2)+"";
@@ -618,7 +631,7 @@ public class ProfileViewerGui extends WindowScreen {
         long joinedDate = ProfilePlayerResponse.get("first_join").getAsLong();
         String joinedString = simpleDateFormat.format(new Date(joinedDate));
         String profileType = ChatFormatting.GREEN+bold+"Classic";
-
+        
         if(ProfileResponse.has("game_mode")) {
             String gamemode = ProfileResponse.get("game_mode").getAsString();
             if(gamemode.equals("ironman")) profileType = ChatFormatting.WHITE+bold+"♲ Ironman";
@@ -632,7 +645,6 @@ public class ProfileViewerGui extends WindowScreen {
         UIComponent lastRow = new UIBlock(clear).setWidth(new RelativeConstraint(1f)).setY(new SiblingConstraint(2f)).setChildOf(generalInfoContainer).setHeight(new RelativeConstraint(0.15f));   
 
         new UIText(g+"Profile Name: "+bold+Utils.convertToTitleCase(cute_name)).setX(new SiblingConstraint(10f)).setChildOf(topRow);
-
         new UIText(g+"Profile Type: "+profileType).setX(new SiblingConstraint(10f)).setChildOf(topRow);
         new UIText(g+"Joined: "+bold+joinedString).setX(new SiblingConstraint(10f)).setChildOf(topRow);
 
@@ -663,24 +675,31 @@ public class ProfileViewerGui extends WindowScreen {
             .setHeight(new RelativeConstraint(0.75f))
             .setWidth(new RelativeConstraint(0.75f));
 
-        System.out.println("-------MEMBERS-----------");
-        coopMemberList.forEach((e)->{
-            System.out.println("User: "+e);
-        });
-        System.out.println("------------------------");
+        System.out.println(profile.getName());
+        int coopSelectorIndex = -1;
+        int currentCoopSelectorIndex = -1;
+        for (String member : coopMemberList) {
+            currentCoopSelectorIndex++;
+            if (member.equalsIgnoreCase(profile.getName())) {
+                coopSelectorIndex = currentCoopSelectorIndex;
+                break;
+            }
+        }
 
-        DropDownComponent coopSelector = (DropDownComponent) new DropDownComponent(coopMemberList.indexOf(profile.getName()), coopMemberList,coopMemberList.size())
+        DropDownComponent coopSelector = (DropDownComponent) new DropDownComponent(coopSelectorIndex, coopMemberList,coopMemberList.size())
             .setChildOf(sidebarArea)
             .setWidth(new RelativeConstraint(0.60f))
             .setX(new CenterConstraint())
             .setY(new RelativeConstraint(0.88f));
+        System.out.println("Created Coop Selector");
 
         DropDownComponent profileSelector = (DropDownComponent) new DropDownComponent(profileList.indexOf(ChatFormatting.GREEN+cute_name), profileList,profileList.size())
             .setChildOf(sidebarArea)
             .setWidth(new RelativeConstraint(0.50f))
             .setX(new CenterConstraint())
             .setY(new RelativeConstraint(0.94f));
- 
+        System.out.println("Created Profile Selector");
+
         profileSelector.getSelectedText().onSetValue((value)->{
             ProfileViewerUtils.animateX(lastSelectedButton, 8f);
             loadProfile(value,false);
@@ -733,6 +752,7 @@ public class ProfileViewerGui extends WindowScreen {
                 armorComponent.addChild(backgroundSlot);
             }
         }
+
         UIComponent equipmentComponent = new UIBlock(clear)
             .setX(new CenterConstraint())
             .setY(new SiblingConstraint(2f,false))
@@ -769,9 +789,10 @@ public class ProfileViewerGui extends WindowScreen {
                 equipmentComponent.addChild(backgroundSlot);
             }
         }
+
         sidebarArea.addChild(armorComponent);
         sidebarArea.addChild(equipmentComponent);
-        
+
         // Seperator to the right side of the sidebar
         UIComponent sidebarSeperator = new UIBlock()
             .setWidth(new PixelConstraint(1f))
@@ -782,6 +803,7 @@ public class ProfileViewerGui extends WindowScreen {
 
         box.addChild(titleArea);
         box.addChild(sidebarArea);
+
         box.addChild(sidebarSeperator);
         box.addChild(statsAreaContainer);
 
@@ -965,7 +987,8 @@ public class ProfileViewerGui extends WindowScreen {
             e.printStackTrace();
             // TODO: handle exception
         }
-        if(tamingLevel.totalXp==0 && farmingLevel.totalXp==0 && miningLevel.totalXp==0 && combatLevel.totalXp==0 && foragingLevel.totalXp==0 && fishingLevel.totalXp==0) {
+
+        if(tamingLevel.currentXp==0 && farmingLevel.currentXp==0 && miningLevel.currentXp==0 && combatLevel.currentXp==0 && foragingLevel.currentXp==0 && fishingLevel.currentXp==0) {
             skillApiDisabled = true;
         }
         System.out.println("set skill experience");
@@ -1274,6 +1297,11 @@ public class ProfileViewerGui extends WindowScreen {
         }
 
         if(categoryName.equals("Dungeons")) {
+             UIComponent loadingText = new UIText(ChatFormatting.RED+"Waiting for SkyCrypt..")
+                    .setTextScale(new PixelConstraint(2f))
+                    .setChildOf(statsAreaContainer)
+                    .setX(new CenterConstraint())
+                    .setY(new CenterConstraint());
             try {
                 String id = ProfileResponse.get("profile_id").toString().replaceAll("\"", "");
                 JsonObject obj = profiles.get(id).getAsJsonObject();
@@ -1312,7 +1340,7 @@ public class ProfileViewerGui extends WindowScreen {
                 try {nextHealXp = healerClass.get("xpForNext").getAsInt();} catch (Exception e) {}
                 try {nextMageXp = mageClass.get("xpForNext").getAsInt();} catch (Exception e) {}
                 try {nextTankXp = tankClass.get("xpForNext").getAsInt();} catch (Exception e) {}
-
+                statsAreaContainer.removeChild(loadingText);
                 drawProgressbar(catacombsLevel.get("xpCurrent").getAsInt(),nextCataXp,statsAreaLeft,"Catacombs "+catacombsLevel.get("level").getAsInt(),new ItemStack(Items.skull),null,false);
                 drawProgressbar(archerClass.get("xpCurrent").getAsInt(),nextArchXp,statsAreaLeft,"Archer "+archerClass.get("level").getAsInt(),new ItemStack(Items.bow),null,false);
                 drawProgressbar(healerClass.get("xpCurrent").getAsInt(),nextHealXp,statsAreaLeft,"Healer "+healerClass.get("level").getAsInt(),new ItemStack(Items.potionitem),null,false);
@@ -1351,15 +1379,15 @@ public class ProfileViewerGui extends WindowScreen {
                 new UIText(g+ChatFormatting.DARK_AQUA+"Diamond Essence: "+bold+nf.format(essences.get("diamond").getAsInt())).setY(new SiblingConstraint(3f)).setChildOf(right);
                 new UIText(g+ChatFormatting.GOLD+"Gold Essence: "+bold+nf.format(essences.get("gold").getAsInt())).setY(new SiblingConstraint(3f)).setChildOf(right);
                 
-                totalDungeonRuns = 0;
+                totalDungeonRuns = 1;
 
                 addDungeonFloors(catacombs);
                 addDungeonFloors(mastermode);
-
+                
                 Double averageSecrets = Math.round((secrets.doubleValue()/totalDungeonRuns.doubleValue())*100.0)/100.0;
                 UIComponent avgSecretComponent = new UIText(g+"Average Secrets Per Run: "+bold+nf.format(averageSecrets)).setY(new SiblingConstraint(3f)).setChildOf(left);
 
-                dungeonHoverables.put(avgSecretComponent, new ArrayList<>(Arrays.asList(ChatFormatting.RED + "This is an estimate because the secret count is combined across profiles")));
+                dungeonHoverables.put(avgSecretComponent, new ArrayList<>(Arrays.asList(ChatFormatting.RED + "This is an estimate because",ChatFormatting.RED+"the secret count is combined",ChatFormatting.RED+"across profiles")));
             } catch (Exception e) {
                 e.printStackTrace();
                 // TODO: handle exception
@@ -1474,7 +1502,7 @@ public class ProfileViewerGui extends WindowScreen {
         }
         
         if(categoryName.equals("Pets")) {
-            UIComponent loadingText = new UIText(ChatFormatting.RED+"Loading...")
+            UIComponent loadingText = new UIText(ChatFormatting.RED+"Waiting for SkyCrypt..")
                     .setTextScale(new PixelConstraint(2f))
                     .setChildOf(statsAreaContainer)
                     .setX(new CenterConstraint())
@@ -1662,12 +1690,16 @@ public class ProfileViewerGui extends WindowScreen {
 
     HashMap<String,String> coopNames = new HashMap<>();
     public class CoopCollector {
-        int total;
+        long total;
         String username;
         
-        public CoopCollector(String u,int t) {
+        public CoopCollector(String u,Long t) {
             total = t;
             username = u;
+        }
+
+        public long getTotal() {
+            return total;
         }
     }
     public int loadCollectionsCategory(JsonObject category, UIComponent component) {
@@ -1698,7 +1730,7 @@ public class ProfileViewerGui extends WindowScreen {
             List<String> lore = new ArrayList<>();
             List<CoopCollector> collectors = new ArrayList<>();
             JsonObject members = ProfileResponse.get("members").getAsJsonObject();
-            Double total = 0d;
+            long total = 0l;
 
             for(Entry<String, JsonElement> member:members.entrySet()) {
                 if(!coopNames.containsKey(member.getKey())) {
@@ -1707,16 +1739,20 @@ public class ProfileViewerGui extends WindowScreen {
                 }
 
 
-                Integer value = 0;
+                Long value = 0l;
                 try {
-                    value = member.getValue().getAsJsonObject().get("collection").getAsJsonObject().get(item.getKey()).getAsInt();
+                    value = member.getValue().getAsJsonObject().get("collection").getAsJsonObject().get(item.getKey()).getAsLong();
                 } catch (Exception e) {
                     // TODO: handle exception
                 }
                 total+=value;
                 collectors.add(new CoopCollector(coopNames.get(member.getKey()),value));
             }
-            collectors.sort((a,b)->{return b.total-a.total;});
+            // Create a list of CoopCollector objects
+            // Sort the list based on the 'total' field in descending order
+            collectors = collectors.stream()
+                    .sorted(Comparator.comparingLong(CoopCollector::getTotal).reversed())
+                    .collect(Collectors.toList());
 
             CollectionTier rank = getCollectionTier(item.getValue().getAsJsonObject(),total);
             String itemName = Utils.cleanColor(stack.getDisplayName());
@@ -1733,7 +1769,7 @@ public class ProfileViewerGui extends WindowScreen {
             lore.add("§7Contributions:");
 
             for (CoopCollector collector : collectors) {
-                lore.add(collector.username+"§7: §e"+Utils.nf.format(collector.total)+Utils.percentOf(collector.total, total.intValue()));
+                lore.add(collector.username+"§7: §e"+Utils.nf.format(collector.total)+Utils.percentOf(collector.total, total));
             }
 
             // Calculate the position for the current item
@@ -1770,7 +1806,7 @@ public class ProfileViewerGui extends WindowScreen {
         return totalHeight;
     }
 
-    public String stringProgressBar(Double total2,Integer total) {
+    public String stringProgressBar(long total2,Integer total) {
         Double percent = (double) (total2/total);
         String progessed = "§2§l§m §2§l§m ";
         String unprogessed = "§f§l§m §f§l§m ";
@@ -1797,7 +1833,7 @@ public class ProfileViewerGui extends WindowScreen {
             this.progress=progress;
         }
     }
-    public CollectionTier getCollectionTier(JsonObject itemObj, Double total) {
+    public CollectionTier getCollectionTier(JsonObject itemObj, long total) {
         JsonArray tiers = itemObj.get("tiers").getAsJsonArray();
         Integer maxTiers = itemObj.get("maxTiers").getAsInt();
         boolean maxed = false;

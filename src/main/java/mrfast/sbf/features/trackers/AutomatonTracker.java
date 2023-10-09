@@ -153,7 +153,7 @@ public class AutomatonTracker {
     static String display = "";
     public static class AutomatonTrackerGUI extends UIElement {
         public AutomatonTrackerGUI() {
-            super("Automaton Tracker", new Point(0.45052084f, 0.86944443f));
+            super("Automaton Tracker", new Point(0.2f, 0.0f));
             SkyblockFeatures.GUIMANAGER.registerElement(this);
         }
 

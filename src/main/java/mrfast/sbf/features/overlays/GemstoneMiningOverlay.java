@@ -10,6 +10,7 @@ import mrfast.sbf.SkyblockFeatures;
 import mrfast.sbf.core.PricingData;
 import mrfast.sbf.core.SkyblockInfo;
 import mrfast.sbf.events.SecondPassedEvent;
+import mrfast.sbf.features.overlays.maps.CrystalHollowsMap;
 import mrfast.sbf.gui.components.Point;
 import mrfast.sbf.gui.components.UIElement;
 import mrfast.sbf.utils.Utils;
@@ -53,6 +54,7 @@ public class GemstoneMiningOverlay {
             List<Gemstone> gemstonesToRemove = new ArrayList<>();
 
             for(Gemstone gemstone:gemstones) {
+                // Change the 5 to minutes for average
                 if((new Date()).getTime()-gemstone.time > 5*60*1000) gemstonesToRemove.add(gemstone);
             }
             for(Gemstone gemstone:gemstonesToRemove) {
@@ -64,14 +66,15 @@ public class GemstoneMiningOverlay {
         }
     }
     @SubscribeEvent
-    public void onDrawContainerTitle(ClientChatReceivedEvent event) {
+    public void onChat(ClientChatReceivedEvent event) {
         String message = event.message.getUnformattedText();
         if (message.contains("PRISTINE!") && SkyblockFeatures.config.gemstoneTracker) {
             start = true;
             message = message.toUpperCase();
             String itemName = message.split(" ")[4]+"_"+message.split(" ")[5]+"_GEM";
-            Utils.SendMessage(itemName);
-            gemstones.add(new Gemstone((new Date()).getTime(), itemName,Integer.parseInt(message.replaceAll("[^0-9]", ""))));
+            String count  = message.split("X")[1].split("!")[0];
+            Integer countInt = Integer.parseInt(count.replaceAll("[^0-9]", ""));
+            gemstones.add(new Gemstone((new Date()).getTime(), itemName,countInt));
         }
     }
 
@@ -81,14 +84,14 @@ public class GemstoneMiningOverlay {
 
     public static class GemstoneMiningGUI extends UIElement {
         public GemstoneMiningGUI() {
-            super("Gemstone GUI", new Point(0.45052084f, 0.86944443f));
+            super("Gemstone GUI", new Point(0.2f, 0.0f));
             SkyblockFeatures.GUIMANAGER.registerElement(this);
         }
 
         @Override
         public void drawElement() {
             try {
-                if(mc.thePlayer == null || !Utils.inSkyblock || !getToggled() || !SkyblockInfo.getInstance().getMap().equals("Crystal Hollows")) return;
+                if(mc.thePlayer == null || !Utils.inSkyblock || !getToggled() || !CrystalHollowsMap.inCrystalHollows) return;
                 int total = 0;
                 for(Gemstone gemstone:gemstones) {
                     if(PricingData.bazaarPrices.get(gemstone.item_name) != null) {
@@ -98,7 +101,7 @@ public class GemstoneMiningOverlay {
                 String[] lines = {
                     ChatFormatting.LIGHT_PURPLE+""+ChatFormatting.BOLD+"Gemstone Mining Info",
                     ChatFormatting.LIGHT_PURPLE+" Time Spent Mining: "+ChatFormatting.GREEN+Utils.secondsToTime(seconds),
-                    ChatFormatting.LIGHT_PURPLE+" Gemstone Coins Per hour: §6"+Utils.nf.format(total*12),
+                    ChatFormatting.LIGHT_PURPLE+" Coins Per hour: §6"+Utils.nf.format(total*12),
                     ChatFormatting.LIGHT_PURPLE+" Pristine Count: §a"+gemstones.size()
                 };
                 int lineCount = 0;
@@ -116,7 +119,7 @@ public class GemstoneMiningOverlay {
             String[] lines = {
                 ChatFormatting.LIGHT_PURPLE+""+ChatFormatting.BOLD+"Gemstone Mining Info",
                 ChatFormatting.LIGHT_PURPLE+"Time Spent Mining: 19m 27s",
-                ChatFormatting.LIGHT_PURPLE+"Gemstone Coins Per hour: §6123,456",
+                ChatFormatting.LIGHT_PURPLE+"Coins Per hour: §6123,456",
                 ChatFormatting.LIGHT_PURPLE+"Pristine Count: §a3"
             };
             int lineCount = 0;
@@ -138,7 +141,7 @@ public class GemstoneMiningOverlay {
 
         @Override
         public int getWidth() {
-            return Utils.GetMC().fontRendererObj.getStringWidth("Gemstone Coins Per hour: §6123,456");
+            return Utils.GetMC().fontRendererObj.getStringWidth(" Coins Per hour: §6123,456");
         }
     }
 }

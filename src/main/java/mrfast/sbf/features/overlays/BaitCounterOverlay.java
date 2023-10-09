@@ -80,7 +80,7 @@ public class BaitCounterOverlay {
 
     public static class baitCounter extends UIElement {
         public baitCounter() {
-            super("baitCounter", new Point(0.6125f, 0.675f));
+            super("baitCounter", new Point(0.2f, 0.0f));
             SkyblockFeatures.GUIMANAGER.registerElement(this);
         }
 

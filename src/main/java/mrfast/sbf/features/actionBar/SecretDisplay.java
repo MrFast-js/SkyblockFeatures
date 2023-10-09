@@ -23,7 +23,7 @@ public class SecretDisplay {
     public static class JerryTimerGUI extends UIElement {
 
         public JerryTimerGUI() {
-            super("Secret Display", new Point(0.45052084f, 0.86944443f));
+            super("Secret Display", new Point(0.2f, 0.0f));
             SkyblockFeatures.GUIMANAGER.registerElement(this);
         }
 

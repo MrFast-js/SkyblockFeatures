@@ -18,7 +18,7 @@ public class DefenceDisplay {
     static String display = Utils.Defence+"";
     public static class JerryTimerGUI extends UIElement {
         public JerryTimerGUI() {
-            super("Defence Display", new Point(0.45052084f, 0.86944443f));
+            super("Defence Display", new Point(0.2f, 0.0f));
             SkyblockFeatures.GUIMANAGER.registerElement(this);
         }
 

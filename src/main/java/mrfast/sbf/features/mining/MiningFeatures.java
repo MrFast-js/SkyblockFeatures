@@ -14,6 +14,7 @@ import mrfast.sbf.SkyblockFeatures;
 import mrfast.sbf.core.SkyblockInfo;
 import mrfast.sbf.events.BlockChangeEvent;
 import mrfast.sbf.events.PacketEvent;
+import mrfast.sbf.features.overlays.maps.CrystalHollowsMap;
 import mrfast.sbf.utils.RenderUtil;
 import mrfast.sbf.utils.ScoreboardUtil;
 import mrfast.sbf.utils.Utils;
@@ -125,7 +126,7 @@ public class MiningFeatures {
         }
         
         try {
-            if(!SkyblockFeatures.config.treasureChestSolver || !SkyblockInfo.getInstance().getMap().equals("Crystal Hollows")) return;
+            if(!SkyblockFeatures.config.treasureChestSolver || !CrystalHollowsMap.inCrystalHollows) return;
             Block block = Minecraft.getMinecraft().theWorld.getBlockState(new BlockPos(treasureChest)).getBlock();
             if(treasureChest != null) {
                 Vec3 stringPos = new Vec3(treasureChest.getX()+0.5, treasureChest.getY()+1.1, treasureChest.getZ()+0.5);

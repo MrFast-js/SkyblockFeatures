@@ -27,7 +27,7 @@ public class SpeedDisplay {
     }
     public static class JerryTimerGUI extends UIElement {
         public JerryTimerGUI() {
-            super("Speed Display", new Point(0.375f, 0.975f));
+            super("Speed Display", new Point(0.2f, 0.0f));
             SkyblockFeatures.GUIMANAGER.registerElement(this);
         }
 

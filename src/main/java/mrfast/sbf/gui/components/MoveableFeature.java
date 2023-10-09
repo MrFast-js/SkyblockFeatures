@@ -4,6 +4,7 @@ import java.awt.Color;
 import mrfast.sbf.utils.Utils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
 
 public class MoveableFeature extends GuiButton {
@@ -35,12 +36,14 @@ public class MoveableFeature extends GuiButton {
     @Override
     public void drawButton(Minecraft mc, int mouseX, int mouseY) {
         updateLocations();
-        int screenWidth = Utils.GetMC().displayWidth;
-        int screenHeight = Utils.GetMC().displayHeight;
-        Float actualX =screenWidth*x;
-        Float actualY =screenHeight*y;
-        Float xWidth = actualX+element.getWidth();
-        Float yHeight = actualY+element.getHeight();
+        ScaledResolution sr = new ScaledResolution(mc);
+
+        int screenWidth = sr.getScaledWidth();
+        int screenHeight = sr.getScaledHeight();
+        Float actualX = screenWidth*x;
+        Float actualY = screenHeight*y;
+        Float xWidth = actualX+element.getWidth()+4;
+        Float yHeight = actualY+element.getHeight()+4;
 
         hovered = mouseX >= actualX && mouseY >= actualY && mouseX < xWidth && mouseY < yHeight;
         Color c = new Color(255, 255, 255, hovered ? 100 : 40);

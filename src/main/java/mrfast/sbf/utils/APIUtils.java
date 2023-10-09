@@ -127,14 +127,13 @@ public class APIUtils {
         return rarity;
     }
 
-    public static JsonObject getNetworthResponse(JsonObject data) {
+    public static JsonObject getNetworthResponse(JsonObject data,String playerUuid,String profileUuid) {
         try {
-            // Specify the URL
             URL url = new URL("http://maro.skyblockextras.com/api/networth/categories");
 
             // Create the connection
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.setRequestMethod("POST");
+            connection.setRequestMethod("POST");    
             connection.setRequestProperty("Content-Type", "application/json");
             connection.setDoOutput(true);
 
@@ -151,6 +150,11 @@ public class APIUtils {
             int responseCode = connection.getResponseCode();
             System.out.println("Response Code: " + responseCode);
 
+            if(connection.getContent().toString().contains("cause")) {
+                System.out.println(connection.getContent().toString());
+                return new JsonObject();
+            }
+
             // Read the response
             StringBuilder response = new StringBuilder();
             try (BufferedReader reader = new BufferedReader(
@@ -161,6 +165,7 @@ public class APIUtils {
                 }
             }
 
+
             // Parse the response JSON
             Gson gson = new Gson();
             JsonObject jsonResponse = gson.fromJson(response.toString(), JsonObject.class);
@@ -169,6 +174,23 @@ public class APIUtils {
             System.out.println("Got Networth");
             // Close the connection
             connection.disconnect();
+
+            JsonObject museumResponse = getJSONResponse("https://api.hypixel.net/skyblock/museum?profile="+profileUuid);
+
+            if(museumResponse.get("success").getAsBoolean()) {
+                System.out.println("Success!");
+                Boolean museumApiEnabled = museumResponse.get("members").getAsJsonObject().entrySet().size()>0;
+                if(museumApiEnabled) {
+                    JsonObject members =  museumResponse.get("members").getAsJsonObject();
+                    if(jsonResponse.has("data")) {
+                        JsonObject member = members.get(playerUuid).getAsJsonObject();
+                        Long value = member.get("value").getAsLong();
+
+                        jsonResponse.get("data").getAsJsonObject().get("categories").getAsJsonObject().addProperty("museum", value);
+                    }
+                }
+            }
+
             return jsonResponse;
         } catch (IOException e) {
             e.printStackTrace();

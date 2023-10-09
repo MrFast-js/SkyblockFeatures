@@ -81,7 +81,7 @@ public class EnderNodeTracker {
     static String display = "";
     public static class EnderNodeGui extends UIElement {
         public EnderNodeGui() {
-            super("Ender Node Tracker", new Point(0.004166f, 0.41111112f));
+            super("Ender Node Tracker", new Point(0.2f, 0.0f));
             SkyblockFeatures.GUIMANAGER.registerElement(this);
         }
 

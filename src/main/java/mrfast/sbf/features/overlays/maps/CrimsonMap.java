@@ -1,4 +1,4 @@
-package mrfast.sbf.features.overlays;
+package mrfast.sbf.features.overlays.maps;
 
 import java.util.HashMap;
 
@@ -65,7 +65,7 @@ public class CrimsonMap {
     }   
     public static class CrimsonIslesMap extends UIElement {
         public CrimsonIslesMap() {
-            super("Crimson Isles Map", new Point(0, 5f));
+            super("Crimson Isles Map", new Point(0.2f, 0.0f));
             SkyblockFeatures.GUIMANAGER.registerElement(this);
         }
 

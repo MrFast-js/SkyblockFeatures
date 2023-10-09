@@ -460,7 +460,7 @@ public class ExoticAuctions {
     
     public static class AutoAuctionGui extends UIElement {
         public AutoAuctionGui() {
-            super("Auto Auction Exotic Counter", new Point(0.25677082f, 0.4435921f));
+            super("Auto Auction Exotic Counter", new Point(0.2f, 0.0f));
             SkyblockFeatures.GUIMANAGER.registerElement(this);
         }
 

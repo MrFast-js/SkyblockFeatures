@@ -7,6 +7,7 @@ import com.mojang.realmsclient.gui.ChatFormatting;
 
 import mrfast.sbf.SkyblockFeatures;
 import mrfast.sbf.core.SkyblockInfo;
+import mrfast.sbf.features.overlays.maps.CrystalHollowsMap;
 import mrfast.sbf.gui.components.Point;
 import mrfast.sbf.gui.components.UIElement;
 import mrfast.sbf.utils.Utils;
@@ -22,7 +23,7 @@ public class MiscOverlays {
     }
     public static class timeOverlay extends UIElement {
         public timeOverlay() {
-            super("timeOverlay", new Point(0.6125f, 0.975f));
+            super("timeOverlay", new Point(0f,0f));
             SkyblockFeatures.GUIMANAGER.registerElement(this);
         }
 
@@ -58,14 +59,14 @@ public class MiscOverlays {
 
     public static class dayCounter extends UIElement {
         public dayCounter() {
-            super("dayCounter", new Point(0.6125f, 0.675f));
+            super("dayCounter", new Point(0.2f, 0.0f));
             SkyblockFeatures.GUIMANAGER.registerElement(this);
         }
 
         @Override
         public void drawElement() {
             if(mc.thePlayer == null || !Utils.inSkyblock || Utils.GetMC().theWorld==null || SkyblockInfo.getInstance().getLocation()==null) return;
-            if (SkyblockInfo.getInstance().getMap().equals("Crystal Hollows") && SkyblockFeatures.config.dayTracker) {
+            if (CrystalHollowsMap.inCrystalHollows && SkyblockFeatures.config.dayTracker) {
                 Long time = Utils.GetMC().theWorld.getWorldTime();
                 Double timeDouble = time.doubleValue()/20/60/20;
                 Double day = (Math.round(timeDouble*100.0))/100.0;

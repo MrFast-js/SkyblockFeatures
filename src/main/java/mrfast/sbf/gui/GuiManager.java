@@ -104,15 +104,8 @@ public class GuiManager {
             try {
                 UIElement element = e.getValue();
                 GlStateManager.pushMatrix();
-                GlStateManager.translate((element.getX()*Utils.GetMC().displayWidth), (element.getY()*Utils.GetMC().displayHeight), 0);
+                GlStateManager.translate((element.getX()*(Utils.GetMC().displayWidth/2)), (element.getY()*(Utils.GetMC().displayHeight/2)), 0);
                 GlStateManager.scale(1, 1, 0);
-
-                // if((element.getX()*Utils.GetMC().displayWidth)+element.getWidth()>Utils.GetMC().displayWidth) {
-                //     element.setPos((Utils.GetMC().displayWidth-element.getWidth()), element.getY());
-                // }
-                // if((Utils.GetMC().displayHeight*element.getY())+element.getHeight()>Utils.GetMC().displayHeight) {
-                //     element.setPos(element.getX(),(Utils.GetMC().displayHeight-element.getHeight())/Utils.GetMC().displayHeight);
-                // }
 
                 element.drawElement(); 
                 GlStateManager.popMatrix();
@@ -196,8 +189,7 @@ public class GuiManager {
             GlStateManager.pushMatrix();
             GlStateManager.scale(scale, scale, scale);  // TODO Check if changing this scale breaks anything...
 
-            mc.fontRendererObj.drawString(subtitle, -mc.fontRendererObj.getStringWidth(subtitle) / 2F, -23.0F,
-                    0xFF0000, true);
+            mc.fontRendererObj.drawString(subtitle, -mc.fontRendererObj.getStringWidth(subtitle) / 2F, -23.0F, 0xFF0000, true);
 
             GlStateManager.popMatrix();
             GlStateManager.popMatrix();

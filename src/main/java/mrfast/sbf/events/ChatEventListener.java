@@ -261,7 +261,7 @@ public class ChatEventListener {
                         StringBuilder completionsHoverString = new StringBuilder();
                         int highestFloor = catacombsObject.get("highest_tier_completed").getAsInt();
                         JsonObject completionObj = catacombsObject.get("tier_completions").getAsJsonObject();
-                        int totalRuns = 0;
+                        int totalRuns = 1;
                         for (int i = 0; i <= highestFloor; i++) {
                             completionsHoverString
                                     .append(EnumChatFormatting.GOLD)
@@ -304,7 +304,7 @@ public class ChatEventListener {
         
         // Welcome message
         if (SkyblockFeatures.config.firstLaunch && unformatted.equals("Welcome to Hypixel SkyBlock!")) {
-            Utils.SendMessage("§bThank You for download Skyblock Features! Do /sbf for config!");
+            Utils.SendMessage("§bThank You for downloading Skyblock Features!§e Do /sbf for config!");
 
             SkyblockFeatures.config.firstLaunch = false;
             SkyblockFeatures.config.markDirty();

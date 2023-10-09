@@ -67,7 +67,6 @@ public class ThreeWeirdosSolver {
                     Block block = Utils.GetMC().theWorld.getBlockState(blockPos).getBlock();
                     
                     if(block instanceof BlockChest) {
-                        Utils.SendMessage("GOT CHEST");
                         answerChest=blockPos;
                     }
                 }

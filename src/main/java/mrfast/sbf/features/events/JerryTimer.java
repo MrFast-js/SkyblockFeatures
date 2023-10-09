@@ -49,7 +49,7 @@ public class JerryTimer {
     }   
     public static class JerryTimerGUI extends UIElement {
         public JerryTimerGUI() {
-            super("Jerry Timer", new Point(0, 5));
+            super("Jerry Timer", new Point(0.2f, 0.0f));
             SkyblockFeatures.GUIMANAGER.registerElement(this);
         }
 

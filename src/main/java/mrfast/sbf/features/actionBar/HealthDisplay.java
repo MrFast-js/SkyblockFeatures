@@ -18,7 +18,7 @@ public class HealthDisplay {
     static String display = Utils.Health+"/"+Utils.maxHealth;
     public static class JerryTimerGUI extends UIElement {
         public JerryTimerGUI() {
-            super("Health Display", new Point(0.40520838f, 0.9134259f));
+            super("Health Display", new Point(0f,0f));
             SkyblockFeatures.GUIMANAGER.registerElement(this);
         }
 

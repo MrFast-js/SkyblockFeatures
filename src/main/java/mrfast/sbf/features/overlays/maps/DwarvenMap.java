@@ -1,4 +1,4 @@
-package mrfast.sbf.features.overlays;
+package mrfast.sbf.features.overlays.maps;
 
 import java.util.HashMap;
 
@@ -62,7 +62,7 @@ public class DwarvenMap {
     }   
     public static class DwarvenMapGui extends UIElement {
         public DwarvenMapGui() {
-            super("Dwarven Mines Map", new Point(0.4f, 0.4f));
+            super("Dwarven Mines Map", new Point(0.2f, 0.0f));
             SkyblockFeatures.GUIMANAGER.registerElement(this);
         }
 

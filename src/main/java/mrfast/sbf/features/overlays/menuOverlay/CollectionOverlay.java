@@ -1,4 +1,4 @@
-package mrfast.sbf.features.overlays;
+package mrfast.sbf.features.overlays.menuOverlay;
 
 import java.util.ArrayList;
 import java.util.HashMap;

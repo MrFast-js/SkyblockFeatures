@@ -76,7 +76,7 @@ public class PowderTracker {
     static String display = "";
     public static class EnderNodeGui extends UIElement {
         public EnderNodeGui() {
-            super("Powder Tracker", new Point(0.004166f, 0.41111112f));
+            super("Powder Tracker", new Point(0.2f, 0.0f));
             SkyblockFeatures.GUIMANAGER.registerElement(this);
         }
 

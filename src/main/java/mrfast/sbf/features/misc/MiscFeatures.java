@@ -130,6 +130,7 @@ public class MiscFeatures {
             }
         }
     }
+
     @SubscribeEvent
     public void RenderBlockOverlayEvent(DrawBlockHighlightEvent event) {
         try {

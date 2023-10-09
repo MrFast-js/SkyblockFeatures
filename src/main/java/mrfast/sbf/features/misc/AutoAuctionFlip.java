@@ -616,7 +616,7 @@ public class AutoAuctionFlip {
         private ArrayList<String> lines = new ArrayList<>();
 
         public AutoAuctionGui() {
-            super("Auto Auction Flip Counter", new Point(0.25677082f, 0.4435921f));
+            super("Auto Auction Flip Counter", new Point(0.2f, 0.0f));
             SkyblockFeatures.GUIMANAGER.registerElement(this);
         }
 

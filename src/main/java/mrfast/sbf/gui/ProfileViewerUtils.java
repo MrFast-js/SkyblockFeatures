@@ -72,9 +72,14 @@ public class ProfileViewerUtils {
         }
 
         int level = 0;
-        while (level < 9 && xp >= slayerXP.get(level + 1)) {
-            level++;
+        try {
+            while (level < 9 && xp >= slayerXP.get(level + 1)) {
+                level++;
+            }
+        } catch(Exception a) {
+
         }
+        
         return level;
     }
 
@@ -85,7 +90,12 @@ public class ProfileViewerUtils {
             throw new IllegalArgumentException("Invalid Slayer type tried to get "+slayerType);
         }
         System.out.println(slayerType+" "+lvl+" "+slayerXP.toString());
-        return slayerXP.get(lvl+1);
+        
+        if(slayerXP.get(lvl+1)!=null) {
+            return slayerXP.get(lvl+1);
+        } else {
+            return slayerXP.get(lvl);
+        }
     }
 
     public ProfileViewerUtils() {
@@ -682,12 +692,13 @@ public class ProfileViewerUtils {
     public static void setSlayerSkills(JsonObject userObject) {
         System.out.println("Settings slayer experience");
         JsonObject slayersObject = userObject.get("slayer_bosses").getAsJsonObject();
-        try {
+        // try {
             Integer[] tierPrices = {2000, 7500, 20000, 50000,100000};
 
             if(slayersObject.has("zombie")) {
                 JsonObject obj = slayersObject.get("zombie").getAsJsonObject();
-                int xp = obj.get("xp").getAsInt();
+                int xp = 0;
+                if(obj.has("xp")) xp = obj.get("xp").getAsInt();
                 int level = ProfileViewerUtils.getCurrentSlayerLevel(xp, "zombie");
 
                 int[] tiers = new int[5];
@@ -718,7 +729,8 @@ public class ProfileViewerUtils {
             if(slayersObject.has("spider")) {
                 String slayerType = "spider";
                 JsonObject obj = slayersObject.get(slayerType).getAsJsonObject();
-                int xp = obj.get("xp").getAsInt();
+                int xp = 0;
+                if(obj.has("xp")) xp = obj.get("xp").getAsInt();
                 int level = ProfileViewerUtils.getCurrentSlayerLevel(xp, slayerType);
 
                 String[] tierNames = { "Tier I", "Tier II", "Tier III", "Tier IV"};
@@ -749,7 +761,8 @@ public class ProfileViewerUtils {
             if(slayersObject.has("wolf")) {
                 String slayerType = "wolf";
                 JsonObject obj = slayersObject.get(slayerType).getAsJsonObject();
-                int xp = obj.get("xp").getAsInt();
+                int xp = 0;
+                if(obj.has("xp")) xp = obj.get("xp").getAsInt();
                 int level = ProfileViewerUtils.getCurrentSlayerLevel(xp, slayerType);
 
                 String[] tierNames = { "Tier I", "Tier II", "Tier III", "Tier IV"};
@@ -780,7 +793,8 @@ public class ProfileViewerUtils {
             if(slayersObject.has("enderman")) {
                 String slayerType = "enderman";
                 JsonObject obj = slayersObject.get(slayerType).getAsJsonObject();
-                int xp = obj.get("xp").getAsInt();
+                int xp = 0;
+                if(obj.has("xp")) xp = obj.get("xp").getAsInt();
                 int level = ProfileViewerUtils.getCurrentSlayerLevel(xp, slayerType);
 
                 String[] tierNames = { "Tier I", "Tier II", "Tier III", "Tier IV"};
@@ -811,7 +825,9 @@ public class ProfileViewerUtils {
             if(slayersObject.has("blaze")) {
                 String slayerType = "blaze";
                 JsonObject obj = slayersObject.get(slayerType).getAsJsonObject();
-                int xp = obj.get("xp").getAsInt();
+                int xp = 0;
+                if(obj.has("xp")) xp = obj.get("xp").getAsInt();
+
                 int level = ProfileViewerUtils.getCurrentSlayerLevel(xp, slayerType);
 
                 String[] tierNames = { "Tier I", "Tier II", "Tier III", "Tier IV"};
@@ -826,6 +842,7 @@ public class ProfileViewerUtils {
                     } catch (Exception e) {
                         // Handle exception
                     }
+                    
                 }
 
                 List<String> hover = new ArrayList<>();
@@ -836,13 +853,15 @@ public class ProfileViewerUtils {
                 hover.add(ChatFormatting.GOLD + "Coins Spent: " + ChatFormatting.YELLOW + nf.format(totalCost));
 
                 int nextXp = ProfileViewerUtils.getNextSlayerLevelXP(xp, slayerType);
+
                 ProfileViewerGui.blazeSlayer = new SkillInfo(level, nextXp, xp, hover);
             }
 
             if(slayersObject.has("vampire")) {
                 String slayerType = "vampire";
                 JsonObject obj = slayersObject.get(slayerType).getAsJsonObject();
-                int xp = obj.get("xp").getAsInt();
+                int xp = 0;
+                if(obj.has("xp")) xp = obj.get("xp").getAsInt();
                 int level = ProfileViewerUtils.getCurrentSlayerLevel(xp, slayerType);
 
                 String[] tierNames = { "Tier I", "Tier II", "Tier III", "Tier IV","Tier V"};
@@ -870,10 +889,11 @@ public class ProfileViewerUtils {
                 ProfileViewerGui.vampireSlayer = new SkillInfo(level, nextXp, xp, hover);
             }
 
-        } catch (Exception e) {
-            e.printStackTrace();
-            // TODO: handle exception
-        }
+
+        // } catch (Exception e) {
+        //     e.printStackTrace();
+        //     // TODO: handle exception
+        // }
         System.out.println("set slayer experience");
     }
 }

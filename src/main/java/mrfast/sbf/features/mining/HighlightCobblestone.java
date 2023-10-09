@@ -5,7 +5,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import mrfast.sbf.SkyblockFeatures;
+import mrfast.sbf.core.SkyblockInfo;
 import mrfast.sbf.events.BlockChangeEvent;
+import mrfast.sbf.features.overlays.maps.CrystalHollowsMap;
 import mrfast.sbf.utils.RenderUtil;
 import mrfast.sbf.utils.Utils;
 import net.minecraft.client.renderer.GlStateManager;
@@ -21,7 +23,7 @@ public class HighlightCobblestone {
     
     @SubscribeEvent
     public void onBlockPlace(BlockChangeEvent event) {
-        if(!SkyblockFeatures.config.highlightCobblestone) return;
+        if(!SkyblockFeatures.config.highlightCobblestone || SkyblockInfo.getInstance().getLocation() != null && !CrystalHollowsMap.inCrystalHollows) return;
         if(event.getNew().getBlock() == Blocks.cobblestone && !cobblestonePostitions.contains(event.pos) && Utils.GetMC().thePlayer.getDistance(event.pos.getX(), event.pos.getY(), event.pos.getZ())<10) {
             if(Utils.GetMC().thePlayer.getHeldItem()!=null) {
                 if(Utils.GetMC().thePlayer.getHeldItem().getDisplayName().contains("Cobblestone")) {

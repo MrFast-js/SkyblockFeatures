@@ -22,7 +22,7 @@ public class EffectiveHealthDisplay {
     }
     public static class JerryTimerGUI extends UIElement {
         public JerryTimerGUI() {
-            super("Effective Health Display", new Point(0.6125f, 0.975f));
+            super("Effective Health Display", new Point(0f,0f));
             SkyblockFeatures.GUIMANAGER.registerElement(this);
         }
 

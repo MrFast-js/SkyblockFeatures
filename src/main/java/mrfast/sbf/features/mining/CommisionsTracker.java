@@ -9,6 +9,7 @@ import com.mojang.realmsclient.gui.ChatFormatting;
 
 import mrfast.sbf.SkyblockFeatures;
 import mrfast.sbf.core.SkyblockInfo;
+import mrfast.sbf.features.overlays.maps.CrystalHollowsMap;
 import mrfast.sbf.gui.components.Point;
 import mrfast.sbf.gui.components.UIElement;
 import mrfast.sbf.utils.TabListUtils;
@@ -25,7 +26,7 @@ public class CommisionsTracker {
   public static class CommisionsTrackerGUI extends UIElement {
 
       public CommisionsTrackerGUI() {
-          super("Commissions Tracker", new Point(0.45052084f, 0.86944443f));
+          super("Commissions Tracker", new Point(0.2f, 0.0f));
           SkyblockFeatures.GUIMANAGER.registerElement(this);
       }
 
@@ -33,7 +34,7 @@ public class CommisionsTracker {
       public void drawElement() {
           ArrayList<String> text = new ArrayList<>();
           try {
-              if(mc.thePlayer == null || !Utils.inSkyblock || (!SkyblockInfo.getInstance().getMap().equals("Crystal Hollows") && !SkyblockInfo.getInstance().map.equals("Dwarven Mines")) || !SkyblockFeatures.config.CommisionsTracker) return;
+              if(mc.thePlayer == null || !Utils.inSkyblock || (!CrystalHollowsMap.inCrystalHollows && !SkyblockInfo.getInstance().map.equals("Dwarven Mines")) || !SkyblockFeatures.config.CommisionsTracker) return;
 
               text.add(ChatFormatting.BLUE+"Commissions");
               List<String> commissions = new ArrayList<String>();

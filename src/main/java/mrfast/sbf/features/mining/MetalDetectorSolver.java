@@ -8,6 +8,7 @@ import com.mojang.realmsclient.gui.ChatFormatting;
 
 import mrfast.sbf.SkyblockFeatures;
 import mrfast.sbf.core.SkyblockInfo;
+import mrfast.sbf.features.overlays.maps.CrystalHollowsMap;
 import mrfast.sbf.gui.GuiManager;
 import mrfast.sbf.utils.RenderUtil;
 import mrfast.sbf.utils.Utils;
@@ -127,10 +128,8 @@ public class MetalDetectorSolver {
     BlockPos LastPosition = null;
     @SubscribeEvent
     public void onRenderWorld(ClientTickEvent event) {
-        if(Utils.GetMC().thePlayer==null || !SkyblockFeatures.config.MetalDetectorSolver) return;
-        if(SkyblockInfo.getInstance().getLocation()!=null) {
-            if(!SkyblockInfo.getInstance().getMap().equals("Crystal Hollows")) return;
-        }
+        if(Utils.GetMC().thePlayer==null || !SkyblockFeatures.config.MetalDetectorSolver || !CrystalHollowsMap.inCrystalHollows) return;
+
         ticks++;
         if(ticks >= 4 && Utils.GetMC().thePlayer.getHeldItem() != null && Utils.GetMC().thePlayer.getHeldItem().getDisplayName().contains("Detector") && distanceToTreasure!=0 && center!=null) {
             if(bestPos != null) {

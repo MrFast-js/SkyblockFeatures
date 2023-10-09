@@ -112,7 +112,7 @@ public class IceTreasureTracker {
     static String display = "";
     public static class IceTreasureTrackerGui extends UIElement {
         public IceTreasureTrackerGui() {
-            super("Ice Treasure Tracker", new Point(0.004166f, 0.41111112f));
+            super("Ice Treasure Tracker", new Point(0.2f, 0.0f));
             SkyblockFeatures.GUIMANAGER.registerElement(this);
         }
 

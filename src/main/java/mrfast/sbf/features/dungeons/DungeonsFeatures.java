@@ -208,7 +208,7 @@ public class DungeonsFeatures {
     public static class BlessingViewer extends UIElement {
   
         public BlessingViewer() {
-            super("Blessings Viewer", new Point(0.45052084f, 0.86944443f));
+            super("Blessings Viewer", new Point(0.2f, 0.0f));
             SkyblockFeatures.GUIMANAGER.registerElement(this);
         }
   

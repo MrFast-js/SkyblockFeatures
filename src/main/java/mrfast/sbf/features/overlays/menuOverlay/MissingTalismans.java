@@ -1,4 +1,4 @@
-package mrfast.sbf.features.overlays;
+package mrfast.sbf.features.overlays.menuOverlay;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -72,7 +72,7 @@ public class MissingTalismans {
             if(inAccessoryBag) {
                 if(MissingTalismans==null) {
                     Utils.drawGraySquareWithBorder(180, 0, 200, 3*Utils.GetMC().fontRendererObj.FONT_HEIGHT,3);
-                    Utils.GetMC().fontRendererObj.drawStringWithShadow(ChatFormatting.RED+"Loading..", 190, (10), -1);
+                    Utils.GetMC().fontRendererObj.drawStringWithShadow(ChatFormatting.RED+"Waiting for SkyCrypt..", 190, (10), -1);
                     return;
                 }
                 Utils.drawGraySquareWithBorder(180, -100, 200, (int) (MissingTalismans.size()*1.15*Utils.GetMC().fontRendererObj.FONT_HEIGHT),3);

@@ -26,11 +26,14 @@ import gg.essential.elementa.components.UIWrappedText;
 import gg.essential.elementa.components.inspector.Inspector;
 import gg.essential.elementa.constraints.CenterConstraint;
 import gg.essential.elementa.constraints.ChildBasedSizeConstraint;
+import gg.essential.elementa.constraints.ColorConstraint;
+import gg.essential.elementa.constraints.ConstantColorConstraint;
 import gg.essential.elementa.constraints.PixelConstraint;
 import gg.essential.elementa.constraints.RelativeConstraint;
 import gg.essential.elementa.constraints.SiblingConstraint;
 import gg.essential.elementa.constraints.animation.AnimatingConstraints;
 import gg.essential.elementa.constraints.animation.Animations;
+import gg.essential.elementa.dsl.UtilitiesKt;
 import gg.essential.elementa.effects.OutlineEffect;
 import gg.essential.elementa.effects.RecursiveFadeEffect;
 import gg.essential.elementa.effects.ScissorEffect;
@@ -51,9 +54,9 @@ import mrfast.sbf.core.Config;
 import mrfast.sbf.utils.Utils;
 
 public class ConfigGui extends WindowScreen {
-    public static SortedMap<String, SortedMap<String,List<Property>>> catagories = new TreeMap<>();
+    public static SortedMap<String, SortedMap<String,List<Property>>> categories = new TreeMap<>();
     public static HashMap<Property, Object> valueMap = new HashMap<>();
-    public static String selectedCatagory = "General";
+    public static String selectedCategory = "General";
     public String searchQuery = "";
     static Boolean furfSkyThemed = false;
 
@@ -66,7 +69,7 @@ public class ConfigGui extends WindowScreen {
     // Text/Lines colors
     Color titleColor = SkyblockFeatures.config.titleColor;//new Color(0x00FFFF);
     Color guiLines = SkyblockFeatures.config.guiLines;
-    Color selectedCategory = SkyblockFeatures.config.selectedCategory;
+    Color selectedCategoryColor = SkyblockFeatures.config.selectedCategory;
     Color hoveredCategory = SkyblockFeatures.config.hoveredCategory;
     Color defaultCategory = SkyblockFeatures.config.defaultCategory;
     Color versionText = SkyblockFeatures.config.versionColor;//new Color(0xFFFFFF);
@@ -84,7 +87,7 @@ public class ConfigGui extends WindowScreen {
     Color clear = new Color(0,0,0,0);
     public ConfigGui(Boolean doAnimation) {
         super(ElementaVersion.V2);
-        reloadAllCatagories();
+        reloadAllCategories();
         furfSkyThemed = SkyblockFeatures.config.furfSkyThemed;
         int screenHeight = Utils.GetMC().currentScreen.height;
         UIComponent box = new UIRoundedRectangle(10f)
@@ -128,7 +131,9 @@ public class ConfigGui extends WindowScreen {
             .enableEffect(new ScissorEffect())
             .setTextScale(new PixelConstraint((float) fontScale));
 
-        new Inspector(getWindow()).setChildOf(getWindow());
+        if(Utils.isDeveloper()) {
+            new Inspector(getWindow()).setChildOf(getWindow());
+        }
         
         UIComponent searchBox = new UIRoundedRectangle(5f)
             .setChildOf(titleArea)
@@ -157,7 +162,7 @@ public class ConfigGui extends WindowScreen {
             .setY(new PixelConstraint(titleArea.getHeight()-1))
             .setColor(guiLines);
 
-        // Area of where the currently selected catagorie's feature will be displayed
+        // Area of where the currently selected categorie's feature will be displayed
         UIComponent loadedFeaturesList = new ScrollComponent("No Matching Settings Found", 10f, featureBoxOutline, false, true, false, false, 25f, 1f, null)
             .setX(new PixelConstraint(0.25f*guiWidth))
             .setY(new PixelConstraint(titleArea.getHeight()))
@@ -174,7 +179,7 @@ public class ConfigGui extends WindowScreen {
             return Unit.INSTANCE;
         });
         
-        // Side bar on the left that holds the catagories
+        // Side bar on the left that holds the categories
         UIComponent sidebarArea = new UIBlock()
             .setX(new PixelConstraint(-5f))
             .setY(new PixelConstraint(titleArea.getHeight()))
@@ -199,32 +204,32 @@ public class ConfigGui extends WindowScreen {
             .setY(new PixelConstraint(titleArea.getHeight()))
             .setColor(guiLines);
 
-        // Draw catagorys on sidebar
-        for(String catagoryName:catagories.keySet()) {
-            UIComponent ExampleCatagory = new UIText(catagoryName)
+        // Draw categorys on sidebar
+        for(String categoryName:categories.keySet()) {
+            UIComponent ExampleCategory = new UIText(categoryName)
                 .setChildOf(sidebarAreaScroll)
                 .setColor(defaultCategory)
                 .setX(new CenterConstraint())
-                .setY(new SiblingConstraint((float) (3f*fontScale)))
+                .setY(new SiblingConstraint((float) (2.5f*fontScale)))
                 .enableEffect(new RecursiveFadeEffect())
-                .setTextScale(new PixelConstraint((float) fontScale*2));
+                .setTextScale(new PixelConstraint((float) fontScale*1.5f));
                 
             // Set color of selected category
-            if(catagoryName.equals(selectedCatagory)) {
-                ExampleCatagory.setColor(selectedCategory);
+            if(categoryName.equals(selectedCategory)) {
+                ExampleCategory.setColor(selectedCategoryColor);
             }
-            ExampleCatagory.onMouseEnterRunnable(()->{
-                if(!catagoryName.equals(selectedCatagory)) {
-                    ExampleCatagory.setColor(hoveredCategory);
+            ExampleCategory.onMouseEnterRunnable(()->{
+                if(!categoryName.equals(selectedCategory)) {
+                    ExampleCategory.setColor(hoveredCategory);
                 }
             });
-            ExampleCatagory.onMouseLeaveRunnable(()->{
-                if(!catagoryName.equals(selectedCatagory)) ExampleCatagory.setColor(defaultCategory);
+            ExampleCategory.onMouseLeaveRunnable(()->{
+                if(!categoryName.equals(selectedCategory)) ExampleCategory.setColor(defaultCategory);
             });
-            ExampleCatagory.onMouseClickConsumer((event)->{
-                if(selectedCatagory==catagoryName) return;
-                selectedCatagory = catagoryName;
-                LoadCatagory(catagoryName);
+            ExampleCategory.onMouseClickConsumer((event)->{
+                if(selectedCategory==categoryName) return;
+                selectedCategory = categoryName;
+                LoadCategory(categoryName);
             });
         }
 
@@ -296,7 +301,7 @@ public class ConfigGui extends WindowScreen {
             animation.setTextScaleAnimation(Animations.OUT_EXP, 0.5f, new PixelConstraint((float) (4.0*fontScale)));
             titleText.animateTo(animation);
         }
-        if(selectedCatagory.contains("Customization")) {
+        if(selectedCategory.contains("Customization")) {
             UIComponent resetGuiColorsButton = new UIRoundedRectangle(10f).setColor(editGuiUnhovered)
                 .setX(new RelativeConstraint(0.65f))
                 .setY(new PixelConstraint(0.01f*guiHeight))
@@ -334,8 +339,8 @@ public class ConfigGui extends WindowScreen {
         }
     }
 
-    public void reloadAllCatagories() {
-        catagories.clear();
+    public void reloadAllCategories() {
+        categories.clear();
         Config field = SkyblockFeatures.config;
         Field[] fieldsOfFieldClass = Config.class.getFields();
         for(int i = 0;i < fieldsOfFieldClass.length; i++) {
@@ -343,21 +348,21 @@ public class ConfigGui extends WindowScreen {
                 Object value = fieldsOfFieldClass[i].get(field);
                 if (fieldsOfFieldClass[i].isAnnotationPresent(Property.class)) {
                     Property feature = fieldsOfFieldClass[i].getAnnotation(Property.class);
-                    // Create catagory if not exist already
-                    if(!catagories.containsKey(feature.category())) {
-                        catagories.put(feature.category(), new TreeMap<>());
+                    // Create category if not exist already
+                    if(!categories.containsKey(feature.category())) {
+                        categories.put(feature.category(), new TreeMap<>());
                     }
-                    SortedMap<String, List<Property>> catagory = catagories.get(feature.category());
+                    SortedMap<String, List<Property>> category = categories.get(feature.category());
 
-                    // Create subcatagory if not exist already
-                    if(!catagory.containsKey(feature.subcategory())) {
-                        catagory.put(feature.subcategory(), new ArrayList<>());
+                    // Create subcategory if not exist already
+                    if(!category.containsKey(feature.subcategory())) {
+                        category.put(feature.subcategory(), new ArrayList<>());
                     }
-                    List<Property> subcatagory = catagory.get(feature.subcategory());
+                    List<Property> subcategory = category.get(feature.subcategory());
             
-                    if(!subcatagory.contains(feature)) {
+                    if(!subcategory.contains(feature)) {
                         valueMap.put(feature, value);
-                        subcatagory.add(feature);
+                        subcategory.add(feature);
                     }
                 }
             } catch (Exception e) {
@@ -365,62 +370,74 @@ public class ConfigGui extends WindowScreen {
             }
         }
     }
+    public class ExpandableComponent {
+        Boolean enabled = false;
+        UIComponent parent = null;
+        List<UIComponent> children = new ArrayList<>();
 
+        public ExpandableComponent() {
+
+        }
+    }
+    HashMap<String,ExpandableComponent> parentStuff = new HashMap<>();
     public void reloadFeatures(UIComponent loadedFeaturesList, float guiHeight, float guiWidth, double fontScale) {
         int yOffset = 0;
         float Margin = 6f;
-        // Default catagory
-        for(String catagoryName:catagories.keySet()) {
+        // Default category
+        for(String categoryName:categories.keySet()) {
             if(searchQuery.isEmpty()) {
-                if(!catagoryName.equals(selectedCatagory)) {
+                if(!categoryName.equals(selectedCategory)) {
                     continue;
                 }
             }
 
-            for(String subcatagoryName:catagories.get(catagoryName).keySet()) {
-                List<Property> subcatagory = catagories.get(catagoryName).get(subcatagoryName);
+            for(String subcategoryName:categories.get(categoryName).keySet()) {
+                List<Property> subcategory = categories.get(categoryName).get(subcategoryName);
                 int featuresVisible = 0;
-                for(Property feature:subcatagory) {
+                for(Property feature:subcategory) {
                     if((!feature.name().toLowerCase().contains(searchQuery) && !feature.description().toLowerCase().contains(searchQuery)) || feature.hidden()) {
                         continue;
                     }
                     featuresVisible++;
                 }
-                // Dont show subcatagory names if no elements of it are visible
+                // Dont show subcategory names if no elements of it are visible
                 if(featuresVisible==0) continue;
-                // Render subcatagory name
+                // Render subcategory name
 
                 UIComponent container = new UIBlock(clear).setChildOf(loadedFeaturesList)
                     .setX(new CenterConstraint())
                     .setHeight(new ChildBasedSizeConstraint())
                     .setWidth(new RelativeConstraint(1f))
-                    .setY(new PixelConstraint(yOffset+Margin));
+                    .setY(new SiblingConstraint(Margin));
 
-                // new Divider(subcatagoryName,null).setChildOf(container);
-                new UIText(subcatagoryName).setChildOf(container)
+                // new Divider(subcategoryName,null).setChildOf(container);
+                new UIText(subcategoryName).setChildOf(container)
                     .setY(new CenterConstraint())
                     .setX(new CenterConstraint())
                     .setTextScale(new PixelConstraint((float) fontScale*3));
 
-                yOffset += container.getHeight() + Margin;
-                for(Property feature:subcatagory) {
+                // yOffset += container.getHeight() + Margin;
+                for(Property feature:subcategory) {
                     if((!feature.name().toLowerCase().contains(searchQuery) && !feature.description().toLowerCase().contains(searchQuery)) || feature.hidden()) {
                         continue;
                     }
+
                     String outlinePath = furfSkyThemed?"/assets/skyblockfeatures/gui/outlineFurf.png":"/assets/skyblockfeatures/gui/outline.png";
+
                     UIComponent border = UIImage.ofResourceCached(outlinePath).setChildOf(loadedFeaturesList)
                         .setX(new CenterConstraint())
                         .setWidth(new RelativeConstraint(0.92f))
-                        .setY(new PixelConstraint(yOffset+Margin));
-                    
-                    UIComponent exampleFeature = new UIBlock().setChildOf(loadedFeaturesList).setColor(clear)
+                        .setY(new SiblingConstraint(Margin));
+
+                    UIComponent exampleFeature = new UIBlock().setChildOf(border).setColor(clear)
                         .setX(new CenterConstraint())
-                        .setY(new PixelConstraint(yOffset+Margin))
+                        .setY(new PixelConstraint(0f))
                         .setWidth(new PixelConstraint(0.90f*0.75f*guiWidth))
                         .setHeight(new ChildBasedSizeConstraint());
-                        
+                    
                     if(feature.type() == PropertyType.SLIDER) {
-                        exampleFeature.setHeight(new RelativeConstraint(0.15f));
+                        border.setHeight(new RelativeConstraint(0.15f));
+                        exampleFeature.setHeight(new RelativeConstraint(1f));
                     }
                     if(feature.type() == PropertyType.COLOR) {
                         // Color Title
@@ -436,7 +453,9 @@ public class ConfigGui extends WindowScreen {
                             .setHeight(new PixelConstraint(0.08f*0.75f*guiHeight))
                             .enableEffect(new OutlineEffect(Color.yellow, 1f));
                             
-                        exampleFeature.setHeight(new RelativeConstraint(0.29f));
+                        border.setHeight(new RelativeConstraint(0.29f));
+                        exampleFeature.setHeight(new RelativeConstraint(1f));
+
                     } else {
                         // Feature Title
                         new UIText(feature.name()).setChildOf(exampleFeature)
@@ -444,7 +463,6 @@ public class ConfigGui extends WindowScreen {
                             .setX(new PixelConstraint(4f))
                             .setTextScale(new PixelConstraint((float) fontScale*2f));
                     }
-                    
         
                     // Feature description
                     if(feature.type() == PropertyType.PARAGRAPH) {
@@ -477,13 +495,33 @@ public class ConfigGui extends WindowScreen {
                         comp.onMouseClickConsumer((event)->{
                             Boolean val = (Boolean) getVariable(feature.name());
                             setVariable(feature.name(),!val);
+                            
+                            if(feature.searchTags().length>0) {
+                                String tag = feature.searchTags()[0];
+                                if(tag.equals("parent")) {
+                                    ExpandableComponent parent = parentStuff.get(feature.name());
+                                    parent.enabled = !val;
+                                    for(UIComponent child : parent.children) {
+                                        if(parent.enabled) {
+                                            child.unhide(true);
+                                        } else {
+                                            child.hide();
+                                        }
+                                    }
+                                }
+                            }
                         });
                     }
 
                     if(feature.type() == PropertyType.COLOR) {
                         UIComponent comp = new ColorComponent((Color) valueMap.get(feature),false).setChildOf(exampleFeature);
+                        Object[] val = { 0 };
                         ((ColorComponent) comp).onValueChange((value)->{
-                            setVariable(feature.name(),value);
+                            val[0] = value;
+                            return Unit.INSTANCE;
+                        });
+                        ((ColorComponent) comp).onFocusLost((a)->{
+                            setVariable(feature.name(),val[0]);
                             GuiUtil.open(new ConfigGui(false));
                             return Unit.INSTANCE;
                         });
@@ -533,68 +571,70 @@ public class ConfigGui extends WindowScreen {
                     }
                     border.setHeight(new PixelConstraint(exampleFeature.getHeight()));
 
-                    yOffset += exampleFeature.getHeight() + Margin;
+                    if(feature.searchTags().length>0) {
+                        String tag = feature.searchTags()[0];
+                        if(tag.equals("parent")) {
+                            Boolean enabled = (Boolean) getVariable(feature.name());
+                            ExpandableComponent comp = new ExpandableComponent();
+                            comp.enabled = enabled;
+                            comp.parent = border;
+                            parentStuff.put(feature.name(),comp);
+                        } else {
+                            if(parentStuff.get(tag)!=null) {
+                                Boolean enabled = parentStuff.get(tag).enabled;
+                                border.setWidth(new RelativeConstraint(.85f));  
+                                exampleFeature.setWidth(new RelativeConstraint(1f));
+                                parentStuff.get(tag).children.add(border);
+
+                                if(!enabled) {
+                                    border.hide();
+                                    // exampleFeature.hide();
+                                    continue;
+                                };
+                            }
+                        }
+                    }
+
+                    // yOffset += exampleFeature.getHeight() + Margin;
                 }
             }
         }
     }
-
-    public void setVariable(String name,Object newValue) {
-        Config field = SkyblockFeatures.config;
-        Field[] fieldsOfFieldClass = Config.class.getFields();
-        for(int i = 0;i < fieldsOfFieldClass.length; i++) {
-            try {
-                if (fieldsOfFieldClass[i].isAnnotationPresent(Property.class)) {
-                    Property featureProperty = fieldsOfFieldClass[i].getAnnotation(Property.class);
-                    if(featureProperty.name()==name) {
-                        fieldsOfFieldClass[i].setAccessible(true);
-                        fieldsOfFieldClass[i].set(field, newValue);
-                    }
-                }
-            } catch (Exception e) {
-                // TODO: handle exception
-            }
-        }
-        reloadAllCatagories();
+    public void setVariable(String name, Object newValue) {
+        Config config = SkyblockFeatures.config;
+        Arrays.stream(config.getClass().getFields())
+            .filter(field -> field.isAnnotationPresent(Property.class) && field.getAnnotation(Property.class).name().equals(name))
+            .findFirst()
+            .ifPresent(field -> {
+                field.setAccessible(true);
+                try { field.set(config, newValue); } catch (Exception e) { e.printStackTrace(); }
+            });
+        reloadAllCategories();
     }
 
     public Object getVariable(String name) {
-        Config field = SkyblockFeatures.config;
-        Field[] fieldsOfFieldClass = Config.class.getFields();
-        for(int i = 0;i < fieldsOfFieldClass.length; i++) {
-            try {
-                Object value = fieldsOfFieldClass[i].get(field);
-                if (fieldsOfFieldClass[i].isAnnotationPresent(Property.class)) {
-                    Property featureProperty = fieldsOfFieldClass[i].getAnnotation(Property.class);
-                    if(featureProperty.name()==name) {
-                        return value;
-                    }
-                }
-            } catch (Exception e) {
-                // TODO: handle exception
-            }
-        }
-        return null;
+        Config config = SkyblockFeatures.config;
+        return Arrays.stream(config.getClass().getFields())
+                    .filter(field -> field.isAnnotationPresent(Property.class) && field.getAnnotation(Property.class).name().equals(name))
+                    .findFirst()
+                    .map(field -> {
+                        field.setAccessible(true);
+                        try { return field.get(config); } catch (Exception e) { e.printStackTrace(); }
+                        return null;
+                    })
+                    .orElse(null);
     }
 
-    public ArrayList getOptions(String name) {
-        Field[] fieldsOfFieldClass = Config.class.getFields();
-        for(int i = 0;i < fieldsOfFieldClass.length; i++) {
-            try {
-                if (fieldsOfFieldClass[i].isAnnotationPresent(Property.class)) {
-                    Property featureProperty = fieldsOfFieldClass[i].getAnnotation(Property.class);
-                    if(featureProperty.name()==name) {
-                        return new ArrayList(Arrays.asList(featureProperty.options()));
-                    }
-                }
-            } catch (Exception e) {
-                // TODO: handle exception
-            }
-        }
-        return null;
+    public List<String> getOptions(String name) {
+        return Arrays.stream(SkyblockFeatures.config.getClass().getFields())
+                    .filter(field -> field.isAnnotationPresent(Property.class) && field.getAnnotation(Property.class).name().equals(name))
+                    .findFirst()
+                    .map(field -> Arrays.asList(field.getAnnotation(Property.class).options()))
+                    .orElse(null);
     }
 
-    public void LoadCatagory(String catagoryName) {
+
+    public void LoadCategory(String categoryName) {
         GuiUtil.open(new ConfigGui(false));
     }
 }

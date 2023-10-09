@@ -1,4 +1,4 @@
-package mrfast.sbf.features.overlays;
+package mrfast.sbf.features.overlays.menuOverlay;
 
 import java.io.File;
 import java.io.FileReader;

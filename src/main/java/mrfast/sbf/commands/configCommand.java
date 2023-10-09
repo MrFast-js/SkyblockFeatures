@@ -9,6 +9,7 @@ import com.mojang.realmsclient.gui.ChatFormatting;
 
 import gg.essential.api.utils.GuiUtil;
 import mrfast.sbf.SkyblockFeatures;
+import mrfast.sbf.core.SkyblockInfo;
 import mrfast.sbf.gui.EditLocationsGui;
 import mrfast.sbf.gui.GuiManager;
 import mrfast.sbf.gui.ConfigGui;
@@ -63,6 +64,9 @@ public class configCommand extends CommandBase {
             case "version":
                 Utils.SendMessage(ChatFormatting.YELLOW+"Your using Skyblock Features v"+SkyblockFeatures.VERSION);
                 break;
+            case "loc":
+                Utils.SendMessage(ChatFormatting.GRAY+"Local:'"+SkyblockInfo.getInstance().localLocation+"' Map:"+SkyblockInfo.getInstance().map+" Location:'"+SkyblockInfo.getInstance().location+"'");
+                break;
             case "resetgui":
                 GuiManager.GuiPositions.forEach((name,point)->{
                     Point pnt = GuiManager.names.get(name).getPos();
@@ -109,13 +113,7 @@ public class configCommand extends CommandBase {
                 " §3/skills §l➡ §bDisplays in chat the specified players skills." + "\n"+
                 " §3/sky §l➡ §bGives the link to the specified players Skycrypt profile."));
                 break;
-            case "editlocation":
-            case "editlocations":
-            case "location":
-            case "locations":
-            case "loc":
             case "edit":
-            case "gui":
                 GuiUtil.open(Objects.requireNonNull(new EditLocationsGui()));
                 break;
             default:

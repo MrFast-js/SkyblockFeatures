@@ -73,36 +73,34 @@ import mrfast.sbf.features.mining.CommisionsTracker;
 import mrfast.sbf.features.mining.HighlightCobblestone;
 import mrfast.sbf.features.mining.MetalDetectorSolver;
 import mrfast.sbf.features.mining.MiningFeatures;
-import mrfast.sbf.features.mining.PathTracer;
 import mrfast.sbf.features.misc.AuctionFeatures;
 import mrfast.sbf.features.misc.AutoAuctionFlip;
 import mrfast.sbf.features.misc.ChronomotronSolver;
 import mrfast.sbf.features.misc.ConjuringCooldown;
 import mrfast.sbf.features.misc.CropCounter;
-import mrfast.sbf.features.misc.FishingHelper;
 import mrfast.sbf.features.misc.MiscFeatures;
 import mrfast.sbf.features.misc.PlayerDiguiser;
 import mrfast.sbf.features.misc.SpamHider;
 import mrfast.sbf.features.misc.TreecapCooldown;
 import mrfast.sbf.features.misc.UltrasequencerSolver;
 import mrfast.sbf.features.overlays.BaitCounterOverlay;
-import mrfast.sbf.features.overlays.CollectionOverlay;
-import mrfast.sbf.features.overlays.ComposterOverlay;
-import mrfast.sbf.features.overlays.CrimsonMap;
-import mrfast.sbf.features.overlays.CrystalHollowsMap;
 import mrfast.sbf.features.overlays.DamageOverlays;
-import mrfast.sbf.features.overlays.DwarvenMap;
 import mrfast.sbf.features.overlays.FairySoulWaypoints;
-import mrfast.sbf.features.overlays.GardenVisitorOverlay;
 import mrfast.sbf.features.overlays.GemstoneMiningOverlay;
 import mrfast.sbf.features.overlays.GiftTracker;
 import mrfast.sbf.features.overlays.GrandmaWolfTimer;
-import mrfast.sbf.features.overlays.MinionOverlay;
 import mrfast.sbf.features.overlays.MiscOverlays;
-import mrfast.sbf.features.overlays.MissingTalismans;
 import mrfast.sbf.features.overlays.RelicFinderWaypoints;
-import mrfast.sbf.features.overlays.TradingOverlay;
 import mrfast.sbf.features.overlays.ZealotSpawnLocations;
+import mrfast.sbf.features.overlays.maps.CrimsonMap;
+import mrfast.sbf.features.overlays.maps.CrystalHollowsMap;
+import mrfast.sbf.features.overlays.maps.DwarvenMap;
+import mrfast.sbf.features.overlays.menuOverlay.CollectionOverlay;
+import mrfast.sbf.features.overlays.menuOverlay.ComposterOverlay;
+import mrfast.sbf.features.overlays.menuOverlay.GardenVisitorOverlay;
+import mrfast.sbf.features.overlays.menuOverlay.MinionOverlay;
+import mrfast.sbf.features.overlays.menuOverlay.MissingTalismans;
+import mrfast.sbf.features.overlays.menuOverlay.TradingOverlay;
 import mrfast.sbf.features.render.DynamicFullbright;
 import mrfast.sbf.features.render.HideStuff;
 import mrfast.sbf.features.render.HighlightCropArea;
@@ -121,6 +119,7 @@ import mrfast.sbf.utils.CapeUtils;
 import mrfast.sbf.utils.Utils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.renderer.entity.RendererLivingEntity;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.command.ICommand;
 import net.minecraft.entity.Entity;
@@ -143,8 +142,9 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 
-@Mod(modid = SkyblockFeatures.MODID, name = SkyblockFeatures.MOD_NAME, version = "1.2.6", acceptedMinecraftVersions = "[1.8.9]", clientSideOnly = true)
+@Mod(modid = SkyblockFeatures.MODID, name = SkyblockFeatures.MOD_NAME, version = "1.2.7", acceptedMinecraftVersions = "[1.8.9]", clientSideOnly = true)
 public class SkyblockFeatures {
+    
     public static final String MODID = "skyblockfeatures";
     public static final String MOD_NAME = "skyblockfeatures";
     // Skyblock Features Produciton API key
@@ -235,7 +235,6 @@ public class SkyblockFeatures {
             new GiftTracker(),
             new CropCounter(),
             new HideGlass(),
-            new FishingHelper(),
             new AuctionFeatures(),
             new CapeUtils(),
             new MinionOverlay(),
@@ -255,7 +254,6 @@ public class SkyblockFeatures {
             new TradingOverlay(),
             new MiscOverlays(),
             new TrevorHelper(),
-            new PathTracer(),
             new GhostTracker(),
             new CreeperSolver(),
             new PowderTracker(),

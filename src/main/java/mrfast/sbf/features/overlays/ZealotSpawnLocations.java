@@ -195,7 +195,7 @@ public class ZealotSpawnLocations {
     }   
     public static class JerryTimerGUI extends UIElement {
         public JerryTimerGUI() {
-            super("Zealot Timer", new Point(0, 5));
+            super("Zealot Timer", new Point(0.2f, 0.0f));
             SkyblockFeatures.GUIMANAGER.registerElement(this);
         }
         
@@ -211,7 +211,7 @@ public class ZealotSpawnLocations {
         public void drawElementExample() {
             if(mc.thePlayer == null || !Utils.inSkyblock) return;
             Utils.GetMC().fontRendererObj.drawStringWithShadow(zealotDisplay, 0, 0, 0xFFFFFF);
-            Utils.GetMC().fontRendererObj.drawStringWithShadow(bruiserDisplay, 0, (float) (Utils.GetMC().fontRendererObj.FONT_HEIGHT+0.1), 0xFFFFFF);
+            Utils.GetMC().fontRendererObj.drawStringWithShadow(EnumChatFormatting.LIGHT_PURPLE + "Bruiser Spawn: " + EnumChatFormatting.GREEN + "Ready!", 0, (float) (Utils.GetMC().fontRendererObj.FONT_HEIGHT+0.1), 0xFFFFFF);
         }
 
         @Override

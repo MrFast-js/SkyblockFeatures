@@ -145,7 +145,7 @@ public class GrandmaWolfTimer {
 
     public static class gWolfTimer extends UIElement {
         public gWolfTimer() {
-            super("Grandma Wolf Timer", new Point(0.6125f, 0.675f));
+            super("Grandma Wolf Timer", new Point(0.2f, 0.0f));
             SkyblockFeatures.GUIMANAGER.registerElement(this);
         }
 
