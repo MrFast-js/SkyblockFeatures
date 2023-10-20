@@ -54,7 +54,7 @@ public class HighlightCobblestone {
                     cobblestonePostitions.remove(pos);
                 }
                 AxisAlignedBB box = new AxisAlignedBB(pos, pos.add(1, 1, 1));
-                RenderUtil.drawOutlinedFilledBoundingBox(box, Color.cyan, event.partialTicks);
+                RenderUtil.drawOutlinedFilledBoundingBox(box, SkyblockFeatures.config.highlightCobblestoneColor, event.partialTicks);
             }
             GlStateManager.enableDepth();
         } catch (Exception e) {

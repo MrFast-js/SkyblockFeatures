@@ -89,7 +89,6 @@ public class MinionOverlay {
                             Double perHour = Math.floor((3600/secondsPerAction)*sellPrice);
                             String duration = "Unknown";
                             if(closestMinion != null && lastCollected.containsKey(closestMinion.getPosition().toString())) {
-                                // Utils.SendMessage(System.currentTimeMillis()+"   "+lastCollected.get(closestMinion.getPosition().toString())+"     "+(System.currentTimeMillis()-lastCollected.get(closestMinion.getPosition().toString())));
                                 duration = Utils.msToDuration(lastCollected.get(closestMinion.getPosition().toString()));
                             }
                             String[] lines = {

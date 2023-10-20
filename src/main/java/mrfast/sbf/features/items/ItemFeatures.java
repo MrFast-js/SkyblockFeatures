@@ -71,7 +71,7 @@ public class ItemFeatures {
                 Double valuePer = PricingData.lowestBINs.get(auctionIdentifier);
 
                 if (SkyblockFeatures.config.showEstimatedPrice && valuePer!=null) {
-                    Integer total = (int) ItemUtils.getEstimatedItemValue(item);//Math.floor(valuePer+starValue+enchantValue) * item.stackSize;
+                    Long total = ItemUtils.getEstimatedItemValue(item);//Math.floor(valuePer+starValue+enchantValue) * item.stackSize;
                     event.toolTip.add("§bEstimated Price: §6" + Utils.nf.format(total*item.stackSize));
                 }
 

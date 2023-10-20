@@ -178,7 +178,7 @@ public class AutoAuctionFlip {
 
         if(timeUntilReload == 40) {
             messageSent = 0;
-            if((earliestApiUpdateTime!=60 && latestApiUpdateTime!=0)) {
+            if((earliestApiUpdateTime!=60 && latestApiUpdateTime!=0) && stage == 3) {
                 Utils.SendMessage(ChatFormatting.GRAY+"Filtered out "+Utils.nf.format((auctionsFilteredThrough-auctionsPassedFilteredThrough))+" auctions in the past 60s ");
             }
         }
@@ -186,7 +186,7 @@ public class AutoAuctionFlip {
             auctionFlips.clear();
         }
         if(timeUntilReload == 10) {
-            if(earliestApiUpdateTime!=60 && latestApiUpdateTime!=0) {
+            if(earliestApiUpdateTime!=60 && latestApiUpdateTime!=0 && stage==3) {
                 Utils.SendMessage(ChatFormatting.GRAY+"Scanning for auctions in 10s ");
                 if(!apiUpdated) {
                     Utils.SendMessage(ChatFormatting.RED+"The API Didnt update when expected! Restarting flipper..");
@@ -281,6 +281,8 @@ public class AutoAuctionFlip {
                             System.out.println("Detected API Update");
                             apiUpdated = true;
                             int pages = data.get("totalPages").getAsInt();
+                            // Bin Flips dont usually appear past the first 5 pages
+                            if(SkyblockFeatures.config.autoAuctionFlip) pages = 5;
                             for(int b=0;b<pages;b++) {
                                 JsonObject data2 = APIUtils.getJSONResponse("https://api.hypixel.net/skyblock/auctions?page="+b);
                                 JsonArray products2 = data2.get("auctions").getAsJsonArray();
@@ -309,7 +311,7 @@ public class AutoAuctionFlip {
     public void filterAndNotifyProfitableAuctions(JsonArray products) {
         for(JsonElement entry : products) {
             // Limit number of mesages added because it will crash game if it gets overloaded
-            Float max = Float.parseFloat(SkyblockFeatures.config.autoAuctionFlipMinPercent);
+            float max = (float) (SkyblockFeatures.config.autoAuctionFlipMinPercent);
             if(messageSent>max) continue;
             
             if(entry.isJsonObject()) {
@@ -344,8 +346,8 @@ public class AutoAuctionFlip {
                         Integer valueOfTheItem = (int) (SkyblockFeatures.config.autoFlipAddEnchAndStar?estimatedPrice:lowestBinPrice);
                         Integer percentage = (int) Math.floor(((valueOfTheItem/binPrice)-1)*100);
                         JsonObject auctionData = PricingData.getItemAuctionInfo(id);
-                        Double enchantValue = ItemUtils.getEnchantsWorth(extraAttributes);
-                        Double starValue = ItemUtils.getStarCost(extraAttributes);
+                        Long enchantValue = ItemUtils.getEnchantsWorth(extraAttributes);
+                        Long starValue = ItemUtils.getStarCost(extraAttributes);
                         Double profit = valueOfTheItem-binPrice;
                         int volume = 20;
 
@@ -425,8 +427,8 @@ public class AutoAuctionFlip {
                         Integer valueOfTheItem = (int) (SkyblockFeatures.config.autoFlipAddEnchAndStar?estimatedPrice:lowestBinPrice);
                         JsonObject auctionData = PricingData.getItemAuctionInfo(id);
                         String auctionId = itemData.get("uuid").toString().replaceAll("\"","");
-                        Double enchantValue = ItemUtils.getEnchantsWorth(extraAttributes);;
-                        Double starValue = ItemUtils.getStarCost(extraAttributes);
+                        Long enchantValue = ItemUtils.getEnchantsWorth(extraAttributes);;
+                        Long starValue = ItemUtils.getStarCost(extraAttributes);
                         int volume = 20;
 
                         if(auctionData!=null) volume = auctionData.get("sales").getAsInt();
@@ -542,9 +544,9 @@ public class AutoAuctionFlip {
 
     public boolean priceFilter(int volume,double percentage,String itemName,String aucId,Integer valueOfTheItem,Double profit,Double binPrice,long msTillEnd) {
         boolean returnValue = false;
-        Float margin = Float.parseFloat(SkyblockFeatures.config.autoAuctionFlipMargin);
-        Float minVolume = Float.parseFloat(SkyblockFeatures.config.autoAuctionFlipMinVolume);
-        Float minPercent = Float.parseFloat(SkyblockFeatures.config.autoAuctionFlipMinPercent);
+        float margin = (float) SkyblockFeatures.config.autoAuctionFlipMargin;
+        float minVolume = (float) (SkyblockFeatures.config.autoAuctionFlipMinVolume);
+        float minPercent = (float) (SkyblockFeatures.config.autoAuctionFlipMinPercent);
 
         if(volume<minVolume) {
             if(debugLogging) System.out.println(itemName+" Auction Removed Because MinVol Filter "+"Vol: "+volume+" "+aucId); 

@@ -8,16 +8,6 @@ import java.io.File;
 
 public class Config extends Vigilant {
     @Property(
-            type = PropertyType.TEXT,
-            name = "Hypixel API Key",
-            description = "Your Hypixel API key\nObtained by running §a/api new",
-            category = "General",
-            subcategory = "API",
-            hidden = true
-    )
-    public String apiKey = "5c47ad45-09e6-4267-8a6a-fe1bcdcf8ced";
-
-    @Property(
             type = PropertyType.SLIDER,
             name = "Times Game Restarted",
             description = "",
@@ -76,15 +66,6 @@ public class Config extends Vigilant {
 
     @Property(
             type = PropertyType.SWITCH,
-            name = "Auto Join Dungeon",
-            description = "Auto joins the dungeon when the party is full. §cWarning Use At Own Risk",
-            category = "§1§rDungeons",
-            subcategory = "Miscellaneous"
-    )
-    public boolean autoJoinDungeon = false;
-
-    @Property(
-            type = PropertyType.SWITCH,
             name = "Box Shadow Assasins",
             description = "Draws a box around invisible shadow assasins when their sword is visible.",
             category = "§1§rDungeons",
@@ -118,6 +99,15 @@ public class Config extends Vigilant {
             subcategory = "Miscellaneous"
     )
     public boolean highlightDoors = false;
+
+    @Property(
+            type = PropertyType.SWITCH,
+            name = "Disable Blood Music",
+            description = "Stops the music from playing when the blood room is open",
+            category = "§1§rDungeons",
+            subcategory = "Miscellaneous"
+    )
+    public boolean stopBloodMusic = false;
 
     @Property(
         type = PropertyType.SWITCH,
@@ -154,7 +144,7 @@ public class Config extends Vigilant {
             subcategory = "Solvers"
     )
     public boolean teleportPadSolver = false;
-
+    
     @Property(
             type = PropertyType.SWITCH,
             name = "Creeper Solver",
@@ -187,18 +177,40 @@ public class Config extends Vigilant {
             name = "Highlight Bats",
             description = "Draws a box around bats to make bats easier to find",
             category = "§1§rDungeons",
-            subcategory = "Miscellaneous"
+            subcategory = "Miscellaneous",
+            searchTags = {"parent"}
     )
     public boolean highlightBats = false;
 
     @Property(
+            type = PropertyType.COLOR,
+            name = "Bat Highlight Color",
+            description = "",
+            category = "§1§rDungeons",
+            subcategory = "Miscellaneous",
+            searchTags = {"Highlight Bats"}
+    )
+    public Color highlightBatColor = Color.green;
+
+    @Property(
             type = PropertyType.SWITCH,
             name = "Highlight Gifts",
-            description = "Highlights with a yellow box of where gifts are at the Jerry's workshop.",
+            description = "Highlights with a box of where gifts are at the Jerry's workshop.",
             category = "Render",
-	    subcategory = "Highlights"
+	    subcategory = "Highlights",
+            searchTags = {"parent"}
     )
     public boolean presentWaypoints = false;
+    
+    @Property(
+            type = PropertyType.COLOR,
+            name = "Gift Highlight Color",
+            description = "",
+            category = "Render",
+	    subcategory = "Highlights",
+            searchTags = {"Highlight Gifts"}
+    )
+    public Color presentWaypointsColor = Color.yellow;
 
     @Property(
             type = PropertyType.SWITCH,
@@ -241,13 +253,23 @@ public class Config extends Vigilant {
 
     @Property(
             type = PropertyType.SWITCH,
-            name = "Highlight Thrown Beacon Through Walls",
+            name = "Highlight Through Walls",
             description = "Highlights the beacon thats thrown by the enderman slayer through walls. §cWarning Use At Own Risk",
             category = "Slayers",
 	    subcategory = "Voidgloom",
             searchTags = {"Highlight Thrown Beacon"}
     )
     public boolean highlightBeaconsThroughWalls = false;
+    
+    @Property(
+            type = PropertyType.COLOR,
+            name = "Beacon Highlight Color",
+            description = "",
+            category = "Slayers",
+	    subcategory = "Voidgloom",
+            searchTags = {"Highlight Thrown Beacon"}
+    )
+    public Color highlightBeaconsColor = Color.green;
 
     @Property(
             type = PropertyType.SWITCH,
@@ -286,6 +308,26 @@ public class Config extends Vigilant {
             searchTags = {"Highlight Ender Nodes"}
     )
     public boolean highlightEnderNodesWalls = false;
+
+    @Property(
+            type = PropertyType.COLOR,
+            name = "Endstone Node Color",
+            description = "",
+            category = "§1§rThe End",
+	    subcategory = "Mining",
+            searchTags = {"Highlight Ender Nodes"}
+    )
+    public Color highlightEnderNodesEndstoneColor = Color.magenta;
+
+    @Property(
+            type = PropertyType.COLOR,
+            name = "Obsidian Node Color",
+            description = "",
+            category = "§1§rThe End",
+	    subcategory = "Mining",
+            searchTags = {"Highlight Ender Nodes"}
+    )
+    public Color highlightEnderNodesObiColor = new Color(0x4f024f);
 
     @Property(
             type = PropertyType.SWITCH,
@@ -373,36 +415,95 @@ public class Config extends Vigilant {
             name = "Highlight Correct Livid",
             description = "Highlights the incorrect livid",
             category = "§1§rDungeons",
-            subcategory = "Miscellaneous"
+            subcategory = "Miscellaneous",
+            searchTags = {"parent"}
     )
     public boolean highlightCorrectLivid = false;
+    @Property(
+            type = PropertyType.COLOR,
+            name = "Livid Highlight Color",
+            description = "",
+            category = "§1§rDungeons",
+            subcategory = "Miscellaneous",
+            searchTags = {"Highlight Correct Livid"}
+    )
+    public Color correctLividColor = Color.cyan;
 
     @Property(
             type = PropertyType.SWITCH,
             name = "Fairy Soul Helper",
             description = "Highlights nearby fairy souls using waypoints",
-            category = "General",
-            subcategory = "Other"
+            category = "Render",
+            subcategory = "Highlights",
+            searchTags = {"parent"}
     )
     public boolean fairy = false;
+    @Property(
+            type = PropertyType.COLOR,
+            name = "§1§rUncollected Color",
+            description = "",
+            category = "Render",
+            subcategory = "Highlights",
+            searchTags = {"Fairy Soul Helper"}
+    )
+    public Color fairySoulUnFound = Color.magenta;
+    @Property(
+            type = PropertyType.COLOR,
+            name = "§1§rCollected Color",
+            description = "",
+            category = "Render",
+            subcategory = "Highlights",
+            searchTags = {"Fairy Soul Helper"}
+    )
+    public Color fairySoulFound = Color.GREEN;
 
     @Property(
         type = PropertyType.SWITCH,
         name = "Rift Enigma Soul Helper",
         description = "Highlights nearby Enigma souls using waypoints in the Rift",
         category = "The Rift",
-        subcategory = "General"
+        subcategory = "General",
+        searchTags = {"parent"}
     )
     public boolean riftSouls = false;
+     @Property(
+            type = PropertyType.COLOR,
+            name = "Uncollected Color",
+            description = "",
+            category = "The Rift",
+            subcategory = "General",
+            searchTags = {"Rift Enigma Soul Helper"}
+    )
+    public Color riftSoulUnFound = Color.magenta;
+    @Property(
+            type = PropertyType.COLOR,
+            name = "Collected Color",
+            description = "",
+            category = "The Rift",
+            subcategory = "General",
+            searchTags = {"Rift Enigma Soul Helper"}
+    )
+    public Color riftSoulFound = Color.GREEN;
 
     @Property(
         type = PropertyType.SWITCH,
         name = "Rift Mirrorverse Helper",
         description = "Solvers for some of the puzzles in the mirrorverse in the Rift",
         category = "The Rift",
-        subcategory = "General"
+        subcategory = "General",
+        searchTags = {"parent"}
     )
     public boolean riftMirrorverseHelper = false;
+
+    @Property(
+            type = PropertyType.COLOR,
+            name = "Main Highlight Color",
+            description = "",
+            category = "The Rift",
+            subcategory = "General",
+            searchTags = {"Rift Mirrorverse Helper"}
+    )
+    public Color riftMirrorverseHelperColor = new Color(0x00FFFF);
 
     @Property(
         type = PropertyType.SWITCH,
@@ -488,7 +589,7 @@ public class Config extends Vigilant {
 
     @Property(
             type = PropertyType.SLIDER,
-            name = "Dynamic Fullbright Disabled Value",
+            name = "Enabled Value",
             description = "Value of brightness to set when in the certain locations",
             category = "Render",
             subcategory = "Fullbright",
@@ -500,7 +601,7 @@ public class Config extends Vigilant {
 
     @Property(
             type = PropertyType.SLIDER,
-            name = "Dynamic Fullbright Enabled Value",
+            name = "Disabled Value",
             description = "Value of brightness to set when everywhere else",
             category = "Render",
             subcategory = "Fullbright",
@@ -778,18 +879,6 @@ public class Config extends Vigilant {
     public boolean dungeonMap = false;
 
     @Property(
-            type = PropertyType.SLIDER,
-            name = "Dungeon Map Head Scale",
-            description = "Scale the size of the heads on the dungeon map §3(Percent)",
-            category = "§1§rDungeons",
-            subcategory = "Dungeon Map",
-            min = 50,
-            max = 150,
-            searchTags = {"Dungeon Map"}
-    )
-    public int dungeonMapHeadScale = 100;
-
-    @Property(
             type = PropertyType.SWITCH,
             name = "Center Player on Dungeon Map",
             description = "Locks your player to the center of the dungeon map",
@@ -801,23 +890,45 @@ public class Config extends Vigilant {
 
     @Property(
             type = PropertyType.SWITCH,
-            name = "Rotate Dungeon Map",
-            description = "Rotates dungeon map based on your rotation",
+            name = "Render Player Names",
+            description = "Draws names above the players",
             category = "§1§rDungeons",
             subcategory = "Dungeon Map",
             searchTags = {"Dungeon Map"}
     )
-    public boolean dungeonMapRotate = false;
+    public boolean dungeonMapPlayerNames= true;
 
     @Property(
             type = PropertyType.SWITCH,
-            name = "Dungeon Map Outline Heads",
+            name = "Blood Door Highlight",
+            description = "Marks the players name red if they opened the blood door",
+            category = "§1§rDungeons",
+            subcategory = "Dungeon Map",
+            searchTags = {"Dungeon Map"}
+    )
+    public boolean dungeonMapBloodGuy = true;
+
+    @Property(
+            type = PropertyType.SWITCH,
+            name = "Render Player Heads",
             description = "Adds an outline the the player heads on the dungeon map",
             category = "§1§rDungeons",
             subcategory = "Dungeon Map",
             searchTags = {"Dungeon Map"}
     )
-    public boolean dungeonMapOutlineHeads = true;
+    public boolean dungeonMapHeads = true;
+
+    @Property(
+            type = PropertyType.SLIDER,
+            name = "Player Head Scale",
+            description = "Scale the size of the heads on the dungeon map §3(Percent)",
+            category = "§1§rDungeons",
+            subcategory = "Dungeon Map",
+            min = 50,
+            max = 150,
+            searchTags = {"Dungeon Map"}
+    )
+    public int dungeonMapHeadScale = 100;
 
      @Property(
             type = PropertyType.SWITCH,
@@ -832,7 +943,7 @@ public class Config extends Vigilant {
             type = PropertyType.SWITCH,
             name = "Glowing Dungeon Teammates!",
             description = "Make your teamates glow based on there class in dungeons.",
-            category = "General",
+            category = "Render",
             subcategory = "1.9 Glow Effect"
     )
     public boolean glowingDungeonPlayers = false;
@@ -841,7 +952,7 @@ public class Config extends Vigilant {
             type = PropertyType.SWITCH,
             name = "Glowing Players",
             description = "Make visible players anywhere glow",
-            category = "General",
+            category = "Render",
             subcategory = "1.9 Glow Effect"
     )
     public boolean glowingPlayers = false;
@@ -850,7 +961,7 @@ public class Config extends Vigilant {
             type = PropertyType.SWITCH,
             name = "Glowing Items!",
             description = "Make items glow depending on rarity (Requires Fast render to be off.)",
-            category = "General",
+            category = "Render",
             subcategory = "1.9 Glow Effect"
     )
     public boolean glowingItems = false;
@@ -893,7 +1004,7 @@ public class Config extends Vigilant {
 
     @Property(
             type = PropertyType.SWITCH,
-            name = "Ghost Tracker",
+            name = "Ghost Loot Tracker",
             description = "Tracks the loot gained from killing Ghosts",
             category = "Mining",
             subcategory = "Trackers"
@@ -923,9 +1034,19 @@ public class Config extends Vigilant {
             name = "Highlight Placed Cobblestone",
             description = "Highlights the cobblestone you place in crystal hollows",
             category = "Quality of Life",
-            subcategory = "Mining"
+            subcategory = "Mining",
+            searchTags = {"parent"}
     )
     public boolean highlightCobblestone = false;
+    @Property(
+            type = PropertyType.COLOR,
+            name = "Cobblestone Color",
+            description = "",
+            category = "Quality of Life",
+            subcategory = "Mining",
+            searchTags = {"Highlight Placed Cobblestone"}
+    )
+    public Color highlightCobblestoneColor = Color.cyan;
 
     @Property(
             type = PropertyType.SWITCH,
@@ -1031,7 +1152,7 @@ public class Config extends Vigilant {
 
      @Property(
             type = PropertyType.SWITCH,
-            name = "Timestamps",
+            name = "Chat Timestamps",
             description = "Add Chat Timestamps to Messages",
             category = "Quality of Life",
             subcategory = "Visual"
@@ -1097,9 +1218,20 @@ public class Config extends Vigilant {
         name = "Highlight Glowing Mushrooms",
         description = "Highlights glowing mushrooms in the Glowing Mushroom Cave",
         category = "§1§rFarming",
-        subcategory = "Glowing Mushroom Cave"
+        subcategory = "Glowing Mushroom Cave",
+        searchTags = {"parent"}
     )
     public boolean highlightMushrooms = false;
+
+    @Property(
+        type = PropertyType.COLOR,
+        name = "Mushroom Highlight Color",
+        description = "",
+        category = "§1§rFarming",
+        subcategory = "Glowing Mushroom Cave",
+        searchTags = {"Highlight Glowing Mushrooms"}
+    )
+    public Color highlightMushroomsColor = Color.green;
 
     @Property(
         type = PropertyType.SWITCH,
@@ -1318,40 +1450,40 @@ public class Config extends Vigilant {
     public boolean autoFlipBIN = true;
 
     @Property(
-            type = PropertyType.TEXT,
+            type = PropertyType.NUMBER,
             name = "Profit Margin",
-            description = "The minimum amount of profit for an auction to be shown to you. §3(Numbers Only)",
+            description = "The minimum amount of profit for an auction to be shown to you.",
             category = "§1§rBIN Flipper",
             subcategory = "BIN Flipper Settings"
     )
-    public String autoAuctionFlipMargin = "100000";
+    public int autoAuctionFlipMargin = 200000;
     
     @Property(
-            type = PropertyType.TEXT,
+            type = PropertyType.NUMBER,
             name = "Minimum Volume",
-            description = "The minimum amount of sales per day for an auction to be shown to you. §3(Numbers Only)",
+            description = "The minimum amount of sales per day for an auction to be shown to you.",
             category = "§1§rBIN Flipper",
             subcategory = "BIN Flipper Settings"
     )
-    public String autoAuctionFlipMinVolume = "1";
+    public int autoAuctionFlipMinVolume = 1;
  
     @Property(
-            type = PropertyType.TEXT,
+            type = PropertyType.NUMBER,
             name = "Minimum Flip Percent",
-            description = "The minimum percent of profit from an auction to be shown to you. §3(Numbers Only)",
+            description = "The minimum percent of profit from an auction to be shown to you.",
             category = "§1§rBIN Flipper",
             subcategory = "BIN Flipper Settings"
     )
-    public String autoAuctionFlipMinPercent = "5";
+    public int autoAuctionFlipMinPercent = 5;
 
     @Property(
-            type = PropertyType.TEXT,
+            type = PropertyType.NUMBER,
             name = "Max Amount Of Auctions",
-            description = "The max amount of flips to be show to you, this will prevent lag. §3(Numbers Only)",
+            description = "The max amount of flips to be show to you, this will prevent lag.",
             category = "§1§rBIN Flipper",
             subcategory = "BIN Flipper Settings"
     )
-    public String autoAuctionFlipMaxAuc = "50";
+    public int autoAuctionFlipMaxAuc = 50;
 
     @Property(
             type = PropertyType.SWITCH,
@@ -1393,7 +1525,7 @@ public class Config extends Vigilant {
             type = PropertyType.SWITCH,
             name = "Easy Auction Buying",
             description = "By spam clicking you will auto buy/bid the item from that is currently viewed.",
-            category = "§1§rBIN Flipper",
+            category = "§1§rAuction house",
             subcategory = "BIN Flipper Settings"
     )
     public boolean autoAuctionFlipEasyBuy = false;

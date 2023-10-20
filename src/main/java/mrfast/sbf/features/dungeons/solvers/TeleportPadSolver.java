@@ -64,7 +64,7 @@ public class TeleportPadSolver {
 
         for(BlockPos frame:endportalFrames) {
             AxisAlignedBB aabb = new AxisAlignedBB(frame, frame.add(1, 1, 1));
-            RenderUtil.drawOutlinedFilledBoundingBox(aabb, Color.green, event.partialTicks);
+            RenderUtil.drawOutlinedFilledBoundingBox(aabb, Color.red, event.partialTicks);
         }
     }
 }

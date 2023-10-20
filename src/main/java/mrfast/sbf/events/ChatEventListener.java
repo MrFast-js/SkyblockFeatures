@@ -44,11 +44,7 @@ public class ChatEventListener {
 
     @SubscribeEvent
     public void onWorldChange(WorldEvent.Load event) {
-        try {
-            barCount = 0;
-        } catch(Exception e) {
-
-        }
+        barCount = 0;
     }
     
     @SubscribeEvent(receiveCanceled = true, priority = EventPriority.HIGHEST)
@@ -71,21 +67,6 @@ public class ChatEventListener {
             }
         }
 
-        if(unformatted.contains("Click here to warp to the dungeon!") && SkyblockFeatures.config.autoJoinDungeon)  {
-            List<IChatComponent> chatComponents = event.message.getSiblings();
-            for(IChatComponent chatComponent: chatComponents) {
-                if(chatComponent.getChatStyle().getChatClickEvent()!=null) {
-                    String joinDungeonCommand = chatComponent.getChatStyle().getChatClickEvent().getValue();
-                    Utils.GetMC().thePlayer.sendChatMessage(joinDungeonCommand);
-                    Utils.setTimeout(()->{
-                        Utils.SendMessage(EnumChatFormatting.YELLOW + "Auto Joining Dungeon..");
-                        Utils.playSound("random.orb", 1);
-                    },10);
-                    break;
-                }
-            }
-        }
-
         if(unformatted.startsWith("You have joined ") && unformatted.contains("party!") && SkyblockFeatures.config.autoPartyChat) {
             Utils.GetMC().thePlayer.sendChatMessage("/chat p");
             Utils.setTimeout(()->{
@@ -93,24 +74,10 @@ public class ChatEventListener {
             },10);
         }
 
-        if (unformatted.startsWith("Your new API key is ")) {
-            String apiKey = event.message.getSiblings().get(0).getChatStyle().getChatClickEvent().getValue();
-            SkyblockFeatures.config.apiKey = apiKey;
-            SkyblockFeatures.config.markDirty();
-            SkyblockFeatures.config.writeData();
-            Utils.SendMessage(EnumChatFormatting.GREEN + "Updated your Hypixel API key!");
-        }
-
         if (unformatted.startsWith("Party Finder")) {
             String[] args = unformatted.split(" ");
             if(args[3] != null) {
                 new Thread(() -> {
-                    // Check key
-                    String key = SkyblockFeatures.config.apiKey;
-                    if (key.equals("")) {
-                        Utils.SendMessage(EnumChatFormatting.RED + "API key not set. Use /setkey.");
-                    }
-                    
                     // Get UUID for Hypixel API requests
                     String username;
                     String uuid;
@@ -118,7 +85,7 @@ public class ChatEventListener {
                     uuid = APIUtils.getUUID(username);
                     
                     // Find stats of latest profile
-                    String latestProfile = APIUtils.getLatestProfileID(uuid, key);
+                    String latestProfile = APIUtils.getLatestProfileID(uuid);
                     if (latestProfile == null) return;
         
                     String profileURL = "https://api.hypixel.net/skyblock/profile?profile=" + latestProfile+"#PartFinder";
@@ -311,6 +278,4 @@ public class ChatEventListener {
             SkyblockFeatures.config.writeData();
         }
     }
-
-    public int peoplejoined;
 }

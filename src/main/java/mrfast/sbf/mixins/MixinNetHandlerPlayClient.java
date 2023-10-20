@@ -19,7 +19,6 @@ public class MixinNetHandlerPlayClient {
         try {
             if (MinecraftForge.EVENT_BUS.post(new PacketEvent.SendEvent(packet))) ci.cancel();
         } catch (Throwable e) {
-            Minecraft.getMinecraft().ingameGUI.getChatGUI().printChatMessage(new ChatComponentText("§cSkytils caught and logged an exception at PacketEvent.SendEvent. Please report this on the Discord server."));
             e.printStackTrace();
         }
     }

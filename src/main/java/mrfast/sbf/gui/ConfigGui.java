@@ -13,6 +13,8 @@ import java.util.List;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
+import com.mojang.realmsclient.gui.ChatFormatting;
+
 import gg.essential.api.utils.GuiUtil;
 import gg.essential.elementa.ElementaVersion;
 import gg.essential.elementa.UIComponent;
@@ -39,6 +41,7 @@ import gg.essential.elementa.effects.RecursiveFadeEffect;
 import gg.essential.elementa.effects.ScissorEffect;
 import gg.essential.vigilance.data.Property;
 import gg.essential.vigilance.data.PropertyType;
+import gg.essential.vigilance.gui.VigilancePalette;
 import gg.essential.vigilance.gui.common.input.UITextInput;
 import gg.essential.vigilance.gui.common.shadow.ShadowIcon;
 import gg.essential.vigilance.gui.settings.CheckboxComponent;
@@ -132,7 +135,7 @@ public class ConfigGui extends WindowScreen {
             .setTextScale(new PixelConstraint((float) fontScale));
 
         if(Utils.isDeveloper()) {
-            new Inspector(getWindow()).setChildOf(getWindow());
+            // new Inspector(getWindow()).setChildOf(getWindow());
         }
         
         UIComponent searchBox = new UIRoundedRectangle(5f)
@@ -373,6 +376,7 @@ public class ConfigGui extends WindowScreen {
     public class ExpandableComponent {
         Boolean enabled = false;
         UIComponent parent = null;
+        String parentName = "";
         List<UIComponent> children = new ArrayList<>();
 
         public ExpandableComponent() {
@@ -395,9 +399,23 @@ public class ConfigGui extends WindowScreen {
                 List<Property> subcategory = categories.get(categoryName).get(subcategoryName);
                 int featuresVisible = 0;
                 for(Property feature:subcategory) {
-                    if((!feature.name().toLowerCase().contains(searchQuery) && !feature.description().toLowerCase().contains(searchQuery)) || feature.hidden()) {
-                        continue;
+                    boolean ignoreFeature = true;
+                    if(feature.name().toLowerCase().contains(searchQuery)) ignoreFeature = false;
+                    if(feature.description().toLowerCase().contains(searchQuery)) ignoreFeature =false;
+                    if(feature.subcategory().toLowerCase().contains(searchQuery)) ignoreFeature = false;
+                    if(feature.hidden()) ignoreFeature = true;
+
+                    if(feature.searchTags().length>0) {
+                        String tag = feature.searchTags()[0];
+                        if(parentStuff.get(tag)!=null) {
+                            Boolean enabled = parentStuff.get(tag).enabled;
+                            if(!enabled) {
+                                ignoreFeature = true;
+                            }
+                        }
                     }
+
+                    if(ignoreFeature) continue;
                     featuresVisible++;
                 }
                 // Dont show subcategory names if no elements of it are visible
@@ -418,8 +436,21 @@ public class ConfigGui extends WindowScreen {
 
                 // yOffset += container.getHeight() + Margin;
                 for(Property feature:subcategory) {
-                    if((!feature.name().toLowerCase().contains(searchQuery) && !feature.description().toLowerCase().contains(searchQuery)) || feature.hidden()) {
-                        continue;
+                    if(feature.hidden()) continue;
+
+                    if(!feature.name().toLowerCase().contains(searchQuery) && !feature.description().toLowerCase().contains(searchQuery)) {
+                        boolean shouldShow = false;
+                        if(feature.subcategory().toLowerCase().contains(searchQuery)) shouldShow = true;
+                        if(feature.searchTags().length>0) {
+                            String tag = feature.searchTags()[0];
+                            if(parentStuff.get(tag)!=null) {
+                                Boolean enabled = parentStuff.get(tag).enabled;
+                                if(enabled) {
+                                    shouldShow = true;
+                                }
+                            }
+                        }
+                        if(!shouldShow) continue;
                     }
 
                     String outlinePath = furfSkyThemed?"/assets/skyblockfeatures/gui/outlineFurf.png":"/assets/skyblockfeatures/gui/outline.png";
@@ -439,21 +470,22 @@ public class ConfigGui extends WindowScreen {
                         border.setHeight(new RelativeConstraint(0.15f));
                         exampleFeature.setHeight(new RelativeConstraint(1f));
                     }
+                    UIComponent colorPreview = null;
                     if(feature.type() == PropertyType.COLOR) {
                         // Color Title
                         new UIText(feature.name()).setChildOf(exampleFeature)
                             .setY(new CenterConstraint())
                             .setX(new PixelConstraint(4f))
                             .setTextScale(new PixelConstraint((float) fontScale*2f));
-                        new UIBlock((Color) valueMap.get(feature))
+                        colorPreview = new UIBlock((Color) valueMap.get(feature))
                             .setChildOf(exampleFeature)
                             .setY(new CenterConstraint())
-                            .setX(new RelativeConstraint(0.66f))
+                            .setX(new PixelConstraint(120f,true))
                             .setWidth(new PixelConstraint(0.08f*0.75f*guiWidth))
                             .setHeight(new PixelConstraint(0.08f*0.75f*guiHeight))
                             .enableEffect(new OutlineEffect(Color.yellow, 1f));
                             
-                        border.setHeight(new RelativeConstraint(0.29f));
+                        border.setHeight(new RelativeConstraint(0.16f));
                         exampleFeature.setHeight(new RelativeConstraint(1f));
 
                     } else {
@@ -492,6 +524,7 @@ public class ConfigGui extends WindowScreen {
         
                     if(feature.type() == PropertyType.SWITCH) {
                         UIComponent comp = new SwitchComponent((Boolean) valueMap.get(feature)).setChildOf(exampleFeature);
+                        // Sub subs
                         comp.onMouseClickConsumer((event)->{
                             Boolean val = (Boolean) getVariable(feature.name());
                             setVariable(feature.name(),!val);
@@ -515,14 +548,26 @@ public class ConfigGui extends WindowScreen {
 
                     if(feature.type() == PropertyType.COLOR) {
                         UIComponent comp = new ColorComponent((Color) valueMap.get(feature),false).setChildOf(exampleFeature);
-                        Object[] val = { 0 };
-                        ((ColorComponent) comp).onValueChange((value)->{
-                            val[0] = value;
+                        
+                        final UIComponent finalColorPreview = colorPreview;
+
+                        comp.onMouseClick((event,a)->{
+                            AnimatingConstraints anim = border.makeAnimation();
+                            anim.setHeightAnimation(Animations.OUT_EXP, 0.5f, new RelativeConstraint(0.29f));
+                            border.animateTo(anim);
                             return Unit.INSTANCE;
                         });
-                        ((ColorComponent) comp).onFocusLost((a)->{
-                            setVariable(feature.name(),val[0]);
-                            GuiUtil.open(new ConfigGui(false));
+                        // comp.onMouseLeave((event)->{
+                        //     AnimatingConstraints anim = border.makeAnimation();
+                        //     anim.setHeightAnimation(Animations.IN_EXP, 0.5f, new RelativeConstraint(0.16f));
+                        //     border.animateTo(anim);
+                        //     ((ColorComponent) comp).closePopups(false);
+                        //      ((ColorComponent) comp).
+                        //     return Unit.INSTANCE;
+                        // });
+                        ((ColorComponent) comp).onValueChange((value)->{
+                            setVariable(feature.name(),value);
+                            finalColorPreview.setColor(((Color)value));
                             return Unit.INSTANCE;
                         });
                     }
@@ -550,6 +595,48 @@ public class ConfigGui extends WindowScreen {
                         }
                         ((TextComponent) comp).onValueChange((value)->{
                             setVariable(feature.name(),value);
+                            return Unit.INSTANCE;
+                        });
+                    }
+
+                    if(feature.type() == PropertyType.NUMBER) {
+                        UIComponent comp = new UIBlock(new Color(0x232323))
+                            .enableEffect(new OutlineEffect(VigilancePalette.INSTANCE.getComponentBorder(),1f))
+                            .setX(new PixelConstraint(22f,true))
+                            .setY(new CenterConstraint())
+                            .setWidth(new PixelConstraint(58f))
+                            .setHeight(new PixelConstraint(16f))
+                            .setChildOf(exampleFeature);
+
+                        UITextInput newcomp = (UITextInput) new UITextInput("")
+                            .setChildOf(comp)
+                            .setColor(new Color(0xBBBBBB))
+                            .setWidth(new PixelConstraint(54f))
+                            .setHeight(new PixelConstraint(16f))
+                            .setX(new PixelConstraint(3f))
+                            .setY(new PixelConstraint(4f));
+
+                        newcomp.onMouseClickConsumer((event)->{
+                            newcomp.grabWindowFocus();;
+                        });
+                        newcomp.setText(valueMap.get(feature)+"");
+                        
+                        newcomp.onKeyType((component, character, integer) -> {
+                            String cleanNumber = ((String) newcomp.getText()).replaceAll("[^0-9]", "");
+                            if(cleanNumber.length()==0) {
+                                comp.setColor(new Color(0x401613));
+                                newcomp.setText("0");
+                            } else {
+                                comp.setColor(new Color(0x232323));
+                            }
+                            Integer value = 0;
+                            try {
+                                value = Integer.parseInt(cleanNumber);
+                            } catch (Exception e) {
+                                // TODO: handle exception
+                            }
+                            setVariable(feature.name(),value);
+                            newcomp.setText(cleanNumber+"");
                             return Unit.INSTANCE;
                         });
                     }

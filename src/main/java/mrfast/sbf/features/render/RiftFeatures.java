@@ -112,9 +112,11 @@ public class RiftFeatures {
                 }
             }
 
-            for(BlockPos pos:Barriers) RenderUtil.drawOutlinedFilledBoundingBox(new AxisAlignedBB(pos, pos.add(1, 1, 1)),Color.CYAN, event.partialTicks);
+            for(BlockPos pos:Barriers) {
+                RenderUtil.drawOutlinedFilledBoundingBox(pos,SkyblockFeatures.config.riftMirrorverseHelperColor, event.partialTicks);
+            }
 
-            // Parkour
+            // Upside down Parkour
             if(Utils.GetMC().thePlayer.getPosition().getX()<=-116) {
                 for(int x=-122;x>=-224;x--) {
                     for(int z=-91;z>=-126;z--) {
@@ -124,7 +126,7 @@ public class RiftFeatures {
                                 int y2 = pos.getY()-46;
                                 AxisAlignedBB aabb = new AxisAlignedBB(pos.getX()-1, 46-y2+1.1, pos.getZ(), pos.getX()+1, 46-y2, pos.getZ()+2);
 
-                                RenderUtil.drawOutlinedFilledBoundingBox(aabb,Color.cyan, event.partialTicks);
+                                RenderUtil.drawOutlinedFilledBoundingBox(aabb,SkyblockFeatures.config.riftMirrorverseHelperColor, event.partialTicks);
                             }
                         }
                     }

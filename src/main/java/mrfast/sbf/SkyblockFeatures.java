@@ -2,8 +2,10 @@ package mrfast.sbf;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.security.KeyStore;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -21,10 +23,11 @@ import org.apache.logging.log4j.Logger;
 import org.lwjgl.input.Keyboard;
 
 import gg.essential.api.EssentialAPI;
+import gg.essential.elementa.UIComponent;
+import gg.essential.elementa.components.UIText;
 import mrfast.sbf.commands.DungeonsCommand;
 import mrfast.sbf.commands.FakePlayerCommand;
 import mrfast.sbf.commands.FlipsCommand;
-import mrfast.sbf.commands.GetkeyCommand;
 import mrfast.sbf.commands.InventoryCommand;
 import mrfast.sbf.commands.RepartyCommand;
 import mrfast.sbf.commands.ShrugCommand;
@@ -115,6 +118,7 @@ import mrfast.sbf.features.trackers.TrevorHelper;
 import mrfast.sbf.gui.GuiManager;
 import mrfast.sbf.gui.ProfileViewerGui;
 import mrfast.sbf.gui.ProfileViewerUtils;
+import mrfast.sbf.utils.APIUtils;
 import mrfast.sbf.utils.CapeUtils;
 import mrfast.sbf.utils.Utils;
 import net.minecraft.client.Minecraft;
@@ -147,8 +151,6 @@ public class SkyblockFeatures {
     
     public static final String MODID = "skyblockfeatures";
     public static final String MOD_NAME = "skyblockfeatures";
-    // Skyblock Features Produciton API key
-    public static String API_KEY = "68f8f3dd-bb03-4ee8-9135-8f6ce023b88a";
     public static String VERSION = "Loading";
     public static final Minecraft mc = Minecraft.getMinecraft();
 
@@ -193,6 +195,7 @@ public class SkyblockFeatures {
 
         // Save the config
         config.preload();
+        // UIComponent a = new UIText("test");
         SkyblockFeatures.config.markDirty();
         SkyblockFeatures.config.writeData();
 
@@ -207,6 +210,7 @@ public class SkyblockFeatures {
             SkyblockInfo.getInstance(),
             new SpamHider(),
             new PricingData(),
+            new APIUtils(),
             new ZealotSpawnLocations(),
             new ChestProfit(),
             new DungeonMap(),
@@ -291,7 +295,6 @@ public class SkyblockFeatures {
                 break;
             }
         }
-        if(config.apiKey!=API_KEY) config.apiKey = API_KEY;
         SkyblockFeatures.config.timeStartedUp++;
         System.out.println("You have started Skyblock Features up "+SkyblockFeatures.config.timeStartedUp+" times!");
     }
@@ -316,7 +319,6 @@ public class SkyblockFeatures {
         commands.add(new ShrugCommand());
         commands.add(new FlipsCommand());
         commands.add(new InventoryCommand());
-        commands.add(new GetkeyCommand());
         commands.add(new DungeonsCommand());
         commands.add(new RepartyCommand());
         commands.add(new pingCommand());
@@ -341,7 +343,7 @@ public class SkyblockFeatures {
 
     @SubscribeEvent
     public void onTick(TickEvent.ClientTickEvent event) {
-        SkyblockFeatures.config.autoAuctionFlipMargin = SkyblockFeatures.config.autoAuctionFlipMargin.replaceAll("[^0-9]", "");
+        // SkyblockFeatures.config.autoAuctionFlipMargin = SkyblockFeatures.config.autoAuctionFlipMargin.replaceAll("[^0-9]", "");
         if (event.phase != TickEvent.Phase.START) return;
         // Small items
         if(start) {

@@ -48,7 +48,7 @@ public class GiftTracker {
                }
             }
             if (!gifts.contains(entity) && !isPlayerGift) {
-               highlightBlock(Color.YELLOW, entity.posX-0.5, entity.posY+1.5, entity.posZ-0.5, 1.0D,event.partialTicks);
+               highlightBlock(SkyblockFeatures.config.presentWaypointsColor, entity.posX-0.5, entity.posY+1.5, entity.posZ-0.5, 1.0D,event.partialTicks);
             }
          }
          if(SkyblockFeatures.locationString.contains("Glacial") && SkyblockFeatures.config.icecaveHighlight) {

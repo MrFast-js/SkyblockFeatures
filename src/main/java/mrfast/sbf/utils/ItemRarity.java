@@ -28,7 +28,6 @@ public enum ItemRarity {
     private final String name;
     private final EnumChatFormatting baseColor;
     private final Color color;
-    private final int code;
 
     static {
         for (ItemRarity rarity : values())
@@ -41,7 +40,6 @@ public enum ItemRarity {
         this.name = name;
         this.baseColor = baseColor;
         this.color = color;
-        this.code = (255 << 24) | (code & 0x00FFFFFF);;
     }
 
     public String getName() {

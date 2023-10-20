@@ -195,7 +195,7 @@ public class MiscFeatures {
         if(SkyblockInfo.getInstance().localLocation.contains("Glowing") && SkyblockFeatures.config.highlightMushrooms) {
             try {
                 for(Vec3 packet:particles) {
-                    Color color = new Color(0x55FF55);
+                    Color color = SkyblockFeatures.config.highlightMushroomsColor;
                     highlightBlock(color, Math.floor(packet.xCoord),Math.floor(packet.yCoord), Math.floor(packet.zCoord), event.partialTicks);
 
                     Block block = Minecraft.getMinecraft().theWorld.getBlockState(new BlockPos(packet)).getBlock();
@@ -247,16 +247,11 @@ public class MiscFeatures {
                 tryingNetworth = true;
                 new Thread(() -> {
                     try {
-                        
-                    
-                    String key = SkyblockFeatures.config.apiKey;
-                    if (key.equals("")) return;
-                    
                     // Get UUID for Hypixel API requests
                     String username = chestName.substring(0, chestName.indexOf("'"));
                     String uuid = APIUtils.getUUID(username);
                     // Find stats of latest profile
-                    String latestProfile = APIUtils.getLatestProfileID(uuid, key);
+                    String latestProfile = APIUtils.getLatestProfileID(uuid);
                     if (latestProfile == null) {
                         apiOff = true;
                         return;
@@ -293,8 +288,6 @@ public class MiscFeatures {
                 lines.add(ChatFormatting.WHITE+"Skill Avg: "+ChatFormatting.RED+"Loading..");
                 lines.add(ChatFormatting.WHITE+"Senither Weight: "+ChatFormatting.RED+"Loading..");
                 lines.add(ChatFormatting.WHITE+"Discord: "+ChatFormatting.RED+"Loading...");
-            } else if(SkyblockFeatures.config.apiKey.equals("")){
-                lines.add(ChatFormatting.RED+"API key not set.");
             } else {
                 lines.add(ChatFormatting.RED+"Player has API Disabled.");
             }

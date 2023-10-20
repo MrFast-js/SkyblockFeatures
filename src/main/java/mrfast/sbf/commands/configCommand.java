@@ -74,23 +74,6 @@ public class configCommand extends CommandBase {
                 });
                 Utils.SendMessage("Gui Positions Reset!");
                 break;
-            case "setkey":
-                if (args.length == 1) {
-                    player.addChatMessage(new ChatComponentText("§c§l[ERROR] §8» §cPlease provide your Hypixel API key!"));
-                    return;
-                }
-                new Thread(() -> {
-                    String apiKey = args[1];
-                    if (APIUtils.getJSONResponse("https://api.hypixel.net/key?key=" + apiKey).get("success").getAsBoolean()) {
-                        SkyblockFeatures.config.apiKey = apiKey;
-                        SkyblockFeatures.config.markDirty();
-                        player.addChatMessage(new ChatComponentText("§a§l[SUCCESS] §8» §aYour Hypixel API key has been set to §f" + apiKey + "§a."));
-                        SkyblockFeatures.config.writeData();
-                    } else {
-                        player.addChatMessage(new ChatComponentText("§c§l[ERROR] §8» §cThe Hypixel API key you provided was §finvalid§c."));
-                    }
-                }).start();
-                break;
             case "config":
                 GuiUtil.open(new ConfigGui(true));
                 break;
@@ -99,7 +82,6 @@ public class configCommand extends CommandBase {
                 " §2§l ❣ §7§oThe current mod version is §f§o" + SkyblockFeatures.VERSION + "§7§o." + "\n" +
                 "§9§l➜ Setup:" + "\n" +
                 " §3/sbf §l➡ §bOpens the configuration GUI." + "\n" +
-                " §3/sbf setkey §l➡ §bSets your Hypixel API key." + "\n" +
                 " §3/sbf help §l➡ §bShows this help menu." + "\n" +
                 " §3/sbf edit §l➡ §bOpens the location editing GUI." + "\n" +
                 "§9§l➜ Miscellaneous:" + "\n" +

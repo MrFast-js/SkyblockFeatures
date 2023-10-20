@@ -65,12 +65,6 @@ public class InventoryCommand extends CommandBase {
 		new Thread(() -> {
 			EntityPlayer player = (EntityPlayer) arg0;
 			
-			// Check key
-			String key = SkyblockFeatures.config.apiKey;
-			if (key.equals("")) {
-				Utils.SendMessage(EnumChatFormatting.RED + "API key not set. Use /setkey.");
-			}
-			
 			// Get UUID for Hypixel API requests
 			String username;
 			String uuid;
@@ -84,7 +78,7 @@ public class InventoryCommand extends CommandBase {
 			Utils.SendMessage(EnumChatFormatting.GREEN + "Checking inventory of " + EnumChatFormatting.DARK_GREEN + username);
 			
 			// Find stats of latest profile
-			String latestProfile = APIUtils.getLatestProfileID(uuid, key);
+			String latestProfile = APIUtils.getLatestProfileID(uuid);
 			if (latestProfile == null) return;
 
 			String profileURL = "https://api.hypixel.net/skyblock/profile?profile=" + latestProfile;

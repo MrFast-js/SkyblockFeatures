@@ -227,7 +227,16 @@ public class ProfileViewerGui extends WindowScreen {
                 .setWidth(new PixelConstraint(guiWidth))
                 .setHeight(new PixelConstraint(0.15f*guiHeight))
                 .enableEffect(new ScissorEffect());
-            
+
+            // Title text 2
+            UIComponent titleText2 = new UIText("Skyblock Features Profile Viewer")
+                .setColor(Color.gray)
+                .setChildOf(titleArea)
+                .setX(new CenterConstraint())
+                .setY(new PixelConstraint(3f,true))
+                .enableEffect(new ScissorEffect())
+                .setTextScale(new PixelConstraint(((float)fontScale)));
+
             // Title text
             UIComponent titleText = new UIText(username)
                 .setColor(titleColor)
@@ -235,7 +244,7 @@ public class ProfileViewerGui extends WindowScreen {
                 .setX(new CenterConstraint())
                 .setY(new CenterConstraint())
                 .enableEffect(new ScissorEffect())
-                .setTextScale(new PixelConstraint((float) (doAnimation?1*fontScale:4*fontScale)));
+                .setTextScale(new PixelConstraint((float) (doAnimation?1*fontScale:3*fontScale)));
             
             // Gray horizontal line 1px from bottom of the title area
             new UIBlock().setChildOf(titleArea)
@@ -273,7 +282,7 @@ public class ProfileViewerGui extends WindowScreen {
                 box.animateTo(anim);
 
                 AnimatingConstraints animation = titleText.makeAnimation();
-                animation.setTextScaleAnimation(Animations.OUT_EXP, 0.5f, new PixelConstraint((float) (4.0*fontScale)));
+                animation.setTextScaleAnimation(Animations.OUT_EXP, 0.5f, new PixelConstraint((float) (3.0*fontScale)));
                 titleText.animateTo(animation);
             }
         }
@@ -282,8 +291,7 @@ public class ProfileViewerGui extends WindowScreen {
 			System.out.println("Starting thread ");
 
             hypixelProfilesResponse = null;
-            String latestProfile = APIUtils.getLatestProfileID(playerUuid, SkyblockFeatures.config.apiKey);
-            System.out.println("doing stuff part 2 "+playerUuid);
+            String latestProfile = APIUtils.getLatestProfileID(playerUuid);
             if (profileString.equals("auto") && latestProfile == null) return;
             String locationURL = "https://api.hypixel.net/status?uuid="+playerUuid+"#GetLocationPV";
             String profileURL = "https://api.hypixel.net/skyblock/profiles?uuid=" + playerUuid+"#GetProfilePV";
@@ -376,6 +384,8 @@ public class ProfileViewerGui extends WindowScreen {
             .setChildOf(getWindow());
     JsonObject profiles = new JsonObject();
     static String lastProfileID = "";
+    static JsonObject networthResponse = null;
+
     public void loadProfile(String cute_name,Boolean initial) {
         System.out.println("Loading Profile "+cute_name+ " initial: "+initial);
         generalHoverables.clear();
@@ -390,7 +400,7 @@ public class ProfileViewerGui extends WindowScreen {
         }
         if(initial) {
             if(Utils.isDeveloper()) {
-                new Inspector(getWindow()).setChildOf(getWindow());
+                // new Inspector(getWindow()).setChildOf(getWindow());
             }
 
             drawSideButton(sideButtonContainer,"General",()->{
@@ -510,6 +520,15 @@ public class ProfileViewerGui extends WindowScreen {
             .setWidth(new PixelConstraint(guiWidth))
             .setHeight(new PixelConstraint(0.15f*guiHeight))
             .enableEffect(new ScissorEffect());
+
+        // Title text 2
+        UIComponent titleText2 = new UIText("Skyblock Features Profile Viewer")
+            .setColor(Color.gray)
+            .setChildOf(titleArea)
+            .setX(new CenterConstraint())
+            .setY(new PixelConstraint(3f,true))
+            .enableEffect(new ScissorEffect())
+            .setTextScale(new PixelConstraint(((float)fontScale)));
         
         // Title text
         UIComponent titleText = new UIText(profile.getName())
@@ -518,7 +537,7 @@ public class ProfileViewerGui extends WindowScreen {
             .setX(new CenterConstraint())
             .setY(new CenterConstraint())
             .enableEffect(new ScissorEffect())
-            .setTextScale(new PixelConstraint((float) (4f*fontScale)));
+            .setTextScale(new PixelConstraint((float) (3f*fontScale)));
         
         // Gray horizontal line 1px from bottom of the title area
         new UIBlock().setChildOf(titleArea).setWidth(new PixelConstraint(guiWidth-2)).setHeight(new PixelConstraint(1f)).setX(new CenterConstraint()).setY(new PixelConstraint(titleArea.getHeight()-1)).setColor(guiLines);
@@ -562,68 +581,7 @@ public class ProfileViewerGui extends WindowScreen {
         try {Purse = (long) ProfilePlayerResponse.get("coin_purse").getAsDouble();} catch (Exception e) {}
         try {Bank = (long) ProfileResponse.get("banking").getAsJsonObject().get("balance").getAsDouble();} catch (Exception e) {}
 
-        JsonObject data = new JsonObject();
-        data.add("data", ProfilePlayerResponse);
-        JsonObject networthResponse = APIUtils.getNetworthResponse(data,playerUuid,selectedProfileUUID);
-
-        List<String> networthTooltip = new ArrayList<>(Arrays.asList(ChatFormatting.RED + "Player has API disabled"));
-        String networth = ChatFormatting.RED+"API Disabled";
-
-        if(networthResponse.has("data")) {
-            JsonObject networthJson = networthResponse.get("data").getAsJsonObject();
-            JsonObject networthCategorys = networthJson.get("categories").getAsJsonObject();
-            
-
-            {
-                long Armor = 0; 
-                long Wardrobe = 0; 
-                long Inventory = 0;
-                long Museum = 0;
-                long accessories = 0;
-                long enderchest = 0; 
-                long Sacks = 0;
-                long Storage = 0;
-                long pets = 0;
-                long total = 0;
-                long irl = 0;
-
-                try {Armor = networthCategorys.get("armor").getAsJsonObject().get("total").getAsLong();} catch (NullPointerException e) {}
-                try {Wardrobe = networthCategorys.get("wardrobe_inventory").getAsJsonObject().get("total").getAsLong();} catch (NullPointerException e) {}
-                try {Inventory = networthCategorys.get("inventory").getAsJsonObject().get("total").getAsLong();} catch (NullPointerException e) {}
-                try {accessories = networthCategorys.get("talismans").getAsJsonObject().get("total").getAsLong();} catch (NullPointerException e) {}
-                try {Storage = networthCategorys.get("storage").getAsJsonObject().get("total").getAsLong();} catch (NullPointerException e) {}
-                try {enderchest = networthCategorys.get("enderchest").getAsJsonObject().get("total").getAsLong();} catch (NullPointerException e) {}
-                try {Sacks = networthJson.get("sacks").getAsLong();} catch (NullPointerException e) {}
-                try {pets = networthCategorys.get("pets").getAsJsonObject().get("total").getAsLong();} catch (NullPointerException e) {}
-                try {Museum = networthCategorys.get("museum").getAsLong();} catch (NullPointerException e) {}
-                try {total = networthJson.get("networth").getAsLong()+Purse+Bank+Museum;} catch (NullPointerException e) {}
-
-                if(PricingData.bazaarPrices.get("BOOSTER_COOKIE")!=null) irl = (int) ((total/PricingData.bazaarPrices.get("BOOSTER_COOKIE"))*2.4);
-
-                networthTooltip = new ArrayList<>(Arrays.asList(
-                    ChatFormatting.GREEN + "Total Networth: " + ChatFormatting.GOLD + nf.format(total),
-                    ChatFormatting.GREEN + "IRL Worth: " + ChatFormatting.DARK_GREEN+"$" + nf.format(irl),
-                    "",
-                    ChatFormatting.GREEN + "Purse: " + ChatFormatting.GOLD + Utils.formatNumber(Purse) + Utils.percentOf(Purse,total),
-                    ChatFormatting.GREEN + "Bank: " + ChatFormatting.GOLD + Utils.formatNumber(Bank) + Utils.percentOf(Bank,total),
-                    ChatFormatting.GREEN + "Sacks: " + ChatFormatting.GOLD + Utils.formatNumber(Sacks) + Utils.percentOf(Sacks,total),
-                    ChatFormatting.GREEN + "Armor: " + ChatFormatting.GOLD + Utils.formatNumber(Armor) + Utils.percentOf(Armor,total),
-                    ChatFormatting.GREEN + "Museum: " + ChatFormatting.GOLD + Utils.formatNumber(Museum) + Utils.percentOf(Museum,total),
-                    ChatFormatting.GREEN + "Storage: " + ChatFormatting.GOLD + Utils.formatNumber(Storage) + Utils.percentOf(Storage,total),
-                    ChatFormatting.GREEN + "Wardrobe: " + ChatFormatting.GOLD + Utils.formatNumber(Wardrobe) + Utils.percentOf(Wardrobe,total),
-                    ChatFormatting.GREEN + "Inventory: " + ChatFormatting.GOLD + Utils.formatNumber(Inventory) + Utils.percentOf(Inventory,total),
-                    ChatFormatting.GREEN + "Enderchest: " + ChatFormatting.GOLD + Utils.formatNumber(enderchest) + Utils.percentOf(enderchest,total),
-                    ChatFormatting.GREEN + "Accessories: " + ChatFormatting.GOLD + Utils.formatNumber(accessories) + Utils.percentOf(accessories,total),
-                    ChatFormatting.GREEN + "Pets: " + ChatFormatting.GOLD + Utils.formatNumber(pets)+Utils.percentOf(pets,total)
-                ));
-                networth = nf.format(networthJson.get("networth").getAsLong()+Purse+Bank+Museum);
-
-            }
-
-        } else {
-            System.out.println("No Networth Data!!" );
-            new ArrayList<>(Arrays.asList(ChatFormatting.RED + "Player has inventory API disabled"));
-        }
+        String networth = ChatFormatting.RED+"Loading";
 
         // String avgSkill = Utils.round(ProfilePlayerResponse.get("average_level_no_progress").getAsDouble(),2)+"";
         // String joined = ProfilePlayerResponse.get("first_join").getAsJsonObject().get("text").getAsString();
@@ -651,7 +609,7 @@ public class ProfileViewerGui extends WindowScreen {
         new UIText(g+"Current Area: "+bold+playerLocation.trim()).setX(new PixelConstraint(0)).setChildOf(midRow);
 
         UIComponent networthComponent = new UIText(g+"Networth: "+bold+networth).setX(new SiblingConstraint(10f)).setChildOf(midRow);
-        generalHoverables.put(networthComponent, networthTooltip);
+        
 
         new UIText(g+"Bank: "+bold+Utils.formatNumber(Bank)).setX(new SiblingConstraint(10f)).setChildOf(midRow);
         new UIText(g+"Fairy Souls: "+bold+fairySouls).setX(new SiblingConstraint(10f)).setChildOf(lastRow);
@@ -807,8 +765,105 @@ public class ProfileViewerGui extends WindowScreen {
         box.addChild(sidebarSeperator);
         box.addChild(statsAreaContainer);
 
-        titleText.setTextScale(new PixelConstraint((float) (4.0*fontScale)));
+        titleText.setTextScale(new PixelConstraint((float) (3.0*fontScale)));
         loadCollectionsCategories();
+
+        
+        loadNetworth(profileUUID,playerUuid,Purse,Bank,networthComponent);
+    }
+
+    public void loadNetworth(String profileUUID,String playerUuid,long Purse,long Bank,UIComponent networthComponent) {
+        System.out.println("doing networth");
+
+        new Thread(()->{
+            JsonObject profiles = APIUtils.getJSONResponse("https://sky.shiiyu.moe/api/v2/profile/"+playerUuid+"#skycryptForPV").get("profiles").getAsJsonObject();
+
+            List<String> networthTooltip = new ArrayList<>(Arrays.asList(ChatFormatting.RED + "Player has API disabled"));
+            String networth = ChatFormatting.RED+"Loading";
+            while (profiles.entrySet().size() == 0) {
+                try {
+                    Thread.sleep(100); // Add a delay of 100 milliseconds
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            if (profiles.has(profileUUID) && profiles.get(profileUUID).isJsonObject()) {
+                JsonObject profileObject = profiles.getAsJsonObject(profileUUID);
+                if (profileObject.has("data") && profileObject.get("data").isJsonObject()) {
+                    JsonObject dataObject = profileObject.getAsJsonObject("data");
+                    if (dataObject.has("networth") && dataObject.get("networth").isJsonObject()) {
+                        networthResponse = dataObject.getAsJsonObject("networth");
+                    }
+                }
+            }
+            
+            JsonObject museumResponse = APIUtils.getJSONResponse("https://api.hypixel.net/skyblock/museum?profile="+profileUUID);
+
+            JsonObject networthCategorys = networthResponse.get("types").getAsJsonObject();
+
+            if(museumResponse.get("success").getAsBoolean()) {
+                Boolean museumApiEnabled = museumResponse.get("members").getAsJsonObject().entrySet().size()>0;
+                if(museumApiEnabled) {
+                    JsonObject members =  museumResponse.get("members").getAsJsonObject();
+                    JsonObject member = members.get(playerUuid).getAsJsonObject();
+                    Long value = member.get("value").getAsLong();
+                    networthCategorys.addProperty("museum", value);
+                }
+            }
+            {
+                long Armor = 0; 
+                long equipment = 0; 
+                long Wardrobe = 0; 
+                long Inventory = 0;
+                long Museum = 0;
+                long accessories = 0;
+                long enderchest = 0; 
+                long Sacks = 0;
+                long Storage = 0;
+                long pets = 0;
+                long total = 0;
+                long irl = 0;
+
+                try {Armor = networthCategorys.get("armor").getAsJsonObject().get("total").getAsLong();} catch (NullPointerException e) {}
+                try {equipment = networthCategorys.get("equipment").getAsJsonObject().get("total").getAsLong();} catch (NullPointerException e) {}
+                try {Wardrobe = networthCategorys.get("wardrobe").getAsJsonObject().get("total").getAsLong();} catch (NullPointerException e) {}
+                try {Inventory = networthCategorys.get("inventory").getAsJsonObject().get("total").getAsLong();} catch (NullPointerException e) {}
+                try {accessories = networthCategorys.get("accessories").getAsJsonObject().get("total").getAsLong();} catch (NullPointerException e) {}
+                try {Storage = networthCategorys.get("storage").getAsJsonObject().get("total").getAsLong();} catch (NullPointerException e) {}
+                try {enderchest = networthCategorys.get("enderchest").getAsJsonObject().get("total").getAsLong();} catch (NullPointerException e) {}
+                try {Sacks = networthCategorys.get("sacks").getAsJsonObject().get("total").getAsLong();} catch (NullPointerException e) {}
+                try {pets = networthCategorys.get("pets").getAsJsonObject().get("total").getAsLong();} catch (NullPointerException e) {}
+                try {Museum = networthCategorys.get("museum").getAsLong();} catch (NullPointerException e) {}
+                try {total = networthResponse.get("networth").getAsLong()+Museum;} catch (NullPointerException e) {}
+
+                if(PricingData.bazaarPrices.get("BOOSTER_COOKIE")!=null) irl = (int) ((total/PricingData.bazaarPrices.get("BOOSTER_COOKIE"))*2.4);
+
+                networthTooltip = new ArrayList<>(Arrays.asList(
+                    ChatFormatting.AQUA + "Networth",
+                    ChatFormatting.ITALIC +""+ ChatFormatting.DARK_GRAY + "Networth calculations by SkyHelper",
+                    "",
+                    ChatFormatting.GREEN + "Total Networth: " + ChatFormatting.GOLD + nf.format(total),
+                    ChatFormatting.GREEN + "IRL Worth: " + ChatFormatting.DARK_GREEN+"$" + nf.format(irl),
+                    "",
+                    ChatFormatting.GREEN + "Purse: " + ChatFormatting.GOLD + Utils.formatNumber(Purse) + Utils.percentOf(Purse,total),
+                    ChatFormatting.GREEN + "Bank: " + ChatFormatting.GOLD + Utils.formatNumber(Bank) + Utils.percentOf(Bank,total),
+                    ChatFormatting.GREEN + "Sacks: " + ChatFormatting.GOLD + Utils.formatNumber(Sacks) + Utils.percentOf(Sacks,total),
+                    ChatFormatting.GREEN + "Armor: " + ChatFormatting.GOLD + Utils.formatNumber(Armor) + Utils.percentOf(Armor,total),
+                    ChatFormatting.GREEN + "Museum: " + ChatFormatting.GOLD + Utils.formatNumber(Museum) + Utils.percentOf(Museum,total),
+                    ChatFormatting.GREEN + "Storage: " + ChatFormatting.GOLD + Utils.formatNumber(Storage) + Utils.percentOf(Storage,total),
+                    ChatFormatting.GREEN + "Wardrobe: " + ChatFormatting.GOLD + Utils.formatNumber(Wardrobe) + Utils.percentOf(Wardrobe,total),
+                    ChatFormatting.GREEN + "Inventory: " + ChatFormatting.GOLD + Utils.formatNumber(Inventory) + Utils.percentOf(Inventory,total),
+                    ChatFormatting.GREEN + "Equipment: " + ChatFormatting.GOLD + Utils.formatNumber(equipment) + Utils.percentOf(equipment,total),
+                    ChatFormatting.GREEN + "Enderchest: " + ChatFormatting.GOLD + Utils.formatNumber(enderchest) + Utils.percentOf(enderchest,total),
+                    ChatFormatting.GREEN + "Accessories: " + ChatFormatting.GOLD + Utils.formatNumber(accessories) + Utils.percentOf(accessories,total),
+                    ChatFormatting.GREEN + "Pets: " + ChatFormatting.GOLD + Utils.formatNumber(pets)+Utils.percentOf(pets,total)
+                ));
+                networth = nf.format(networthResponse.get("networth").getAsLong()+Museum);
+                ((UIText) networthComponent).setText(g+"Networth: "+bold+networth);
+                generalHoverables.put(networthComponent, networthTooltip);
+            }
+        }).start();
     }
     
     
@@ -825,7 +880,7 @@ public class ProfileViewerGui extends WindowScreen {
         if(v==null) v = 0;
 
         Float value = v.floatValue();
-        Float max = m.floatValue();;
+        Float max = m.floatValue();
 
         // System.out.println("Value: "+value+" Max: "+max+" "+label);
         UIComponent container = new UIBlock(clear).setChildOf(statsArea)

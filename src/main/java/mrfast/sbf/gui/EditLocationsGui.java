@@ -80,9 +80,9 @@ public class EditLocationsGui extends GuiScreen {
 
     protected void onMouseMove(int mouseX, int mouseY) {
         ScaledResolution sr = new ScaledResolution(mc);
-            float minecraftScale = sr.getScaleFactor();
-            float floatMouseX = Mouse.getX() / minecraftScale;
-            float floatMouseY = (mc.displayHeight - Mouse.getY()) / minecraftScale;
+        float minecraftScale = sr.getScaleFactor();
+        float floatMouseX = Mouse.getX() / minecraftScale;
+        float floatMouseY = (mc.displayHeight - Mouse.getY()) / minecraftScale;
         
         if (dragging != null) {
             MoveableFeature lb = MoveableFeatures.get(dragging);

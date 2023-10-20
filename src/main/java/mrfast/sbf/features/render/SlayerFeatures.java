@@ -18,14 +18,14 @@ public class SlayerFeatures {
     @SubscribeEvent
     public void onRenderWorld(RenderWorldLastEvent event) {
         if(Utils.GetMC().theWorld == null || Utils.GetMC().thePlayer == null || SkyblockInfo.getInstance().getLocation()==null) return;
-        if(!SkyblockFeatures.config.highlightBeacons && !SkyblockInfo.getInstance().map.equals("The End")) return;
+        if(!SkyblockFeatures.config.highlightBeacons || !SkyblockInfo.getInstance().map.equals("The End")) return;
 
         for(TileEntity e:Utils.GetMC().theWorld.loadedTileEntityList) {
             if(e instanceof TileEntityBeacon) {
                 BlockPos p = e.getPos();
                 AxisAlignedBB aabb = new AxisAlignedBB(p.getX(), p.getY(), p.getZ(), p.getX()+1, p.getY()+1, p.getZ()+1);
                 if(SkyblockFeatures.config.highlightBeaconsThroughWalls) GlStateManager.disableDepth();
-                RenderUtil.drawOutlinedFilledBoundingBox(aabb, Color.red, event.partialTicks);
+                RenderUtil.drawOutlinedFilledBoundingBox(aabb, SkyblockFeatures.config.highlightBeaconsColor, event.partialTicks);
                 GlStateManager.enableDepth();
             }
         }

@@ -6,6 +6,12 @@ import net.minecraft.inventory.Slot;
 import net.minecraftforge.fml.common.eventhandler.Cancelable;
 import net.minecraftforge.fml.common.eventhandler.Event;
 
+/**
+ * Modified from Skytils 0.x under GNU Affero General Public License v3.0
+ * https://github.com/Skytils/SkytilsMod/tree/0.x
+ *
+ * @author Sychic
+ */
 public abstract class GuiContainerEvent extends Event {
 
     public GuiContainer gui;

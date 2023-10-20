@@ -13,6 +13,8 @@ import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 
 public class ItemStackComponent extends UIComponent {
     private final State<ItemStack> state;
@@ -31,35 +33,39 @@ public class ItemStackComponent extends UIComponent {
 
     @Override
     public void draw(UMatrixStack matrixStack) {
+        ItemStack item = this.state.get();
+        if (item == null) return;
+
         beforeDraw(matrixStack);
         super.draw(matrixStack);
-        if(getWidth()==0) setWidth(new PixelConstraint(16f));
-        if(getHeight()==0) setHeight(new PixelConstraint(16f));
+
+        if (getWidth() == 0) setWidth(new PixelConstraint(16f));
+        if (getHeight() == 0) setHeight(new PixelConstraint(16f));
 
         matrixStack.push();
         matrixStack.translate(getLeft(), getTop(), 100f);
         matrixStack.scale(getWidth() / 16f, getHeight() / 16f, 0f);
+
         UGraphics.color4f(1f, 1f, 1f, 1f);
         UGraphics.disableLighting();
+
         matrixStack.runWithGlobalState(() -> {
-            UGraphics.disableLighting();
-            ItemStack item = state.get();
             RenderItem itemRender = Minecraft.getMinecraft().getRenderItem();
             RenderHelper.enableGUIStandardItemLighting();
-            itemRender.zLevel = -145; //Negates the z-offset of the below method.
-            itemRender.renderItemAndEffectIntoGUI(item, 0, 0);
-            itemRender.renderItemOverlays(Utils.GetMC().fontRendererObj,item, 0, 0);
+            itemRender.zLevel = -145; // Negates the z-offset of the below method.
+            itemRender.renderItemIntoGUI(item, 0, 0);
+            itemRender.renderItemOverlays(Utils.GetMC().fontRendererObj, item, 0, 0);
             RenderHelper.disableStandardItemLighting();
         });
+
         UGraphics.disableLighting();
         matrixStack.pop();
-        int mouseX = ProfileViewerGui.mouseXFloat;
-        int mouseY = ProfileViewerGui.mouseYFloat;
-        if(state.get()==null) return;
-        if(!state.get().hasDisplayName()) return;
-        if(state.get().getDisplayName().trim().isEmpty()) return;
-        if(mouseX>getLeft()&&mouseX<getLeft()+getWidth() && mouseY>getTop()&&mouseY<getTop()+getHeight()) {
-            ProfileViewerGui.renderTooltip = state.get().getTooltip(Utils.GetMC().thePlayer, false);
+
+        if (!item.hasDisplayName()) return;
+        if (item.getDisplayName().trim().isEmpty()) return;
+        
+        if (this.isHovered()) {
+            ProfileViewerGui.renderTooltip = item.getTooltip(Utils.GetMC().thePlayer, false);
         }
     }
 }

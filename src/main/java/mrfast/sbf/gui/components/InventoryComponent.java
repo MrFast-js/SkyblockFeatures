@@ -57,7 +57,6 @@ public class InventoryComponent extends UIComponent {
             }
         }
     }
-    UIComponent hovered = null;
 
     @Override
     public void draw(UMatrixStack matrixStack) {

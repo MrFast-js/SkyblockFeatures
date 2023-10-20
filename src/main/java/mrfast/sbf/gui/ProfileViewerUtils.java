@@ -89,7 +89,6 @@ public class ProfileViewerUtils {
         if (slayerXP == null) {
             throw new IllegalArgumentException("Invalid Slayer type tried to get "+slayerType);
         }
-        System.out.println(slayerType+" "+lvl+" "+slayerXP.toString());
         
         if(slayerXP.get(lvl+1)!=null) {
             return slayerXP.get(lvl+1);
@@ -213,7 +212,6 @@ public class ProfileViewerUtils {
         for(int i=1;i<=currentLevel;i++) {
             xpCost+=getXpAtLevel(i,type);
         } 
-        System.out.println(xp+"xp "+currentLevel+"lvl  "+xpCost+"  "+(xp-xpCost));
         return xp - xpCost;
     }
 

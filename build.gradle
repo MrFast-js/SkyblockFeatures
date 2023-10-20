@@ -1,4 +1,4 @@
-// Java Development Kit 8, Gradle 6.5
+// Java 1.8.0_281, Gradle 6.5
 plugins {
     id "net.minecraftforge.gradle.forge" version "FG_2.1-SNAPSHOT"
     id "org.spongepowered.mixin" version "d5f9873d60"

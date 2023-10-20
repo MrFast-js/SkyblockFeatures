@@ -65,7 +65,7 @@ public class BlazeSolver {
 
             for (Entity entity : entities) {
                 if (entity.getName().contains("Blaze") && entity.getName().contains("/")) {
-                    String blazeName = Utils.cleanColor(entity.getName());
+                    String blazeName = Utils.cleanColor(entity.getName().replaceAll(",", ""));
                     try {
                         int health = Integer.parseInt(blazeName.substring(blazeName.indexOf("/") + 1, blazeName.length() - 1));
                         blazes.add(new Blaze(entity, health));

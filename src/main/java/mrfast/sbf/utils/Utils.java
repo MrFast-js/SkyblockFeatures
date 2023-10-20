@@ -3,6 +3,7 @@ package mrfast.sbf.utils;
 import java.awt.Color;
 import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -139,9 +140,9 @@ public class Utils {
         return mc;
     }
 
-    public static Boolean isDeveloper() {
-        String[] developers = {"Skyblock_Lobby", "OzzyAndShadow"};
-        return developers.toString().contains(mc.thePlayer.getName());
+    public static boolean isDeveloper() {
+        String[] developers = {"Skyblock_Lobby"};
+        return Arrays.asList(developers).contains(Utils.GetMC().thePlayer.getName());
     }
 
     public static void drawTexturedRect(float x, float y, float width, float height, float uMin, float uMax, float vMin, float vMax, int filter) {
@@ -351,22 +352,6 @@ public class Utils {
 
     public static void playSound(String sound, double pitch) {
         mc.thePlayer.playSound(sound, 1, (float) pitch);
-    }
-    
-	public static int getDungeonFloor() {
-        String floor="";
-        for (String l : ScoreboardUtil.getSidebarLines()) {
-            String line = ScoreboardUtil.cleanSB(l);
-            if(line.contains("Catacombs")) {
-                floor = line;
-            }
-        }
-
-        if(floor.replaceAll("[^0-9]", "") != "") {
-            return Integer.parseInt(floor.replaceAll("[^0-9]", ""));
-        } else {
-            return 0;
-        }
     }
 
     public static boolean isNPC(Entity entity) {

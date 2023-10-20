@@ -39,12 +39,9 @@ public class BaitCounterOverlay {
     public void reloadFishingBag() {
         typesOfBait.clear();
         new Thread(() -> {
-                String key = SkyblockFeatures.config.apiKey;
-                if (key.equals("")) return;
-                
                 // Get UUID for Hypixel API requests
                 String uuid = APIUtils.getUUID(Utils.GetMC().thePlayer.getName());;
-                String latestProfile = APIUtils.getLatestProfileID(uuid, key);
+                String latestProfile = APIUtils.getLatestProfileID(uuid);
                 if (latestProfile == null) return;
 
                 String profileURL = "https://api.hypixel.net/skyblock/profile?profile=" + latestProfile+"#BaitDisplay";

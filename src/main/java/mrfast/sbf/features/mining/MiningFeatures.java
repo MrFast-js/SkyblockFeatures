@@ -68,6 +68,9 @@ public class MiningFeatures {
         if(SkyblockFeatures.config.highlightEnderNodes && SkyblockInfo.getInstance().getMap().contains("The End")) {
             try {
                 if(SkyblockFeatures.config.highlightEnderNodesWalls) GlStateManager.disableDepth();
+                Color endColor = SkyblockFeatures.config.highlightEnderNodesEndstoneColor;
+                Color obiColor = SkyblockFeatures.config.highlightEnderNodesObiColor;
+
                 List<Vec3> drawnPositions = new ArrayList<Vec3>();
 
                 for(Vec3 packet:enderParticles) {
@@ -86,35 +89,35 @@ public class MiningFeatures {
                     if ((x - Math.floor(x)) == 0.25) {
                         BlockPos blockPos = new BlockPos(Math.round(x - 1.25), Math.round(y - 0.5), Math.round(z - 0.5));
                         Block block = Utils.GetMC().theWorld.getBlockState(blockPos).getBlock();
-                        Color color = block instanceof BlockObsidian ? new Color(0x4f024f) : Color.magenta;
+                        Color color = block instanceof BlockObsidian ? obiColor : endColor;
                         RenderUtil.drawOutlinedFilledBoundingBox(blockPos, color, event.partialTicks);
                         drawnPositions.add(packet);
                     }
                     if ((y - Math.floor(y)) == 0.25) {
                         BlockPos blockPos = new BlockPos(Math.round(x-1), Math.round(y - 1.25), Math.round(z - 0.5));
                         Block block = Utils.GetMC().theWorld.getBlockState(blockPos).getBlock();
-                        Color color = block instanceof BlockObsidian ? new Color(0x4f024f) : Color.magenta;
+                        Color color = block instanceof BlockObsidian ? obiColor : endColor;
                         RenderUtil.drawOutlinedFilledBoundingBox(blockPos, color, event.partialTicks);
                         drawnPositions.add(packet);
                     }
                     if ((z - Math.floor(z)) == 0.25) {
                         BlockPos blockPos = new BlockPos(Math.round(x - 0.5), Math.round(y - 0.5), Math.round(z - 1.25));
                         Block block = Utils.GetMC().theWorld.getBlockState(blockPos).getBlock();
-                        Color color = block instanceof BlockObsidian ? new Color(0x4f024f) : Color.magenta;
+                        Color color = block instanceof BlockObsidian ? obiColor : endColor;
                         RenderUtil.drawOutlinedFilledBoundingBox(blockPos, color, event.partialTicks);
                         drawnPositions.add(packet);
                     }
                     if ((x - Math.floor(x)) == 0.75) {
                         BlockPos blockPos = new BlockPos(Math.round(x + 0.25), Math.round(y - 0.5), Math.round(z - 0.5));
                         Block block = Utils.GetMC().theWorld.getBlockState(blockPos).getBlock();
-                        Color color = block instanceof BlockObsidian ? new Color(0x4f024f) : Color.magenta;
+                        Color color = block instanceof BlockObsidian ? obiColor : endColor;
                         RenderUtil.drawOutlinedFilledBoundingBox(blockPos, color, event.partialTicks);
                         drawnPositions.add(packet);
                     }
                     if ((z - Math.floor(z)) == 0.75) {
                         BlockPos blockPos = new BlockPos(Math.round(x - 0.5), Math.round(y - 0.5), Math.round(z + 0.25));
                         Block block = Utils.GetMC().theWorld.getBlockState(blockPos).getBlock();
-                        Color color = block instanceof BlockObsidian ? new Color(0x4f024f) : Color.magenta;
+                        Color color = block instanceof BlockObsidian ? obiColor : endColor;
                         RenderUtil.drawOutlinedFilledBoundingBox(blockPos, color, event.partialTicks);
                         drawnPositions.add(packet);
                     }

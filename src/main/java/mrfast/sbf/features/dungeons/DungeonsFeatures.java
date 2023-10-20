@@ -13,6 +13,7 @@ import com.mojang.realmsclient.gui.ChatFormatting;
 
 import mrfast.sbf.SkyblockFeatures;
 import mrfast.sbf.events.GuiContainerEvent;
+import mrfast.sbf.events.PacketEvent;
 import mrfast.sbf.gui.components.Point;
 import mrfast.sbf.gui.components.UIElement;
 import mrfast.sbf.utils.ItemUtils;
@@ -34,6 +35,7 @@ import net.minecraft.inventory.Container;
 import net.minecraft.inventory.ContainerChest;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.play.server.S29PacketSoundEffect;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntitySkull;
 import net.minecraft.util.AxisAlignedBB;
@@ -62,7 +64,7 @@ public class DungeonsFeatures {
         if(SkyblockFeatures.config.highlightBats) {
             for(Entity entity:mc.theWorld.loadedEntityList) {
                 if(entity instanceof EntityBat && !entity.isInvisible()) {
-                    RenderUtil.drawOutlinedFilledBoundingBox(entity.getEntityBoundingBox(),Color.GREEN,event.partialTicks);
+                    RenderUtil.drawOutlinedFilledBoundingBox(entity.getEntityBoundingBox(),SkyblockFeatures.config.highlightBatColor,event.partialTicks);
                 }
             }
         }
@@ -91,6 +93,14 @@ public class DungeonsFeatures {
             }
         }
     }
+
+    @SubscribeEvent
+    public void onPacket(PacketEvent.ReceiveEvent event) {
+        if(event.packet instanceof S29PacketSoundEffect && bloodguy!=null && Utils.inDungeons && SkyblockFeatures.config.stopBloodMusic) {
+            S29PacketSoundEffect packet = (S29PacketSoundEffect) event.packet;
+            if(packet.getSoundName().contains("note")) event.setCanceled(true);
+        }
+    }
     
     @SubscribeEvent
     public void onWorldChanges(WorldEvent.Load event) {
@@ -109,13 +119,20 @@ public class DungeonsFeatures {
     int count = 0;
     public static EntityPlayer bloodguy;
     static Map<String,Integer> blessings = new HashMap<String,Integer>();
+
+
     @SubscribeEvent(priority = EventPriority.HIGHEST, receiveCanceled = true)
     public void onChatMesaage(ClientChatReceivedEvent event) {
         if (!Utils.inDungeons || event.type == 2) return;
         String text = event.message.getUnformattedText();
-        for (Map.Entry<EntityPlayer,String> entry : Nametags.players.entrySet()) {
-            if(text.contains(entry.getKey().getName()) && text.contains("has obtained Blood Key!")) {
-                bloodguy = entry.getKey();
+        if(text.endsWith("has obtained Blood Key!")) {
+            for (Map.Entry<EntityPlayer,String> entry : Nametags.players.entrySet()) {
+                if(text.contains(entry.getKey().getName())) {
+                    bloodguy = entry.getKey();
+                }
+            }
+            if(bloodguy==null) {
+                bloodguy = Utils.GetMC().thePlayer;
             }
         }
 

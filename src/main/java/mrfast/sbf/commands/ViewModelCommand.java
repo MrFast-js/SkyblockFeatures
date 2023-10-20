@@ -10,6 +10,8 @@ import gg.essential.api.commands.Command;
 import gg.essential.api.commands.DefaultHandler;
 import gg.essential.api.utils.GuiUtil;
 import mrfast.sbf.features.items.ViewModel;
+import mrfast.sbf.utils.Utils;
+import net.minecraft.util.ChatComponentText;
 
 public class ViewModelCommand extends Command {
 

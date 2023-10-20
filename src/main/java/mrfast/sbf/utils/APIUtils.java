@@ -46,16 +46,15 @@ public class APIUtils {
         } else {
             System.out.println("Sending request to " + urlString);
         }
+        // PROXYYYYY so me api key aint known ty @nea
+        if(urlString.contains("api.hypixel.net")) urlString = urlString.replace("api.hypixel.net", "proxy.friedcow.repl.co");
 
         EntityPlayer player = Minecraft.getMinecraft().thePlayer;
         try {
             HttpGet request = new HttpGet(new URL(urlString).toURI());
             request.setProtocolVersion(HttpVersion.HTTP_1_1);
-            
-            if (urlString.contains("https://api.hypixel.net")) {
-                // Skyblock Features Production API Key
-                request.setHeader("API-Key", SkyblockFeatures.config.apiKey);
-            }
+
+            request.setHeader("Authentication", "Skyblock-Features-Mod");
 
             try (CloseableHttpResponse response = client.execute(request)) {
                 HttpEntity entity = response.getEntity();
@@ -64,7 +63,6 @@ public class APIUtils {
                 if (statusCode == 200) {
                     try (BufferedReader in = new BufferedReader(new InputStreamReader(entity.getContent(),StandardCharsets.UTF_8))) {
                         Gson gson = new Gson();
-                        // System.out.println("sending full");
                         return gson.fromJson(in, JsonObject.class);
                     }
                 } else {
@@ -79,6 +77,7 @@ public class APIUtils {
         return new JsonObject();
     }
     public static HashMap<String,String> rankCache = new HashMap<>();
+
     public static String getHypixelRank(String uuid) {
         if(rankCache.containsKey(uuid)) return rankCache.get(uuid);
 
@@ -108,14 +107,6 @@ public class APIUtils {
         }
     }
 
-    // public static void getPetObject(JsonObject pet) {
-    //     String petName = pet.get("type").getAsString();
-    //     String petRarity = getPetRarity(pet.get("tier").getAsString()).toString();
-    //     String url = "https://raw.githubusercontent.com/NotEnoughUpdates/NotEnoughUpdates-REPO/782dc74181469b2171d573fad74d64d0cd9f62ef/items/"+petName+";"+petRarity+".json";
-    //     JsonObject petObject = getJSONResponse(url);
-    //     System.out.println(url+" "+petObject);
-    // }
-
     public static Integer getPetRarity(String tier) {
         Integer rarity = 0;
         if(tier.equals("COMMON")) rarity = 1;
@@ -126,78 +117,6 @@ public class APIUtils {
         if(tier.equals("MYTHIC")) rarity = 6;
         return rarity;
     }
-
-    public static JsonObject getNetworthResponse(JsonObject data,String playerUuid,String profileUuid) {
-        try {
-            URL url = new URL("http://maro.skyblockextras.com/api/networth/categories");
-
-            // Create the connection
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.setRequestMethod("POST");    
-            connection.setRequestProperty("Content-Type", "application/json");
-            connection.setDoOutput(true);
-
-            // Create the JSON body
-            String jsonBody = data.toString();  // Replace with your JSON body
-
-            // Write the JSON body to the request
-            try (OutputStream outputStream = connection.getOutputStream()) {
-                byte[] input = jsonBody.getBytes("utf-8");
-                outputStream.write(input, 0, input.length);
-            }
-
-            // Get the response code
-            int responseCode = connection.getResponseCode();
-            System.out.println("Response Code: " + responseCode);
-
-            if(connection.getContent().toString().contains("cause")) {
-                System.out.println(connection.getContent().toString());
-                return new JsonObject();
-            }
-
-            // Read the response
-            StringBuilder response = new StringBuilder();
-            try (BufferedReader reader = new BufferedReader(
-                    new InputStreamReader(connection.getInputStream()))) {
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    response.append(line);
-                }
-            }
-
-
-            // Parse the response JSON
-            Gson gson = new Gson();
-            JsonObject jsonResponse = gson.fromJson(response.toString(), JsonObject.class);
-
-            // Print the parsed JSON
-            System.out.println("Got Networth");
-            // Close the connection
-            connection.disconnect();
-
-            JsonObject museumResponse = getJSONResponse("https://api.hypixel.net/skyblock/museum?profile="+profileUuid);
-
-            if(museumResponse.get("success").getAsBoolean()) {
-                System.out.println("Success!");
-                Boolean museumApiEnabled = museumResponse.get("members").getAsJsonObject().entrySet().size()>0;
-                if(museumApiEnabled) {
-                    JsonObject members =  museumResponse.get("members").getAsJsonObject();
-                    if(jsonResponse.has("data")) {
-                        JsonObject member = members.get(playerUuid).getAsJsonObject();
-                        Long value = member.get("value").getAsLong();
-
-                        jsonResponse.get("data").getAsJsonObject().get("categories").getAsJsonObject().addProperty("museum", value);
-                    }
-                }
-            }
-
-            return jsonResponse;
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return new JsonObject();
-    }
-
 
     // Only used for UUID => Username
     public static JsonArray getArrayResponse(String urlString) {
@@ -225,13 +144,8 @@ public class APIUtils {
                 Gson gson = new Gson();
 
                 return gson.fromJson(r.toString(), JsonArray.class);
-            } else {
-                // player.addChatMessage(new ChatComponentText(EnumChatFormatting.RED + "Request failed. HTTP Error Code: " + response.getStatusLine().getStatusCode()));
             }
-        } catch (Exception ex) {
-            player.addChatMessage(new ChatComponentText(EnumChatFormatting.RED + "An error has occured. "));
-            // ex.printStackTrace();
-        }
+        } catch (Exception ex) {}
         return new JsonArray();
     }
 
@@ -259,7 +173,7 @@ public class APIUtils {
         }
     }
 
-    public static String getLatestProfileID(String uuid, String key) {
+    public static String getLatestProfileID(String uuid) {
         String latestProfile = "";
         String cuteName = "";
         JsonObject profilesResponse = getJSONResponse("https://api.hypixel.net/skyblock/profiles?uuid=" + uuid);

@@ -42,25 +42,20 @@ public class DungeonMap {
 	static double selfHeadPositionX = 0;
 	static double selfHeadPositionY = 0;
 	public static void renderOverlay() {
-		if(!Utils.inDungeons) return;
-        if(!SkyblockFeatures.config.dungeonMap) return;
-		try {
-			ItemStack[] items = Minecraft.getMinecraft().thePlayer.inventory.mainInventory;
-			for (ItemStack item : items) {
-				if (item != null) {
-					if (item.getItem().isMap()) {
-						if (item.getItem() instanceof ItemMap) {
-							ItemMap mapitem = (ItemMap) item.getItem();
-							mapData = mapitem.getMapData(item, Minecraft.getMinecraft().thePlayer.getEntityWorld());
-						}
+		if(!Utils.inDungeons || !SkyblockFeatures.config.dungeonMap) return;
+
+		ItemStack[] items = Minecraft.getMinecraft().thePlayer.inventory.mainInventory;
+		for (ItemStack item : items) {
+			if (item != null) {
+				if (item.getItem().isMap()) {
+					if (item.getItem() instanceof ItemMap) {
+						ItemMap mapitem = (ItemMap) item.getItem();
+						mapData = mapitem.getMapData(item, Minecraft.getMinecraft().thePlayer.getEntityWorld());
 					}
 				}
 			}
-			if (mapData == null) return;
-		} catch (Error error) {
-			Minecraft.getMinecraft().thePlayer.addChatMessage(new ChatComponentText("Error loading map! Check your console!"));
-			return;
 		}
+		if (mapData == null) return;
 		int index = 0;
 		for(Entry<String, Vec4b> decoration:mapData.mapDecorations.entrySet()) {
 			index++;
@@ -69,32 +64,25 @@ public class DungeonMap {
 			}
 		}
 
-		try {
-            Utils.drawGraySquareWithBorder(0, 0, 128, 128, 3);
-			GlStateManager.pushMatrix();
-			GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-			if(SkyblockFeatures.config.dungeonMapRotate) {
-				GlStateManager.translate(64, 64, 0);
-				GlStateManager.rotate(Utils.GetMC().thePlayer.rotationYawHead,0,0, 1);
-				GlStateManager.translate(-64, -64, 0);
-			}
-			if(SkyblockFeatures.config.dungeonMapCenter) {
-				GlStateManager.translate(128-selfHeadPositionX-64, 128-selfHeadPositionY-64, 0);
-			}
-			Minecraft.getMinecraft().entityRenderer.getMapItemRenderer().renderMap(mapData, true);
+		Utils.drawGraySquareWithBorder(0, 0, 128, 128, 3);
+		GlStateManager.pushMatrix();
+		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 
-			drawPlayersOnMap();
-			drawHeadOnMap();
-			GlStateManager.popMatrix();
-		} catch (Error error) {
-			Minecraft.getMinecraft().thePlayer.addChatMessage(new ChatComponentText("Error! Check your console!"));
+		if(SkyblockFeatures.config.dungeonMapCenter) {
+			GlStateManager.translate(128-selfHeadPositionX-64, 128-selfHeadPositionY-64, 0);
 		}
+		Minecraft.getMinecraft().entityRenderer.getMapItemRenderer().renderMap(mapData, true);
+
+		drawPlayersOnMap();
+		drawHeadOnMap();
+		GlStateManager.popMatrix();
 	}
+
 	static MapData mapData;
 	int seconds = 0;
 	@SubscribeEvent
 	public void onSecond(SecondPassedEvent event) {
-		if(!Utils.inDungeons) return;
+		if(!Utils.inDungeons || !SkyblockFeatures.config.dungeonMap) return;
 		seconds++;
 		if(seconds==5) {
 			seconds = 0;
@@ -141,7 +129,7 @@ public class DungeonMap {
 		// Draw Username
 		GlStateManager.pushMatrix();
 		GlStateManager.scale(0.75f, 0.75f, 0);
-		if(DungeonsFeatures.bloodguy!=null) {
+		if(DungeonsFeatures.bloodguy!=null && SkyblockFeatures.config.dungeonMapBloodGuy) {
 			if(DungeonsFeatures.bloodguy.getName().contains(shortName)) {
 				shortName = ChatFormatting.RED+shortName;
 			}
@@ -161,7 +149,10 @@ public class DungeonMap {
 		float z = 1.0F;
 		for (Entry<String,Vec4b> entry : mapData.mapDecorations.entrySet()) {
 			Integer playerId = Integer.parseInt(entry.getKey().replaceAll("[^0-9]", ""));
-			if(playerSkins.get(playerId)!=null) continue;
+			if(SkyblockFeatures.config.dungeonMapHeads) {
+				if(playerSkins.get(playerId)!=null) continue;
+			}
+
 			Vec4b vec4b = entry.getValue();
 			GlStateManager.pushMatrix();
 			GlStateManager.translate(0, 0, z);
@@ -192,9 +183,11 @@ public class DungeonMap {
 		GlStateManager.popMatrix();
 	};
 
+	
 	// Draw head on map
 	public static void DrawHead(Double x,Double z,ResourceLocation skin, Float rotation,String name) {
-		drawPlayerNameOnMap(x,z,name);
+		if(SkyblockFeatures.config.dungeonMapPlayerNames) drawPlayerNameOnMap(x,z,name);
+		if(!SkyblockFeatures.config.dungeonMapHeads) return;
 		GlStateManager.pushMatrix();
 		Minecraft.getMinecraft().getTextureManager().bindTexture(skin);
 		GlStateManager.disableDepth();
@@ -204,9 +197,7 @@ public class DungeonMap {
 		GlStateManager.translate(x, z, -0.02F);
 		GlStateManager.rotate(rotation, 0.0F, 0.0F, 1.0F);
 		GlStateManager.scale(SkyblockFeatures.config.dungeonMapHeadScale/100d, SkyblockFeatures.config.dungeonMapHeadScale/100d, 0);
-		if(SkyblockFeatures.config.dungeonMapOutlineHeads) {
-			Gui.drawRect(-8/2-1,-8/2-1, 8/2+1, 8/2+1, 0xff111111);
-		}
+		Gui.drawRect(-8/2-1,-8/2-1, 8/2+1, 8/2+1, 0xff111111);
 		GlStateManager.color(1, 1, 1, 1);
 
 		Tessellator tessellator = Tessellator.getInstance();
@@ -238,15 +229,6 @@ public class DungeonMap {
 		count++;
 
 		if(count == 200) {
-			// System.out.println("----------------START-------------");
-			// for(int i=0;i<intArray.length;i++) {
-			// 	NetworkPlayerInfo player = tablist.get(intArray[i]);
-			// 	if(player.getDisplayName().getUnformattedText().split(" ").length > 1) {
-			// 		String name = Utils.cleanColor(player.getDisplayName().getUnformattedText().split(" ")[1]);
-			// 		System.out.println("icon-"+i+" "+name);
-			// 	}
-			// }
-			// System.out.println("----------------FINISH-------------");
 			count = 0;
 			for(int i=0;i<intArray.length;i++) {
 				NetworkPlayerInfo player = tablist.get(intArray[i]);
@@ -318,7 +300,7 @@ public class DungeonMap {
 						
 						if(skin != DefaultPlayerSkin.getDefaultSkin(aplayer.getUniqueID())) {
 							closePlayerPosition.put(shortName,new MapPosition(x, z,rotation));
-							float r = SkyblockFeatures.config.dungeonMapRotate?-player.rotationYawHead:player.rotationYawHead;
+							float r = player.rotationYawHead;
 							if(SkyblockFeatures.config.dungeonMapCenter) {
 								GlStateManager.translate(-(128-selfHeadPositionX-64), -(128-selfHeadPositionY-64), 0);
 								DrawHead(64d,64d,skin,r,shortName);

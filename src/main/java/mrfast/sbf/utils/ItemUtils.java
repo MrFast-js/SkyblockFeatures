@@ -124,6 +124,7 @@ public class ItemUtils {
 
         return null;
     }
+
     private static HashMap<String, ItemStack> itemDataCache = new HashMap<>();
     public static ItemStack getSkyblockItem(String id) {
         if(itemDataCache.containsKey(id)) {
@@ -139,14 +140,8 @@ public class ItemUtils {
         public String internalname;
         public String itemid;
         public String displayname;
-        public String clickcommand;
-        public int damage;
         public String nbttag;
-        public String modver;
         public List<String> lore;
-        public String infoType;
-        public List<String> info;
-        public String crafttext;
     }
 
     public static ItemStack parseJsonToItemStack(String json) {
@@ -177,7 +172,6 @@ public class ItemUtils {
         nbtTagCompound.setString("display", "{\"Lore\":" + gson.toJson(itemData.lore) + ",\"Name\":\"" + itemData.displayname + "\"}");
         nbtTagCompound.setString("ExtraAttributes", "{\"id\":\"" + itemData.internalname + "\"}");
         nbtTagCompound.setByte("HideFlags", (byte) 254);
-        // System.out.println(json);
         itemStack.setTagCompound(nbtTagCompound);
         itemStack.setStackDisplayName(itemData.displayname);
         return itemStack;
@@ -260,7 +254,6 @@ public class ItemUtils {
         }
 
         NBTTagList lore = display.getTagList("Lore", Constants.NBT.TAG_STRING);
-        String name = display.getString("Name");
 
         // Determine the item's rarity
         for (int i = 0; i < lore.tagCount(); i++) {
@@ -311,12 +304,11 @@ public class ItemUtils {
             }
         }
 
-        // If the item doesn't have a valid rarity, return null
         return ItemRarity.COMMON;
     }
     public static HashMap<String,JsonObject> skyhelperItemMap = new HashMap<>();
     
-    public static double getEstimatedItemValue(ItemStack stack) {
+    public static long getEstimatedItemValue(ItemStack stack) {
         if(skyhelperItemMap.size()==0) {
             JsonArray items = APIUtils.getArrayResponse("https://raw.githubusercontent.com/Altpapier/SkyHelper-Networth/abb278d6be1e13b3204ccb05f47c5e8aaf614733/constants/items.json");
             for(int i=0;i<items.size();i++) {
@@ -327,11 +319,11 @@ public class ItemUtils {
 
         String id = PricingData.getIdentifier(stack);
         NBTTagCompound ExtraAttributes = getExtraAttributes(stack);
-        double total = 0;
+        Long total = 0l;
 
         try {
             // Add lowest bin as a base price
-            total+=PricingData.lowestBINs.get(id);
+            total+=PricingData.lowestBINs.get(id).longValue();
             // Add wither essence value
             total+=getStarCost(ExtraAttributes);
             // Add enchants
@@ -350,11 +342,13 @@ public class ItemUtils {
 
     public static Integer getEstimatedItemValue(NBTTagCompound ExtraAttributes) {
         if(skyhelperItemMap.size()==0) {
-            JsonArray items = APIUtils.getArrayResponse("https://raw.githubusercontent.com/Altpapier/SkyHelper-Networth/abb278d6be1e13b3204ccb05f47c5e8aaf614733/constants/items.json");
-            for(int i=0;i<items.size();i++) {
-                JsonObject a = items.get(i).getAsJsonObject();
-                skyhelperItemMap.put(a.get("id").getAsString(), a);
-            }
+            new Thread(()->{
+                JsonArray items = APIUtils.getArrayResponse("https://raw.githubusercontent.com/Altpapier/SkyHelper-Networth/abb278d6be1e13b3204ccb05f47c5e8aaf614733/constants/items.json");
+                for(int i=0;i<items.size();i++) {
+                    JsonObject a = items.get(i).getAsJsonObject();
+                    skyhelperItemMap.put(a.get("id").getAsString(), a);
+                }
+            }).start();
         }
         String id = ExtraAttributes.getString("id");
         if(!PricingData.averageLowestBINs.containsKey(id)) return 0;
@@ -378,8 +372,8 @@ public class ItemUtils {
         return (int) total;
     }
 
-    public static double getUpgradeCost(NBTTagCompound ExtraAttributes) {
-        double total = 0;
+    public static Long getUpgradeCost(NBTTagCompound ExtraAttributes) {
+        long total = 0;
         // Hot potato books
         if (ExtraAttributes.hasKey("hot_potato_count")) {
             int hpb = ExtraAttributes.getInteger("hot_potato_count");
@@ -399,7 +393,7 @@ public class ItemUtils {
         return total;
     }
 
-    public static double getStarCost(NBTTagCompound extraAttributes) {
+    public static Long getStarCost(NBTTagCompound extraAttributes) {
         String id = extraAttributes.getString("id");
         int stars = 0;
         int masterStars = 0;
@@ -420,7 +414,7 @@ public class ItemUtils {
                     stars = 5;
                 }
             } else {
-                return 0;
+                return 0l;
             }
             JsonArray upgradeCosts = skyhelperItemMap.get(id).get("upgrade_costs").getAsJsonArray();
             for(int i=0;i<stars;i++) {
@@ -445,13 +439,13 @@ public class ItemUtils {
         } catch (Exception e) {
             // TODO: handle exception
         }
-        return (totalEssence*pricePerEssence)+masterStarPrice;
+        return ((long)((totalEssence*pricePerEssence)+masterStarPrice));
     }
 
-    public static double getGemstoneWorth(NBTTagCompound extraAttributes) {
-        if (!extraAttributes.hasKey("gems")) return 0;
+    public static Long getGemstoneWorth(NBTTagCompound extraAttributes) {
+        if (!extraAttributes.hasKey("gems")) return 0l;
         NBTTagCompound nbt = extraAttributes.getCompoundTag("gems");
-        int total = 0;
+        long total = 0;
         List<String> finalGemstones = new ArrayList<>();
 
         for (String enchant : nbt.getKeySet()) {
@@ -476,10 +470,10 @@ public class ItemUtils {
         return total;
     }
 
-    public static double getEnchantsWorth(NBTTagCompound extraAttributes) {
-        if(!extraAttributes.hasKey("enchantments")) return 0;
+    public static Long getEnchantsWorth(NBTTagCompound extraAttributes) {
+        if(!extraAttributes.hasKey("enchantments")) return 0l;
         NBTTagCompound nbt = extraAttributes.getCompoundTag("enchantments");
-        int total = 0;
+        long total = 0;
         for(String enchant:nbt.getKeySet()) {
             String id = "ENCHANTMENT_"+enchant.toUpperCase()+"_"+nbt.getInteger(enchant);
             if(PricingData.bazaarPrices.get(id)!=null) {

@@ -74,7 +74,8 @@ public class SkyblockInfo {
                 event.setCanceled(true);
                 if(chatMessage.contains("limbo") && Utils.inSkyblock) {
                     Utils.setTimeout(()->{
-                       Minecraft.getMinecraft().thePlayer.sendChatMessage("/locraw");
+                        Minecraft.getMinecraft().thePlayer.sendChatMessage("/locraw");
+                        System.out.println("Sending /locraw");
                     }, 2000);
                 }
                 parseMap(chatMessage);
@@ -92,6 +93,7 @@ public class SkyblockInfo {
         worldJustLoaded = true;
         location = "";
         map = "";
+        ticks = 0;
     }
 
     int ticks = 0;
@@ -114,6 +116,7 @@ public class SkyblockInfo {
             ticks = 0;
             worldJustLoaded = false;
             Minecraft.getMinecraft().thePlayer.sendChatMessage("/locraw");
+            System.out.println("Sending /locraw");
         }
 
         try {
@@ -145,7 +148,6 @@ public class SkyblockInfo {
     }
 
     private boolean isJsonLikeMessage(String chatMessage) {
-        // Check if the message contains curly braces ({}) as a simple heuristic
         return chatMessage.contains("{\"server\"");
     }
 
@@ -157,6 +159,7 @@ public class SkyblockInfo {
             // Invalid JSON format, do error handling if needed
             e.printStackTrace();
         }
+        System.out.println(chatMessage);
         if (jsonObject.has("server")) {
             if (jsonObject.has("map")) {
                 map = jsonObject.get("map").getAsString();
@@ -164,6 +167,7 @@ public class SkyblockInfo {
                 Utils.setTimeout(()->{
                     if(!worldJustLoaded) return;
                     Minecraft.getMinecraft().thePlayer.sendChatMessage("/locraw");
+                    System.out.println("Sending /locraw");
                     worldJustLoaded = false;
                 }, 1000);
             }

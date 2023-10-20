@@ -50,7 +50,7 @@ public class MissingTalismans {
                     String username = Utils.GetMC().thePlayer.getName();
                     String uuid = APIUtils.getUUID(username);
                     // Find stats of latest profile
-                    String latestProfile = APIUtils.getLatestProfileID(uuid, "");
+                    String latestProfile = APIUtils.getLatestProfileID(uuid);
                     if (latestProfile == null) {
                         return;
                     };
