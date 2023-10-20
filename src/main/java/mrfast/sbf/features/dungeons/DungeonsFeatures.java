@@ -68,6 +68,7 @@ public class DungeonsFeatures {
                 }
             }
         }
+
         if (mc.theWorld != null && SkyblockFeatures.config.highlightDoors) {
             for(TileEntity entity:mc.theWorld.loadedTileEntityList) {
                 if (entity instanceof TileEntitySkull) {
@@ -78,16 +79,14 @@ public class DungeonsFeatures {
                     skull.writeToNBT(entityData);
                     Boolean witherSkull = entityData.toString().contains("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvM2JjYmJmOTRkNjAzNzQzYTFlNzE0NzAyNmUxYzEyNDBiZDk4ZmU4N2NjNGVmMDRkY2FiNTFhMzFjMzA5MTRmZCJ9fX0");
                     Boolean bloodSkull = entityData.toString().contains("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvOWQ5ZDgwYjc5NDQyY2YxYTNhZmVhYTIzN2JkNmFkYWFhY2FiMGMyODgzMGZiMzZiNTcwNGNmNGQ5ZjU5MzdjNCJ9fX0");
-                    if(!witherSkull&&!bloodSkull) continue;
+                    if(!witherSkull && !bloodSkull) continue;
                     
                     if(mc.theWorld.getBlockState(pos.add(4, 0, 4)).getBlock() instanceof BlockSkull) {
-                        if(witherSkull||bloodSkull) {
-                            Color c = witherSkull?Color.black:new Color(255,65,65); 
-                            GlStateManager.disableDepth();
-                            AxisAlignedBB aabb = new AxisAlignedBB(pos.getX()+1, pos.getY()-1, pos.getZ()+1, pos.getX()+1+3, pos.getY()-1+4, pos.getZ()+1+3);
-                            RenderUtil.drawOutlinedFilledBoundingBox(aabb, c, event.partialTicks);
-                            GlStateManager.enableDepth();
-                        }
+                        Color c = witherSkull?Color.black:new Color(255,65,65);
+                        GlStateManager.disableDepth();
+                        AxisAlignedBB aabb = new AxisAlignedBB(pos.getX()+1, pos.getY()-1, pos.getZ()+1, pos.getX()+1+3, pos.getY()-1+4, pos.getZ()+1+3);
+                        RenderUtil.drawOutlinedFilledBoundingBox(aabb, c, event.partialTicks);
+                        GlStateManager.enableDepth();
                     }
                 }
             }

@@ -90,16 +90,12 @@ public class ProfileViewerGui extends WindowScreen {
     String playerLocation = "";
     String selectedProfileUUID = "";
     GameProfile profile = null;
-    public static Integer mouseXFloat = 0;
-    public static Integer mouseYFloat = 0;
     public static List<String> renderTooltip = null;
     
     @Override
     public void onDrawScreen(UMatrixStack matrixStack,int mouseX, int mouseY, float partialTicks) {
         super.onDrawScreen(matrixStack, mouseX, mouseY, partialTicks);
         getWindow().draw(matrixStack);
-        mouseXFloat = mouseX;
-        mouseYFloat = mouseY;
         HashMap<UIComponent, List<String>> hoverables = null;
 
         if(selectedCategory.equals("General")) hoverables = generalHoverables;
@@ -1111,6 +1107,7 @@ public class ProfileViewerGui extends WindowScreen {
     public void loadCategory(String categoryName) {
         categoryName = Utils.cleanColor(categoryName);
         statsAreaContainer.clearChildren();
+
         selectedCategory = categoryName;
 
         if(categoryName.equals("Inventories")) {
@@ -1785,7 +1782,7 @@ public class ProfileViewerGui extends WindowScreen {
             List<String> lore = new ArrayList<>();
             List<CoopCollector> collectors = new ArrayList<>();
             JsonObject members = ProfileResponse.get("members").getAsJsonObject();
-            long total = 0l;
+            long total = 0L;
 
             for(Entry<String, JsonElement> member:members.entrySet()) {
                 if(!coopNames.containsKey(member.getKey())) {
@@ -1794,7 +1791,7 @@ public class ProfileViewerGui extends WindowScreen {
                 }
 
 
-                Long value = 0l;
+                long value = 0L;
                 try {
                     value = member.getValue().getAsJsonObject().get("collection").getAsJsonObject().get(item.getKey()).getAsLong();
                 } catch (Exception e) {
@@ -1816,7 +1813,7 @@ public class ProfileViewerGui extends WindowScreen {
             
             if(!rank.maxed) {
                 lore.add("");
-                lore.add("§7Progress to "+itemName+" "+(rank.tier+1)+": §e"+(Math.floor(total/(rank.untilNext+total)*1000)/10)+"§6%");
+                lore.add("§7Progress to "+itemName+" "+(rank.tier+1)+": §e"+(Math.floor((double) total /(rank.untilNext+total)*1000)/10)+"§6%");
                 lore.add(stringProgressBar(total,(int) (rank.untilNext+total)));
             }
 

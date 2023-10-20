@@ -31,7 +31,7 @@ public class FairySoulWaypoints {
 
    @SubscribeEvent
    public void onAttack(AttackEntityEvent event) {
-      if(!SkyblockFeatures.config.fairy) return;
+      if(!SkyblockFeatures.config.fairySoulHelper) return;
       
       if (event.target != null && event.target instanceof EntityArmorStand && ((EntityArmorStand)event.target).getCurrentArmor(3) != null && !soullocations.contains(event.target.getPosition().toString())) {
          Boolean fairySoul = ((EntityArmorStand)event.target).getCurrentArmor(3).serializeNBT().getCompoundTag("tag").getCompoundTag("SkullOwner").getCompoundTag("Properties").toString().contains("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYjk2OTIzYWQyNDczMTAwMDdmNmFlNWQzMjZkODQ3YWQ1Mzg2NGNmMTZjMzU2NWExODFkYzhlNmIyMGJlMjM4NyJ9fX0="); 
@@ -97,14 +97,14 @@ public class FairySoulWaypoints {
       Minecraft mc = Minecraft.getMinecraft();
 
       if (mc.theWorld != null && Utils.inSkyblock) {
-         if(SkyblockFeatures.config.fairy) {
+         if(SkyblockFeatures.config.fairySoulHelper) {
             Iterator<Entity> var3 = mc.theWorld.loadedEntityList.iterator();
             
             GlStateManager.disableDepth();
             while(var3.hasNext()) {
                Entity entity = (Entity)var3.next();
                if (entity instanceof EntityArmorStand ) {
-                  if(((EntityArmorStand)entity).getCurrentArmor(3) != null && SkyblockFeatures.config.fairy) {
+                  if(((EntityArmorStand)entity).getCurrentArmor(3) != null && SkyblockFeatures.config.fairySoulHelper) {
                      String id = ((EntityArmorStand)entity).getCurrentArmor(3).serializeNBT().getCompoundTag("tag").getCompoundTag("SkullOwner").getCompoundTag("Properties").toString();
                      
                      if(id.contains("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYjk2OTIzYWQyNDczMTAwMDdmNmFlNWQzMjZkODQ3YWQ1Mzg2NGNmMTZjMzU2NWExODFkYzhlNmIyMGJlMjM4NyJ9fX0=")) {

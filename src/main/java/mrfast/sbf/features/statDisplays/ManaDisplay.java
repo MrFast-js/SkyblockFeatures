@@ -1,4 +1,4 @@
-package mrfast.sbf.features.actionBar;
+package mrfast.sbf.features.statDisplays;
 
 import mrfast.sbf.SkyblockFeatures;
 import mrfast.sbf.gui.components.Point;

@@ -28,13 +28,11 @@ public class Nametags {
     public Minecraft mc = Minecraft.getMinecraft();
     public RenderGlobal renderGlobal = mc.renderGlobal;
     public static Map<EntityPlayer, String> players = new HashMap<EntityPlayer, String>();
-    public static List<Vec3> NPCs = new ArrayList<>();
 
     @SubscribeEvent
     public void onWorldChange(WorldEvent.Load event) {
         try {
             players.clear();
-            NPCs.clear();
         } catch(Exception e) {
 
         }
@@ -86,10 +84,6 @@ public class Nametags {
         if(player.equals(Utils.GetMC().thePlayer)) return;
         
         players.put(player, color);
-
-        ////////////////////////////////////////////////
-        // NAME TAGS
-        ////////////////////////////////////////////////
 
         float f = 1.6F;
 		float f1 = 0.016666668F * f;

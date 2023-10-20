@@ -28,21 +28,7 @@ import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class RiftFeatures {
-    List<Vec3> allCritParticles = new ArrayList<>();
     List<BlockPos> Barriers = new ArrayList<>();
-
-    @SubscribeEvent
-    public void onReceivePacket(PacketEvent.ReceiveEvent event) {
-        if(!SkyblockFeatures.config.riftSpellLines) return;
-        if (event.packet instanceof S2APacketParticles) {
-            S2APacketParticles packet = (S2APacketParticles) event.packet;
-            EnumParticleTypes type = packet.getParticleType();
-            Vec3 pos = new Vec3(packet.getXCoordinate(), packet.getYCoordinate(), packet.getZCoordinate());
-            if ((type == EnumParticleTypes.CRIT||type == EnumParticleTypes.CRIT_MAGIC) && !allCritParticles.contains(pos) && Utils.GetMC().thePlayer.getPositionVector().distanceTo(pos)<5) {
-                allCritParticles.add(pos);
-            }
-        }
-    }
 
     @SubscribeEvent
     public void onTooltip(ItemTooltipEvent event) {
@@ -89,19 +75,6 @@ public class RiftFeatures {
 
     @SubscribeEvent
     public void onRenderWorld(RenderWorldLastEvent event) {
-        try {
-            if(SkyblockFeatures.config.riftSpellLines) {
-                if (!allCritParticles.isEmpty()) {
-                    List<Vec3> newList = ParticlePathfinder.findPath(allCritParticles);
-                    // Draw the red line
-                    if (newList.size() > 1) {
-                        GlStateManager.disableDepth();
-                        RenderUtil.drawLines(newList, Color.RED, 10, event.partialTicks);
-                        GlStateManager.enableDepth();
-                    }
-                }
-            }
-        } catch (Exception e) {}
         String location = Utils.cleanColor(SkyblockInfo.getInstance().localLocation);
         if(location.contains("Mirrorverse") && SkyblockFeatures.config.riftMirrorverseHelper) {
             // Laser puzzle
@@ -138,12 +111,5 @@ public class RiftFeatures {
     @SubscribeEvent
     public void onWorldChange(WorldEvent.Load event) {
         Barriers.clear();
-        allCritParticles.clear();
-    }
-
-    @SubscribeEvent
-    public void SecondPassedEvent(SecondPassedEvent e) {
-        if(!SkyblockFeatures.config.riftSpellLines) return;
-        allCritParticles.clear();
     }
 }

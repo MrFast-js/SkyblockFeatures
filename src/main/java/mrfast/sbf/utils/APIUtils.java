@@ -47,7 +47,7 @@ public class APIUtils {
             System.out.println("Sending request to " + urlString);
         }
         // PROXYYYYY so me api key aint known ty @nea
-        if(urlString.contains("api.hypixel.net")) urlString = urlString.replace("api.hypixel.net", "proxy.friedcow.repl.co");
+        if(urlString.contains("api.hypixel.net")) urlString = urlString.replace("api.hypixel.net", "proxy.mrfastkrunker.workers.dev");
 
         EntityPlayer player = Minecraft.getMinecraft().thePlayer;
         try {

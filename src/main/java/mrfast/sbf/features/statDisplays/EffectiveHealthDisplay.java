@@ -1,4 +1,4 @@
-package mrfast.sbf.features.actionBar;
+package mrfast.sbf.features.statDisplays;
 
 import mrfast.sbf.SkyblockFeatures;
 import mrfast.sbf.gui.components.Point;
@@ -7,7 +7,7 @@ import mrfast.sbf.utils.Utils;
 import net.minecraft.client.Minecraft;
 
 
-public class HealthDisplay {
+public class EffectiveHealthDisplay {
 
     private static final Minecraft mc = Minecraft.getMinecraft();
 
@@ -15,32 +15,34 @@ public class HealthDisplay {
         new JerryTimerGUI();
     }
 
-    static String display = Utils.Health+"/"+Utils.maxHealth;
+    static String display = "1234";
+
+    public static int getSpeed() {
+        return Math.round(Utils.Health * (1f+ (Utils.Defence / 100f) ));
+    }
     public static class JerryTimerGUI extends UIElement {
         public JerryTimerGUI() {
-            super("Health Display", new Point(0f,0f));
+            super("Effective Health Display", new Point(0f,0f));
             SkyblockFeatures.GUIMANAGER.registerElement(this);
         }
 
         @Override
         public void drawElement() {
             if(mc.thePlayer == null || !Utils.inSkyblock) return;
-            display = Utils.Health+"/"+Utils.maxHealth;
             if (this.getToggled() && Minecraft.getMinecraft().thePlayer != null && mc.theWorld != null) {
-                Utils.drawTextWithStyle(display, 0, 0, 0xFF5555);
+                Utils.drawTextWithStyle(getSpeed()+"", 0, 0, 0x00AA00);
             }
         }
         @Override
         public void drawElementExample() {
             if(mc.thePlayer == null || !Utils.inSkyblock) return;
-            display = Utils.Health+"/"+Utils.maxHealth;
-            Utils.drawTextWithStyle(display, 0, 0, 0xFF5555);
+            Utils.drawTextWithStyle("1234", 0, 0, 0x00AA00);
         }
 
         @Override
         public boolean getToggled() {
-            return Utils.inSkyblock && SkyblockFeatures.config.HealthDisplay;
-        }    
+            return Utils.inSkyblock && SkyblockFeatures.config.EffectiveHealthDisplay;
+        }
 
         @Override
         public int getHeight() {

@@ -1,4 +1,4 @@
-package mrfast.sbf.features.actionBar;
+package mrfast.sbf.features.statDisplays;
 
 
 import net.minecraft.client.Minecraft;

@@ -30,15 +30,6 @@ public class Config extends Vigilant {
 
     @Property(
             type = PropertyType.SWITCH,
-            name = "Hide Potion Effects",
-            description = "Hide the potion effects inside your inventory while on skyblock",
-            category = "General",
-            subcategory = "Other"
-    )
-    public boolean hidepotion = true;
-
-    @Property(
-            type = PropertyType.SWITCH,
             name = "Hide Red Numbers From Sidebar",
             description = "Hide the red numbers from the sidebar",
             category = "General",
@@ -404,11 +395,11 @@ public class Config extends Vigilant {
     @Property(
             type = PropertyType.SWITCH,
             name = "Better Party Finder",
-            description = "Highlight parties you can't join with red",
+            description = "Creates a better user interface for the dungeon party finder",
             category = "§1§rDungeons",
             subcategory = "Miscellaneous"
     )
-    public boolean betterpartys = false;
+    public boolean betterPartyFinder = false;
 
     @Property(
             type = PropertyType.SWITCH,
@@ -437,7 +428,7 @@ public class Config extends Vigilant {
             subcategory = "Highlights",
             searchTags = {"parent"}
     )
-    public boolean fairy = false;
+    public boolean fairySoulHelper = false;
     @Property(
             type = PropertyType.COLOR,
             name = "§1§rUncollected Color",

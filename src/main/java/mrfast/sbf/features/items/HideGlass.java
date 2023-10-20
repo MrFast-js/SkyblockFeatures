@@ -49,7 +49,6 @@ public class HideGlass {
         }
     }
 
-    // Just cuz i think it looks better idk
     @SubscribeEvent
     public void onTooltipLow(ItemTooltipEvent event) {
         if(Utils.inSkyblock && SkyblockFeatures.config.showSkyblockID) {
@@ -57,7 +56,7 @@ public class HideGlass {
                 String line = Utils.cleanColor(event.toolTip.get(i));
                 if(line.contains("minecraft:")) {
                     event.toolTip.add(i+1,ChatFormatting.DARK_GRAY+"ID: "+ItemUtils.getSkyBlockItemID(event.itemStack));
-                    if(Utils.GetMC().thePlayer.getName().equals("Skyblock_Lobby")) {
+                    if(Utils.isDeveloper()) {
                         if(Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)&&Keyboard.isKeyDown(Keyboard.KEY_LCONTROL)) {
                             NBTTagCompound tag = event.itemStack.getTagCompound();
                             if(tag!=null) {
@@ -93,7 +92,7 @@ public class HideGlass {
     
     @SubscribeEvent
     public void onSlotClick(SlotClickedEvent event) {
-        if(Utils.GetMC().thePlayer.getName().equals("Skyblock_Lobby")) {
+        if(Utils.isDeveloper()) {
             if(Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)&&Keyboard.isKeyDown(Keyboard.KEY_LCONTROL)) {
                 event.setCanceled(true);
                 System.out.println("-====================================-");
@@ -190,7 +189,7 @@ public class HideGlass {
         if (event.gui instanceof GuiChest ) {
             GuiChest gui = (GuiChest) event.gui;
             ContainerChest chest = (ContainerChest) gui.inventorySlots;
-            if(Utils.GetMC().thePlayer.getName().equals("Skyblock_Lobby")) {
+            if(Utils.isDeveloper()) {
                 if(Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)&&Keyboard.isKeyDown(Keyboard.KEY_LCONTROL)) {
                     for(int i=0;i<chest.inventorySlots.size();i++) {
                         

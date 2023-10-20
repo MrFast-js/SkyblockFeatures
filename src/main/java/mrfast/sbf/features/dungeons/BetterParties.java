@@ -61,7 +61,7 @@ public class BetterParties {
     @SubscribeEvent
     public void onTooltip(ItemTooltipEvent event) {
         if (!(Minecraft.getMinecraft().currentScreen instanceof GuiChest)) return;
-        if(!SkyblockFeatures.config.betterpartys) return;
+        if(!SkyblockFeatures.config.betterPartyFinder) return;
 
         GuiChest chest = (GuiChest) Minecraft.getMinecraft().currentScreen;
         ContainerChest cont = (ContainerChest) chest.inventorySlots;
@@ -78,11 +78,11 @@ public class BetterParties {
     @SubscribeEvent
     public void onDrawContainerTitle(TitleDrawnEvent event) {
         if (!(Minecraft.getMinecraft().currentScreen instanceof GuiChest) || event.gui == null) return;
-        if(!SkyblockFeatures.config.betterpartys) return;
+        if(!SkyblockFeatures.config.betterPartyFinder) return;
         GuiChest chest = (GuiChest) Minecraft.getMinecraft().currentScreen;
         ContainerChest cont = (ContainerChest) chest.inventorySlots;
         String name = cont.getLowerChestInventory().getName();
-        if(!SkyblockFeatures.config.betterpartys) return;
+        if(!SkyblockFeatures.config.betterPartyFinder) return;
         if (!"Party Finder".equals(name) || hoverItemStack == null || HideGlass.isEmptyGlassPane(hoverItemStack)) return;
         List<String> loreList = ItemUtils.getItemLore(hoverItemStack);
         int maxLineLength = 0;
@@ -110,7 +110,7 @@ public class BetterParties {
         GuiChest chest = (GuiChest) Minecraft.getMinecraft().currentScreen;
         ContainerChest cont = (ContainerChest) chest.inventorySlots;
         String name = cont.getLowerChestInventory().getName();
-        if(!SkyblockFeatures.config.betterpartys) return;
+        if(!SkyblockFeatures.config.betterPartyFinder) return;
         if (!"Party Finder".equals(name)) return;
 
         int i = 222;

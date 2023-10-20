@@ -1,4 +1,4 @@
-package mrfast.sbf.features.actionBar;
+package mrfast.sbf.features.statDisplays;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
