@@ -36,7 +36,7 @@ public class MinionOverlay {
 
     @SubscribeEvent
     public void onDrawContainerTitle(TitleDrawnEvent event) {
-        if (event.gui !=null && event.gui instanceof GuiChest && SkyblockFeatures.config.minionOverlay) {
+        if (event.gui instanceof GuiChest && SkyblockFeatures.config.minionOverlay) {
             GuiChest gui = (GuiChest) event.gui;
             ContainerChest chest = (ContainerChest) gui.inventorySlots;
             IInventory inv = chest.getLowerChestInventory();
@@ -44,7 +44,7 @@ public class MinionOverlay {
 
             String chestName = inv.getDisplayName().getUnformattedText().trim();
             if(chestName.contains(" Minion ") && !chestName.contains("Recipe")) {
-                if(lastCollected.size()==0) {
+                if(lastCollected.isEmpty()) {
                     readConfig();
                 }
                 int secondsPerAction = 0;
@@ -55,12 +55,12 @@ public class MinionOverlay {
                     ItemStack stack = inv.getStackInSlot(slotId);
                     if (slotId == 4) {
                         List<String> lore = ItemUtils.getItemLore(stack);
-                        for(int i=0;i<lore.size();i++) {
-                            String line = Utils.cleanColor(lore.get(i));
-                            if(line.contains("Actions:")) {
+                        for (String s : lore) {
+                            String line = Utils.cleanColor(s);
+                            if (line.contains("Actions:")) {
                                 secondsPerAction = Integer.parseInt(line.replaceAll("[^0-9]", ""));
-                                if(line.contains(".")) {
-                                    secondsPerAction/=10;
+                                if (line.contains(".")) {
+                                    secondsPerAction /= 10;
                                 }
                             }
                         }

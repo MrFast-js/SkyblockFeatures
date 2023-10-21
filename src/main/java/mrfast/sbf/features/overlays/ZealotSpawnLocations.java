@@ -75,6 +75,7 @@ public class ZealotSpawnLocations {
     @SubscribeEvent
     public void onRender(RenderWorldLastEvent event) {
         if(!SkyblockFeatures.config.showZealotSpawns) return;
+
         loc = SkyblockInfo.getInstance().localLocation;
         inNest = loc.contains("Dragons Nest");
         if(inNest) {

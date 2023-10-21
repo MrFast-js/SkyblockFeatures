@@ -40,7 +40,7 @@ public class GiftTracker {
       Minecraft mc = Minecraft.getMinecraft();
       if(mc.theWorld == null || Utils.inDungeons || !Utils.inSkyblock) return;
       if(SkyblockFeatures.config.icecaveHighlightWalls) GlStateManager.disableDepth();
-      Boolean inGlacialCave = SkyblockInfo.getInstance().localLocation.contains("Glacial");
+      boolean inGlacialCave = SkyblockInfo.getInstance().localLocation.contains("Glacial");
       for(Entity entity:mc.theWorld.loadedEntityList) {
          if (SkyblockFeatures.config.presentWaypoints && entity instanceof EntityArmorStand && !inGlacialCave && ((EntityArmorStand)entity).getCurrentArmor(3) != null && ((EntityArmorStand)entity).getCurrentArmor(3).serializeNBT().getCompoundTag("tag").getCompoundTag("SkullOwner").getCompoundTag("Properties").toString().contains("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMTBmNTM5ODUxMGIxYTA1YWZjNWIyMDFlYWQ4YmZjNTgzZTU3ZDcyMDJmNTE5M2IwYjc2MWZjYmQwYWUyIn19fQ=")) {
             boolean isPlayerGift = false;
@@ -54,8 +54,8 @@ public class GiftTracker {
             }
          }
          if(inGlacialCave && SkyblockFeatures.config.icecaveHighlight) {
-            Block blockstate = mc.theWorld.getBlockState(entity.getPosition()).getBlock();
-            if(SkyblockFeatures.config.icecaveHighlight && (blockstate instanceof BlockIce || blockstate instanceof BlockPackedIce) && entity instanceof EntityArmorStand && ((EntityArmorStand)entity).getCurrentArmor(3) != null) {
+            Block blockState = mc.theWorld.getBlockState(entity.getPosition()).getBlock();
+            if(SkyblockFeatures.config.icecaveHighlight && (blockState instanceof BlockIce || blockState instanceof BlockPackedIce) && entity instanceof EntityArmorStand && ((EntityArmorStand)entity).getCurrentArmor(3) != null) {
                String texture = ((EntityArmorStand)entity).getCurrentArmor(3).serializeNBT().getCompoundTag("tag").getCompoundTag("display").getString("Name");
                Vec3 StringPos = new Vec3(entity.posX, entity.posY+3, entity.posZ);
 
