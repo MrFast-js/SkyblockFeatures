@@ -84,7 +84,7 @@ public class CrimsonMap {
                         double x = lastPlayerX;
                         double z = lastPlayerZ;
                         double rotation = lastPlayerR;
-                        // -360 -423
+
                         double newX = Math.round((player.posX+360)/2+821/4)/2;
                         double newZ = Math.round((player.posZ+423)/2+1391/4)/2;
                         double newRotation = player.rotationYawHead;
