@@ -1,5 +1,6 @@
 package mrfast.sbf.features.misc;
 
+import java.awt.*;
 import java.io.ByteArrayInputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -9,6 +10,9 @@ import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 
+import mrfast.sbf.utils.RenderUtil;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraftforge.client.event.RenderWorldLastEvent;
 import org.apache.commons.codec.binary.Base64InputStream;
 import org.lwjgl.input.Keyboard;
 
@@ -149,19 +153,22 @@ public class AutoAuctionFlip {
             resetFlipper();
         }
         if(!SkyblockFeatures.config.autoAuctionFlip) return;
-
-        if(Keyboard.isKeyDown(SkyblockFeatures.openBestFlipKeybind.getKeyCode()) && Utils.GetMC().currentScreen==null) {
-            if(auctionFlips.size()>0 && !sent) {
-                bestAuction = auctionFlips.get(0);
-                Utils.GetMC().thePlayer.sendChatMessage("/viewauction "+bestAuction.auctionId);
-                sent = true;
-                auctionFlips.remove(auctionFlips.get(0));
-                Utils.setTimeout(()-> {
-                    AutoAuctionFlip.sent = false;
-                }, 1000);
-            } else {
-                Utils.SendMessage(ChatFormatting.RED+"Best flip not found! Keep holding to open next.");
+        try {
+            if(Keyboard.isKeyDown(SkyblockFeatures.openBestFlipKeybind.getKeyCode()) && Utils.GetMC().currentScreen==null) {
+                if(auctionFlips.size()>0 && !sent) {
+                    bestAuction = auctionFlips.get(0);
+                    Utils.GetMC().thePlayer.sendChatMessage("/viewauction "+bestAuction.auctionId);
+                    sent = true;
+                    auctionFlips.remove(auctionFlips.get(0));
+                    Utils.setTimeout(()-> {
+                        AutoAuctionFlip.sent = false;
+                    }, 1000);
+                } else {
+                    Utils.SendMessage(ChatFormatting.RED+"Best flip not found! Keep holding to open next.");
+                }
             }
+        } catch (Exception e) {
+
         }
     }
 

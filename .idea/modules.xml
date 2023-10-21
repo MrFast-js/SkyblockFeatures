@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/SkyblockFeatures-master.iml" filepath="$PROJECT_DIR$/.idea/modules/SkyblockFeatures-master.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/SkyblockFeatures-master.api.iml" filepath="$PROJECT_DIR$/.idea/modules/SkyblockFeatures-master.api.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/SkyblockFeatures-master.main.iml" filepath="$PROJECT_DIR$/.idea/modules/SkyblockFeatures-master.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/SkyblockFeatures-master.test.iml" filepath="$PROJECT_DIR$/.idea/modules/SkyblockFeatures-master.test.iml" />

@@ -134,9 +134,7 @@ public class TrevorHelper {
         for(String loc:biomeLocations.keySet()) {
             if(location.contains(loc) && !animalKilled) {
                 BlockPos pos = biomeLocations.get(loc);
-                GlStateManager.disableDepth();
-                RenderUtil.drawWaypoint(pos, new Color(0x00FFFF),ChatFormatting.GOLD+loc, event.partialTicks);
-                GlStateManager.enableDepth();
+                RenderUtil.drawWaypoint(pos, new Color(0x00FFFF),ChatFormatting.GOLD+loc, event.partialTicks,true);
             }
         }
         if(tracking!=null && !animalKilled) {
@@ -148,9 +146,7 @@ public class TrevorHelper {
         }
         if(animalKilled) {
             BlockPos pos = new BlockPos(287,101,-571);
-            GlStateManager.disableDepth();
-            RenderUtil.drawWaypoint(pos, new Color(0x00FFFF),ChatFormatting.GOLD+"Trevor", event.partialTicks);
-            GlStateManager.enableDepth();
+            RenderUtil.drawWaypoint(pos, new Color(0x00FFFF),ChatFormatting.GOLD+"Trevor", event.partialTicks,true);
         }
     }
 }

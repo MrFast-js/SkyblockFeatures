@@ -111,11 +111,9 @@ public class CrystalHollowsMap {
     public void renderWorld(RenderWorldLastEvent event) {
         if (!start || Minecraft.getMinecraft().thePlayer == null || Minecraft.getMinecraft().theWorld == null || !SkyblockFeatures.config.CrystalHollowsMap || SkyblockInfo.getInstance().getLocation() != null && !CrystalHollowsMap.inCrystalHollows) return;
 
-        GlStateManager.disableDepth();
         locations.forEach((locationName,pos)->{
-            RenderUtil.drawWaypoint(pos,Color.green,locationName,event.partialTicks);
+            RenderUtil.drawWaypoint(pos,Color.green,locationName,event.partialTicks,true);
         });
-        GlStateManager.enableDepth();
     }
 
     private void addLocation(String keyword, String locationName, BlockPos location) {

@@ -18,7 +18,6 @@ import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 public class CrimsonMap {
-    // Map Asset Inspired by Skyblock Extra's
     public static final ResourceLocation map = new ResourceLocation("skyblockfeatures","map/crimson.png");
     public static final ResourceLocation playerIcon = new ResourceLocation("skyblockfeatures","map/mapIcon.png");
 
@@ -124,7 +123,7 @@ public class CrimsonMap {
                 GlStateManager.color(1, 1, 1, 1);
                 GlStateManager.pushMatrix();
                     Utils.GetMC().getTextureManager().bindTexture(map);
-                    Utils.drawTexturedRect(0, 0, 735/4,804/4, 0, 1, 0, 1, GL11.GL_NEAREST);
+                    Utils.drawTexturedRect(0, 0, 1653/8,1429/8, 0, 1, 0, 1, GL11.GL_NEAREST);
                 GlStateManager.popMatrix();
 
                 double x = Math.round((323-202)/4.9);
@@ -146,12 +145,12 @@ public class CrimsonMap {
 
         @Override
         public int getHeight() {
-            return 804/4;
+            return 1429/8;
         }
 
         @Override
         public int getWidth() {
-            return 735/4;
+            return 1653/8;
         }
     }
 }

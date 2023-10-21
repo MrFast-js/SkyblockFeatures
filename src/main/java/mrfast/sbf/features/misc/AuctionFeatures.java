@@ -370,8 +370,6 @@ public class AuctionFeatures {
                         lineCount++;
                     }
                 }
-
-                // Utils.SendMessage(ChatFormatting.GREEN+"In the past 7 days you have made "+ChatFormatting.GOLD+Utils.nf.format(totalProfit)+ChatFormatting.GREEN+" coins!");
             }
             // get price from when buying a auction
             if(chestName.contains("Auction View") && !chestName.contains("BIN")) {

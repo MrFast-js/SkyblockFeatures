@@ -32,48 +32,48 @@ public class MetalDetectorSolver {
     List<Vec3> chests = new ArrayList<>();
     List<BlockPos> foundChests = new ArrayList<>();
     List<Vec3> treasureLocations = new ArrayList<>(Arrays.asList(
-        new Vec3(-38, -22, 26),
-        new Vec3(38, -22, -26),
-        new Vec3(-40, -22, 18),
-        new Vec3(-41, -20, 22),
-        new Vec3(-5, -21, 16),
-        new Vec3(40, -22, -30),
-        new Vec3(-42, -20, -28),
-        new Vec3(-43, -22, -40),
-        new Vec3(42, -19, -41),
-        new Vec3(43, -21, -16),
-        new Vec3(-1, -22, -20),
-        new Vec3(6, -21, 28),
-        new Vec3(7, -21, 11),
-        new Vec3(7, -21, 22),
-        new Vec3(-12, -21, -44),
-        new Vec3(12, -22, 31),
-        new Vec3(12, -22, -22),
-        new Vec3(12, -21, 7),
-        new Vec3(12, -21, -43),
-        new Vec3(-14, -21, 43),
-        new Vec3(-14, -21, 22),
-        new Vec3(-17, -21, 20),
-        new Vec3(-20, -22, 0),
-        new Vec3(1, -21, 20),
-        new Vec3(19, -22, 29),
-        new Vec3(20, -22, 0),
-        new Vec3(20, -21, -26),
-        new Vec3(-23, -22, 40),
-        new Vec3(22, -21, -14),
-        new Vec3(-24, -22, 12),
-        new Vec3(23, -22, 26),
-        new Vec3(23, -22, -39),
-        new Vec3(24, -22, 27),
-        new Vec3(25, -22, 17),
-        new Vec3(29, -21, -44),
-        new Vec3(-31, -21, -12),
-        new Vec3(-31, -21, -40),
-        new Vec3(30, -21, -25),
-        new Vec3(-32, -21, -40),
-        new Vec3(-36, -20, 42),
-        new Vec3(-37, -21, -14),
-        new Vec3(-37, -21, -22)
+            new Vec3(-38, -22, 26),
+            new Vec3(38, -22, -26),
+            new Vec3(-40, -22, 18),
+            new Vec3(-41, -20, 22),
+            new Vec3(-5, -21, 16),
+            new Vec3(40, -22, -30),
+            new Vec3(-42, -20, -28),
+            new Vec3(-43, -22, -40),
+            new Vec3(42, -19, -41),
+            new Vec3(43, -21, -16),
+            new Vec3(-1, -22, -20),
+            new Vec3(6, -21, 28),
+            new Vec3(7, -21, 11),
+            new Vec3(7, -21, 22),
+            new Vec3(-12, -21, -44),
+            new Vec3(12, -22, 31),
+            new Vec3(12, -22, -22),
+            new Vec3(12, -21, 7),
+            new Vec3(12, -21, -43),
+            new Vec3(-14, -21, 43),
+            new Vec3(-14, -21, 22),
+            new Vec3(-17, -21, 20),
+            new Vec3(-20, -22, 0),
+            new Vec3(1, -21, 20),
+            new Vec3(19, -22, 29),
+            new Vec3(20, -22, 0),
+            new Vec3(20, -21, -26),
+            new Vec3(-23, -22, 40),
+            new Vec3(22, -21, -14),
+            new Vec3(-24, -22, 12),
+            new Vec3(23, -22, 26),
+            new Vec3(23, -22, -39),
+            new Vec3(24, -22, 27),
+            new Vec3(25, -22, 17),
+            new Vec3(29, -21, -44),
+            new Vec3(-31, -21, -12),
+            new Vec3(-31, -21, -40),
+            new Vec3(30, -21, -25),
+            new Vec3(-32, -21, -40),
+            new Vec3(-36, -20, 42),
+            new Vec3(-37, -21, -14),
+            new Vec3(-37, -21, -22)
     ));
     List<Vec3> PossibletreasureLocations = new ArrayList<>();
     Vec3 center = null;
@@ -87,7 +87,7 @@ public class MetalDetectorSolver {
     double lastDistance = 0;
 
     @SubscribeEvent
-	public void onEvent(ClientChatReceivedEvent event) {
+    public void onEvent(ClientChatReceivedEvent event) {
         if(Utils.GetMC().thePlayer==null || !SkyblockFeatures.config.MetalDetectorSolver) return;
         if (event.type == 2) {
             String actionBar = event.message.getFormattedText();
@@ -138,7 +138,7 @@ public class MetalDetectorSolver {
                     GuiManager.createTitle(ChatFormatting.AQUA+"Treasure Found!", 10);
                 }
                 Vec3 actualBestPos = center.add(bestPos);
-    
+
                 if(actualBestPos.distanceTo(Utils.GetMC().thePlayer.getPositionVector())<5) {
                     if(!(Utils.GetMC().theWorld.getBlockState(new BlockPos(actualBestPos)).getBlock() instanceof BlockChest)) {
                         distanceToTreasure = 0;
@@ -152,7 +152,7 @@ public class MetalDetectorSolver {
                 announcedRecalculating = true;
                 GuiManager.createTitle(ChatFormatting.RED+"Stand Still. Recalculating..", 40);
             }
-            if(sameDistance>=2 && bestPos == null) {                
+            if(sameDistance>=2 && bestPos == null) {
                 ticks = 0;
                 PossibletreasureLocations = treasureLocations;
                 bestPos = null;
@@ -162,7 +162,7 @@ public class MetalDetectorSolver {
                     } else {
                         Vec3 actualPos = center.add(pos);
                         Vec3 actualBestPos = center.add(bestPos);
-                        
+
                         double distToBest = Math.abs(actualBestPos.distanceTo(Utils.GetMC().thePlayer.getPositionVector())-distanceToTreasure);
                         double distToThis = Math.abs(actualPos.distanceTo(Utils.GetMC().thePlayer.getPositionVector())-distanceToTreasure);
                         if(distToThis<distToBest) {
@@ -192,17 +192,15 @@ public class MetalDetectorSolver {
             }
         }
     }
-        
+
     @SubscribeEvent
     public void onRenderWorld(RenderWorldLastEvent event) {
         if(Utils.GetMC().thePlayer==null || !SkyblockFeatures.config.MetalDetectorSolver) return;
         if(center == null) return;
-        GlStateManager.disableDepth();
         if(bestPos != null) {
             BlockPos pos = new BlockPos(bestPos.xCoord+center.xCoord, bestPos.yCoord+center.yCoord, bestPos.zCoord+center.zCoord);
-            RenderUtil.drawWaypoint(pos, new Color(0x00FFFF),ChatFormatting.GOLD+"Treasure", event.partialTicks);
+            RenderUtil.drawWaypoint(pos, new Color(0x00FFFF),ChatFormatting.GOLD+"Treasure", event.partialTicks,true);
         }
-        GlStateManager.enableDepth();
     }
-    
+
 }

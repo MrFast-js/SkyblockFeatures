@@ -40,13 +40,16 @@ public class RenderUtil {
         AxisAlignedBB aabb = new AxisAlignedBB(pos,pos.add(1, 1, 1));
         drawOutlinedFilledBoundingBox(aabb,color,partialTicks);
     }
-    public static void drawWaypoint(BlockPos pos,Color color,String label,float partialTicks) {
+    public static void drawWaypoint(BlockPos pos,Color color,String label,float partialTicks,boolean throughWalls) {
         // Beacon
         AxisAlignedBB aabb2 = new AxisAlignedBB(pos.getX()+0.5, pos.getY()+1, pos.getZ()+0.5, pos.getX()+0.5, pos.getY()+100, pos.getZ()+0.5);
         RenderUtil.drawOutlinedFilledBoundingBox(aabb2, color, partialTicks);
-
+        GlStateManager.pushMatrix();
+        if(throughWalls) GlStateManager.disableDepth();
         drawOutlinedFilledBoundingBox(pos,color,partialTicks);
         renderWaypointText(pos.add(0, 3, 0),label);
+        if(throughWalls) GlStateManager.enableDepth();
+        GlStateManager.popMatrix();
     }
 
     public static void renderWaypointText(BlockPos pos, String text) {
