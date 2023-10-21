@@ -58,6 +58,7 @@ public class TrevorHelper {
         String msg = event.message.getUnformattedText();
         if(msg.contains("[NPC] Trevor")) {
             tracking = null;
+            location = "";
             animalKilled = false;
         }
         if(msg.contains("animal near the ")) {

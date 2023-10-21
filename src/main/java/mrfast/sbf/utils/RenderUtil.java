@@ -25,6 +25,7 @@ public class RenderUtil {
     public static void drawOutlinedFilledBoundingBox(AxisAlignedBB aabb, Color color, float partialTicks) {
         aabb = aabb.offset(-0.001, -0.001, -0.001);
         aabb = aabb.expand(0.002, 0.002, 0.002);
+        GlStateManager.pushMatrix();
         GlStateManager.enableBlend();
         GlStateManager.disableTexture2D();
         GlStateManager.depthMask(false);
@@ -35,6 +36,7 @@ public class RenderUtil {
         GlStateManager.depthMask(true);
         GlStateManager.enableTexture2D();
         GlStateManager.disableBlend();
+        GlStateManager.popMatrix();
     }
     public static void drawOutlinedFilledBoundingBox(BlockPos pos, Color color, float partialTicks) {
         AxisAlignedBB aabb = new AxisAlignedBB(pos,pos.add(1, 1, 1));
@@ -43,14 +45,18 @@ public class RenderUtil {
     public static void drawWaypoint(BlockPos pos,Color color,String label,float partialTicks,boolean throughWalls) {
         // Beacon
         AxisAlignedBB aabb2 = new AxisAlignedBB(pos.getX()+0.5, pos.getY()+1, pos.getZ()+0.5, pos.getX()+0.5, pos.getY()+100, pos.getZ()+0.5);
-        RenderUtil.drawOutlinedFilledBoundingBox(aabb2, color, partialTicks);
+
         GlStateManager.pushMatrix();
+        GlStateManager.pushAttrib();
         if(throughWalls) GlStateManager.disableDepth();
+        drawOutlinedFilledBoundingBox(aabb2, color, partialTicks);
         drawOutlinedFilledBoundingBox(pos,color,partialTicks);
         renderWaypointText(pos.add(0, 3, 0),label);
         if(throughWalls) GlStateManager.enableDepth();
+        GlStateManager.popAttrib();
         GlStateManager.popMatrix();
     }
+
 
     public static void renderWaypointText(BlockPos pos, String text) {
         double x = pos.getX() + 0.5 - Utils.GetMC().getRenderManager().viewerPosX;
@@ -99,11 +105,11 @@ public class RenderUtil {
     
         GlStateManager.enableDepth();
         GlStateManager.disableBlend();
-    
+        GlStateManager.enableLighting(); // Restore lighting settings
+
         GlStateManager.popAttrib();
         GlStateManager.popMatrix();
     
-        GlStateManager.enableLighting(); // Restore lighting settings
     }
     
 

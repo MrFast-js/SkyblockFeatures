@@ -40,28 +40,25 @@ public class CropCounter {
     public void onTick(TickEvent.ClientTickEvent event) {
         if(mc.thePlayer == null||!SkyblockFeatures.config.Counter||!Utils.inSkyblock) return;
         ItemStack item = mc.thePlayer.getHeldItem();
-        if(item == null) return;
-        if(!item.getDisplayName().contains("Hoe")) return;
+
+        if(item == null || !item.getDisplayName().contains("Hoe")) return;
 
         ticks++;
-        if(averageCropsValues.size()>0 && ticks >= 10 && averageCropsValues.size()>5) {
+        if(!averageCropsValues.isEmpty() && ticks >= 10 && averageCropsValues.size()>5) {
             averageCropsValues.remove(0);
         }
         List<String> lore = ItemUtils.getItemLore(item);
-        for (int i = 0; i < lore.size(); i++) {
-            String line = lore.get(i);
-            if(line.contains("Counter: ")) {
+        for (String line : lore) {
+            if (line.contains("Counter: ")) {
                 count = line.replace("Counter: ", "");
-                int counter = Integer.parseInt(count.replaceAll("[^0-9]",""));
-                
-                if(ticks >= 10) {
+                int counter = Integer.parseInt(count.replaceAll("[^0-9]", ""));
+
+                if (ticks >= 10) {
                     ticks = 0;
-                    if(oldCount == 0) {
-                        oldCount = counter;
-                    } else {
-                        averageCropsValues.add((counter-oldCount)*2);
-                        oldCount = counter;
+                    if (oldCount != 0) {
+                        averageCropsValues.add((counter - oldCount) * 2);
                     }
+                    oldCount = counter;
                 }
             }
         }

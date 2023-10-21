@@ -32,6 +32,7 @@ public class MissingTalismans {
     @SubscribeEvent
     public void onTick(TickEvent.ClientTickEvent event) {
         if(!SkyblockFeatures.config.showMissingAccessories) return;
+
         if(Utils.GetMC().currentScreen != null) {
             if(Utils.GetMC().currentScreen instanceof GuiChest) {
                 GuiChest gui = (GuiChest) Utils.GetMC().currentScreen;
@@ -68,6 +69,7 @@ public class MissingTalismans {
     @SubscribeEvent
     public void onDrawContainerTitle(TitleDrawnEvent event) {
         if(!SkyblockFeatures.config.showMissingAccessories) return;
+
         if (event.gui != null && event.gui instanceof GuiChest) {
             if(inAccessoryBag) {
                 if(MissingTalismans==null) {

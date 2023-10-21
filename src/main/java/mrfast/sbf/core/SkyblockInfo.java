@@ -100,17 +100,9 @@ public class SkyblockInfo {
 
     @SubscribeEvent
     public void onTick(ClientTickEvent event) {
-        if (event.phase != Phase.END) {
-            return; // Only run on the client side at the end of a tick
-        }
+        if (event.phase != Phase.END || Utils.GetMC().theWorld == null) return;
 
-        if (Utils.GetMC().theWorld == null) {
-            return;
-        }
-
-        if (worldJustLoaded) {
-            ticks++;
-        }
+        if (worldJustLoaded) ticks++;
 
         if (ticks >= 80 && worldJustLoaded && Utils.isOnHypixel()) {
             ticks = 0;

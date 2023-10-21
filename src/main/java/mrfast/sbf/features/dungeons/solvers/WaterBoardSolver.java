@@ -32,6 +32,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
+
 public class WaterBoardSolver {
     private final static Minecraft mc = Minecraft.getMinecraft();
     private static final HashMap<WoolColor, ImmutableSet<LeverBlock>> solutions = new HashMap<>();
@@ -46,9 +47,7 @@ public class WaterBoardSolver {
 
     @SubscribeEvent
     public void onGameTick(TickEvent.ClientTickEvent event) {
-        if (event.phase != TickEvent.Phase.START || !Utils.inDungeons || mc.theWorld == null || mc.thePlayer == null || !SkyblockFeatures.config.WaterBoardSolver) {
-            return;
-        }
+        if (event.phase != TickEvent.Phase.START || !Utils.inDungeons || mc.theWorld == null || mc.thePlayer == null || !SkyblockFeatures.config.WaterBoardSolver) return;
 
         EntityPlayerSP player = mc.thePlayer;
 
@@ -119,11 +118,11 @@ public class WaterBoardSolver {
         for (BlockPos pos : positionsInRange) {
             Block block = mc.theWorld.getBlockState(pos).getBlock();
             if (block == Blocks.sticky_piston) {
-                return true; // Found a sticky piston
+                return true;
             }
         }
     
-        return false; // No sticky pistons found in the range
+        return false;
     }
 
     private void findChestLocation(EntityPlayerSP player) {
@@ -178,7 +177,7 @@ public class WaterBoardSolver {
                     }
 
                     updatePuzzleVariant(foundGoldBlock, foundHardenedClay, foundEmeraldBlock, foundQuartzBlock, foundDiamondBlock);
-                    if(solutions.size()==0) loadSolutions();
+                    if(solutions.isEmpty()) loadSolutions();
                     break;
                 }
             }
@@ -233,7 +232,6 @@ public class WaterBoardSolver {
                 break;
         }
     }
-
 
     @SubscribeEvent
     public void onRenderWorld(RenderWorldLastEvent event) {
@@ -296,7 +294,7 @@ public class WaterBoardSolver {
         GREEN(EnumDyeColor.LIME),
         RED(EnumDyeColor.RED);
 
-        public EnumDyeColor dyeColor;
+        public final EnumDyeColor dyeColor;
 
         WoolColor(EnumDyeColor dyeColor) {
             this.dyeColor = dyeColor;

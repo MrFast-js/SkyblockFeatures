@@ -153,7 +153,9 @@ public class ZealotSpawnLocations {
     
     @SubscribeEvent
     public void onSeconds(TickEvent.ClientTickEvent event) {
-        if(Utils.inSkyblock && startZealotTimer && inNest && SkyblockFeatures.config.showZealotSpawns) {
+        if(!Utils.inSkyblock || !SkyblockFeatures.config.showZealotSpawns) return;
+
+        if(startZealotTimer && inNest) {
             zealotTicks++;
             if (zealotTicks % 20 == 0) {
                 zealotTicks = 0;
@@ -170,7 +172,7 @@ public class ZealotSpawnLocations {
             }
             zealotDisplay = EnumChatFormatting.LIGHT_PURPLE + "Zealot Spawn: "+ChatFormatting.DARK_PURPLE+zealotHalfseconds/2+"s";
         };
-        if(Utils.inSkyblock && startBruiserTimer && loc.contains("Zealot Bruiser Hideout") && SkyblockFeatures.config.showZealotSpawns) {
+        if(startBruiserTimer && loc.contains("Zealot Bruiser Hideout")) {
             bruiserTicks++;
             if (bruiserTicks % 20 == 0) {
                 bruiserTicks = 0;
@@ -187,14 +189,13 @@ public class ZealotSpawnLocations {
             }
             bruiserDisplay = EnumChatFormatting.LIGHT_PURPLE + "Bruiser Spawn: "+ChatFormatting.DARK_PURPLE+bruiserHalfseconds/2+"s";
         };
-    
     }
 
     static {
-        new JerryTimerGUI();
+        new ZealotSpawnTimer();
     }   
-    public static class JerryTimerGUI extends UIElement {
-        public JerryTimerGUI() {
+    public static class ZealotSpawnTimer extends UIElement {
+        public ZealotSpawnTimer() {
             super("Zealot Timer", new Point(0.2f, 0.0f));
             SkyblockFeatures.GUIMANAGER.registerElement(this);
         }

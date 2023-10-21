@@ -77,7 +77,7 @@ public class Reparty {
 
     @SubscribeEvent
     public void onClientTick(TickEvent.ClientTickEvent event) {
-        if (event.phase == TickEvent.Phase.END) {
+        if (event.phase == TickEvent.Phase.END && SkyblockFeatures.config.autoAcceptReparty) {
             if (waitingForInvite && hasTimeExpired()) {
                 resetListener();
             }

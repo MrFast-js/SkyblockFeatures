@@ -1,6 +1,5 @@
 package mrfast.sbf.features.misc;
 
-import java.awt.*;
 import java.io.ByteArrayInputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -10,9 +9,6 @@ import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 
-import mrfast.sbf.utils.RenderUtil;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.client.event.RenderWorldLastEvent;
 import org.apache.commons.codec.binary.Base64InputStream;
 import org.lwjgl.input.Keyboard;
 
@@ -25,7 +21,6 @@ import mrfast.sbf.SkyblockFeatures;
 import mrfast.sbf.core.AuctionUtil;
 import mrfast.sbf.core.PricingData;
 import mrfast.sbf.core.SkyblockInfo;
-import mrfast.sbf.events.GuiContainerEvent;
 import mrfast.sbf.events.SecondPassedEvent;
 import mrfast.sbf.events.SlotClickedEvent;
 import mrfast.sbf.features.items.HideGlass;
@@ -48,6 +43,7 @@ import net.minecraft.util.MathHelper;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
+import org.lwjgl.input.Mouse;
 
 public class AutoAuctionFlip {
     static Auction bestAuction = null;
@@ -153,9 +149,11 @@ public class AutoAuctionFlip {
             resetFlipper();
         }
         if(!SkyblockFeatures.config.autoAuctionFlip) return;
+
         try {
-            if(Keyboard.isKeyDown(SkyblockFeatures.openBestFlipKeybind.getKeyCode()) && Utils.GetMC().currentScreen==null) {
-                if(auctionFlips.size()>0 && !sent) {
+            boolean down = Mouse.isButtonDown(SkyblockFeatures.openBestFlipKeybind.getKeyCode())||Keyboard.isKeyDown(SkyblockFeatures.openBestFlipKeybind.getKeyCode());
+            if(down && Utils.GetMC().currentScreen==null) {
+                if(!auctionFlips.isEmpty() && !sent) {
                     bestAuction = auctionFlips.get(0);
                     Utils.GetMC().thePlayer.sendChatMessage("/viewauction "+bestAuction.auctionId);
                     sent = true;
@@ -167,7 +165,7 @@ public class AutoAuctionFlip {
                     Utils.SendMessage(ChatFormatting.RED+"Best flip not found! Keep holding to open next.");
                 }
             }
-        } catch (Exception e) {
+        } catch (Exception ignored) {
 
         }
     }

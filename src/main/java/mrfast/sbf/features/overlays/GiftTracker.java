@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import com.mojang.realmsclient.gui.ChatFormatting;
 
 import mrfast.sbf.SkyblockFeatures;
+import mrfast.sbf.core.SkyblockInfo;
 import mrfast.sbf.utils.RenderUtil;
 import mrfast.sbf.utils.Utils;
 import net.minecraft.block.Block;
@@ -39,8 +40,9 @@ public class GiftTracker {
       Minecraft mc = Minecraft.getMinecraft();
       if(mc.theWorld == null || Utils.inDungeons || !Utils.inSkyblock) return;
       if(SkyblockFeatures.config.icecaveHighlightWalls) GlStateManager.disableDepth();
+      Boolean inGlacialCave = SkyblockInfo.getInstance().localLocation.contains("Glacial");
       for(Entity entity:mc.theWorld.loadedEntityList) {
-         if (SkyblockFeatures.config.presentWaypoints && entity instanceof EntityArmorStand && !SkyblockFeatures.locationString.contains("Glacial")&& ((EntityArmorStand)entity).getCurrentArmor(3) != null && ((EntityArmorStand)entity).getCurrentArmor(3).serializeNBT().getCompoundTag("tag").getCompoundTag("SkullOwner").getCompoundTag("Properties").toString().contains("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMTBmNTM5ODUxMGIxYTA1YWZjNWIyMDFlYWQ4YmZjNTgzZTU3ZDcyMDJmNTE5M2IwYjc2MWZjYmQwYWUyIn19fQ=")) {
+         if (SkyblockFeatures.config.presentWaypoints && entity instanceof EntityArmorStand && !inGlacialCave && ((EntityArmorStand)entity).getCurrentArmor(3) != null && ((EntityArmorStand)entity).getCurrentArmor(3).serializeNBT().getCompoundTag("tag").getCompoundTag("SkullOwner").getCompoundTag("Properties").toString().contains("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMTBmNTM5ODUxMGIxYTA1YWZjNWIyMDFlYWQ4YmZjNTgzZTU3ZDcyMDJmNTE5M2IwYjc2MWZjYmQwYWUyIn19fQ=")) {
             boolean isPlayerGift = false;
             for(Entity otherEntity:mc.theWorld.loadedEntityList) {
                if(otherEntity instanceof EntityArmorStand && otherEntity.getDistanceToEntity(entity)<0.5 && otherEntity.getName().contains("From: ")) {
@@ -51,7 +53,7 @@ public class GiftTracker {
                highlightBlock(SkyblockFeatures.config.presentWaypointsColor, entity.posX-0.5, entity.posY+1.5, entity.posZ-0.5, 1.0D,event.partialTicks);
             }
          }
-         if(SkyblockFeatures.locationString.contains("Glacial") && SkyblockFeatures.config.icecaveHighlight) {
+         if(inGlacialCave && SkyblockFeatures.config.icecaveHighlight) {
             Block blockstate = mc.theWorld.getBlockState(entity.getPosition()).getBlock();
             if(SkyblockFeatures.config.icecaveHighlight && (blockstate instanceof BlockIce || blockstate instanceof BlockPackedIce) && entity instanceof EntityArmorStand && ((EntityArmorStand)entity).getCurrentArmor(3) != null) {
                String texture = ((EntityArmorStand)entity).getCurrentArmor(3).serializeNBT().getCompoundTag("tag").getCompoundTag("display").getString("Name");

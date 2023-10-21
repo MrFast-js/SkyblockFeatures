@@ -18,33 +18,23 @@ import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 public class DwarvenMap {
-    // Map Asset Inspired by Skyblock Extra's
     public static final ResourceLocation map = new ResourceLocation("skyblockfeatures","map/dwarven.png");
     public static final ResourceLocation playerIcon = new ResourceLocation("skyblockfeatures","map/mapIcon.png");
 
     static boolean loaded = false;
-    static boolean start = false;   
     static int ticks = 0;
     public static HashMap<String,BlockPos> locations = new HashMap<>();
     @SubscribeEvent
-    public void onload(WorldEvent.Load event) {
-        try {
-            locations.clear();
-            loaded = false;
-            ticks = 0;
-            start = false;
-            if(Minecraft.getMinecraft().thePlayer != null && Minecraft.getMinecraft().theWorld != null && SkyblockFeatures.config.dwarvenMinesMap) {
-                start = true;
-            }
-        } catch(Exception e) {
-            
-        }
+    public void onLoad(WorldEvent.Load event) {
+        locations.clear();
+        loaded = false;
+        ticks = 0;
     }
     
     
     @SubscribeEvent
     public void onTick(TickEvent.ClientTickEvent event) {
-        if(start && Minecraft.getMinecraft().thePlayer != null && Minecraft.getMinecraft().theWorld != null && SkyblockFeatures.config.dwarvenMinesMap) {
+        if(Minecraft.getMinecraft().thePlayer != null && Minecraft.getMinecraft().theWorld != null && SkyblockFeatures.config.dwarvenMinesMap) {
             ticks++;
             if(ticks >= 40) {
                 loaded = true;
@@ -58,10 +48,10 @@ public class DwarvenMap {
     static double lastPlayerR = 0;
 
     static {
-        new DwarvenMapGui();
+        new DwarvenMinesMap();
     }   
-    public static class DwarvenMapGui extends UIElement {
-        public DwarvenMapGui() {
+    public static class DwarvenMinesMap extends UIElement {
+        public DwarvenMinesMap() {
             super("Dwarven Mines Map", new Point(0.2f, 0.0f));
             SkyblockFeatures.GUIMANAGER.registerElement(this);
         }

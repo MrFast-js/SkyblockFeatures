@@ -27,8 +27,7 @@ public class UltrasequencerSolver {
     
     @SubscribeEvent
     public void onTick(TickEvent.ClientTickEvent event) {
-        if (event.phase != TickEvent.Phase.START) return;
-        if(!SkyblockFeatures.config.enchantingSolvers) return;
+        if (event.phase != TickEvent.Phase.START || !SkyblockFeatures.config.enchantingSolvers) return;
 
         if (Utils.GetMC().currentScreen instanceof GuiChest) {
             if (Utils.GetMC().thePlayer == null) return;
@@ -46,7 +45,6 @@ public class UltrasequencerSolver {
                             int number = Integer.parseInt(itemName);
                             if(HideGlass.isEmptyGlassPane(invSlots.get(i).getStack())) continue;
                             clickInOrderSlots[number - 1] = invSlots.get(i);
-                            if(HideGlass.isEmptyGlassPane(null))
                             answers.put(invSlots.get(i), invSlots.get(i).getStack());
                         }
                     }

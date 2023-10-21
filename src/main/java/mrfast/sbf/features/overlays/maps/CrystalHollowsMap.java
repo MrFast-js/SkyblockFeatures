@@ -39,7 +39,6 @@ public class CrystalHollowsMap {
     public static final ResourceLocation PLAYER_ICON2 = new ResourceLocation("skyblockfeatures", "map/mapIcon2.png");
 
     private static boolean loaded = false;
-    private static boolean start = false;
     public static boolean inCrystalHollows = false;
     private static int ticks = 0;
     private static final HashMap<String, BlockPos> locations = new HashMap<>();
@@ -49,25 +48,17 @@ public class CrystalHollowsMap {
     public void onLoad(WorldEvent.Load event) {
         locations.clear();
         playerBreadcrumbs.clear();
+        inCrystalHollows = false;
         loaded = false;
         ticks = 0;
-        start = Minecraft.getMinecraft().thePlayer != null && Minecraft.getMinecraft().theWorld != null && SkyblockFeatures.config.CrystalHollowsMap;
-        if (!start) {
-            return;
-        }
     }
 
     @SubscribeEvent
     public void onTick(TickEvent.ClientTickEvent event) {
-        if (SkyblockInfo.getInstance().getLocation() != null && !SkyblockInfo.getInstance().getMap().equals("Crystal Hollows")) {
-            inCrystalHollows = false;
-            return;
-        } else {
+        if(Minecraft.getMinecraft().thePlayer == null || Minecraft.getMinecraft().theWorld == null || !SkyblockFeatures.config.CrystalHollowsMap) return;
+
+        if (SkyblockInfo.getInstance().getLocation() != null && SkyblockInfo.getInstance().getMap().equals("Crystal Hollows")) {
             inCrystalHollows = true;
-        }
-        
-        if (!start || Minecraft.getMinecraft().thePlayer == null || Minecraft.getMinecraft().theWorld == null || !SkyblockFeatures.config.CrystalHollowsMap) {
-            return;
         }
 
         ticks++;
@@ -109,7 +100,7 @@ public class CrystalHollowsMap {
     }
     @SubscribeEvent
     public void renderWorld(RenderWorldLastEvent event) {
-        if (!start || Minecraft.getMinecraft().thePlayer == null || Minecraft.getMinecraft().theWorld == null || !SkyblockFeatures.config.CrystalHollowsMap || SkyblockInfo.getInstance().getLocation() != null && !CrystalHollowsMap.inCrystalHollows) return;
+        if (Minecraft.getMinecraft().thePlayer == null || Minecraft.getMinecraft().theWorld == null || !SkyblockFeatures.config.CrystalHollowsMap || SkyblockInfo.getInstance().getLocation() != null && !CrystalHollowsMap.inCrystalHollows) return;
 
         locations.forEach((locationName,pos)->{
             RenderUtil.drawWaypoint(pos,Color.green,locationName,event.partialTicks,true);
@@ -117,7 +108,7 @@ public class CrystalHollowsMap {
     }
 
     private void addLocation(String keyword, String locationName, BlockPos location) {
-        String position = SkyblockFeatures.locationString.toLowerCase();
+        String position = SkyblockInfo.getInstance().localLocation.toLowerCase();
         if (position.contains(keyword) && !locations.containsKey(locationName)) {
             locations.put(locationName, location);
         }
@@ -156,8 +147,9 @@ public class CrystalHollowsMap {
                                     Vector2d p2 = playerBreadcrumbs.get(i+1);
 
                                     double distance = Math.sqrt(Math.pow(Math.abs(p1.y - p2.y), 2) + Math.pow(Math.abs(p1.x - p2.x), 2));
-                                    if(distance<40)
-                                    Utils.drawLine((int) playerBreadcrumbs.get(i).x, (int) playerBreadcrumbs.get(i).y,(int)  playerBreadcrumbs.get(i+1).x,(int)  playerBreadcrumbs.get(i+1).y, new Color(0,0,0),5);
+                                    if(distance<40) {
+                                        Utils.drawLine((int) playerBreadcrumbs.get(i).x, (int) playerBreadcrumbs.get(i).y,(int)  playerBreadcrumbs.get(i+1).x,(int)  playerBreadcrumbs.get(i+1).y, new Color(0,0,0),5);
+                                    }
                                 }
                             }
                             GlStateManager.popMatrix();

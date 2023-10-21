@@ -149,12 +149,9 @@ public class SkyblockFeatures {
     public static GuiManager GUIMANAGER;
     public static Logger LOGGER = LogManager.getLogger(MOD_NAME);
     public static int ticks = 0;
-
-    public static ArrayDeque<String> sendMessageQueue = new ArrayDeque<>();
     public static boolean usingNEU = false;
 
     public static File jarFile = null;
-    private static long lastChatMessage = 0;
 
     @Mod.Instance(MODID)
     public static SkyblockFeatures INSTANCE;
@@ -323,17 +320,12 @@ public class SkyblockFeatures {
         }
     }
 
-
-    public static boolean auctionPricesLoaded = false;
     public static boolean smallItems = false;
     public boolean start = true;
-    public boolean loadedBlacklist = false;
-    public boolean checkedIfBlacklisted = false;
     ArrayList<String> blacklist = new ArrayList<>();
 
     @SubscribeEvent
     public void onTick(TickEvent.ClientTickEvent event) {
-        // SkyblockFeatures.config.autoAuctionFlipMargin = SkyblockFeatures.config.autoAuctionFlipMargin.replaceAll("[^0-9]", "");
         if (event.phase != TickEvent.Phase.START) return;
         // Small items
         if(start) {
@@ -352,12 +344,6 @@ public class SkyblockFeatures {
             }
             smallItems = config.smallItems;
         }
-        if (mc.thePlayer != null && sendMessageQueue.size() > 0 && System.currentTimeMillis() - lastChatMessage > 200) {
-            String msg = sendMessageQueue.pollFirst();
-            if (msg != null) {
-                mc.thePlayer.sendChatMessage(msg);
-            }
-        }
         
         if (ticks % 20 == 0) {
             if (mc.thePlayer != null) {
@@ -370,38 +356,7 @@ public class SkyblockFeatures {
 
         ticks++;
     }
-
-    @SubscribeEvent
-    public void onSendPacket(PacketEvent.SendEvent event) {
-        if (event.packet instanceof C01PacketChatMessage) {
-            lastChatMessage = System.currentTimeMillis();
-        }
-    }
     
-    GuiScreen lastGui = null;
-    @SubscribeEvent
-    public void onClientTick(TickEvent.ClientTickEvent event) {
-        if (event.phase == TickEvent.Phase.START && !Minecraft.getMinecraft().isSingleplayer() && Minecraft.getMinecraft().theWorld != null && Minecraft.getMinecraft().getNetHandler() != null && EssentialAPI.getMinecraftUtil().isHypixel()) {
-            try {
-                Scoreboard scoreboard = Minecraft.getMinecraft().thePlayer.getWorldScoreboard();
-                ScoreObjective scoreObjective = scoreboard.getObjectiveInDisplaySlot(1);
-                Collection<Score> collection = scoreboard.getSortedScores(scoreObjective);
-                for (Score score1 : collection)
-                {
-                    ScorePlayerTeam scorePlayerTeam = scoreboard.getPlayersTeam(score1.getPlayerName());
-                    String scoreText = EnumChatFormatting.getTextWithoutFormattingCodes(ScorePlayerTeam.formatPlayerName(scorePlayerTeam, score1.getPlayerName()));
-
-                    if (scoreText.contains("⏣")) {
-                        locationString = keepLettersAndNumbersOnly(scoreText.replace("⏣", ""));
-                    }
-                }
-            } catch (NullPointerException  e) {
-                //TODO: handle exception
-            }
-        }
-    }
-    
-    public static String locationString = "Unknown";
     private static final Pattern LETTERS_NUMBERS = Pattern.compile("[^a-z A-Z:0-9/'()]");
 
     private String keepLettersAndNumbersOnly(String text) {
@@ -415,7 +370,7 @@ public class SkyblockFeatures {
     public final static KeyBinding openBestFlipKeybind = new KeyBinding("Open Best Flip", Keyboard.KEY_J, "Skyblock Features");
     
     @EventHandler
-    public void inist(FMLInitializationEvent event) {
+    public void initKeybinds(FMLInitializationEvent event) {
         MinecraftForge.EVENT_BUS.register(this);
         ClientRegistry.registerKeyBinding(reloadAH);
         ClientRegistry.registerKeyBinding(openBestFlipKeybind);
@@ -425,7 +380,7 @@ public class SkyblockFeatures {
     }
 
     @SubscribeEvent
-    public void onTsick(TickEvent.ClientTickEvent e) {
+    public void onTick2(TickEvent.ClientTickEvent e) {
         if (toggleSprint.isPressed()) {
             if (toggled) {
                 Utils.SendMessage(EnumChatFormatting.RED + "Togglesprint disabled.");

@@ -132,7 +132,8 @@ public class AuctionFeatures {
     
     @SubscribeEvent
     public void onTick(ClientTickEvent event) {
-        if (!Utils.inSkyblock || !SkyblockFeatures.usingNEU || Utils.GetMC().thePlayer == null || Utils.GetMC().thePlayer.openContainer == null) return;
+        if (!Utils.inSkyblock || !SkyblockFeatures.usingNEU || Utils.GetMC().thePlayer == null || Utils.GetMC().thePlayer.openContainer == null || !SkyblockFeatures.config.auctionGuis) return;
+
         itemCount = 0;
         for(ItemStack stack:Utils.GetMC().thePlayer.openContainer.inventoryItemStacks) {
             if(ItemUtils.getRarity(stack) != null) {

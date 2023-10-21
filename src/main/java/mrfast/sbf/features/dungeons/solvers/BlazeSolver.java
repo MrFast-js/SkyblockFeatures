@@ -31,7 +31,7 @@ public class BlazeSolver {
     static boolean foundChest = false;
     static List<Blaze> blazes = new ArrayList<>();
 
-    public class Blaze {
+    public static class Blaze {
         int health = 0;
         Entity EntityBlaze;
 
@@ -43,23 +43,18 @@ public class BlazeSolver {
     
     @SubscribeEvent
     public void onWorldChange(WorldEvent.Load event) {
-        try {
-            higherToLower = false;
-            foundChest = false;
-        } catch(Exception e) {
-
-        }
+        higherToLower = false;
+        foundChest = false;
     }
 
     @SubscribeEvent
     public void onTick(TickEvent.ClientTickEvent event) {
-        if (event.phase != TickEvent.Phase.START) return;
+        if (event.phase != TickEvent.Phase.START || !Utils.inDungeons || !SkyblockFeatures.config.blazeSolver) return;
 
-        Minecraft mc = Minecraft.getMinecraft();
-        EntityPlayerSP player = mc.thePlayer;
-        World world = mc.theWorld;
+        EntityPlayerSP player = Utils.GetMC().thePlayer;
+        World world = Utils.GetMC().theWorld;
 
-        if (Utils.inDungeons && world != null && player != null && SkyblockFeatures.config.blazeSolver) {
+        if (world != null && player != null) {
             blazes.clear();
             List<Entity> entities = world.getLoadedEntityList();
 

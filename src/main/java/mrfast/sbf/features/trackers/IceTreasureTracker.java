@@ -7,6 +7,7 @@ import com.mojang.realmsclient.gui.ChatFormatting;
 
 import mrfast.sbf.SkyblockFeatures;
 import mrfast.sbf.core.PricingData;
+import mrfast.sbf.core.SkyblockInfo;
 import mrfast.sbf.events.SecondPassedEvent;
 import mrfast.sbf.gui.components.Point;
 import mrfast.sbf.gui.components.UIElement;
@@ -118,7 +119,7 @@ public class IceTreasureTracker {
 
         @Override
         public void drawElement() {
-            if (this.getToggled() && Minecraft.getMinecraft().thePlayer != null && mc.theWorld != null && !hidden && SkyblockFeatures.locationString.contains("Glacial")) {
+            if (this.getToggled() && Minecraft.getMinecraft().thePlayer != null && mc.theWorld != null && !hidden && SkyblockInfo.getInstance().localLocation.contains("Glacial")) {
                 String[] lines = {
                     ChatFormatting.GREEN+"Time Elapsed: §r"+Utils.secondsToTime(totalSeconds),
                     ChatFormatting.AQUA+"Treasures Mined: §r"+Utils.nf.format(iceTreasuresMined),

@@ -92,7 +92,8 @@ public class PricingData {
         if (reloadTimer.getTime() >= 90000 || !reloadTimer.isStarted()) {
             if(reloadTimer.getTime() >= 90000) reloadTimer.reset();
             reloadTimer.start();
-            // Load average lowest binss  - Taken from 
+
+            // Load average lowest binss  - Taken from NotEnoughUpdates
             new Thread(() -> {
                 JsonObject data = APIUtils.getJSONResponse("https://moulberry.codes/lowestbin.json");
                 for (Map.Entry<String, JsonElement> items : data.entrySet()) {
@@ -113,7 +114,7 @@ public class PricingData {
                 }).start();
             }
             // Get bazaar prices
-            if (bazaarPrices.size() == 0) {
+            if (bazaarPrices.isEmpty()) {
                 new Thread(() -> {
                     JsonObject data = APIUtils.getJSONResponse("https://api.hypixel.net/skyblock/bazaar");
                     JsonObject products = data.get("products").getAsJsonObject();
@@ -129,7 +130,7 @@ public class PricingData {
                 }).start();
             }
             // Get NPC sell prices
-            if (npcSellPrices.size() == 0) {
+            if (npcSellPrices.isEmpty()) {
                 new Thread(() -> {
                     JsonObject data = APIUtils.getJSONResponse("https://api.hypixel.net/resources/skyblock/items#NpcSellPrices");
                     JsonArray items = data.get("items").getAsJsonArray();

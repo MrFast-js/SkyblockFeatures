@@ -28,8 +28,8 @@ public class TeleportPadSolver {
 
     @SubscribeEvent
     public void onTick(ClientTickEvent event) {
-        Minecraft mc = Utils.GetMC();
         if(Utils.GetMC().theWorld == null || !Utils.inDungeons || !SkyblockFeatures.config.teleportPadSolver) return;
+        Minecraft mc = Utils.GetMC();
 
         int[][] directionOffsets = {
             {-1, 1},   // North-West

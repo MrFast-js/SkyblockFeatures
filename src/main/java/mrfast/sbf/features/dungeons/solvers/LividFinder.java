@@ -39,6 +39,7 @@ public class LividFinder {
     @SubscribeEvent
     public void onTick(TickEvent.ClientTickEvent event) {
         if(Utils.GetMC().theWorld == null || !SkyblockFeatures.config.highlightCorrectLivid || !Utils.inDungeons) return;
+
         IBlockState state = Utils.GetMC().theWorld.getBlockState(new BlockPos(6, 109, 43));
         try {
             EnumDyeColor color = state.getValue(BlockStainedGlass.COLOR);

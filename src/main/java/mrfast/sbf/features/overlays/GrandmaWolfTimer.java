@@ -32,6 +32,7 @@ public class GrandmaWolfTimer {
     @SubscribeEvent
     public void onEntityDeath(LivingDeathEvent event) {
         if(!SkyblockFeatures.config.GrandmaWolfTimer) return;
+
         if(Utils.GetMC().thePlayer.getDistanceToEntity(event.entity)<10 && Utils.GetMC().thePlayer.canEntityBeSeen(event.entity)) {
             SecondsRemaining = currentCombo;
         }
@@ -40,6 +41,7 @@ public class GrandmaWolfTimer {
     @SubscribeEvent
     public void onDrawSlots(GuiContainerEvent.DrawSlotEvent.Pre event) {
         if(!SkyblockFeatures.config.GrandmaWolfTimer) return;
+
         if (event.gui instanceof GuiChest ) {
             GuiChest gui = (GuiChest) event.gui;
             ContainerChest chest = (ContainerChest) gui.inventorySlots;
@@ -90,16 +92,15 @@ public class GrandmaWolfTimer {
     }
     @SubscribeEvent
     public void onTick(ClientTickEvent event) {
-        if(!SkyblockFeatures.config.GrandmaWolfTimer) return;
-        System.out.println(SkyblockFeatures.config.gMaWolf5Second);
-        if(Utils.GetMC().theWorld==null) return;
+        if(!SkyblockFeatures.config.GrandmaWolfTimer || Utils.GetMC().theWorld==null) return;
+
         if(fiveComboSeconds==0 && SkyblockFeatures.config.gMaWolf5Second!=0) {
-            fiveComboSeconds=SkyblockFeatures.config.gMaWolf5Second/10;
-            TenComboSeconds=SkyblockFeatures.config.gMaWolf10Second/10;
-            FifteenComboSeconds=SkyblockFeatures.config.gMaWolf15Second/10;
-            TwentyComboSeconds=SkyblockFeatures.config.gMaWolf20Second/10;
-            TwentyFiveComboSeconds=SkyblockFeatures.config.gMaWolf25Second/10;
-            ThirtyComboSeconds=SkyblockFeatures.config.gMaWolf30Second/10;
+            fiveComboSeconds= (double) SkyblockFeatures.config.gMaWolf5Second /10;
+            TenComboSeconds= (double) SkyblockFeatures.config.gMaWolf10Second /10;
+            FifteenComboSeconds= (double) SkyblockFeatures.config.gMaWolf15Second /10;
+            TwentyComboSeconds= (double) SkyblockFeatures.config.gMaWolf20Second /10;
+            TwentyFiveComboSeconds= (double) SkyblockFeatures.config.gMaWolf25Second /10;
+            ThirtyComboSeconds= (double) SkyblockFeatures.config.gMaWolf30Second /10;
         }
         
         if(SecondsRemaining>0.05) SecondsRemaining-=0.05/2;
@@ -108,6 +109,7 @@ public class GrandmaWolfTimer {
     @SubscribeEvent
     public void onChatMessage(ClientChatReceivedEvent event) {
         if(!SkyblockFeatures.config.GrandmaWolfTimer) return;
+
         String raw = event.message.getUnformattedText();
         if(raw.contains("Your Kill Combo has expired! You reached a ")) {
             SecondsRemaining=0;

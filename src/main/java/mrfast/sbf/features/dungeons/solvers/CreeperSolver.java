@@ -23,7 +23,6 @@ import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
  * @author Bowser0000
  */
 public class CreeperSolver {
-    // 10 Colors
     static final int[] CREEPER_COLORS = {0xe6194B, 0xf58231, 0xffe119, 0x3cb44b, 0x42d4f4, 0x4363d8, 0x911eb4, 0xf032e6, 0x000075, 0xaaffc3};
     static boolean drawCreeperLines = false;
     static Vec3 creeperLocation = new Vec3(0, 0, 0);
@@ -31,37 +30,36 @@ public class CreeperSolver {
 
     @SubscribeEvent
     public void onTick(ClientTickEvent event) {
-        if(SkyblockFeatures.config.creeperSolver && Utils.GetMC().thePlayer!=null) {
-            if(Utils.inDungeons) {
-                EntityPlayer p = Utils.GetMC().thePlayer;
-                AxisAlignedBB radiusCube = new AxisAlignedBB(p.posX-15, p.posY-10,p.posZ-15,p.posX+15,p.posY+10,p.posZ+15);
-                List<EntityCreeper> nearbyCreepers = Utils.GetMC().theWorld.getEntitiesWithinAABB(EntityCreeper.class, radiusCube);
-                if(nearbyCreepers.size()>0 && !nearbyCreepers.get(0).isInvisible()) {
-                    EntityCreeper entity = nearbyCreepers.get(0);
-                    creeperLines.clear();
-                    if (!drawCreeperLines) creeperLocation = new Vec3(entity.posX, entity.posY + 1, entity.posZ);
-                    drawCreeperLines = true;
-                    BlockPos block1 = new BlockPos(entity.posX - 14, entity.posY - 7, entity.posZ - 13);
-                    BlockPos block2 = new BlockPos(entity.posX + 14, entity.posY + 10, entity.posZ + 13);
-                    Iterable<BlockPos> blocks = BlockPos.getAllInBox(block1, block2);
-                    for (BlockPos blockPos : blocks) {
-                        Block block = Utils.GetMC().theWorld.getBlockState(blockPos).getBlock();
-                        if (block == Blocks.sea_lantern || block == Blocks.prismarine) {
-                            // Connect block to nearest block on opposite side
-                            Vec3 startBlock = new Vec3(blockPos.getX() + 0.5, blockPos.getY() + 0.5, blockPos.getZ() + 0.5);
-                            BlockPos oppositeBlock = getFirstBlockPosAfterVectors(startBlock, creeperLocation);
-                            BlockPos endBlock = getNearbyBlock(oppositeBlock, Blocks.sea_lantern, Blocks.prismarine);
-                            if (endBlock != null && startBlock.yCoord > 68 && endBlock.getY() > 68) { // Don't create line underground
-                                // Add to list for drawing
-                                Vec3[] insertArray = {startBlock, new Vec3(endBlock.getX() + 0.5, endBlock.getY() + 0.5, endBlock.getZ() + 0.5)};
-                                creeperLines.add(insertArray);
-                            }
-                        }
+        if(!SkyblockFeatures.config.creeperSolver || !Utils.inDungeons || Utils.GetMC().thePlayer==null) return;
+        EntityPlayer p = Utils.GetMC().thePlayer;
+        AxisAlignedBB radiusCube = new AxisAlignedBB(p.posX-15, p.posY-10,p.posZ-15,p.posX+15,p.posY+10,p.posZ+15);
+        List<EntityCreeper> nearbyCreepers = Utils.GetMC().theWorld.getEntitiesWithinAABB(EntityCreeper.class, radiusCube);
+
+        if(!nearbyCreepers.isEmpty() && !nearbyCreepers.get(0).isInvisible()) {
+            EntityCreeper entity = nearbyCreepers.get(0);
+            creeperLines.clear();
+            if (!drawCreeperLines) creeperLocation = new Vec3(entity.posX, entity.posY + 1, entity.posZ);
+            drawCreeperLines = true;
+            BlockPos block1 = new BlockPos(entity.posX - 14, entity.posY - 7, entity.posZ - 13);
+            BlockPos block2 = new BlockPos(entity.posX + 14, entity.posY + 10, entity.posZ + 13);
+            Iterable<BlockPos> blocks = BlockPos.getAllInBox(block1, block2);
+
+            for (BlockPos blockPos : blocks) {
+                Block block = Utils.GetMC().theWorld.getBlockState(blockPos).getBlock();
+                if (block == Blocks.sea_lantern || block == Blocks.prismarine) {
+                    // Connect block to nearest block on opposite side
+                    Vec3 startBlock = new Vec3(blockPos.getX() + 0.5, blockPos.getY() + 0.5, blockPos.getZ() + 0.5);
+                    BlockPos oppositeBlock = getFirstBlockPosAfterVectors(startBlock, creeperLocation);
+                    BlockPos endBlock = getNearbyBlock(oppositeBlock, Blocks.sea_lantern, Blocks.prismarine);
+                    if (endBlock != null && startBlock.yCoord > 68 && endBlock.getY() > 68) { // Don't create line underground
+                        // Add to list for drawing
+                        Vec3[] insertArray = {startBlock, new Vec3(endBlock.getX() + 0.5, endBlock.getY() + 0.5, endBlock.getZ() + 0.5)};
+                        creeperLines.add(insertArray);
                     }
-                } else {
-                    drawCreeperLines = false;
                 }
             }
+        } else {
+            drawCreeperLines = false;
         }
     }
 
@@ -71,7 +69,7 @@ public class CreeperSolver {
             for (int i = 0; i < creeperLines.size(); i++) {
                 Vec3 pos1 = creeperLines.get(i)[0];
                 Vec3 pos2 = creeperLines.get(i)[1];
-                int color = CREEPER_COLORS[i % 10];
+                int color = CREEPER_COLORS[i%10];
                 RenderUtil.drawOutlinedFilledBoundingBox(new AxisAlignedBB(pos1.xCoord - 0.51, pos1.yCoord - 0.51, pos1.zCoord - 0.51, pos1.xCoord + 0.51, pos1.yCoord + 0.51, pos1.zCoord + 0.51), new Color(color), event.partialTicks);
                 RenderUtil.drawOutlinedFilledBoundingBox(new AxisAlignedBB(pos2.xCoord - 0.51, pos2.yCoord - 0.51, pos2.zCoord - 0.51, pos2.xCoord + 0.51, pos2.yCoord + 0.51, pos2.zCoord + 0.51), new Color(color), event.partialTicks);
             }
