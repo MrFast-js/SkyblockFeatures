@@ -1,22 +1,9 @@
 package mrfast.sbf.features.misc;
 
-import java.io.ByteArrayInputStream;
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.HashMap;
-import java.util.List;
-
-import org.apache.commons.codec.binary.Base64InputStream;
-import org.lwjgl.input.Keyboard;
-
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.mojang.realmsclient.gui.ChatFormatting;
-
 import mrfast.sbf.SkyblockFeatures;
 import mrfast.sbf.core.AuctionUtil;
 import mrfast.sbf.core.PricingData;
@@ -43,7 +30,13 @@ import net.minecraft.util.MathHelper;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
+import org.apache.commons.codec.binary.Base64InputStream;
+import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
+
+import java.io.ByteArrayInputStream;
+import java.nio.charset.StandardCharsets;
+import java.util.*;
 
 public class AutoAuctionFlip {
     static Auction bestAuction = null;
@@ -179,7 +172,7 @@ public class AutoAuctionFlip {
         seconds = calendar.get(Calendar.SECOND)+1;
         if(lastSecond == seconds) return;
         lastSecond = seconds;
-        Integer timeUntilReload = seconds<earliestApiUpdateTime?earliestApiUpdateTime-seconds:60-seconds+earliestApiUpdateTime;
+        int timeUntilReload = seconds<earliestApiUpdateTime?earliestApiUpdateTime-seconds:60-seconds+earliestApiUpdateTime;
 
         if(timeUntilReload == 40) {
             messageSent = 0;
@@ -215,6 +208,11 @@ public class AutoAuctionFlip {
                 JsonArray startingProducts = startingData.get("auctions").getAsJsonArray();
                 String startingUUID = startingProducts.get(0).getAsJsonObject().get("uuid").getAsString();
 
+                /*
+                    Find the point in time when the auction API reloads.
+                    This gets the auction id of the first auction visible, then every second
+                    it checks the first auction again to see if it changed, if it has then it knows the API updated.
+                */
                 for(int i=0;i<60;i++) {
                     Utils.setTimeout(()->{
                         if(Utils.inDungeons || !SkyblockFeatures.config.autoAuctionFlip || foundReloadTime) return;
@@ -241,6 +239,7 @@ public class AutoAuctionFlip {
                         }
                     }, i*1000);
                 }
+                // Check if the api updated when it was expected to
                 Utils.setTimeout(()->{
                     if(Utils.inDungeons || !SkyblockFeatures.config.autoAuctionFlip) return;
 
@@ -310,8 +309,7 @@ public class AutoAuctionFlip {
             }).start();
         }
     }
-    
-    HashMap<String,Double> totalAuctions = new HashMap<>();
+
     boolean debugLogging = false;
     public void filterAndNotifyProfitableAuctions(JsonArray products) {
         for(JsonElement entry : products) {
@@ -336,12 +334,9 @@ public class AutoAuctionFlip {
                         // Get Current Item Price
                         Double binPrice = (double) itemData.get("starting_bid").getAsInt();
 
-                        // Load lowets and average BIN prices
+                        // Load lowest and average BIN prices
                         Double lowestBinPrice = PricingData.lowestBINs.get(id);
                         Double avgBinPrice = PricingData.averageLowestBINs.get(id);
-                        if(lowestBinPrice==null||avgBinPrice==null) continue;
-                        
-                        // Item values;
 
                         if(lowestBinPrice==null||avgBinPrice==null) continue;
 
@@ -349,7 +344,7 @@ public class AutoAuctionFlip {
                         Integer estimatedPrice = ItemUtils.getEstimatedItemValue(extraAttributes);
                         String auctionId = itemData.get("uuid").toString().replaceAll("\"","");
                         Integer valueOfTheItem = (int) (SkyblockFeatures.config.autoFlipAddEnchAndStar?estimatedPrice:lowestBinPrice);
-                        Integer percentage = (int) Math.floor(((valueOfTheItem/binPrice)-1)*100);
+                        int percentage = (int) Math.floor(((valueOfTheItem/binPrice)-1)*100);
                         JsonObject auctionData = PricingData.getItemAuctionInfo(id);
                         Long enchantValue = ItemUtils.getEnchantsWorth(extraAttributes);
                         Long starValue = ItemUtils.getStarCost(extraAttributes);
