@@ -2,6 +2,7 @@ package mrfast.sbf.core;
 
 import gg.essential.vigilance.Vigilant;
 import gg.essential.vigilance.data.*;
+import mrfast.sbf.SkyblockFeatures;
 
 import java.awt.Color;
 import java.io.File;
@@ -1810,7 +1811,11 @@ public class Config extends Vigilant {
     public static File file = new File("./config/skyblockfeatures/config.toml");
     public Config() {
         super(file);
-
         initialize();
+    }
+
+    public void forceSave() {
+        SkyblockFeatures.config.markDirty();
+        SkyblockFeatures.config.writeData();
     }
 }

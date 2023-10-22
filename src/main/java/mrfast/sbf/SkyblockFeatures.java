@@ -4,18 +4,10 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStreamReader;
 import java.net.URL;
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-import java.util.Set;
-import java.util.regex.Pattern;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.lwjgl.input.Keyboard;
 
 import gg.essential.api.EssentialAPI;
@@ -37,7 +29,6 @@ import mrfast.sbf.core.Config;
 import mrfast.sbf.core.PricingData;
 import mrfast.sbf.core.SkyblockInfo;
 import mrfast.sbf.events.ChatEventListener;
-import mrfast.sbf.events.PacketEvent;
 import mrfast.sbf.events.SecondPassedEvent;
 import mrfast.sbf.features.statDisplays.ActionBarListener;
 import mrfast.sbf.features.statDisplays.CryptDisplay;
@@ -115,14 +106,8 @@ import mrfast.sbf.utils.APIUtils;
 import mrfast.sbf.utils.CapeUtils;
 import mrfast.sbf.utils.Utils;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.command.ICommand;
-import net.minecraft.network.play.client.C01PacketChatMessage;
-import net.minecraft.scoreboard.Score;
-import net.minecraft.scoreboard.ScoreObjective;
-import net.minecraft.scoreboard.ScorePlayerTeam;
-import net.minecraft.scoreboard.Scoreboard;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.client.ClientCommandHandler;
 import net.minecraftforge.common.MinecraftForge;
@@ -142,19 +127,15 @@ public class SkyblockFeatures {
     public static final String MODID = "skyblockfeatures";
     public static final String MOD_NAME = "skyblockfeatures";
     public static String VERSION = "Loading";
-    public static final Minecraft mc = Minecraft.getMinecraft();
+    public static Minecraft mc = Minecraft.getMinecraft();
 
     public static Config config = new Config();
-    public static File modDir = new File(new File(mc.mcDataDir, "config"), "skyblockfeatures");
     public static GuiManager GUIMANAGER;
-    public static Logger LOGGER = LogManager.getLogger(MOD_NAME);
     public static int ticks = 0;
     public static boolean usingNEU = false;
-
     public static File jarFile = null;
+    public static File modDir = new File(new File(mc.mcDataDir, "config"), "skyblockfeatures");
 
-    @Mod.Instance(MODID)
-    public static SkyblockFeatures INSTANCE;
 
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event) {
@@ -169,24 +150,12 @@ public class SkyblockFeatures {
         String playerUUID = Utils.GetMC().getSession().getProfile().getId().toString();
 
         // Load blacklist
-        try {
-            URL url = new URL("https://raw.githubusercontent.com/MrFast-js/SBF-Blacklist/main/blacklist.txt");
-            BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream()));
-            String s;
-            while ((s = reader.readLine()) != null) {
-                if(s.equals(playerUUID)) {
-                    throw new Error("You're blacklisted from using SBF! If you think this is a mistake contact MrFast#7146 on discord.");
-                }
-            }
-        } catch (Exception ignored) {}
+        initBlacklist(playerUUID);
 
         // Save the config
         config.preload();
-        // UIComponent a = new UIText("test");
-        SkyblockFeatures.config.markDirty();
-        SkyblockFeatures.config.writeData();
+        SkyblockFeatures.config.forceSave();
 
-        
         EssentialAPI.getCommandRegistry().registerCommand(new ViewModelCommand());
 
         // Features to load
@@ -271,9 +240,7 @@ public class SkyblockFeatures {
             new ExoticAuctions(),
             new CollectionOverlay()
         );
-        features.forEach((feature)->{
-            MinecraftForge.EVENT_BUS.register(feature);
-        });
+        features.forEach(MinecraftForge.EVENT_BUS::register);
         // Checks mod folder for version of Skyblock Features your using
         for(String modName:listFilesUsingJavaIO(Minecraft.getMinecraft().mcDataDir.getAbsolutePath()+"/mods")) {
             if(modName.contains("Skyblock-Features")) {
@@ -282,12 +249,31 @@ public class SkyblockFeatures {
                 break;
             }
         }
+
         SkyblockFeatures.config.timeStartedUp++;
+        SkyblockFeatures.config.forceSave();
         System.out.println("You have started Skyblock Features up "+SkyblockFeatures.config.timeStartedUp+" times!");
     }
+
+    /*
+    This hopefully shouldn't need to be used but in the case of people trying to sell or claim my mod as theirs, this is prevention.
+     */
+    public void initBlacklist(String playerUUID) {
+        try {
+            URL url = new URL("https://raw.githubusercontent.com/MrFast-js/SBF-Blacklist/main/blacklist.txt");
+            BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream()));
+            String s;
+            while ((s = reader.readLine()) != null) {
+                if(s.equals(playerUUID)) {
+                    throw new Error("You're blacklisted from using SBF! If you think this is a mistake contact 'mrfast' on discord.");
+                }
+            }
+        } catch (Exception ignored) {}
+    }
+
     // List files in a directory (Used only for the mods folder)
     public Set<String> listFilesUsingJavaIO(String dir) {
-        return Stream.of(new File(dir).listFiles())
+        return Stream.of(Objects.requireNonNull(new File(dir).listFiles()))
           .filter(file -> !file.isDirectory())
           .map(File::getName)
           .collect(Collectors.toSet());
@@ -322,7 +308,6 @@ public class SkyblockFeatures {
 
     public static boolean smallItems = false;
     public boolean start = true;
-    ArrayList<String> blacklist = new ArrayList<>();
 
     @SubscribeEvent
     public void onTick(TickEvent.ClientTickEvent event) {
@@ -355,12 +340,6 @@ public class SkyblockFeatures {
         }
 
         ticks++;
-    }
-    
-    private static final Pattern LETTERS_NUMBERS = Pattern.compile("[^a-z A-Z:0-9/'()]");
-
-    private String keepLettersAndNumbersOnly(String text) {
-        return LETTERS_NUMBERS.matcher(EnumChatFormatting.getTextWithoutFormattingCodes(text)).replaceAll("");
     }
 
     private KeyBinding toggleSprint;

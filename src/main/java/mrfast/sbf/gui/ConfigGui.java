@@ -2,18 +2,14 @@ package mrfast.sbf.gui;
 
 import java.awt.Color;
 import java.awt.Desktop;
-import java.io.IOException;
 import java.lang.reflect.Field;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.SortedMap;
 import java.util.TreeMap;
-
-import com.mojang.realmsclient.gui.ChatFormatting;
 
 import gg.essential.api.utils.GuiUtil;
 import gg.essential.elementa.ElementaVersion;
@@ -25,17 +21,13 @@ import gg.essential.elementa.components.UIImage;
 import gg.essential.elementa.components.UIRoundedRectangle;
 import gg.essential.elementa.components.UIText;
 import gg.essential.elementa.components.UIWrappedText;
-import gg.essential.elementa.components.inspector.Inspector;
 import gg.essential.elementa.constraints.CenterConstraint;
 import gg.essential.elementa.constraints.ChildBasedSizeConstraint;
-import gg.essential.elementa.constraints.ColorConstraint;
-import gg.essential.elementa.constraints.ConstantColorConstraint;
 import gg.essential.elementa.constraints.PixelConstraint;
 import gg.essential.elementa.constraints.RelativeConstraint;
 import gg.essential.elementa.constraints.SiblingConstraint;
 import gg.essential.elementa.constraints.animation.AnimatingConstraints;
 import gg.essential.elementa.constraints.animation.Animations;
-import gg.essential.elementa.dsl.UtilitiesKt;
 import gg.essential.elementa.effects.OutlineEffect;
 import gg.essential.elementa.effects.RecursiveFadeEffect;
 import gg.essential.elementa.effects.ScissorEffect;
@@ -65,8 +57,7 @@ public class ConfigGui extends WindowScreen {
 
     @Override
 	public void onScreenClose() {
-		SkyblockFeatures.config.markDirty();
-        SkyblockFeatures.config.writeData();
+		SkyblockFeatures.config.forceSave();
 	}
 
     // Text/Lines colors

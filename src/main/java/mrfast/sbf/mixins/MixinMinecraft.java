@@ -16,9 +16,6 @@ import net.minecraft.util.ResourceLocation;
 
 @Mixin(Minecraft.class)
 public class MixinMinecraft {
-    @Shadow
-    private EntityPlayerSP thePlayer;
-    public FontRenderer mcFontRendererObj;
 
     @Redirect(method = "startGame", at = @At(value = "FIELD", target = "Lnet/minecraft/client/Minecraft;fontRendererObj:Lnet/minecraft/client/gui/FontRenderer;"))
     public void startFontRenderer(Minecraft instance, FontRenderer value) {

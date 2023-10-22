@@ -1,18 +1,14 @@
 package mrfast.sbf.events;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.event.ClickEvent;
 import net.minecraft.event.HoverEvent;
 import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.ChatStyle;
 import net.minecraft.util.EnumChatFormatting;
-import net.minecraft.util.IChatComponent;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
-import net.minecraftforge.event.ServerChatEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -25,8 +21,6 @@ import java.util.Arrays;
 import java.util.Base64;
 import java.util.Collections;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import com.google.gson.JsonObject;
 import com.mojang.realmsclient.gui.ChatFormatting;
@@ -274,8 +268,7 @@ public class ChatEventListener {
             Utils.SendMessage("§bThank You for downloading Skyblock Features!§e Do /sbf for config!");
 
             SkyblockFeatures.config.firstLaunch = false;
-            SkyblockFeatures.config.markDirty();
-            SkyblockFeatures.config.writeData();
+            SkyblockFeatures.config.forceSave();
         }
     }
 }
