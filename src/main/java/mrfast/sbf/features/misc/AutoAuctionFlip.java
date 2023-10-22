@@ -326,7 +326,7 @@ public class AutoAuctionFlip {
                 JsonObject itemData = entry.getAsJsonObject();
                 // Bin Flip
                 if(itemData.get("bin").getAsBoolean()) {
-                    if(!SkyblockFeatures.config.autoFlipBIN) continue;
+                    if(!SkyblockFeatures.config.aucFlipperBins) continue;
                     try {
                         // NBT related
                         String item_bytes = itemData.get("item_bytes").getAsString();

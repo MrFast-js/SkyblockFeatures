@@ -1417,7 +1417,7 @@ public class Config extends Vigilant {
     @Property(
             type = PropertyType.SWITCH,
             name = "Flipper Active",
-            description = "Enables or disables the flipper with its current settings",
+            description = "Enables or disables the flipper with its current settings.\n§cDo not put 100% trust in the mod, it can and probably will make mistakes.",
             category = "§1§rAuction Flipper",
             subcategory = "Flipper Settings"
     )
@@ -1425,8 +1425,8 @@ public class Config extends Vigilant {
 
     @Property(
             type = PropertyType.SWITCH,
-            name = "BIN Flipper",
-            description = "Shows you BIN that have a flip value of more than your margin.\n§cDo not put 100% trust in the mod, it can and probably will make mistakes.",
+            name = "Include BIN Flips",
+            description = "Check BINs for flips. §cThis is risky you need to know what your doing.",
             category = "§1§rAuction Flipper",
             subcategory = "Flipper Settings"
     )
@@ -1440,15 +1440,6 @@ public class Config extends Vigilant {
         subcategory = "Flipper Settings"
     )
     public boolean aucFlipperAucs = true;
-    
-    @Property(
-        type = PropertyType.SWITCH,
-        name = "Include BIN Flips",
-        description = "Check BIN for flips §c(Risky)",
-        category = "§1§rAuction Flipper",
-        subcategory = "Flipper Settings"
-    )
-    public boolean autoFlipBIN = true;
 
     @Property(
             type = PropertyType.NUMBER,
