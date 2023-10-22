@@ -1416,28 +1416,37 @@ public class Config extends Vigilant {
 
     @Property(
             type = PropertyType.SWITCH,
+            name = "Flipper Active",
+            description = "Enables or disables the flipper with its current settings",
+            category = "§1§rAuction Flipper",
+            subcategory = "Flipper Settings"
+    )
+    public boolean aucFlipperEnabled = false;
+
+    @Property(
+            type = PropertyType.SWITCH,
             name = "BIN Flipper",
             description = "Shows you BIN that have a flip value of more than your margin.\n§cDo not put 100% trust in the mod, it can and probably will make mistakes.",
-            category = "§1§rBIN Flipper",
-            subcategory = "BIN Flipper Settings"
+            category = "§1§rAuction Flipper",
+            subcategory = "Flipper Settings"
     )
-    public boolean autoAuctionFlip = false;
+    public boolean aucFlipperBins = false;
 
     @Property(
         type = PropertyType.SWITCH,
         name = "Include Auction Flips",
         description = "Check auctions for flips",
-        category = "§1§rBIN Flipper",
-        subcategory = "BIN Flipper Settings"
+        category = "§1§rAuction Flipper",
+        subcategory = "Flipper Settings"
     )
-    public boolean autoFlipAuction = true;
+    public boolean aucFlipperAucs = true;
     
     @Property(
         type = PropertyType.SWITCH,
         name = "Include BIN Flips",
         description = "Check BIN for flips §c(Risky)",
-        category = "§1§rBIN Flipper",
-        subcategory = "BIN Flipper Settings"
+        category = "§1§rAuction Flipper",
+        subcategory = "Flipper Settings"
     )
     public boolean autoFlipBIN = true;
 
@@ -1445,8 +1454,8 @@ public class Config extends Vigilant {
             type = PropertyType.NUMBER,
             name = "Profit Margin",
             description = "The minimum amount of profit for an auction to be shown to you.",
-            category = "§1§rBIN Flipper",
-            subcategory = "BIN Flipper Settings"
+            category = "§1§rAuction Flipper",
+            subcategory = "Flipper Settings"
     )
     public int autoAuctionFlipMargin = 200000;
     
@@ -1454,8 +1463,8 @@ public class Config extends Vigilant {
             type = PropertyType.NUMBER,
             name = "Minimum Volume",
             description = "The minimum amount of sales per day for an auction to be shown to you.",
-            category = "§1§rBIN Flipper",
-            subcategory = "BIN Flipper Settings"
+            category = "§1§rAuction Flipper",
+            subcategory = "Flipper Settings"
     )
     public int autoAuctionFlipMinVolume = 1;
  
@@ -1463,8 +1472,8 @@ public class Config extends Vigilant {
             type = PropertyType.NUMBER,
             name = "Minimum Flip Percent",
             description = "The minimum percent of profit from an auction to be shown to you.",
-            category = "§1§rBIN Flipper",
-            subcategory = "BIN Flipper Settings"
+            category = "§1§rAuction Flipper",
+            subcategory = "Flipper Settings"
     )
     public int autoAuctionFlipMinPercent = 5;
 
@@ -1472,8 +1481,8 @@ public class Config extends Vigilant {
             type = PropertyType.NUMBER,
             name = "Max Amount Of Auctions",
             description = "The max amount of flips to be show to you, this will prevent lag.",
-            category = "§1§rBIN Flipper",
-            subcategory = "BIN Flipper Settings"
+            category = "§1§rAuction Flipper",
+            subcategory = "Flipper Settings"
     )
     public int autoAuctionFlipMaxAuc = 50;
 
@@ -1481,8 +1490,8 @@ public class Config extends Vigilant {
             type = PropertyType.SWITCH,
             name = "Make Purse Max Amount",
             description = "Make the amount of money you can spend on an auction equal to your purse.",
-            category = "§1§rBIN Flipper",
-            subcategory = "BIN Flipper Settings"
+            category = "§1§rAuction Flipper",
+            subcategory = "Flipper Settings"
     )
     public boolean autoAuctionFlipSetPurse = false;
 
@@ -1490,8 +1499,8 @@ public class Config extends Vigilant {
         type = PropertyType.SWITCH,
         name = "Change Item Estimation",
         description = "Include stars and enchants into item value estimation.",
-        category = "§1§rBIN Flipper",
-        subcategory = "BIN Flipper Settings"
+        category = "§1§rAuction Flipper",
+        subcategory = "Flipper Settings"
     )
     public boolean autoFlipAddEnchAndStar = true;
 
@@ -1499,8 +1508,8 @@ public class Config extends Vigilant {
             type = PropertyType.SWITCH,
             name = "Refresh Countdown",
             description = "Show the countdown till refreshing.",
-            category = "§1§rBIN Flipper",
-            subcategory = "BIN Flipper Settings"
+            category = "§1§rAuction Flipper",
+            subcategory = "Flipper Settings"
     )
     public boolean autoAuctionFlipCounter = false;
 
@@ -1508,8 +1517,8 @@ public class Config extends Vigilant {
             type = PropertyType.SWITCH,
             name = "Auto Open",
             description = "Opens up the bid menu for the item with the highest profit. \n§cThis is slower than holding down key",
-            category = "§1§rBIN Flipper",
-            subcategory = "BIN Flipper Settings"
+            category = "§1§rAuction Flipper",
+            subcategory = "Flipper Settings"
     )
     public boolean autoAuctionFlipOpen = false;
 
@@ -1518,7 +1527,7 @@ public class Config extends Vigilant {
             name = "Easy Auction Buying",
             description = "By spam clicking you will auto buy/bid the item from that is currently viewed.",
             category = "§1§rAuction house",
-            subcategory = "BIN Flipper Settings"
+            subcategory = "Flipper Settings"
     )
     public boolean autoAuctionFlipEasyBuy = false;
 
@@ -1528,8 +1537,8 @@ public class Config extends Vigilant {
             type = PropertyType.CHECKBOX,
             name = "Filter Out Pets",
             description = "Filters out pets from Auto Flipper",
-            category = "§1§rBIN Flipper",
-            subcategory = "§1§rBIN Flipper Filter"
+            category = "§1§rAuction Flipper",
+            subcategory = "§1§rAuction Flipper Filter"
     )
     public boolean autoAuctionFilterOutPets = false;
 
@@ -1537,8 +1546,8 @@ public class Config extends Vigilant {
             type = PropertyType.CHECKBOX,
             name = "Filter Out Skins",
             description = "Filters out minion skins, armor skins, and pet skins from Auto Flipper",
-            category = "§1§rBIN Flipper",
-            subcategory = "§1§rBIN Flipper Filter"
+            category = "§1§rAuction Flipper",
+            subcategory = "§1§rAuction Flipper Filter"
     )
     public boolean autoAuctionFilterOutSkins = false;
 
@@ -1546,8 +1555,8 @@ public class Config extends Vigilant {
             type = PropertyType.CHECKBOX,
             name = "Filter Out Furniture",
             description = "Filters out furniture from Auto Flipper",
-            category = "§1§rBIN Flipper",
-            subcategory = "§1§rBIN Flipper Filter"
+            category = "§1§rAuction Flipper",
+            subcategory = "§1§rAuction Flipper Filter"
     )
     public boolean autoAuctionFilterOutFurniture = false;
 
@@ -1555,8 +1564,8 @@ public class Config extends Vigilant {
             type = PropertyType.CHECKBOX,
             name = "Filter Out Dyes",
             description = "Filters out dyes from Auto Flipper",
-            category = "§1§rBIN Flipper",
-            subcategory = "§1§rBIN Flipper Filter"
+            category = "§1§rAuction Flipper",
+            subcategory = "§1§rAuction Flipper Filter"
     )
     public boolean autoAuctionFilterOutDyes = false;
 
@@ -1564,8 +1573,8 @@ public class Config extends Vigilant {
             type = PropertyType.CHECKBOX,
             name = "Filter Out Runes",
             description = "Filters out runes from Auto Flipper",
-            category = "§1§rBIN Flipper",
-            subcategory = "§1§rBIN Flipper Filter"
+            category = "§1§rAuction Flipper",
+            subcategory = "§1§rAuction Flipper Filter"
     )
     public boolean autoAuctionFilterOutRunes = false;
 
@@ -1573,8 +1582,8 @@ public class Config extends Vigilant {
             type = PropertyType.PARAGRAPH,
             name = "Blacklist",
             description = "Filters out any blacklisted items. Seperate with §a;§r.§aExample: 'bonemerang;stick'",
-            category = "§1§rBIN Flipper",
-            subcategory = "§1§rBIN Flipper Filter"
+            category = "§1§rAuction Flipper",
+            subcategory = "§1§rAuction Flipper Filter"
     )
     public String autoAuctionBlacklist = "bonemerang;soldier;jungle pick;";
 

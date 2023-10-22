@@ -102,7 +102,7 @@ public class PricingData {
             }).start();
 
             // Get extra auction data
-            if (SkyblockFeatures.config.auctionGuis || SkyblockFeatures.config.autoAuctionFlip) {
+            if (SkyblockFeatures.config.auctionGuis || SkyblockFeatures.config.aucFlipperEnabled) {
                 new Thread(() -> {
                     AuctionUtil.getMyApiGZIPAsync("https://moulberry.codes/auction_averages/3day.json.gz", (jsonObject) -> {
                         auctionPricesJson = jsonObject;
