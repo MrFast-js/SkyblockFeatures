@@ -40,7 +40,7 @@ public class BaitCounterOverlay {
         typesOfBait.clear();
         new Thread(() -> {
                 // Get UUID for Hypixel API requests
-                String uuid = APIUtils.getUUID(Utils.GetMC().thePlayer.getName());;
+                String uuid = Utils.GetMC().thePlayer.getUniqueID().toString();
                 String latestProfile = APIUtils.getLatestProfileID(uuid);
                 if (latestProfile == null) return;
 

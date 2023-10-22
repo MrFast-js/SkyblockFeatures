@@ -57,7 +57,7 @@ public class pvCommand extends CommandBase {
             GuiUtil.open(new ProfileViewerGui(true,username,"auto"));
             return;
         } else {
-            String playerUuid = FakePlayerCommand.getUUID(args[0]);
+            String playerUuid = APIUtils.getUUID(args[0]);
             if(playerUuid==null) {
                 Utils.SendMessage(ChatFormatting.RED+"This player doesn't exist or has never played Skyblock");
                 return;

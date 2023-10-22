@@ -3,11 +3,7 @@ package mrfast.sbf.gui;
 import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.text.NumberFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 
 import com.google.common.collect.Lists;
@@ -689,8 +685,11 @@ public class ProfileViewerUtils {
 
     public static void setSlayerSkills(JsonObject userObject) {
         System.out.println("Settings slayer experience");
-        JsonObject slayersObject = userObject.get("slayer_bosses").getAsJsonObject();
-        // try {
+        JsonObject slayersObject = null;
+        if(userObject.has("slayer_bosses")) {
+            slayersObject = userObject.get("slayer_bosses").getAsJsonObject();
+        }
+         try {
             Integer[] tierPrices = {2000, 7500, 20000, 50000,100000};
 
             if(slayersObject.has("zombie")) {
@@ -886,12 +885,7 @@ public class ProfileViewerUtils {
                 int nextXp = ProfileViewerUtils.getNextSlayerLevelXP(xp, slayerType);
                 ProfileViewerGui.vampireSlayer = new SkillInfo(level, nextXp, xp, hover);
             }
-
-
-        // } catch (Exception e) {
-        //     e.printStackTrace();
-        //     // TODO: handle exception
-        // }
+         } catch (Exception ignored) {}
         System.out.println("set slayer experience");
     }
 }

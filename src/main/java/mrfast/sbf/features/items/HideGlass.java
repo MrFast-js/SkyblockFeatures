@@ -105,6 +105,7 @@ public class HideGlass {
         if(event.inventoryName.contains(ChatFormatting.GREEN+"✯")) {
             if(event.inventoryName.contains("Correct Panes")) {
                 for(int slot : TerminalCommand.paneSlots) {
+                    if(event.slot==null) continue;
                     if(event.slot.slotNumber == slot) {
                         if(event.item.getUnlocalizedName().contains("red")) {
                             Utils.playSound("note.pling", 2);

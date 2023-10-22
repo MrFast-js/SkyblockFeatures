@@ -1,18 +1,12 @@
 package mrfast.sbf.utils;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Scanner;
 
+import mrfast.sbf.commands.FakePlayerCommand;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpVersion;
@@ -27,7 +21,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.mojang.realmsclient.gui.ChatFormatting;
 
-import mrfast.sbf.SkyblockFeatures;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ChatComponentText;
@@ -63,6 +56,7 @@ public class APIUtils {
                 if (statusCode == 200) {
                     try (BufferedReader in = new BufferedReader(new InputStreamReader(entity.getContent(),StandardCharsets.UTF_8))) {
                         Gson gson = new Gson();
+                        System.out.println("200 Response from "+urlString);
                         return gson.fromJson(in, JsonObject.class);
                     }
                 } else {
@@ -107,8 +101,8 @@ public class APIUtils {
         }
     }
 
-    public static Integer getPetRarity(String tier) {
-        Integer rarity = 0;
+    public static int getPetRarity(String tier) {
+        int rarity = 0;
         if(tier.equals("COMMON")) rarity = 1;
         if(tier.equals("UNCOMMON")) rarity = 2;
         if(tier.equals("RARE")) rarity = 3;
@@ -145,21 +139,29 @@ public class APIUtils {
 
                 return gson.fromJson(r.toString(), JsonArray.class);
             }
-        } catch (Exception ex) {}
+        } catch (Exception ignored) {}
         return new JsonArray();
     }
 
     public static String getUUID(String username) {
+        return getUUID(username,false);
+    }
+    public static String getUUID(String username,boolean formatted) {
         try {
             JsonObject uuidResponse = getJSONResponse("https://api.mojang.com/users/profiles/minecraft/" + username);
-            return uuidResponse.get("id").getAsString();
+            String out = uuidResponse.get("id").getAsString();
+            return formatted?formatUUID(out):out;
         } catch (Exception e) {
             // TODO: handle exception
         }
-        return null;
+        return "";
     }
 
-    public static HashMap<String,String> nameCache = new HashMap<>();
+    private static String formatUUID(String input) {
+        return input.replaceAll("(.{8})(.{4})(.{4})(.{4})(.{12})", "$1-$2-$3-$4-$5");
+    }
+
+    private static HashMap<String,String> nameCache = new HashMap<>();
     public static String getName(String uuid) {
         if(nameCache.containsKey(uuid)) return nameCache.get(uuid);
         try {
@@ -188,9 +190,8 @@ public class APIUtils {
             Utils.SendMessage(EnumChatFormatting.RED + "Failed with reason: " + reason);
             return null;
         }
-        if (!profilesResponse.has("profiles")) {
-            return null;
-        }
+        if (!profilesResponse.has("profiles")) return null;
+
         JsonArray profilesArray = profilesResponse.get("profiles").getAsJsonArray();
         for (JsonElement a : profilesArray) {
             JsonObject profileJSON = a.getAsJsonObject();
@@ -200,7 +201,8 @@ public class APIUtils {
                 break;
             }
         }
-        if(latestProfile=="") {
+        // This happens if the person hasnt logged on in a while
+        if(latestProfile.equals("")) {
             System.out.println("No currentt profile found, selecting first");
             JsonObject profileJSON = profilesArray.get(0).getAsJsonObject();
             latestProfile = profileJSON.get("profile_id").getAsString();

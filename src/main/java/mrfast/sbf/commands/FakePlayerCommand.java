@@ -2,8 +2,10 @@ package mrfast.sbf.commands;
 
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.util.Objects;
 import java.util.UUID;
 
+import mrfast.sbf.utils.APIUtils;
 import org.apache.commons.io.IOUtils;
 
 import com.google.gson.JsonObject;
@@ -41,39 +43,15 @@ public class FakePlayerCommand extends CommandBase {
 	@Override
 	public void processCommand(ICommandSender arg0, String[] args) throws CommandException {
         if(fakePlayer != null) {
-            mc.theWorld.removeEntity(fakePlayer);;
+            mc.theWorld.removeEntity(fakePlayer);
         }
-        UUID uuid = UUID.fromString(getUUID(args[0]));
+        UUID uuid = UUID.fromString(APIUtils.getUUID(args[0],true));
 		fakePlayer = new EntityOtherPlayerMP(mc.theWorld, new GameProfile(uuid, args[0]));
         fakePlayer.copyLocationAndAnglesFrom(mc.thePlayer);
         fakePlayer.rotationYawHead = mc.thePlayer.rotationYawHead;
 
         mc.theWorld.addEntityToWorld(-1, fakePlayer);
-        LividFinder.livid = fakePlayer;
 	}
 
-    public static String getUUID(String name) {
-        JsonParser parser = new JsonParser();
-        String url = "https://api.mojang.com/users/profiles/minecraft/" + name;
-        try {
-            String UUIDJson = IOUtils.toString(new URL(url), StandardCharsets.UTF_8);
-            if (UUIDJson.isEmpty()) {
-                return null;
-            }
-            JsonObject UUIDObject = (JsonObject)parser.parse(UUIDJson);
-            return reformatUuid(UUIDObject.get("id").toString());
-        } catch (Exception e) {
-            return null;
-        }
-    }
-    
-    private static String reformatUuid(String uuid) {
-        String longUuid = "";
-        longUuid = longUuid + uuid.substring(1, 9) + "-";
-        longUuid = longUuid + uuid.substring(9, 13) + "-";
-        longUuid = longUuid + uuid.substring(13, 17) + "-";
-        longUuid = longUuid + uuid.substring(17, 21) + "-";
-        longUuid += uuid.substring(21, 33);
-        return longUuid;
-    }
+
 }
