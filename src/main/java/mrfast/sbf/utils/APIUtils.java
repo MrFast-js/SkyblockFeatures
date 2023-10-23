@@ -32,15 +32,21 @@ public class APIUtils {
     public static CloseableHttpClient client = HttpClients.custom().setUserAgent("Mozilla/5.0").build();
 
     public static JsonObject getJSONResponse(String urlString) {
-        if(urlString.contains("#")) {
-            String url = urlString.split("#")[0];
-            String reason = urlString.split("#")[1];
-            System.out.println("Sending request to " + url+" Reason: "+reason);
-        } else {
-            System.out.println("Sending request to " + urlString);
+        if(Utils.isDeveloper()) {
+            if (urlString.contains("#")) {
+                String url = urlString.split("#")[0];
+                String reason = urlString.split("#")[1];
+                System.out.println("Sending request to " + url + " Reason: " + reason);
+            } else {
+                System.out.println("Sending request to " + urlString);
+            }
         }
-        // PROXYYYYY so me api key aint known ty @nea
-        if(urlString.contains("api.hypixel.net")) urlString = urlString.replace("api.hypixel.net", "proxy.mrfastkrunker.workers.dev");
+        // Split between 4 proxies to reduce lag
+        int proxyNumber = (int) Utils.randomNumber(1,4);
+        String proxy = "proxy"+proxyNumber;
+        if(urlString.contains("api.hypixel.net")) {
+            urlString = urlString.replace("api.hypixel.net", proxy+".mrfastkrunker.workers.dev");
+        }
 
         EntityPlayer player = Minecraft.getMinecraft().thePlayer;
         try {
@@ -56,11 +62,10 @@ public class APIUtils {
                 if (statusCode == 200) {
                     try (BufferedReader in = new BufferedReader(new InputStreamReader(entity.getContent(),StandardCharsets.UTF_8))) {
                         Gson gson = new Gson();
-                        System.out.println("200 Response from "+urlString);
                         return gson.fromJson(in, JsonObject.class);
                     }
                 } else {
-                    System.out.println(EnumChatFormatting.RED+"Unexpected Server Response: " + statusCode);
+                    System.out.println(EnumChatFormatting.RED+"Unexpected Server Response: " + statusCode+" "+response.toString()+"  "+response.getStatusLine().getReasonPhrase());
                 }
                 response.close();
             }

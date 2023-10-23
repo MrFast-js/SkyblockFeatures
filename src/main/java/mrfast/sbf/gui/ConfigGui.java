@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
+import com.mojang.realmsclient.gui.ChatFormatting;
 import gg.essential.api.utils.GuiUtil;
 import gg.essential.elementa.ElementaVersion;
 import gg.essential.elementa.UIComponent;
@@ -260,6 +261,17 @@ public class ConfigGui extends WindowScreen {
         });
         // Open gui locations gui when clicked
         editGuiButton.onMouseClickConsumer((event)->{
+            if(isShiftKeyDown()) {
+                Utils.overrideDevMode = true;
+                Utils.overrideDevModeValue = !Utils.overrideDevModeValue;
+                if(Utils.overrideDevModeValue) {
+                    Utils.SendMessage(ChatFormatting.YELLOW+"Developer Mode Enabled!");
+                } else {
+                    Utils.SendMessage(ChatFormatting.YELLOW+"Developer Mode Disabled!");
+                }
+                Utils.playSound("random.orb", 0.1);
+                return;
+            }
             GuiUtil.open(new EditLocationsGui());
         });
         UIComponent discordButton = new ShadowIcon(new ResourceImageFactory("/assets/skyblockfeatures/gui/discord.png",true),true)

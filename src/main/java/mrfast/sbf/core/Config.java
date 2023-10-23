@@ -1489,11 +1489,11 @@ public class Config extends Vigilant {
     @Property(
         type = PropertyType.SWITCH,
         name = "Change Item Estimation",
-        description = "Include stars and enchants into item value estimation.",
+        description = "Include stars and enchants into item value estimation. §cNot 100% accurate",
         category = "§1§rAuction Flipper",
         subcategory = "Flipper Settings"
     )
-    public boolean autoFlipAddEnchAndStar = true;
+    public boolean autoFlipAddEnchAndStar = false;
 
     @Property(
             type = PropertyType.SWITCH,
@@ -1518,7 +1518,7 @@ public class Config extends Vigilant {
             name = "Easy Auction Buying",
             description = "By spam clicking you will auto buy/bid the item from that is currently viewed.",
             category = "§1§rAuction house",
-            subcategory = "Flipper Settings"
+            subcategory = "Auction Utils"
     )
     public boolean autoAuctionFlipEasyBuy = false;
 

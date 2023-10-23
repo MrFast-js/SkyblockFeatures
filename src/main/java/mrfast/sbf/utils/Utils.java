@@ -140,9 +140,15 @@ public class Utils {
         return mc;
     }
 
+    public static boolean overrideDevMode = false;
+    public static boolean overrideDevModeValue = false;
     public static boolean isDeveloper() {
         String[] developers = {"Skyblock_Lobby"};
-        return Arrays.asList(developers).contains(Utils.GetMC().thePlayer.getName());
+        boolean dev = Arrays.asList(developers).contains(Utils.GetMC().thePlayer.getName());
+        if(overrideDevMode) {
+            dev = overrideDevModeValue;
+        }
+        return dev;
     }
 
     public static void drawTexturedRect(float x, float y, float width, float height, float uMin, float uMax, float vMin, float vMax, int filter) {

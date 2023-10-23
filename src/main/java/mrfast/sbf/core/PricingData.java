@@ -93,26 +93,33 @@ public class PricingData {
             if(reloadTimer.getTime() >= 90000) reloadTimer.reset();
             reloadTimer.start();
 
-            // Load average lowest binss  - Taken from NotEnoughUpdates
+            // Load lowest bins - Taken from NotEnoughUpdates
             new Thread(() -> {
                 JsonObject data = APIUtils.getJSONResponse("https://moulberry.codes/lowestbin.json");
                 for (Map.Entry<String, JsonElement> items : data.entrySet()) {
                     lowestBINs.put(items.getKey(), Math.floor(items.getValue().getAsDouble()));
                 }
+                // Use 1 day average for average price because its more accurate
+                AuctionUtil.getMyApiGZIPAsync("https://moulberry.codes/auction_averages_lbin/1day.json.gz", (jsonObject) -> {
+                    for (Map.Entry<String, JsonElement> items : jsonObject.entrySet()) {
+                        averageLowestBINs.put(items.getKey(), Math.floor(items.getValue().getAsDouble()));
+                    }
+                }, ()->{});
             }).start();
 
-            // Get extra auction data
+            // Get extra auction data, like sales per day
             if (SkyblockFeatures.config.auctionGuis || SkyblockFeatures.config.aucFlipperEnabled) {
                 new Thread(() -> {
                     AuctionUtil.getMyApiGZIPAsync("https://moulberry.codes/auction_averages/3day.json.gz", (jsonObject) -> {
                         auctionPricesJson = jsonObject;
-                        for (Map.Entry<String, JsonElement> items : auctionPricesJson.entrySet()) {
-                            Double value = auctionPricesJson.get(items.getKey()).getAsJsonObject().get("price").getAsDouble();
-                            averageLowestBINs.put(items.getKey(), Math.floor(value));
-                        }
+//                        for (Map.Entry<String, JsonElement> items : auctionPricesJson.entrySet()) {
+//                            Double value = auctionPricesJson.get(items.getKey()).getAsJsonObject().get("price").getAsDouble();
+//                            averageLowestBINs.put(items.getKey(), Math.floor(value));
+//                        }
                     }, ()->{});
                 }).start();
             }
+
             // Get bazaar prices
             if (bazaarPrices.isEmpty()) {
                 new Thread(() -> {
