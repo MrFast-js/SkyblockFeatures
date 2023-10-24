@@ -30,8 +30,11 @@ import net.minecraft.util.EnumChatFormatting;
 public class APIUtils {
 
     public static CloseableHttpClient client = HttpClients.custom().setUserAgent("Mozilla/5.0").build();
-
     public static JsonObject getJSONResponse(String urlString) {
+        return getJSONResponse(urlString, new String[]{});
+    }
+
+    public static JsonObject getJSONResponse(String urlString,String[] headers) {
         if(Utils.isDeveloper()) {
             if (urlString.contains("#")) {
                 String url = urlString.split("#")[0];
@@ -52,6 +55,12 @@ public class APIUtils {
         try {
             HttpGet request = new HttpGet(new URL(urlString).toURI());
             request.setProtocolVersion(HttpVersion.HTTP_1_1);
+            // Custom headers
+            for (String header : headers) {
+                String name = header.split("=")[0];
+                String value = header.split("=")[1];
+                request.setHeader(name, value);
+            }
 
             request.setHeader("Authentication", "Skyblock-Features-Mod");
 

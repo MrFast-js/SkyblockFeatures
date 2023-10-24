@@ -320,13 +320,14 @@ public class AuctionFeatures {
     boolean gettingData = false;
     @SubscribeEvent
     public void onDrawContainerTitle(TitleDrawnEvent event) {
-        if (event.gui !=null && event.gui instanceof GuiChest && SkyblockFeatures.config.auctionGuis) {
+        if (event.gui instanceof GuiChest && SkyblockFeatures.config.auctionGuis) {
             GuiChest gui = (GuiChest) event.gui;
             ContainerChest chest = (ContainerChest) gui.inventorySlots;
             IInventory inv = chest.getLowerChestInventory();
             String chestName = inv.getDisplayName().getUnformattedText().trim();
             Double profit = (double) 0;
             for (Auction auction:selfItems) profit += auction.profit;
+
             if(chestName.contains("Auction Stats")) {
                 if(profitData==null && !gettingData) {
                     gettingData = true;
@@ -373,8 +374,7 @@ public class AuctionFeatures {
                 }
             }
             // get price from when buying a auction
-            if(chestName.contains("Auction View") && !chestName.contains("BIN")) {
-                boolean alreadyGotIt = false;
+            if(chestName.contains("Auction View")) {
                 try {
                     if(inv.getStackInSlot(29).getDisplayName().contains("Collect Auction") && SkyblockFeatures.config.showPricePaid) {
                         boolean canCollectItem = false;
@@ -384,7 +384,7 @@ public class AuctionFeatures {
                                 canCollectItem=true;
                             } else {
                                 String numberOnly = Utils.cleanColor(line).replaceAll("[^0-9]", "");
-                                if(numberOnly.length()>0) {
+                                if(!numberOnly.isEmpty()) {
                                     try {
                                         pricePaid = Integer.parseInt(numberOnly);
                                     } catch (Exception e) {
@@ -405,26 +405,40 @@ public class AuctionFeatures {
                 } catch (Exception e) {
                     // TODO: handle exception
                 }
-                
+
                 for(Slot slot:gui.inventorySlots.inventorySlots) {
-                    if (slot.getHasStack() && !alreadyGotIt  && slot.getSlotIndex() == 13) {
+                    if (slot.getHasStack()  && slot.getSlotIndex() == 13) {
                         ItemStack stack = slot.getStack();
-                        alreadyGotIt = true;
                         String auctionIdentifier = PricingData.getIdentifier(stack);
+
                         if (auctionIdentifier != null) {
                             if(!PricingData.lowestBINs.containsKey(auctionIdentifier)) {
                                 continue;
                             }
-                            Double lowestBin = PricingData.lowestBINs.get(auctionIdentifier)*stack.stackSize;
-                            Double avgBin = PricingData.averageLowestBINs.get(auctionIdentifier)*stack.stackSize;
-                            Integer cost = 0;
+                            ItemStack newBidStack = gui.inventorySlots.getSlot(29).getStack();
+                            long newBid = 0;
+                            for(String line : ItemUtils.getItemLore(newBidStack)) {
+                                line = Utils.cleanColor(line);
+                                if(line.contains("New Bid")) {
+                                    newBid = Long.parseLong(Utils.cleanColor(line).replaceAll("[^0-9]", ""));
+                                }
+                            }
+
+                            Long lowestBin = (long) (PricingData.lowestBINs.get(auctionIdentifier)*stack.stackSize);
+
+                            Long avgBin = (long) (PricingData.averageLowestBINs.get(auctionIdentifier)*stack.stackSize);
+                            Long cost = 0L;
                             String endTime = ChatFormatting.RED+"Ended";
-                            Double resellProfit = 0.0;
+                            boolean binAuc = false;
+                            Long resellProfit = 0L;
                             boolean hasTopBid = false;
                             for(String line : ItemUtils.getItemLore(stack)) {
                                 line = Utils.cleanColor(line);
-                                if(line.contains("bid:")) {
-                                    cost = Integer.parseInt(Utils.cleanColor(line).replaceAll("[^0-9]", ""));
+                                if(line.contains("Buy it now:")) {
+                                    binAuc = true;
+                                }
+                                if(line.contains("bid:")||line.contains("Buy it now:")||line.contains("Sold for:")) {
+                                    cost = Long.parseLong(Utils.cleanColor(line).replaceAll("[^0-9]", ""));
                                     if(lowestBin!=null) resellProfit = lowestBin-cost;
                                     else if(avgBin!=null) resellProfit = avgBin-cost;
                                 }
@@ -435,63 +449,50 @@ public class AuctionFeatures {
                                     hasTopBid = true;
                                 }
                             }
-                            if(resellProfit != 0) {
-                                String resellColor = resellProfit>0? ChatFormatting.GREEN+"":ChatFormatting.RED+"";
-                                Boolean Manipulated = false;
-                                if(lowestBin != null && avgBin!=null) {
-                                    if(lowestBin > avgBin+150000) {
-                                        Manipulated = true;
-                                    } else if(cost > avgBin+150000) {
-                                        Manipulated = true;
-                                    } else if(cost > lowestBin+150000) {
-                                        Manipulated = true;
-                                    }
-                                }
-                                if(avgBin == null && lowestBin!=null) {
-                                    if(cost > lowestBin+150000) {
-                                        Manipulated = true;
-                                    }
-                                }
-                                cost = (int) Math.floor(cost);
-                                String avgBinString = avgBin != null?ChatFormatting.GOLD+Utils.nf.format(avgBin):ChatFormatting.RED+"Unknown";
-                                String lowestBinString = lowestBin != null?ChatFormatting.GOLD+Utils.nf.format(lowestBin):ChatFormatting.RED+"Unknown";
-                                double putupTax = Math.floor(lowestBin*0.01);
-                                double collectAuctionTax = cost>=1000000?Math.floor(lowestBin*0.01):0;
-                                double totalTax = Math.floor(putupTax+collectAuctionTax);
-                                double profitAfterBid = cost>100000?resellProfit*0.95:resellProfit*0.9;
-                                // Add your bid into account
 
-                                String resellTax = collectAuctionTax>0?(Utils.nf.format(totalTax))+ChatFormatting.GRAY+" (2%)":Utils.nf.format(putupTax)+ChatFormatting.GRAY+" (1%)";
-                                List<String> lines = new ArrayList<>();
+                            String resellColor = resellProfit>0? ChatFormatting.GREEN+"":ChatFormatting.RED+"";
+                            boolean Manipulated = lowestBin > avgBin + 300000 || cost > avgBin + 300000 || cost > lowestBin + 300000;
 
-                                lines.add(ChatFormatting.WHITE+"Item Price: "+ChatFormatting.GOLD+Utils.nf.format(cost));
-                                lines.add(ChatFormatting.WHITE+"Lowest BIN: "+lowestBinString);
-                                lines.add(ChatFormatting.WHITE+"Average BIN: "+avgBinString);
-                                lines.add(ChatFormatting.WHITE+"Taxes: "+ChatFormatting.GOLD+resellTax);
-                                lines.add(ChatFormatting.WHITE+"Ends: "+ChatFormatting.YELLOW+endTime);
+                            cost = (long) Math.floor(cost);
+                            String avgBinString = ChatFormatting.GOLD+Utils.nf.format(avgBin);
+                            String lowestBinString = ChatFormatting.GOLD+Utils.nf.format(lowestBin);
+                            Long putupTax = (long) Math.floor(lowestBin*0.01);
+                            Long collectAuctionTax = cost>=1000000? (long) Math.floor(lowestBin * 0.01) :0;
+                            Long totalTax = (long) Math.floor(putupTax+collectAuctionTax);
+
+                            Long profitAfterBid = resellProfit-newBid;
+
+                            String resellTax = collectAuctionTax>0?(Utils.nf.format(totalTax))+ChatFormatting.GRAY+" (2%)":Utils.nf.format(putupTax)+ChatFormatting.GRAY+" (1%)";
+                            List<String> lines = new ArrayList<>();
+
+                            lines.add(ChatFormatting.WHITE+"Item Price: "+ChatFormatting.GOLD+Utils.nf.format(cost));
+                            lines.add(ChatFormatting.WHITE+"Lowest BIN: "+lowestBinString);
+                            lines.add(ChatFormatting.WHITE+"Average BIN: "+avgBinString);
+                            if(!binAuc) lines.add(ChatFormatting.WHITE+"Taxes: "+ChatFormatting.GOLD+resellTax);
+                            lines.add(ChatFormatting.WHITE+"Ends: "+ChatFormatting.YELLOW+endTime);
+                            lines.add("");
+                            if(!binAuc&&!hasTopBid) lines.add(ChatFormatting.WHITE+"Profit After Bid: "+resellColor+(Utils.nf.format(Math.floor(profitAfterBid))));
+                            else lines.add(ChatFormatting.WHITE+"Resell Profit: "+resellColor+(Utils.nf.format(Math.floor(resellProfit))));
+
+                            if(Manipulated) {
                                 lines.add("");
-                                if(!hasTopBid) lines.add(ChatFormatting.WHITE+"Profit After Bid: "+resellColor+(Utils.nf.format(Math.floor(profitAfterBid))));
-                                else lines.add(ChatFormatting.WHITE+"Resell Profit: "+resellColor+(Utils.nf.format(Math.floor(resellProfit))));
+                                lines.add(ChatFormatting.RED+""+ChatFormatting.BOLD+"Warning! This items price");
+                                lines.add(ChatFormatting.RED+""+ChatFormatting.BOLD+"is higher than usual!");
+                            }
+                            if(stack.getDisplayName().contains("Minion Skin")) {
+                                lines.add("");
+                                lines.add(ChatFormatting.RED+""+ChatFormatting.BOLD+"Warning! Minion skins are");
+                                lines.add(ChatFormatting.RED+""+ChatFormatting.BOLD+"often manipulated!!");
+                            }
+                            Utils.drawGraySquareWithBorder(180, 0, 150, (int) (lines.size()*1.29*Utils.GetMC().fontRendererObj.FONT_HEIGHT),3);
 
-                                if(Manipulated) {
-                                    lines.add("");
-                                    lines.add(ChatFormatting.RED+""+ChatFormatting.BOLD+"Warning! This items price");
-                                    lines.add(ChatFormatting.RED+""+ChatFormatting.BOLD+"is higher than usual!");
-                                }
-                                if(stack.getDisplayName().contains("Minion Skin")) {
-                                    lines.add("");
-                                    lines.add(ChatFormatting.RED+""+ChatFormatting.BOLD+"Warning! Minion skins are");
-                                    lines.add(ChatFormatting.RED+""+ChatFormatting.BOLD+"often manipulated!!");
-                                }
-                                Utils.drawGraySquareWithBorder(180, 0, 150, (int) (lines.size()*1.29*Utils.GetMC().fontRendererObj.FONT_HEIGHT),3);
-                                
-                                int lineCount = 0;
-                                for(String line:lines) {
-                                    Utils.GetMC().fontRendererObj.drawStringWithShadow(line, 190, lineCount*(Utils.GetMC().fontRendererObj.FONT_HEIGHT+1)+10, -1);
-                                    lineCount++;
-                                }
+                            int lineCount = 0;
+                            for(String line:lines) {
+                                Utils.GetMC().fontRendererObj.drawStringWithShadow(line, 190, lineCount*(Utils.GetMC().fontRendererObj.FONT_HEIGHT+1)+10, -1);
+                                lineCount++;
                             }
                         }
+                        break;
                     }
                 }
             }

@@ -251,6 +251,7 @@ public class SkyblockFeatures {
         }
 
         SkyblockFeatures.config.timeStartedUp++;
+        SkyblockFeatures.config.aucFlipperEnabled = false;
         SkyblockFeatures.config.forceSave();
         System.out.println("You have started Skyblock Features up "+SkyblockFeatures.config.timeStartedUp+" times!");
     }
