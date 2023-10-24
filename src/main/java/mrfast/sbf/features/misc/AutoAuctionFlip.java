@@ -37,6 +37,7 @@ import org.lwjgl.input.Mouse;
 import java.io.ByteArrayInputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class AutoAuctionFlip {
     static Auction bestAuction = null;
@@ -162,6 +163,7 @@ public class AutoAuctionFlip {
 
         }
     }
+    boolean stopUpdatingTimes = false;
 
     @SubscribeEvent
     public void onSecond(SecondPassedEvent event) {
@@ -186,13 +188,7 @@ public class AutoAuctionFlip {
         if(timeUntilReload == 10) {
             if(earliestApiUpdateTime!=60 && latestApiUpdateTime!=0 && stage==3) {
                 Utils.SendMessage(ChatFormatting.GRAY+"Scanning for auctions in 10s ");
-                if(!apiUpdated) {
-                    Utils.SendMessage(ChatFormatting.RED+"The API Didnt update when expected! Restarting flipper..");
-                    SkyblockFeatures.config.aucFlipperEnabled = false;
-                    Utils.setTimeout(()->{
-                        SkyblockFeatures.config.aucFlipperEnabled = true;
-                    }, 100);
-                }
+
             }
             auctionsFilteredThrough = 0;
             apiUpdated = true;
@@ -211,14 +207,8 @@ public class AutoAuctionFlip {
                 */
                 if(Utils.inDungeons || !SkyblockFeatures.config.aucFlipperEnabled || foundReloadTime) return;
                 JsonObject data = APIUtils.getJSONResponse("https://auction-update.mrfastkrunker.workers.dev/");
-                latestApiUpdateTime = data.get("max").getAsInt();
-                earliestApiUpdateTime = data.get("min").getAsInt();
-                foundReloadTime = true;
-                Utils.SendMessage(ChatFormatting.GREEN+"Auction Flipper Setup!");
-                Utils.playSound("random.orb", 0.1);
-                stage = 3;
-                checkForNewReloadTime = false;
-                checkingForNewReloadTime = false;
+
+                setupComplete(data);
             }).start();
         }
 
@@ -250,7 +240,11 @@ public class AutoAuctionFlip {
                             int pages = data.get("totalPages").getAsInt();
 
                             // Auction flips dont appear past the first 5 pages due to it filtering out < 5 minutes
-                            if(SkyblockFeatures.config.aucFlipperAucs && !SkyblockFeatures.config.aucFlipperBins) pages = 5;
+                            if(SkyblockFeatures.config.aucFlipperBins) {
+                                if(!SkyblockFeatures.config.autoFlipAddEnchAndStar) pages = 10;
+                            } else {
+                                if(SkyblockFeatures.config.aucFlipperAucs) pages = 5;
+                            }
 
                             for(int b=0;b<pages;b++) {
                                 JsonObject data2 = APIUtils.getJSONResponse("https://api.hypixel.net/skyblock/auctions?page="+b);
@@ -271,8 +265,52 @@ public class AutoAuctionFlip {
                         }
                     }, i*1000);
                 }
+                Utils.setTimeout(()->{
+                    if(!apiUpdated) {
+                        // The flipper needs to set its self up blah blah
+                        new Thread(()->{
+                            JsonObject startingData2 = APIUtils.getJSONResponse("https://api.hypixel.net/skyblock/auctions?page=0");
+                            JsonArray startingProducts2 = startingData2.get("auctions").getAsJsonArray();
+                            String startingUUID2 = startingProducts2.get(0).getAsJsonObject().get("uuid").getAsString();
+                            stopUpdatingTimes = false;
+
+                            for(int i=0;i<60;i++) {
+                                Utils.setTimeout(()->{
+                                    if(stopUpdatingTimes) return;
+                                    JsonObject comparingData = APIUtils.getJSONResponse("https://api.hypixel.net/skyblock/auctions?page=0");
+                                    JsonArray comparingProducts = comparingData.get("auctions").getAsJsonArray();
+                                    String comparingUUID = comparingProducts.get(0).getAsJsonObject().get("uuid").getAsString();
+
+                                    if(!Objects.equals(comparingUUID, startingUUID2)) {
+                                        String[] headers = new String[]{"updateTimes="+seconds};
+                                        JsonObject newData = APIUtils.getJSONResponse("https://auction-update.mrfastkrunker.workers.dev#updateTimes=",headers);
+                                        if(newData.get("success").getAsBoolean()) {
+                                            Utils.SendMessage(ChatFormatting.YELLOW+"Updated Searching Times!");
+                                            setupComplete(newData);
+                                            stopUpdatingTimes = true;
+                                        }
+                                    }
+                                },1000*i);
+                            }
+                        }).start();
+                        stage = 1;
+                        Utils.SendMessage(ChatFormatting.RED+"The API Didnt update when expected! Updating Times..");
+                    }
+                },lengthOfSearch*1000+1500);
             }).start();
         }
+    }
+
+    private void setupComplete(JsonObject data) {
+        latestApiUpdateTime = data.get("max").getAsInt();
+        earliestApiUpdateTime = data.get("min").getAsInt();
+        System.out.println(latestApiUpdateTime+"  "+earliestApiUpdateTime +" UPDATED");
+        foundReloadTime = true;
+        stage = 3;
+        checkForNewReloadTime = false;
+        checkingForNewReloadTime = false;
+        Utils.SendMessage(ChatFormatting.GREEN+"Auction Flipper Setup!");
+        Utils.playSound("random.orb", 0.1);
     }
 
     boolean debugLogging = false;
@@ -350,7 +388,7 @@ public class AutoAuctionFlip {
 
                             auctionFlips.add(auction);
 
-                            IChatComponent message = new ChatComponentText("\n"+ChatFormatting.AQUA+"[SBF] "+ChatFormatting.GRAY+"BIN FLIP "+name+" "+ChatFormatting.GREEN+currentPrice+" -> "+itemValue+" (+"+currentProfit+" "+ChatFormatting.DARK_RED+percentage+"%"+ChatFormatting.GREEN+") "+
+                            IChatComponent message = new ChatComponentText("\n"+ChatFormatting.AQUA+"[SBF] "+ChatFormatting.GRAY+"BIN "+name+" "+ChatFormatting.GREEN+currentPrice+" -> "+itemValue+" (+"+currentProfit+" "+ChatFormatting.DARK_RED+percentage+"%"+ChatFormatting.GREEN+") "+
                             
                             ChatFormatting.GRAY+"Vol: "+ChatFormatting.AQUA+(auctionData.get("sales").getAsInt())+" sales/day"+
                             (enchantValue>0?(ChatFormatting.GRAY+" Ench: "+ChatFormatting.AQUA+ePrice):"")+
@@ -546,6 +584,7 @@ public class AutoAuctionFlip {
 
     public void resetFlipper() {
         lastSecond = -1;
+        stopUpdatingTimes = true;
         apiUpdated = true;
         earliestApiUpdateTime = 60;
         latestApiUpdateTime = 0;
