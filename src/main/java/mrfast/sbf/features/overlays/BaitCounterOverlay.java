@@ -86,8 +86,8 @@ public class BaitCounterOverlay {
             if(mc.thePlayer == null || !Utils.inSkyblock || Utils.GetMC().theWorld==null || !SkyblockFeatures.config.baitCounter) return;
             Utils.drawTextWithStyle3(ChatFormatting.AQUA+"Bait: "+ChatFormatting.GRAY+"("+(61-seconds)+")", 0, 0);
             int index = 0;
-            if(typesOfBait.size()==0) {
-                Utils.drawTextWithStyle3(" "+ChatFormatting.RED+"Loading..", 0, index*(Utils.GetMC().fontRendererObj.FONT_HEIGHT+1)+10);
+            if(typesOfBait.isEmpty()) {
+                Utils.drawTextWithStyle3(" "+ChatFormatting.RED+"Loading..", 0, 10);
             }
             for(String baitName:typesOfBait.keySet()) {
                 Utils.drawTextWithStyle3(" "+baitName+ChatFormatting.DARK_GRAY+" x"+Utils.nf.format(typesOfBait.get(baitName)), 0, index*(Utils.GetMC().fontRendererObj.FONT_HEIGHT+1)+10);

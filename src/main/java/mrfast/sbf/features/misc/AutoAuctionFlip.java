@@ -58,7 +58,7 @@ public class AutoAuctionFlip {
     static int auctionsPassedFilteredThrough = 0;
     static long startMs;
     static int stage = 0;
-    public class Auction {
+    public static class Auction {
         String auctionId = "";
         JsonObject item_Data = null;
         Double profit = 0d;
@@ -359,9 +359,9 @@ public class AutoAuctionFlip {
 
                         if(auctionData!=null) volume = auctionData.get("sales").getAsInt();
 
-                        // if the lowest bin is over 1.25x the average then its most likely being manipulated so use the average instead
+                        // if the lowest bin is over 1.10x the average then its most likely being manipulated so use the average instead
                         if(!SkyblockFeatures.config.autoFlipAddEnchAndStar) {
-                            if(lowestBinPrice>1.25*avgBinPrice) {
+                            if(lowestBinPrice>1.10*avgBinPrice) {
                                 valueOfTheItem=avgBinPrice.intValue();
                             }
                         }
@@ -436,9 +436,9 @@ public class AutoAuctionFlip {
 
                         if(auctionData!=null) volume = auctionData.get("sales").getAsInt();
 
-                        // if the lowest bin is over 1.25x the average then its most likely being manipulated so use the average instead
+                        // if the lowest bin is over 1.10x the average then its most likely being manipulated so use the average instead
                         if(!SkyblockFeatures.config.autoFlipAddEnchAndStar) {
-                            if(lowestBinPrice>1.25*avgBinPrice) valueOfTheItem=avgBinPrice.intValue();
+                            if(lowestBinPrice>1.10*avgBinPrice) valueOfTheItem=avgBinPrice.intValue();
                         }
 
                         Double profit = valueOfTheItem-bidPrice;

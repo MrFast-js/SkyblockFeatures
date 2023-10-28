@@ -4,6 +4,7 @@ package mrfast.sbf.features.statDisplays;
 import net.minecraft.client.Minecraft;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import mrfast.sbf.SkyblockFeatures;
 import mrfast.sbf.gui.components.Point;
@@ -17,12 +18,12 @@ public class SecretDisplay {
     private static final Minecraft mc = Minecraft.getMinecraft();
 
     static {
-        new JerryTimerGUI();
+        new SecretDisplayGUI();
     }
     static String display = "Secrets";
-    public static class JerryTimerGUI extends UIElement {
+    public static class SecretDisplayGUI extends UIElement {
 
-        public JerryTimerGUI() {
+        public SecretDisplayGUI() {
             super("Secret Display", new Point(0.2f, 0.0f));
             SkyblockFeatures.GUIMANAGER.registerElement(this);
         }
@@ -34,11 +35,9 @@ public class SecretDisplay {
             int maxSecrets = ActionBarListener.maxSecrets;
 
             if (this.getToggled() && Minecraft.getMinecraft().thePlayer != null && mc.theWorld != null) {
-                // Utils.drawTextWithStyle(String.valueOf(secrets) + "/"+maxSecrets+" Secrets", 0, 0, secretsColor);
-                // GlStateManager.color(1, 1, 1, 1);
-                ArrayList<String> text = new ArrayList<>();
+                List<String> text = new ArrayList<>();
 
-                String color = "§c";
+                String color;
 
                 if(secrets == maxSecrets) {
                     color = "§a";
@@ -55,10 +54,10 @@ public class SecretDisplay {
                 } else {
                     text.add(color+secrets+"§7/"+color+maxSecrets);
                 }
-                
+
 
                 for (int i = 0; i < text.size(); i++) {
-                    Utils.drawTextWithStyle3(text.get(i), (getWidth()/3)*i, i * Utils.GetMC().fontRendererObj.FONT_HEIGHT);
+                    Utils.drawTextWithStyle3(text.get(i), ((float) getWidth() /3)*i, i * Utils.GetMC().fontRendererObj.FONT_HEIGHT);
                 }
             }
         }

@@ -61,8 +61,8 @@ public class DungeonsCommand extends CommandBase {
 			Utils.SendMessage(ChatFormatting.RED+"Invalid Command Usage! Example Usage /jd m4");
 			return;
 		}
-		Boolean masterMode = arg1[0].toString().toLowerCase().contains("m");
-		int floorInt = parseInt(arg1[0].toString().replaceAll("[^0-9]", ""));
+		boolean masterMode = arg1[0].toLowerCase().contains("m");
+		int floorInt = parseInt(arg1[0].replaceAll("[^0-9]", ""));
 		String dungeonType = (masterMode?"MASTER_":"")+"CATACOMBS";
 		String dungeonString = dungeonType+"_FLOOR_"+numberWords.get(floorInt);
 		

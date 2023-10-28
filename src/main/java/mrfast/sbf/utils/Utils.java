@@ -52,9 +52,6 @@ public class Utils {
     public static int maxMana;
 
     public static int Defence;
-    public static Utils INSTANCE = new Utils();
-    public Map<UUID, Boolean> glowingCache = new HashMap<>();
-    static Random random = new Random();
     public static final NumberFormat nf = NumberFormat.getInstance(Locale.US);
 
     private static final String[] steps = new String[] {"", "K", "M", "B","T"};
@@ -78,19 +75,9 @@ public class Utils {
         return formattedNumber + steps[magnitudeIndex];
     }
 
-    public static String percentOf(Double num,Double OutOf) {
-		double lowPercent = num/OutOf;
-		double percent = Math.floor(lowPercent*10000)/100;
-		return ChatFormatting.DARK_GRAY+" ("+percent+"%)";
-	}
 	public static String percentOf(long num, long outOf) {
 		double percent = (double) num / outOf * 100;
 		return ChatFormatting.DARK_GRAY + " (" + String.format("%.2f", percent) + "%)";
-	}
-	public static String percentOf(Integer num,Integer OutOf) {
-		Double lowPercent = num.doubleValue()/OutOf.doubleValue();
-		Double percent = Math.floor(lowPercent*10000)/100;
-		return ChatFormatting.DARK_GRAY+" ("+percent+"%)";
 	}
     
     public static boolean isOnHypixel() {
@@ -208,7 +195,7 @@ public class Utils {
         Minecraft.getMinecraft().fontRendererObj.drawString(text, 0, -1, 0x000000, false);
         Minecraft.getMinecraft().fontRendererObj.drawString(text, 0, 0, color, false);
     }
-
+    // Dungeon Map Names
     public static void drawTextWithStyle2(String text, float x, float y) {
         String shadowText = Utils.cleanColor(text);
         Minecraft.getMinecraft().fontRendererObj.drawString(shadowText,1, 0, 0x000000, false);
@@ -217,7 +204,7 @@ public class Utils {
         Minecraft.getMinecraft().fontRendererObj.drawString(shadowText, 0, -1, 0x000000, false);
         Minecraft.getMinecraft().fontRendererObj.drawString(text, 0, 0, 0xFFFFFF, false);
     }
-
+    // Draws at coordinates with Color being taken from
     public static void drawTextWithStyle3(String text, float x, float y) {
         String shadowText = Utils.cleanColor(text);
         Minecraft.getMinecraft().fontRendererObj.drawString(shadowText,x+1, y, 0x000000, false);
@@ -267,6 +254,7 @@ public class Utils {
         return time.trim();
     }
 
+    // Precision is # of decimal places
     public static String round(double value, int precision) {
         double scale = Math.pow(10, precision);
         double roundedValue = Math.round(value * scale) / scale;
@@ -346,6 +334,7 @@ public class Utils {
     }
     public static void SendMessage(Double string) {
         if (Utils.GetMC().ingameGUI != null || Utils.GetMC().thePlayer == null) {
+            assert Utils.GetMC().ingameGUI != null;
             Utils.GetMC().ingameGUI.getChatGUI().printChatMessage(new ChatComponentText(ChatFormatting.AQUA+"[SBF] "+ChatFormatting.RESET+string));
         }
     }

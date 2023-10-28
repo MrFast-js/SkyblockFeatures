@@ -17,11 +17,10 @@ import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class ChronomotronSolver {
-    List<String> ChronomotronOrder = new ArrayList<>();
     static int lastChronomatronRound = 0;
     static List<String> chronomatronPattern = new ArrayList<>();
     static int chronomatronMouseClicks = 0;
-    static int slotToClick = 0;
+
     @SubscribeEvent
     public void onSlotClick(SlotClickedEvent event) {
         if(!SkyblockFeatures.config.enchantingSolvers) return;
@@ -38,6 +37,7 @@ public class ChronomotronSolver {
     @SubscribeEvent
     public void onGuiBackground(TitleDrawnEvent event) {
         if(!SkyblockFeatures.config.enchantingSolvers) return;
+
         if(event.displayName.startsWith("Chronomatron (")) {
             List<Slot> invSlots = event.container.inventorySlots;
             if (invSlots.size() > 48 && invSlots.get(49).getStack() != null) {

@@ -12,7 +12,7 @@ public class EffectiveHealthDisplay {
     private static final Minecraft mc = Minecraft.getMinecraft();
 
     static {
-        new JerryTimerGUI();
+        new EffectiveHealthDisplayGUI();
     }
 
     static String display = "1234";
@@ -20,8 +20,8 @@ public class EffectiveHealthDisplay {
     public static int getSpeed() {
         return Math.round(Utils.Health * (1f+ (Utils.Defence / 100f) ));
     }
-    public static class JerryTimerGUI extends UIElement {
-        public JerryTimerGUI() {
+    public static class EffectiveHealthDisplayGUI extends UIElement {
+        public EffectiveHealthDisplayGUI() {
             super("Effective Health Display", new Point(0f,0f));
             SkyblockFeatures.GUIMANAGER.registerElement(this);
         }

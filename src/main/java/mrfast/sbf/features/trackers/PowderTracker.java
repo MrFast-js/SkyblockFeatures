@@ -22,19 +22,13 @@ public class PowderTracker {
     static boolean hidden = true;
     static int seconds = 0;
     static int totalSeconds = 0;
-    static double coinsPerHour = 0;
     @SubscribeEvent
     public void onload(WorldEvent.Load event) {
-        if(!SkyblockFeatures.config.PowderTracker) return;
-        try {
-            seconds = 0;
-            hidden = true;
-            treasureChestsFound = 0;
-            mithrilPowderGained = 0;
-            gemstonePowderGained = 0;
-        } catch(Exception e) {
-
-        }
+        seconds = 0;
+        hidden = true;
+        treasureChestsFound = 0;
+        mithrilPowderGained = 0;
+        gemstonePowderGained = 0;
     }
 
     @SubscribeEvent
@@ -47,10 +41,10 @@ public class PowderTracker {
             treasureChestsFound++;
         }
         if(raw.contains("You received") && raw.contains("Gemstone Powder.")) {
-            gemstonePowderGained+= Double.parseDouble(raw.replaceAll("[^0-9]", ""));
+            gemstonePowderGained+= (int) Double.parseDouble(raw.replaceAll("[^0-9]", ""));
         }
         if(raw.contains("You received") && raw.contains("Mithril Powder.")) {
-            mithrilPowderGained+= Double.parseDouble(raw.replaceAll("[^0-9]", ""));
+            mithrilPowderGained+= (int) Double.parseDouble(raw.replaceAll("[^0-9]", ""));
         }
     }
 
@@ -83,8 +77,8 @@ public class PowderTracker {
         @Override
         public void drawElement() {
             if (this.getToggled() && Minecraft.getMinecraft().thePlayer != null && mc.theWorld != null && !hidden && totalSeconds>0) {
-                String gemPowderPerHour = Utils.nf.format(Math.floor((3600/totalSeconds)*gemstonePowderGained));
-                String mithrilPowderPerHour = Utils.nf.format(Math.floor((3600/totalSeconds)*mithrilPowderGained));
+                String gemPowderPerHour = Utils.nf.format(Math.floor(((double) 3600 /totalSeconds)*gemstonePowderGained));
+                String mithrilPowderPerHour = Utils.nf.format(Math.floor(((double) 3600 /totalSeconds)*mithrilPowderGained));
 
                 String[] lines = {
                     ChatFormatting.BLUE+"Time Elapsed: §r"+Utils.secondsToTime(totalSeconds),
@@ -104,8 +98,8 @@ public class PowderTracker {
         @Override
         public void drawElementExample() {
             if(mc.thePlayer == null || !Utils.inSkyblock) return;
-            String gemPowderPerHour = Utils.nf.format(Math.floor((3600/345)*10203));
-            String mithrilPowderPerHour = Utils.nf.format(Math.floor((3600/345)*12932));
+            String gemPowderPerHour = Utils.nf.format(Math.floor(((double) 3600 /345)*10203));
+            String mithrilPowderPerHour = Utils.nf.format(Math.floor(((double) 3600 /345)*12932));
             String[] lines = {
                 ChatFormatting.BLUE+"Time Elapsed: §r"+Utils.secondsToTime(378),
                 ChatFormatting.AQUA+"Treasure Chest Found: §r"+Utils.nf.format(20),

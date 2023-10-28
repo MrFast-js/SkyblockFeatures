@@ -17,8 +17,8 @@ public class EnderNodeTracker {
 
     static int enderNodesMined = 0;
     static int nests = 0;
-    static int eendstone = 0;
-    static int eobsidian = 0;
+    static int enchantedEndstone = 0;
+    static int enchantedObsidian = 0;
     static int grand = 0;
     static int titanic = 0;
 
@@ -28,18 +28,14 @@ public class EnderNodeTracker {
     static double coinsPerHour = 0;
     @SubscribeEvent
     public void onload(WorldEvent.Load event) {
-        try {
-            seconds = 0;
-            hidden = true;
-            enderNodesMined = 0;
-            nests = 0;
-            eendstone = 0;
-            eobsidian = 0;
-            grand = 0;
-            titanic = 0;
-        } catch(Exception e) {
-
-        }
+        seconds = 0;
+        hidden = true;
+        enderNodesMined = 0;
+        nests = 0;
+        enchantedEndstone = 0;
+        enchantedObsidian = 0;
+        grand = 0;
+        titanic = 0;
     }
 
     @SubscribeEvent
@@ -49,8 +45,8 @@ public class EnderNodeTracker {
             seconds = 300;
             hidden = false;
             if(raw.contains("Endermite Nest")) nests++;
-            if(raw.contains("Enchanted End Stone")) eendstone++;
-            if(raw.contains("Enchanted Obsidian")) eobsidian++;
+            if(raw.contains("Enchanted End Stone")) enchantedEndstone++;
+            if(raw.contains("Enchanted Obsidian")) enchantedObsidian++;
 
             if(raw.contains("5x Grand Experience Bottle")) grand+=5;
             else if(raw.contains("Grand Experience Bottle")) grand++;
@@ -94,8 +90,8 @@ public class EnderNodeTracker {
                     ChatFormatting.RED+"Endermite Nest: §r"+nests,
                     ChatFormatting.BLUE+"Titanic Exp: §r"+titanic,
                     ChatFormatting.GREEN+"Grand Exp: §r"+grand,
-                    ChatFormatting.GREEN+"Ench. Endestone: §r"+eendstone,
-                    ChatFormatting.GREEN+"Ench. Obsidian: §r"+eobsidian
+                    ChatFormatting.GREEN+"Ench. Endestone: §r"+ enchantedEndstone,
+                    ChatFormatting.GREEN+"Ench. Obsidian: §r"+ enchantedObsidian
                 };
                 int lineCount = 0;
                 for(String line:lines) {

@@ -51,13 +51,7 @@ public class InventoryCommand extends CommandBase {
     public List<String> addTabCompletionOptions(ICommandSender sender, String[] args, BlockPos pos) {
         return (args.length >= 1) ? getListOfStringsMatchingLastWord(args, Utils.getListOfPlayerUsernames()) : null;
     }
-	
-	@Override
-	public int getRequiredPermissionLevel() {
-		return 0;
-	}
-    String delimiter = EnumChatFormatting.RED.toString() + EnumChatFormatting.STRIKETHROUGH.toString() + "" + EnumChatFormatting.BOLD + "-------------------";
-	HashMap<String, List<String>> itemLores = new HashMap<String, List<String>>();
+
 	@Override
 	public void processCommand(ICommandSender arg0, String[] arg1) throws CommandException {
 		InventoryBasic TargetInventory = new InventoryBasic(ChatFormatting.GREEN+"✯ "+arg1[0]+"'s Inventory", true, 54);
@@ -131,7 +125,7 @@ public class InventoryCommand extends CommandBase {
 				}
 			}
 
-			GuiUtil.open(Objects.requireNonNull(new GuiChest(Utils.GetMC().thePlayer.inventory, TargetInventory)));
+			GuiUtil.open(new GuiChest(Utils.GetMC().thePlayer.inventory, TargetInventory));
 		}).start();
 	}
 
@@ -150,39 +144,30 @@ public class InventoryCommand extends CommandBase {
         }
     }
 
-	public static List<ItemStack> decodeItem(Inventory inventory,Boolean offset)
-    {
-        if (inventory != null)
-        {
+	public static List<ItemStack> decodeItem(Inventory inventory,Boolean offset) {
+        if (inventory != null) {
             List<ItemStack> itemStack = new ArrayList<>();
             byte[] decode = Base64.getDecoder().decode(inventory.getData());
 
-            try
-            {
+            try {
                 NBTTagCompound compound = CompressedStreamTools.readCompressed(new ByteArrayInputStream(decode));
                 NBTTagList list = compound.getTagList("i", 10);
 
-                for (int i = 0; i < list.tagCount(); ++i)
-                {
+                for (int i = 0; i < list.tagCount(); ++i) {
                     itemStack.add(ItemStack.loadItemStackFromNBT(list.getCompoundTagAt(i)));
                 }
-            }
-            catch (IOException e)
-            {
+            } catch (IOException e) {
                 e.printStackTrace();
             }
 			if(offset) Collections.rotate(itemStack, -9);
 
             return itemStack;
-        }
-        else
-        {
+        } else {
             List<ItemStack> itemStack = new ArrayList<>();
             ItemStack barrier = new ItemStack(Blocks.barrier);
             barrier.setStackDisplayName(EnumChatFormatting.RESET + "" + EnumChatFormatting.RED + "Item is not available!");
 
-            for (int i = 0; i < 36; ++i)
-            {
+            for (int i = 0; i < 36; ++i) {
                 itemStack.add(barrier);
             }
             return itemStack;

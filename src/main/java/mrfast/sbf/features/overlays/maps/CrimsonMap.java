@@ -27,18 +27,10 @@ public class CrimsonMap {
     public static HashMap<String,BlockPos> locations = new HashMap<>();
     @SubscribeEvent
     public void onload(WorldEvent.Load event) {
-        try {
-            locations.clear();
-            loaded = false;
-            ticks = 0;
-           
-            start = false;
-            if(Minecraft.getMinecraft().thePlayer != null && Minecraft.getMinecraft().theWorld != null && SkyblockFeatures.config.dwarvenMinesMap) {
-                start = true;
-            }
-        } catch(Exception e) {
-            
-        }
+        locations.clear();
+        loaded = false;
+        ticks = 0;
+        start = Minecraft.getMinecraft().thePlayer != null && Minecraft.getMinecraft().theWorld != null && SkyblockFeatures.config.dwarvenMinesMap;
     }
     
     

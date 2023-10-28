@@ -11,13 +11,6 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class ActionBarListener {
 
-	public static String latestExpMessage = "";
-	public static String latestthingwingy = "";
-
-	static String xppercent = "";
-	String expGained = "";
-	String skillName = "";
-
 	public static int maxSecrets;
 	public static int secrets = -1;
 	private static final Pattern PATTERN_SECRETS = Pattern.compile("§7([0-9]+)/([0-9]+) Secrets");
@@ -40,17 +33,16 @@ public class ActionBarListener {
 			String[] actionBarSplit = actionBar.split(" ");
 			for (String piece : actionBarSplit) {
 				String trimmed = piece.trim();
-				String colorsStripped = trimmed.replaceAll("\247.", "").replaceAll(",", "");;
+				String colorsStripped = Utils.cleanColor(trimmed).replaceAll(",", "");;
 
-				if(trimmed.isEmpty())
-					continue;
-
+				if(trimmed.isEmpty()) continue;
+				String shortString = colorsStripped.substring(0, colorsStripped.length() - 1).replaceAll(",", "");
 				if(trimmed.endsWith("❤")) {
-					parseAndSetHealth(colorsStripped.substring(0, colorsStripped.length() - 1).replaceAll(",", ""));
+					parseAndSetHealth(shortString);
 				} else if(trimmed.endsWith("❈")) {
-					parseAndSetDefence(colorsStripped.substring(0, colorsStripped.length() - 1).replaceAll(",", ""));
+					parseAndSetDefence(shortString);
 				} else if(trimmed.endsWith("✎")) {
-					parseAndSetMana(colorsStripped.substring(0, colorsStripped.length() - 1).replaceAll(",", ""));
+					parseAndSetMana(shortString);
 				}
 				
 				actionBar = actionBar.trim();
@@ -62,20 +54,19 @@ public class ActionBarListener {
 
 			if(SkyblockFeatures.config.hidethings) {
 				String[] arr = actionBar.split(" ");
-				for(int i=0;i<arr.length;i++) {
-					if(arr[i].contains("❤")) {
-						actionBar = actionBar.replace(arr[i],"");
-					}
-					if(arr[i].contains("❈") || arr[i].contains("Defense")) {
-						actionBar = actionBar.replace(arr[i],"");
-					}
-					if(arr[i].contains("✎") || arr[i].contains("Mana")) {
-						actionBar = actionBar.replace(arr[i],"");
-					}
-				}
+                for (String s : arr) {
+                    if (s.contains("❤")) {
+                        actionBar = actionBar.replace(s, "");
+                    }
+                    if (s.contains("❈") || s.contains("Defense")) {
+                        actionBar = actionBar.replace(s, "");
+                    }
+                    if (s.contains("✎") || s.contains("Mana")) {
+                        actionBar = actionBar.replace(s, "");
+                    }
+                }
 				event.message = new ChatComponentText(actionBar.replaceAll("\247.\\d+.*Defense", "").trim().replaceAll("\247.\\d+/\\d+✎ Mana", "").trim().replace(secrets+"/"+maxSecrets+" Secrets", "").trim());
-				return;
-			}
+            }
 		}
 	}
 
@@ -88,8 +79,7 @@ public class ActionBarListener {
 	}
 
 	private void parseAndSetDefence(String actionBarSegment) throws NumberFormatException {
-		int defence = Integer.parseInt(actionBarSegment);
-		Utils.Defence = defence;
+        Utils.Defence = Integer.parseInt(actionBarSegment);
 	}
 
 	private void parseAndSetMana(String actionBarSegment) throws NumberFormatException {

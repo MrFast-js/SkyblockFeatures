@@ -38,7 +38,7 @@ public class DamageOverlays {
     }
     
     private void renderTint(float currentHealth, ScaledResolution resolution) {
-        float threshold = Utils.maxHealth/2;
+        float threshold = (float) Utils.maxHealth /2;
         if (currentHealth <= threshold) {
             float f = (threshold - currentHealth) / threshold + 1.0F / threshold * 2.0F;
             GlStateManager.pushMatrix();

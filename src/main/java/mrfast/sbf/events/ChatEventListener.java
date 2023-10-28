@@ -82,7 +82,7 @@ public class ChatEventListener {
                     String latestProfile = APIUtils.getLatestProfileID(uuid);
                     if (latestProfile == null) return;
         
-                    String profileURL = "https://api.hypixel.net/skyblock/profile?profile=" + latestProfile+"#PartFinder";
+                    String profileURL = "https://api.hypixel.net/skyblock/profile?profile=" + latestProfile+"#PartyFinder";
                     JsonObject profileResponse = APIUtils.getJSONResponse(profileURL);
                     if (!profileResponse.get("success").getAsBoolean()) {
                         String reason = profileResponse.get("cause").getAsString();
@@ -90,7 +90,7 @@ public class ChatEventListener {
                         return;
                     }
         
-                    String playerURL = "https://api.hypixel.net/player?uuid=" + uuid+"PartFinder";
+                    String playerURL = "https://api.hypixel.net/player?uuid=" + uuid+"#PartyFinder";
                     System.out.println("Fetching player data...");
                     JsonObject playerResponse = APIUtils.getJSONResponse(playerURL);
                     if(!playerResponse.get("success").getAsBoolean()){

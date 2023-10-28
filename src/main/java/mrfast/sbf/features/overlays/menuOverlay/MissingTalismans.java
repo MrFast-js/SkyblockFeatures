@@ -70,7 +70,7 @@ public class MissingTalismans {
     public void onDrawContainerTitle(TitleDrawnEvent event) {
         if(!SkyblockFeatures.config.showMissingAccessories) return;
 
-        if (event.gui != null && event.gui instanceof GuiChest) {
+        if (event.gui instanceof GuiChest) {
             if(inAccessoryBag) {
                 if(MissingTalismans==null) {
                     Utils.drawGraySquareWithBorder(180, 0, 200, 3*Utils.GetMC().fontRendererObj.FONT_HEIGHT,3);
@@ -78,9 +78,8 @@ public class MissingTalismans {
                     return;
                 }
                 Utils.drawGraySquareWithBorder(180, -100, 200, (int) (MissingTalismans.size()*1.15*Utils.GetMC().fontRendererObj.FONT_HEIGHT),3);
-                int index = 0;
-                Utils.GetMC().fontRendererObj.drawStringWithShadow(ChatFormatting.WHITE+"Missing Talismans ("+MissingTalismans.size()+")", 190, (index*(Utils.GetMC().fontRendererObj.FONT_HEIGHT+1)+10)-100, -1);
-                index++;
+                int index = 1;
+                Utils.GetMC().fontRendererObj.drawStringWithShadow(ChatFormatting.WHITE+"Missing Talismans ("+MissingTalismans.size()+")", 190, -90, -1);
                 LinkedHashMap<String,Integer> accessories = new LinkedHashMap<>();
                 LinkedHashMap<String,Integer> sortedMap = new LinkedHashMap<>();
 

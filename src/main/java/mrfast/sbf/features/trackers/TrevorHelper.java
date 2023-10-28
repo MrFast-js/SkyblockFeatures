@@ -39,7 +39,7 @@ public class TrevorHelper {
     boolean animalKilled = false;
     @SubscribeEvent
     public void onWorldChange(SecondPassedEvent event) {
-        if(!SkyblockFeatures.config.trevorHelper || biomeLocations.size()>0 || !Utils.inSkyblock) return;
+        if(!SkyblockFeatures.config.trevorHelper || !biomeLocations.isEmpty() || !Utils.inSkyblock) return;
         tracking = null;
         biomeLocations.put("Settlement", new BlockPos(167,76,-377));
         biomeLocations.put("Gorge", new BlockPos(282,46,-488));
@@ -116,11 +116,11 @@ public class TrevorHelper {
         for(Entity entity:Utils.GetMC().theWorld.loadedEntityList) {
             try {
                 if(entity instanceof EntityArmorStand) {
-                    if(entity==null || !entity.hasCustomName()) continue;
+                    if(!entity.hasCustomName()) continue;
                     String n = entity.getName();
                     if(n.contains("Trackable") || n.contains("Undetected") || n.contains("Untrackable") || n.contains("Endangered") || n.contains("Elusive")) {
                         for(Entity entity2:Utils.GetMC().theWorld.loadedEntityList) {
-                            if((entity2 instanceof EntityPig || entity2 instanceof EntitySheep || entity2 instanceof EntityRabbit || entity2 instanceof EntityCow || entity2 instanceof EntityHorse || entity2 instanceof EntityPig || entity2 instanceof EntityChicken)) {
+                            if((entity2 instanceof EntitySheep || entity2 instanceof EntityRabbit || entity2 instanceof EntityCow || entity2 instanceof EntityHorse || entity2 instanceof EntityPig || entity2 instanceof EntityChicken)) {
                                 if(entity.getDistanceToEntity(entity2)<3) {
                                     tracking = entity2;
                                 }

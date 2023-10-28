@@ -36,17 +36,11 @@ public class HideGlass {
 
     @SubscribeEvent
     public void onChatMessage(ClientChatReceivedEvent event) {
-        try {
-            if(!SkyblockFeatures.config.timestamps || event.type == 2) return;
-            final String timestamp = new SimpleDateFormat("hh:mm").format(new Date());
-            final IChatComponent msg =
-                    new ChatComponentText("")
-                            .appendText(ChatFormatting.DARK_GRAY+"["+timestamp+"] ")
-                            .appendSibling(event.message);
-            event.message = msg;
-        } catch (Exception e) {
-            //TODO: handle exception
-        }
+        if(!SkyblockFeatures.config.timestamps || event.type == 2) return;
+        String timestamp = new SimpleDateFormat("hh:mm").format(new Date());
+        event.message = new ChatComponentText("")
+                .appendText(ChatFormatting.DARK_GRAY+"["+timestamp+"] ")
+                .appendSibling(event.message);
     }
 
     @SubscribeEvent
@@ -112,7 +106,7 @@ public class HideGlass {
                             TerminalCommand.clicked.add(event.slot.slotNumber);
                             event.inventory.setInventorySlotContents(event.slot.slotNumber, new ItemStack(Blocks.stained_glass_pane, 1, 5).setStackDisplayName(ChatFormatting.RESET+""));
                             if(TerminalCommand.clicked.size() == 14) {
-                                Utils.SendMessage(ChatFormatting.GREEN+"You completed 'Correct all the panes!' in "+(Math.floor((System.currentTimeMillis()-TerminalCommand.start)/10)/100)+"s");
+                                Utils.SendMessage(ChatFormatting.GREEN+"You completed 'Correct all the panes!' in "+Utils.round(System.currentTimeMillis()-TerminalCommand.start,2)+"s");
                                 mc.thePlayer.closeScreen();
                             }
                             if(TerminalCommand.start == 0) {
@@ -121,20 +115,21 @@ public class HideGlass {
                         }
                         if(event.item.getUnlocalizedName().contains("lime") && TerminalCommand.clicked.contains(event.slot.slotNumber)) {
                             Utils.playSound("note.pling", 2);
-                            TerminalCommand.clicked.remove(TerminalCommand.clicked.indexOf(event.slot.slotNumber));
+                            TerminalCommand.clicked.remove((Integer) event.slot.slotNumber);
                             event.inventory.setInventorySlotContents(event.slot.slotNumber, new ItemStack(Blocks.stained_glass_pane, 1, 14).setStackDisplayName(ChatFormatting.RESET+""));
                         }
                     }
                 }
             }
             if(event.inventoryName.contains("Maze")) {
+                assert event.slot != null;
                 if(event.slot.slotNumber == TerminalCommand.mazeSlots[TerminalCommand.mazeSlots.length-(int) TerminalCommand.mazeIndex]) {
                     if(event.item.getUnlocalizedName().contains("white")) {
                         Utils.playSound("note.pling", 2);
                         TerminalCommand.clicked.add(event.slot.slotNumber);
                         event.inventory.setInventorySlotContents(event.slot.slotNumber, new ItemStack(Blocks.stained_glass_pane, 1, 5).setStackDisplayName(ChatFormatting.RESET+""));
                         if(TerminalCommand.clicked.size() == TerminalCommand.mazeSlots.length) {
-                            Utils.SendMessage(ChatFormatting.GREEN+"You completed 'Maze!' in "+(Math.floor((System.currentTimeMillis()-TerminalCommand.start)/10)/100)+"s");
+                            Utils.SendMessage(ChatFormatting.GREEN+"You completed 'Maze!' in "+Utils.round(System.currentTimeMillis()-TerminalCommand.start,2)+"s");
                             mc.thePlayer.closeScreen();
                             TerminalCommand.mazeIndex = 0;
                         }
@@ -149,7 +144,7 @@ public class HideGlass {
             if(event.inventoryName.contains("Click in order") && event.item.getUnlocalizedName().contains("red")) {
                 if(event.item.stackSize==TerminalCommand.orderNumber) {
                     if(TerminalCommand.orderNumber==14) {
-                        Utils.SendMessage(ChatFormatting.GREEN+"You completed 'Click in order!' in "+(Math.floor((System.currentTimeMillis()-TerminalCommand.start)/10)/100)+"s");
+                        Utils.SendMessage(ChatFormatting.GREEN+"You completed 'Click in order!' in "+Utils.round(System.currentTimeMillis()-TerminalCommand.start,2)+"s");
                         mc.thePlayer.closeScreen();
                         TerminalCommand.orderNumber = 1;
                     }
@@ -180,7 +175,7 @@ public class HideGlass {
         IInventory inv = chest.getLowerChestInventory();
         String chestName = inv.getDisplayName().getUnformattedText().trim();
         if(chestName.contains("✯") && TerminalCommand.start!=0) {
-            Utils.GetMC().fontRendererObj.drawString(chestName+" "+(Math.floor((System.currentTimeMillis()-TerminalCommand.start)/10)/100)+"s", 8, 6, 0);
+            Utils.GetMC().fontRendererObj.drawString(chestName+" "+(Utils.round(System.currentTimeMillis() - TerminalCommand.start,2))+"s", 8, 6, 0);
         }
     }
 
@@ -198,7 +193,7 @@ public class HideGlass {
                         int y = chest.inventorySlots.get(i).yDisplayPosition;
                         GlStateManager.pushMatrix();
                         GlStateManager.translate(0, 0, 700);
-                        Utils.drawTextWithStyle3(ChatFormatting.GREEN+""+i+"", x+6, y+6);
+                        Utils.drawTextWithStyle3(ChatFormatting.GREEN+""+i, x+6, y+6);
                         GlStateManager.popMatrix();
                     }
                 }

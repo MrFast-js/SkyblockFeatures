@@ -57,33 +57,20 @@ public class CommisionsTracker {
                 }
                 
                 if(matcher.find()) {
-                    if(getTotal(commission)!=-1) {
-                      String[] a = commission.split(" ");
-                      String amount = Math.round(getTotal(commission) * (Double.valueOf(matcher.group(1)) / 100))+"";
-                      String mid = ChatFormatting.LIGHT_PURPLE+"["+
-                      ChatFormatting.GREEN+amount+
-                      ChatFormatting.GOLD+"/"+
-                      ChatFormatting.GREEN+getTotal(commission)+
-                      ChatFormatting.LIGHT_PURPLE+"]";
-                      commission = commission.replace(a[a.length-1], mid);
-                    } else {
-                      String[] a = commission.split(" ");
-                      String amount = Math.round(getTotal(commission) * (Double.valueOf(matcher.group(1)) / 100))+"";
-                      String mid = ChatFormatting.LIGHT_PURPLE+"["+
-                      ChatFormatting.GREEN+amount+
-                      ChatFormatting.GOLD+"/"+
-                      ChatFormatting.GREEN+getTotal(commission)+
-                      ChatFormatting.LIGHT_PURPLE+"]";
-                      commission = commission.replace(a[a.length-1], mid);
-                    }
+                  String[] a = commission.split(" ");
+                  String amount = Math.round(getTotal(commission) * (Double.valueOf(matcher.group(1)) / 100))+"";
+                  String mid = ChatFormatting.LIGHT_PURPLE+"["+
+                  ChatFormatting.GREEN+amount+
+                  ChatFormatting.GOLD+"/"+
+                  ChatFormatting.GREEN+getTotal(commission)+
+                  ChatFormatting.LIGHT_PURPLE+"]";
+                  commission = commission.replace(a[a.length-1], mid);
                 } else if(commission.contains("DONE")) {
                   commission = commission.replace("DONE", ChatFormatting.GREEN+"DONE");
                 }
                 text.add(ChatFormatting.AQUA+commission);
               }
-            } catch (Exception e) {
-              
-          }
+          } catch (Exception ignored) {}
 
           for (int i = 0; i < text.size(); i++) {
             Utils.drawTextWithStyle3(text.get(i), 0, i * 10);

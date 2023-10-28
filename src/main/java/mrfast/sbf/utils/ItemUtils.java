@@ -25,7 +25,6 @@ import net.minecraftforge.common.util.Constants;
 
 public class ItemUtils {
     private static final Pattern RARITY_PATTERN = Pattern.compile("(§[0-9a-f]§l§ka§r )?([§0-9a-fk-or]+)(?<rarity>[A-Z]+)");
-    public static final int NBT_INTEGER = 3;
     public static final int NBT_STRING = 8;
     public static final int NBT_LIST = 9;
     public static final int NBT_COMPOUND = 10;
@@ -430,7 +429,7 @@ public class ItemUtils {
         Double masterStarPrice = 0d;
         try {
             if(masterStars>0) {
-                if(masterStars>=1) masterStarPrice+=PricingData.bazaarPrices.get("FIRST_MASTER_STAR");
+                masterStarPrice+=PricingData.bazaarPrices.get("FIRST_MASTER_STAR");
                 if(masterStars>=2) masterStarPrice+=PricingData.bazaarPrices.get("SECOND_MASTER_STAR");
                 if(masterStars>=3) masterStarPrice+=PricingData.bazaarPrices.get("THIRD_MASTER_STAR");
                 if(masterStars>=4) masterStarPrice+=PricingData.bazaarPrices.get("FOURTH_MASTER_STAR");
@@ -443,7 +442,7 @@ public class ItemUtils {
     }
 
     public static Long getGemstoneWorth(NBTTagCompound extraAttributes) {
-        if (!extraAttributes.hasKey("gems")) return 0l;
+        if (!extraAttributes.hasKey("gems")) return 0L;
         NBTTagCompound nbt = extraAttributes.getCompoundTag("gems");
         long total = 0;
         List<String> finalGemstones = new ArrayList<>();
@@ -478,7 +477,7 @@ public class ItemUtils {
             String id = "ENCHANTMENT_"+enchant.toUpperCase()+"_"+nbt.getInteger(enchant);
             if(PricingData.bazaarPrices.get(id)!=null) {
                 if(id.contains("ENCHANTMENT_SCAVENGER")||id.contains("ENCHANTMENT_INFINITE_QUIVER")) continue;
-                total+=PricingData.bazaarPrices.get(id)*0.85;
+                total+= (long) (PricingData.bazaarPrices.get(id)*0.85);
             }
         }
         return total;

@@ -27,11 +27,12 @@ public class HighlightCropArea {
     @SubscribeEvent
     public void secondPassed(SecondPassedEvent event) {
         if(SkyblockInfo.getInstance()==null || !SkyblockFeatures.config.GardenBlocksToRemove || Utils.GetMC().theWorld==null) return;
-        try {if(!SkyblockInfo.getInstance().map.equals("Garden")) return;} catch (Exception e) {}
+        try {if(!SkyblockInfo.getInstance().map.equals("Garden")) return;} catch (Exception ignored) {}
     
         for(String line:ScoreboardUtil.getSidebarLines()) {
-            if(line.contains("Cleanup") && blocksToDestroy.size()==0) {
+            if (line.contains("Cleanup") && blocksToDestroy.isEmpty()) {
                 update = true;
+                break;
             }
         }
         seconds++;
@@ -54,7 +55,7 @@ public class HighlightCropArea {
         if(SkyblockInfo.getInstance()==null || !SkyblockFeatures.config.GardenBlocksToRemove || Utils.GetMC().theWorld==null) return;
         try {if(!SkyblockInfo.getInstance().map.equals("Garden")) return;} catch (Exception e) {}
         
-        if(cropAreas.size()==0) {
+        if(cropAreas.isEmpty()) {
             for(int x=-192;x<192;x+=96) {
                 for(int z=-192;z<192;z+=96) {
                     AxisAlignedBB box = new AxisAlignedBB(x-48,65,z-48,x+48,116,z+48);
@@ -93,7 +94,7 @@ public class HighlightCropArea {
     @SubscribeEvent
     public void onBlockChange(BlockChangeEvent event) {
         if(SkyblockInfo.getInstance()==null || !SkyblockFeatures.config.GardenBlocksToRemove || Utils.GetMC().theWorld==null) return;
-        try {if(!SkyblockInfo.getInstance().map.equals("Garden")) return;} catch (Exception e) {}
+        try {if(!SkyblockInfo.getInstance().map.equals("Garden")) return;} catch (Exception ignored) {}
 
         if(blocksToDestroy.contains(event.pos)) {
             blocksToDestroy.remove(blocksToDestroy.indexOf(event.pos));

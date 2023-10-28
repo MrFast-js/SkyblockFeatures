@@ -12,12 +12,12 @@ public class HealthDisplay {
     private static final Minecraft mc = Minecraft.getMinecraft();
 
     static {
-        new JerryTimerGUI();
+        new HealthDisplayGUI();
     }
 
     static String display = Utils.Health+"/"+Utils.maxHealth;
-    public static class JerryTimerGUI extends UIElement {
-        public JerryTimerGUI() {
+    public static class HealthDisplayGUI extends UIElement {
+        public HealthDisplayGUI() {
             super("Health Display", new Point(0f,0f));
             SkyblockFeatures.GUIMANAGER.registerElement(this);
         }

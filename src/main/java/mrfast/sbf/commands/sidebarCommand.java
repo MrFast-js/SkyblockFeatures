@@ -39,21 +39,21 @@ public class sidebarCommand extends CommandBase {
 
 	@Override
 	public void processCommand(ICommandSender arg0, String[] args) throws CommandException {
-        String output = "----------===== TAB LIST =====----------\n\n";
+        StringBuilder output = new StringBuilder("----------===== TAB LIST =====----------\n\n");
         int count = 0;
 		for (NetworkPlayerInfo pi : TabListUtils.getTabEntries()) {
             count++;
-            output += count+": "+Utils.GetMC().ingameGUI.getTabList().getPlayerName(pi)+"\n";
+            output.append(count).append(": ").append(Utils.GetMC().ingameGUI.getTabList().getPlayerName(pi)).append("\n");
         }
-        output += "\n----------===== SIDEBAR =====----------\n\n";
+        output.append("\n----------===== SIDEBAR =====----------\n\n");
         count = 0;
         List<String> lines = ScoreboardUtil.getSidebarLines();
         Collections.reverse(lines);
         for (String line : lines) {
             count++;
-            output += count+": "+line+"\n";
+            output.append(count).append(": ").append(line).append("\n");
         }
-        GuiScreen.setClipboardString(output);
+        GuiScreen.setClipboardString(output.toString());
         Utils.SendMessage(ChatFormatting.GREEN+"Scoreboards copied to clipboard");
 	}
 

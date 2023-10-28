@@ -12,12 +12,30 @@ import mrfast.sbf.gui.components.Point;
 import mrfast.sbf.gui.components.UIElement;
 import mrfast.sbf.utils.Utils;
 import net.minecraft.client.Minecraft;
+import net.minecraftforge.client.event.RenderGameOverlayEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+
 public class MiscOverlays {
     public static Minecraft mc = Utils.GetMC();
     static {
         new timeOverlay();
         new dayCounter();
-    }   
+    }
+
+    @SubscribeEvent
+    public void renderHealth(RenderGameOverlayEvent.Pre event) {
+        if(Utils.inSkyblock) {
+            if (event.type == RenderGameOverlayEvent.ElementType.FOOD && SkyblockFeatures.config.hideHungerBar) {
+                event.setCanceled(true);
+            }
+            if (event.type == RenderGameOverlayEvent.ElementType.HEALTH && SkyblockFeatures.config.hideHealthHearts) {
+                event.setCanceled(true);
+            }
+            if (event.type == RenderGameOverlayEvent.ElementType.ARMOR && SkyblockFeatures.config.hideArmorBar) {
+                event.setCanceled(true);
+            }
+        }
+    }
     public static String getTime() {
         return new SimpleDateFormat("hh:mm:ss").format(new Date());
     }

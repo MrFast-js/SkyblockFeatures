@@ -8,7 +8,6 @@ import mrfast.sbf.SkyblockFeatures;
 import mrfast.sbf.events.SlotClickedEvent;
 import mrfast.sbf.events.GuiContainerEvent.TitleDrawnEvent;
 import mrfast.sbf.features.items.HideGlass;
-import mrfast.sbf.utils.ItemUtils;
 import mrfast.sbf.utils.Utils;
 import net.minecraft.client.gui.inventory.GuiChest;
 import net.minecraft.inventory.ContainerChest;
@@ -21,7 +20,6 @@ import net.minecraftforge.fml.common.gameevent.TickEvent;
 
 public class UltrasequencerSolver {
     static Slot[] clickInOrderSlots = new Slot[36];
-    static int lastUltraSequencerClicked = 0;
     static HashMap<Slot,ItemStack> answers = new HashMap<>();
     static int clickIndex = 1;
     
@@ -88,11 +86,11 @@ public class UltrasequencerSolver {
                                 try {
                                     int slotInt = Integer.parseInt(Utils.cleanColor(slot.getStack().getDisplayName()).replaceAll("[^0-9]", ""));
                                     if(slotInt==clickIndex) {
-                                        sloX = slot.xDisplayPosition;
+                                        slotX = slot.xDisplayPosition;
                                         slotY = slot.yDisplayPosition;
                                     }
                                     if(slotInt==clickIndex+1) {
-                                        nextsloX = slot.xDisplayPosition;
+                                        nextslotX = slot.xDisplayPosition;
                                         nextslotY = slot.yDisplayPosition;
                                     }
                                 } catch (Exception e) {
@@ -104,31 +102,34 @@ public class UltrasequencerSolver {
                     }
                 } else {
                     clickIndex = 1;
-                    sloX = 0;
-                    nextsloX = 0;
+                    slotX = 0;
+                    nextslotX = 0;
                 }
             }
         }
     }
-    int sloX = 0;
+    int slotX = 0;
     int slotY = 0;
 
-    int nextsloX = 0;
+    int nextslotX = 0;
     int nextslotY = 0;
 
     @SubscribeEvent
     public void onDrawSlot(GuiScreenEvent.DrawScreenEvent.Post event) {
-        if(sloX==0) return;
-        Utils.drawLineInGui(sloX+400, slotY+168, event.mouseX, event.mouseY, new Color(0x00FF00), 2,1);
-        if(nextsloX==0) return;
-        Utils.drawLineInGui(sloX+400, slotY+168, nextsloX+400, nextslotY+168, new Color(0xFFFF00), 2,0.6);
+        if(!SkyblockFeatures.config.enchantingSolvers) return;
+        if(slotX ==0) return;
+        Utils.drawLineInGui(slotX +400, slotY+168, event.mouseX, event.mouseY, new Color(0x00FF00), 2,1);
+        if(nextslotX ==0) return;
+        Utils.drawLineInGui(slotX +400, slotY+168, nextslotX +400, nextslotY+168, new Color(0xFFFF00), 2,0.6);
     }
 
     @SubscribeEvent
     public void onGuiOpen(GuiOpenEvent event) {
+        if(!SkyblockFeatures.config.enchantingSolvers) return;
+
         clickIndex = 1;
         clickInOrderSlots = new Slot[36];
-        sloX = 0;
-        nextsloX = 0;
+        slotX = 0;
+        nextslotX = 0;
     }
 }

@@ -27,10 +27,10 @@ public class CropCounter {
     @SubscribeEvent
     public void onSecond(SecondPassedEvent event) {
         if(mc.thePlayer == null||!SkyblockFeatures.config.Counter||!Utils.inSkyblock) return;
-        if(averageCropsValues.size()>0) {
+        if(!averageCropsValues.isEmpty()) {
             int total = 0;
-            for(int i=0;i<averageCropsValues.size();i++) {
-                total+=averageCropsValues.get(i);
+            for (Integer averageCropsValue : averageCropsValues) {
+                total += averageCropsValue;
             }
             cropsPerSecond = total/averageCropsValues.size();
         }

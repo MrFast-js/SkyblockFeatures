@@ -1,7 +1,5 @@
 package mrfast.sbf.features.items;
 
-import java.util.HashMap;
-
 import org.lwjgl.input.Keyboard;
 
 import com.google.gson.JsonObject;
@@ -12,11 +10,8 @@ import mrfast.sbf.core.PricingData;
 import mrfast.sbf.features.misc.AuctionFeatures;
 import mrfast.sbf.utils.ItemUtils;
 import mrfast.sbf.utils.Utils;
-import net.minecraft.client.entity.EntityOtherPlayerMP;
-import net.minecraft.entity.projectile.EntityFishHook;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -33,7 +28,7 @@ public class ItemFeatures {
         String itemUUID = ItemUtils.getItemUUID(item);
 
         if (itemId != null) {
-            if (SkyblockFeatures.config.egg) {
+            if (SkyblockFeatures.config.prehistoricEggDistance) {
                 NBTTagCompound extraAttributes = ItemUtils.getExtraAttributes(item);
 
                 if (extraAttributes != null) {
@@ -71,7 +66,7 @@ public class ItemFeatures {
                 Double valuePer = PricingData.lowestBINs.get(auctionIdentifier);
 
                 if (SkyblockFeatures.config.showEstimatedPrice && valuePer!=null) {
-                    Long total = ItemUtils.getEstimatedItemValue(item);//Math.floor(valuePer+starValue+enchantValue) * item.stackSize;
+                    long total = ItemUtils.getEstimatedItemValue(item);//Math.floor(valuePer+starValue+enchantValue) * item.stackSize;
                     event.toolTip.add("§bEstimated Price: §6" + Utils.nf.format(total*item.stackSize));
                 }
 

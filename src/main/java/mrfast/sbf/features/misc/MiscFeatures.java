@@ -24,8 +24,6 @@ import net.minecraft.block.BlockAir;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiChest;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.item.EntityItem;
-import net.minecraft.entity.item.EntityTNTPrimed;
 import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.projectile.EntityArrow;
@@ -54,11 +52,7 @@ public class MiscFeatures {
 
     @SubscribeEvent
     public void onWorldChanges(WorldEvent.Load event) {
-        try {
-            tracker.clear();
-        } catch(Exception e) {
-
-        }
+        tracker.clear();
     }
 
     @SubscribeEvent
@@ -110,88 +104,51 @@ public class MiscFeatures {
             }
         }
     }
-    HashMap<EntityTNTPrimed,Double> tntExistTimes = new HashMap<>();
-    int tick = 0;
-    @SubscribeEvent
-    public void onTick(ClientTickEvent event) {
-        if(Utils.GetMC().theWorld==null || !SkyblockFeatures.config.tntTimer) return;
-        
-        tick++;
-        for(Entity entity:Utils.GetMC().theWorld.loadedEntityList) {
-            if(entity instanceof EntityTNTPrimed && !tntExistTimes.containsKey(entity)) {
-                tntExistTimes.put((EntityTNTPrimed) entity, 4.7d);
-            }
-        }
-        if(tick==4) {
-            tick = 0;
-            for(EntityTNTPrimed tnt:tntExistTimes.keySet()) {
-                if(tntExistTimes.get(tnt)==0.1) continue;
-                tntExistTimes.put(tnt,Math.floor((tntExistTimes.get(tnt)-0.1)*10)/10);
-            }
-        }
-    }
-
     @SubscribeEvent
     public void RenderBlockOverlayEvent(DrawBlockHighlightEvent event) {
-        try {
-            if(Utils.GetMC().thePlayer.getHeldItem()!=null && SkyblockFeatures.config.teleportDestination) {
-                ItemStack item = Utils.GetMC().thePlayer.getHeldItem();
-                String id = ItemUtils.getSkyBlockItemID(item);
-                if(id!=null)
-                if(id.contains("ASPECT_OF_THE_END") || id.contains("ASPECT_OF_THE_VOID")) {
-                    Double distance = 8.0;
-                    Double etherDistance = 8.0;
-                    Boolean hasEtherwarp = false;
-                    for(String line:ItemUtils.getItemLore(item)) {
-                        line = Utils.cleanColor(line);
-                        if(line.contains("Teleport")) {
-                            try {
-                                distance = Double.parseDouble(line.replaceAll("[^0-9]", ""));
-                            } catch (Exception e) {
-                                // TODO: handle exception
-                            }
-                        }
-                        if(line.contains("up to")) {
-                            try {
-                                etherDistance = Double.parseDouble(line.replaceAll("[^0-9]", ""));
-                            } catch (Exception e) {
-                                // TODO: handle exception
-                            }
-                        }
-                        if(line.contains("Ether")) {
-                            hasEtherwarp = true;
+        if(Utils.GetMC().thePlayer.getHeldItem()!=null && SkyblockFeatures.config.teleportDestination) {
+            ItemStack item = Utils.GetMC().thePlayer.getHeldItem();
+            String id = ItemUtils.getSkyBlockItemID(item);
+            if(id==null) return;
+            if(id.contains("ASPECT_OF_THE_END") || id.contains("ASPECT_OF_THE_VOID")) {
+                double distance = 8.0;
+                double etherDistance = 8.0;
+                boolean hasEtherwarp = false;
+                for(String line:ItemUtils.getItemLore(item)) {
+                    line = Utils.cleanColor(line);
+                    if(line.contains("Teleport")) {
+                        try {
+                            distance = Double.parseDouble(line.replaceAll("[^0-9]", ""));
+                        } catch (Exception e) {
+                            // TODO: handle exception
                         }
                     }
-                    MovingObjectPosition lookingBlock = Utils.GetMC().thePlayer.rayTrace(distance, event.partialTicks);
-                    if(hasEtherwarp && Utils.GetMC().thePlayer.isSneaking())  {
-                        lookingBlock = Utils.GetMC().thePlayer.rayTrace(etherDistance, event.partialTicks);
+                    if(line.contains("up to")) {
+                        try {
+                            etherDistance = Double.parseDouble(line.replaceAll("[^0-9]", ""));
+                        } catch (Exception e) {
+                            // TODO: handle exception
+                        }
                     }
-                    AxisAlignedBB box = new AxisAlignedBB(lookingBlock.getBlockPos(), lookingBlock.getBlockPos().add(1, 1, 1));
-    
-                    if(!(Utils.GetMC().theWorld.getBlockState(lookingBlock.getBlockPos()).getBlock() instanceof BlockAir)) {
-                        RenderUtil.drawOutlinedFilledBoundingBox(box, new Color(0x324ca8), event.partialTicks);
+                    if(line.contains("Ether")) {
+                        hasEtherwarp = true;
                     }
                 }
+                MovingObjectPosition lookingBlock = Utils.GetMC().thePlayer.rayTrace(distance, event.partialTicks);
+                if(hasEtherwarp && Utils.GetMC().thePlayer.isSneaking())  {
+                    lookingBlock = Utils.GetMC().thePlayer.rayTrace(etherDistance, event.partialTicks);
+                }
+                AxisAlignedBB box = new AxisAlignedBB(lookingBlock.getBlockPos(), lookingBlock.getBlockPos().add(1, 1, 1));
+
+                if(!(Utils.GetMC().theWorld.getBlockState(lookingBlock.getBlockPos()).getBlock() instanceof BlockAir)) {
+                    RenderUtil.drawOutlinedFilledBoundingBox(box, new Color(0x324ca8), event.partialTicks);
+                }
             }
-        } catch (Exception e) {
-            // TODO: handle exception
         }
     }
 
     @SubscribeEvent
     public void onRender(RenderWorldLastEvent event) {
-        if(SkyblockFeatures.config.tntTimer) {
-            for(EntityTNTPrimed tnt:tntExistTimes.keySet()) {
-                if(tnt.isDead) {
-                    tntExistTimes.remove(tnt);
-                    return;
-                }
-                if(tntExistTimes.get(tnt)==0) {
-                    return;
-                }
-                RenderUtil.draw3DStringWithShadow(tnt.getPositionVector().addVector(0, 1.5, 0), ChatFormatting.GREEN+""+tntExistTimes.get(tnt).toString(), 0xFFFFFF, event.partialTicks);
-            }
-        }
         if(SkyblockInfo.getInstance().localLocation.contains("Glowing") && SkyblockFeatures.config.highlightMushrooms) {
             try {
                 for(Vec3 packet:particles) {
@@ -232,10 +189,7 @@ public class MiscFeatures {
 
     @SubscribeEvent
     public void onDrawContainerTitle(TitleDrawnEvent event) {
-        try {
-            
-
-        if (event.gui !=null && event.gui instanceof GuiChest && SkyblockFeatures.config.extraProfileInfo) {
+        if (event.gui instanceof GuiChest && SkyblockFeatures.config.extraProfileInfo) {
             GuiChest gui = (GuiChest) event.gui;
             ContainerChest chest = (ContainerChest) gui.inventorySlots;
             IInventory inv = chest.getLowerChestInventory();
@@ -246,7 +200,6 @@ public class MiscFeatures {
             if(!gotNetworth && !tryingNetworth) {
                 tryingNetworth = true;
                 new Thread(() -> {
-                    try {
                     // Get UUID for Hypixel API requests
                     String username = chestName.substring(0, chestName.indexOf("'"));
                     String uuid = APIUtils.getUUID(username);
@@ -272,8 +225,6 @@ public class MiscFeatures {
                     } catch (Exception e) {
                         e.printStackTrace();
                         apiOff = true;
-                    }} catch (Exception e) {
-                        // TODO: handle exception
                     }
                 }).start();
             }
@@ -291,15 +242,12 @@ public class MiscFeatures {
             } else {
                 lines.add(ChatFormatting.RED+"Player has API Disabled.");
             }
-            Utils.drawGraySquareWithBorder(180, 0, 150, (int) ((3+lines.size())*Utils.GetMC().fontRendererObj.FONT_HEIGHT)-8,3);
+            Utils.drawGraySquareWithBorder(180, 0, 150, ((3+lines.size())*Utils.GetMC().fontRendererObj.FONT_HEIGHT) -8,3);
 
             for(int i=0;i<lines.size();i++) {
                 Utils.GetMC().fontRendererObj.drawStringWithShadow(lines.get(i), 190, i*(Utils.GetMC().fontRendererObj.FONT_HEIGHT+1)+10, -1);
             }
         }
-    } catch (Exception e) {
-        // TODO: handle exception
-    }
     }
 
 }

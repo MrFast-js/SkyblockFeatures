@@ -1,5 +1,6 @@
 package mrfast.sbf.features.statDisplays;
 
+import java.awt.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -18,14 +19,12 @@ public class CryptDisplay {
     private static final Minecraft mc = Minecraft.getMinecraft();
 
     static {
-        new JerryTimerGUI();
+        new cryptDisplayGUI();
     }
 
-    static String display = "Secrets";
-    
-    public static class JerryTimerGUI extends UIElement {
+    public static class cryptDisplayGUI extends UIElement {
 
-        public JerryTimerGUI() {
+        public cryptDisplayGUI() {
             super("Crypt Display", new Point(0.2f, 0.0f));
             SkyblockFeatures.GUIMANAGER.registerElement(this);
         }
@@ -43,20 +42,13 @@ public class CryptDisplay {
                         Matcher matcher = cryptsPattern.matcher(name);
                         if (matcher.find()) {
                             crypts = Integer.parseInt(matcher.group("crypts"));
-                            continue;
                         }
                     }
-                } catch (NumberFormatException ignored) {
-                }
+                } catch (NumberFormatException ignored) {}
             }
 
-            int color = 0xeb4034;
+            int color = crypts >= 5?0x55FF55:0xeb4034;
 
-            if(crypts < 5) {
-                color = 0xeb4034;
-            } else {
-                color = 0x55FF55;
-            }
             float scale = 2f;
             if (this.getToggled() && Minecraft.getMinecraft().thePlayer != null && mc.theWorld != null) {
                 GlStateManager.scale(scale, scale, 0);

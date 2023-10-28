@@ -34,9 +34,8 @@ import net.minecraftforge.fml.common.gameevent.TickEvent;
 
 public class CrystalHollowsMap {
     // Map Asset Inspired by Skyblock Extra's
-     public static final ResourceLocation MAP = new ResourceLocation("skyblockfeatures", "map/CrystalHollowsMap.png");
+    public static final ResourceLocation MAP = new ResourceLocation("skyblockfeatures", "map/CrystalHollowsMap.png");
     public static final ResourceLocation PLAYER_ICON = new ResourceLocation("skyblockfeatures", "map/mapIcon.png");
-    public static final ResourceLocation PLAYER_ICON2 = new ResourceLocation("skyblockfeatures", "map/mapIcon2.png");
 
     private static boolean loaded = false;
     public static boolean inCrystalHollows = false;

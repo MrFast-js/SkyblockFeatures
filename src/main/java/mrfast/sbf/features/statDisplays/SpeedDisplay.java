@@ -12,7 +12,7 @@ public class SpeedDisplay {
     private static final Minecraft mc = Minecraft.getMinecraft();
 
     static {
-        new JerryTimerGUI();
+        new SpeedDisplayGUI();
     }
 
     static String display = "123%";
@@ -25,8 +25,8 @@ public class SpeedDisplay {
         text += "%";
         return text;
     }
-    public static class JerryTimerGUI extends UIElement {
-        public JerryTimerGUI() {
+    public static class SpeedDisplayGUI extends UIElement {
+        public SpeedDisplayGUI() {
             super("Speed Display", new Point(0.2f, 0.0f));
             SkyblockFeatures.GUIMANAGER.registerElement(this);
         }

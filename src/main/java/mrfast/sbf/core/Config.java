@@ -531,7 +531,7 @@ public class Config extends Vigilant {
             category = "General",
             subcategory = "Health & Mana Bars"
     )
-    public boolean armorbar = false;
+    public boolean hideArmorBar = false;
 
     @Property(
             type = PropertyType.SWITCH,
@@ -540,7 +540,7 @@ public class Config extends Vigilant {
             category = "General",
             subcategory = "Health & Mana Bars"
     )
-    public boolean hungerbar = false;
+    public boolean hideHungerBar = false;
 
     @Property(
             type = PropertyType.SWITCH,
@@ -549,7 +549,7 @@ public class Config extends Vigilant {
             category = "General",
             subcategory = "Health & Mana Bars"
     )
-    public boolean healthsbar = false;
+    public boolean hideHealthHearts = false;
 
     @Property(
             type = PropertyType.SWITCH,
@@ -1114,15 +1114,6 @@ public class Config extends Vigilant {
             subcategory = "Items"
     )
     public boolean showSkyblockID = false;
-    
-    @Property(
-            type = PropertyType.SWITCH,
-            name = "TNT Timer",
-            description = "Shows the time till tnt exploads",
-            category = "Miscellaneous",
-            subcategory = "Items"
-    )
-    public boolean tntTimer = false;
 
     @Property(
             type = PropertyType.SWITCH,
@@ -1131,7 +1122,7 @@ public class Config extends Vigilant {
             category = "Miscellaneous",
             subcategory = "Items"
     )
-    public boolean egg = false;
+    public boolean prehistoricEggDistance = false;
 
      @Property(
             type = PropertyType.SWITCH,

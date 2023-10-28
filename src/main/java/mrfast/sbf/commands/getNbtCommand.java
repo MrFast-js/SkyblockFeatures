@@ -134,7 +134,7 @@ public class getNbtCommand extends CommandBase {
 
                     // Don't add a comma after the last element.
                     if (i < (bytes.length - 1)) {
-                        stringBuilder.append(", "+System.lineSeparator());
+                        stringBuilder.append(", ").append(System.lineSeparator());
                     }
                 }
             } else {
@@ -146,7 +146,7 @@ public class getNbtCommand extends CommandBase {
 
                     // Don't add a comma after the last element.
                     if (i < (ints.length - 1)) {
-                        stringBuilder.append(", "+System.lineSeparator());
+                        stringBuilder.append(", ").append(System.lineSeparator());
                     }
                 }
             }
@@ -163,7 +163,7 @@ public class getNbtCommand extends CommandBase {
 
                 // Don't add a comma after the last element.
                 if (i < (nbtTagList.tagCount() - 1)) {
-                    stringBuilder.append(", "+System.lineSeparator());
+                    stringBuilder.append(", ").append(System.lineSeparator());
                 }
             }
             stringBuilder.append(']');

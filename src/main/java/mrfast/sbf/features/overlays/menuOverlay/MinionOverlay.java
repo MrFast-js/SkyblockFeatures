@@ -40,7 +40,7 @@ public class MinionOverlay {
             GuiChest gui = (GuiChest) event.gui;
             ContainerChest chest = (ContainerChest) gui.inventorySlots;
             IInventory inv = chest.getLowerChestInventory();
-            Double totalValue = 0d;
+            double totalValue = 0d;
 
             String chestName = inv.getDisplayName().getUnformattedText().trim();
             if(chestName.contains(" Minion ") && !chestName.contains("Recipe")) {
@@ -65,8 +65,7 @@ public class MinionOverlay {
                             }
                         }
                     }
-                    int i=slotId;
-                    if((i == 21||i == 22||i == 23||i == 24||i == 25) || (i == 30||i == 31||i == 32||i == 33||i == 34) || (i == 39||i == 40||i == 41||i == 42||i == 43)) {
+                    if(isSlotFromMinion(slotId)) {
                         String identifier = PricingData.getIdentifier(stack);
                         if(identifier!=null) {
                             Double sellPrice = PricingData.bazaarPrices.get(identifier);
@@ -86,7 +85,7 @@ public class MinionOverlay {
                         Utils.drawGraySquareWithBorder(180, 0, 150, 8*Utils.GetMC().fontRendererObj.FONT_HEIGHT,3);
                         Double sellPrice = PricingData.bazaarPrices.get(identifier);
                         if(sellPrice != null) {
-                            Double perHour = Math.floor((3600/secondsPerAction)*sellPrice);
+                            Double perHour = Math.floor(((double) 3600 /secondsPerAction)*sellPrice);
                             String duration = "Unknown";
                             if(closestMinion != null && lastCollected.containsKey(closestMinion.getPosition().toString())) {
                                 duration = Utils.msToDuration(lastCollected.get(closestMinion.getPosition().toString()));
@@ -117,7 +116,7 @@ public class MinionOverlay {
                     } else {
                         String[] lines = {
                             ChatFormatting.RED+"Unable to get item id!",
-                            ChatFormatting.RED+"Minion Generates: "+identifier
+                            ChatFormatting.RED+"Minion Generates: "+ null
                         };
                         int lineCount = 0;
                         for(String line:lines) {
@@ -132,8 +131,8 @@ public class MinionOverlay {
     @SubscribeEvent
     public void onSlotClick(SlotClickedEvent event) {
         if(SkyblockFeatures.config.minionOverlay) {
-            GuiChest gui = (GuiChest) event.chest;
-            ContainerChest chest = null;
+            GuiChest gui = event.chest;
+            ContainerChest chest;
             if(gui!=null && gui.inventorySlots!=null) {
                 chest = (ContainerChest) gui.inventorySlots;
             } else {
@@ -145,9 +144,7 @@ public class MinionOverlay {
                 if(chestName.contains(" Minion ") && !chestName.contains("Recipe")) {
                 if(event.slot.getHasStack()) {
                     String nameOfItem = Utils.cleanColor(event.slot.getStack().getDisplayName());
-                    int i=event.slot.slotNumber;
-                    boolean fromMinion = ((i == 21||i == 22||i == 23||i == 24||i == 25) || (i == 30||i == 31||i == 32||i == 33||i == 34) || (i == 39||i == 40||i == 41||i == 42||i == 43));
-                    if(nameOfItem.contains("Collect All") || fromMinion) {
+                    if(nameOfItem.contains("Collect All") || isSlotFromMinion(event.slot.slotNumber)) {
                         if(closestMinion!=null) {
                             lastCollected.put(closestMinion.getPosition().toString(), System.currentTimeMillis());
                             saveConfig();
@@ -160,6 +157,10 @@ public class MinionOverlay {
             }
             
         }
+    }
+
+    private boolean isSlotFromMinion(int i) {
+        return i == 21||i == 22||i == 23||i == 24||i == 25||i == 30||i == 31||i == 32||i == 33||i == 34||i == 39||i == 40||i == 41||i == 42||i == 43;
     }
     Entity closestMinion = null;
     @SubscribeEvent

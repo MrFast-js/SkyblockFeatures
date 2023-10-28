@@ -76,7 +76,6 @@ public class APIUtils {
                 } else {
                     System.out.println(EnumChatFormatting.RED+"Unexpected Server Response: " + statusCode+" "+response.toString()+"  "+response.getStatusLine().getReasonPhrase());
                 }
-                response.close();
             }
         } catch (Exception ex) {
             player.addChatMessage(new ChatComponentText(EnumChatFormatting.RED + "An error has occurred."));

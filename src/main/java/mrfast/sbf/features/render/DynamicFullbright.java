@@ -14,9 +14,9 @@ public class DynamicFullbright {
             String loc = SkyblockInfo.getInstance().getMap();
             try {
                 if(loc.equals("Dynamic") || CrystalHollowsMap.inCrystalHollows|| Utils.inDungeons) {
-                    Utils.GetMC().gameSettings.gammaSetting=(SkyblockFeatures.config.DynamicFullbrightDisabled/10);
+                    Utils.GetMC().gameSettings.gammaSetting=((float) SkyblockFeatures.config.DynamicFullbrightDisabled /10);
                 } else {
-                    Utils.GetMC().gameSettings.gammaSetting=SkyblockFeatures.config.DynamicFullbrightElsewhere/10;
+                    Utils.GetMC().gameSettings.gammaSetting= (float) SkyblockFeatures.config.DynamicFullbrightElsewhere /10;
                 }
             } catch (Exception e) {
                 // TODO: handle exception

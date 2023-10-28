@@ -46,7 +46,6 @@ public class FlipsCommand extends CommandBase {
         try {
             Desktop.getDesktop().browse(new URI("https://sky.coflnet.com/player/"+uuid+"/flips"));
         } catch (Exception e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
 

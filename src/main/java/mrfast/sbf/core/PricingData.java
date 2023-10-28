@@ -5,7 +5,6 @@ import java.util.Locale;
 import java.util.Map;
 
 import org.apache.commons.lang3.time.StopWatch;
-import org.lwjgl.Sys;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -143,10 +142,8 @@ public class PricingData {
                     JsonArray items = data.get("items").getAsJsonArray();
                     for (JsonElement item : items) {
                         JsonObject json = item.getAsJsonObject();
-                        try {
+                        if(json.has("npc_sell_price") && json.has("id")) {
                             npcSellPrices.put(json.get("id").getAsString(), json.get("npc_sell_price").getAsInt());
-                        } catch (Exception e) {
-                            // TODO: handle exception
                         }
                     }
                 }).start();

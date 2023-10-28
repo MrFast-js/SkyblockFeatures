@@ -32,7 +32,6 @@ public class ChestProfit {
                     for (String unclean : ItemUtils.getItemLore(openChest)) {
                         String line = Utils.cleanColor(unclean);
                         if (line.contains("FREE")) {
-                            price = 0;
                             break;
                         } else if (line.contains(" Coins")) {
                             price = Integer.parseInt(line.replaceAll("[^0-9]", ""));
@@ -40,7 +39,6 @@ public class ChestProfit {
                         }
                     }
 
-                    chestValue = 0;
                     for (int i = 11; i < 16; i++) {
                         ItemStack lootSlot = inv.getStackInSlot(i);
                         String identifier = PricingData.getIdentifier(lootSlot);
@@ -54,7 +52,7 @@ public class ChestProfit {
                         }
                     }
                 }
-                if (items.size() > 0) {
+                if (!items.isEmpty()) {
                     ArrayList<String> lines = new ArrayList<>();
                     GlStateManager.color(1, 1, 1, 1);
                     GlStateManager.disableLighting();

@@ -8,6 +8,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import mrfast.sbf.features.dungeons.*;
 import org.lwjgl.input.Keyboard;
 
 import gg.essential.api.EssentialAPI;
@@ -38,13 +39,6 @@ import mrfast.sbf.features.statDisplays.HealthDisplay;
 import mrfast.sbf.features.statDisplays.ManaDisplay;
 import mrfast.sbf.features.statDisplays.SecretDisplay;
 import mrfast.sbf.features.statDisplays.SpeedDisplay;
-import mrfast.sbf.features.dungeons.BetterParties;
-import mrfast.sbf.features.dungeons.ChestProfit;
-import mrfast.sbf.features.dungeons.DungeonMap;
-import mrfast.sbf.features.dungeons.DungeonsFeatures;
-import mrfast.sbf.features.dungeons.Nametags;
-import mrfast.sbf.features.dungeons.Reparty;
-import mrfast.sbf.features.dungeons.ShadowAssasinFeatures;
 import mrfast.sbf.features.dungeons.solvers.BlazeSolver;
 import mrfast.sbf.features.dungeons.solvers.CreeperSolver;
 import mrfast.sbf.features.dungeons.solvers.LividFinder;
@@ -84,13 +78,11 @@ import mrfast.sbf.features.overlays.maps.CrimsonMap;
 import mrfast.sbf.features.overlays.maps.CrystalHollowsMap;
 import mrfast.sbf.features.overlays.maps.DwarvenMap;
 import mrfast.sbf.features.overlays.menuOverlay.CollectionOverlay;
-import mrfast.sbf.features.overlays.menuOverlay.ComposterOverlay;
-import mrfast.sbf.features.overlays.menuOverlay.GardenVisitorOverlay;
+import mrfast.sbf.features.overlays.menuOverlay.GardenFeatures;
 import mrfast.sbf.features.overlays.menuOverlay.MinionOverlay;
 import mrfast.sbf.features.overlays.menuOverlay.MissingTalismans;
 import mrfast.sbf.features.overlays.menuOverlay.TradingOverlay;
 import mrfast.sbf.features.render.DynamicFullbright;
-import mrfast.sbf.features.render.HideStuff;
 import mrfast.sbf.features.render.HighlightCropArea;
 import mrfast.sbf.features.render.RiftFeatures;
 import mrfast.sbf.features.render.SlayerFeatures;
@@ -186,9 +178,7 @@ public class SkyblockFeatures {
             new SecretDisplay(),
             new CryptDisplay(),
             new DefenceDisplay(),
-            new HideStuff(),
             new ActionBarListener(),
-            new BetterParties(),
             new CommisionsTracker(),
             new FairySoulWaypoints(),
             new JerryTimer(),
@@ -221,14 +211,13 @@ public class SkyblockFeatures {
             new GrandmaWolfTimer(),
             new RelicFinderWaypoints(),
             new DynamicFullbright(),
-            new GardenVisitorOverlay(),
+            new GardenFeatures(),
             new BaitCounterOverlay(),
             new HighlightCropArea(),
             new MythologicalEvent(),
             new TeleportPadSolver(),
             new WaterBoardSolver(),
             new ShadowAssasinFeatures(),
-            new ComposterOverlay(),
             new SlayerFeatures(),
             new CrimsonMap(),
             new RiftFeatures(),
@@ -238,6 +227,7 @@ public class SkyblockFeatures {
             new Reparty(),
             new ProfileViewerUtils(),
             new ExoticAuctions(),
+            new PartyFinderFeatures(),
             new CollectionOverlay()
         );
         features.forEach(MinecraftForge.EVENT_BUS::register);
@@ -347,13 +337,12 @@ public class SkyblockFeatures {
     private KeyBinding toggleSprint;
     private static boolean toggled = true;
 
-    public final static KeyBinding reloadAH = new KeyBinding("Reload Party Finder/Auction House", Keyboard.KEY_R, "Skyblock Features");
+    public final static KeyBinding reloadPartyFinder = new KeyBinding("Reload Party Finder", Keyboard.KEY_R, "Skyblock Features");
     public final static KeyBinding openBestFlipKeybind = new KeyBinding("Open Best Flip", Keyboard.KEY_J, "Skyblock Features");
     
     @EventHandler
     public void initKeybinds(FMLInitializationEvent event) {
         MinecraftForge.EVENT_BUS.register(this);
-        ClientRegistry.registerKeyBinding(reloadAH);
         ClientRegistry.registerKeyBinding(openBestFlipKeybind);
 
         toggleSprint = new KeyBinding("Toggle Sprint", Keyboard.KEY_I, "Skyblock Features");

@@ -136,7 +136,7 @@ public class AutomatonTracker {
                             }
                             
                             if(name.contains("Control") || name.contains("FTX") || name.contains("Electron") || name.contains("Robotron") || name.contains("Superlite") || name.contains("Synthetic")) {
-                                total += value*stack.stackSize;
+                                total += (int) (value*stack.stackSize);
                             }
                         }
                     }

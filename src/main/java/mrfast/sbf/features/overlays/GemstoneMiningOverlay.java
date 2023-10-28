@@ -8,7 +8,6 @@ import com.mojang.realmsclient.gui.ChatFormatting;
 
 import mrfast.sbf.SkyblockFeatures;
 import mrfast.sbf.core.PricingData;
-import mrfast.sbf.core.SkyblockInfo;
 import mrfast.sbf.events.SecondPassedEvent;
 import mrfast.sbf.features.overlays.maps.CrystalHollowsMap;
 import mrfast.sbf.gui.components.Point;
@@ -31,12 +30,12 @@ public class GemstoneMiningOverlay {
             seconds = 0;
             start = false;
             gemstones.clear();
-        } catch(Exception e) {
+        } catch(Exception ignored) {
 
         }
     }
 
-    public class Gemstone {
+    public static class Gemstone {
         public Long time;
         public String item_name;
         public Integer amount;
@@ -74,7 +73,7 @@ public class GemstoneMiningOverlay {
             String itemName = message.split(" ")[4]+"_"+message.split(" ")[5]+"_GEM";
             String count  = message.split("X")[1].split("!")[0];
             Integer countInt = Integer.parseInt(count.replaceAll("[^0-9]", ""));
-            gemstones.add(new Gemstone((new Date()).getTime(), itemName,countInt));
+            gemstones.add(new Gemstone((new Date()).getTime(), itemName, countInt));
         }
     }
 
@@ -95,13 +94,13 @@ public class GemstoneMiningOverlay {
                 int total = 0;
                 for(Gemstone gemstone:gemstones) {
                     if(PricingData.bazaarPrices.get(gemstone.item_name) != null) {
-                        total += PricingData.bazaarPrices.get(gemstone.item_name)*gemstone.amount;
+                        total += (int) (PricingData.bazaarPrices.get(gemstone.item_name)*gemstone.amount);
                     }
                 }
                 String[] lines = {
                     ChatFormatting.LIGHT_PURPLE+""+ChatFormatting.BOLD+"Gemstone Mining Info",
                     ChatFormatting.LIGHT_PURPLE+" Time Spent Mining: "+ChatFormatting.GREEN+Utils.secondsToTime(seconds),
-                    ChatFormatting.LIGHT_PURPLE+" Coins Per hour: §6"+Utils.nf.format(total*12),
+                    ChatFormatting.LIGHT_PURPLE+" Coins Per hour: §6"+Utils.nf.format(total* 12L),
                     ChatFormatting.LIGHT_PURPLE+" Pristine Count: §a"+gemstones.size()
                 };
                 int lineCount = 0;

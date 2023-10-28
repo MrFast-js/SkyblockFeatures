@@ -3,10 +3,6 @@ package mrfast.sbf.features.mining;
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import org.lwjgl.Sys;
 
 import com.mojang.realmsclient.gui.ChatFormatting;
 
@@ -16,7 +12,6 @@ import mrfast.sbf.events.BlockChangeEvent;
 import mrfast.sbf.events.PacketEvent;
 import mrfast.sbf.features.overlays.maps.CrystalHollowsMap;
 import mrfast.sbf.utils.RenderUtil;
-import mrfast.sbf.utils.ScoreboardUtil;
 import mrfast.sbf.utils.Utils;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockObsidian;
@@ -29,7 +24,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityChest;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.BlockPos;
-import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.Vec3;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
@@ -136,7 +130,6 @@ public class MiningFeatures {
                 GlStateManager.disableDepth();
                 RenderUtil.draw3DString(stringPos, ChatFormatting.AQUA+""+progress+" / 5", 0xFFFFFF, event.partialTicks);
                 GlStateManager.enableDepth();
-                // RenderUtil.drawOutlinedFilledBoundingBox(new AxisAlignedBB(treasureChest, treasureChest.add(1, 1, 1)), Color.green, event.partialTicks);
             }
             for(Vec3 packet:particles) {
                 RenderUtil.drawOutlinedFilledBoundingBox(new AxisAlignedBB(packet.xCoord-0.05, packet.yCoord-0.05, packet.zCoord-0.05, packet.xCoord+0.1, packet.yCoord+0.1, packet.zCoord+0.1), Color.red, event.partialTicks);
@@ -155,14 +148,10 @@ public class MiningFeatures {
 
     @SubscribeEvent
     public void onWorldChange(WorldEvent.Load event) {
-        try {
-            treasureChest = null;
-            particles.clear();
-            enderParticles.clear();
-            progress = 0;
-        } catch(Exception e) {
-
-        }
+        treasureChest = null;
+        particles.clear();
+        enderParticles.clear();
+        progress = 0;
     }
     BlockPos treasureChest = null;
     List<Vec3> particles = new ArrayList<Vec3>();

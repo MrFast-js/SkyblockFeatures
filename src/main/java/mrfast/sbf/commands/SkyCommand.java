@@ -45,7 +45,6 @@ public class SkyCommand extends CommandBase {
         try {
             Desktop.getDesktop().browse(new URI("https://sky.shiiyu.moe/stats/"+username));
         } catch (Exception e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
 

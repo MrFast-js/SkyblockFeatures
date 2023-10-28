@@ -12,12 +12,12 @@ public class DefenceDisplay {
     private static final Minecraft mc = Minecraft.getMinecraft();
 
     static {
-        new JerryTimerGUI();
+        new DefenceDisplayGUI();
     }
 
     static String display = Utils.Defence+"";
-    public static class JerryTimerGUI extends UIElement {
-        public JerryTimerGUI() {
+    public static class DefenceDisplayGUI extends UIElement {
+        public DefenceDisplayGUI() {
             super("Defence Display", new Point(0.2f, 0.0f));
             SkyblockFeatures.GUIMANAGER.registerElement(this);
         }

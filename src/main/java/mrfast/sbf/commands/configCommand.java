@@ -1,5 +1,6 @@
 package mrfast.sbf.commands;
 
+import java.lang.management.ManagementFactory;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
@@ -22,6 +23,11 @@ import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.ChatComponentText;
+
+import javax.management.JMX;
+import javax.management.MBeanServer;
+import javax.management.MXBean;
+import javax.management.ObjectName;
 
 public class configCommand extends CommandBase {
 
@@ -101,5 +107,20 @@ public class configCommand extends CommandBase {
             default:
                 player.addChatMessage(new ChatComponentText("§bSBF ➜ §cThis command doesn't exist!\n  §cUse §b/sbf help§c for a full list of commands"));
         }
+    }
+    @MXBean
+    public interface DiagnosticCommandMXBean {
+        String gcClassHistogram(String[] array);
+    }
+
+    private String generateDataUsage() throws Exception {
+        MBeanServer server = ManagementFactory.getPlatformMBeanServer();
+        ObjectName objectName = ObjectName.getInstance("com.sun.management:type=DiagnosticCommand");
+        DiagnosticCommandMXBean proxy = JMX.newMXBeanProxy(
+                server,
+                objectName,
+                DiagnosticCommandMXBean.class
+        );
+        return proxy.gcClassHistogram(new String[0]).replace("[", "[]");
     }
 }

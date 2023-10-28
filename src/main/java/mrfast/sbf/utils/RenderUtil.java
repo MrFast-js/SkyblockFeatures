@@ -181,30 +181,6 @@ public class RenderUtil {
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
         GlStateManager.popMatrix();
     }
-
-    public static void draw3DString(BlockPos pos, String text, int color, float partialTicks) {
-        Minecraft mc = Minecraft.getMinecraft();
-        EntityPlayer player = mc.thePlayer;
-        double x = (pos.getX() - player.lastTickPosX) + ((pos.getX() - player.posX) - (pos.getX() - player.lastTickPosX)) * partialTicks;
-        double y = (pos.getY() - player.lastTickPosY) + ((pos.getY() - player.posY) - (pos.getY() - player.lastTickPosY)) * partialTicks;
-        double z = (pos.getZ() - player.lastTickPosZ) + ((pos.getZ() - player.posZ) - (pos.getZ() - player.lastTickPosZ)) * partialTicks;
-        RenderManager renderManager = mc.getRenderManager();
-
-        float f = 1.6F;
-        float f1 = 0.016666668F * f;
-        int width = mc.fontRendererObj.getStringWidth(text) / 2;
-        GlStateManager.pushMatrix();
-        GlStateManager.translate(x, y, z);
-        GL11.glNormal3f(0f, 1f, 0f);
-        GlStateManager.rotate(-renderManager.playerViewY, 0f, 1f, 0f);
-        GlStateManager.rotate(renderManager.playerViewX, 1f, 0f, 0f);
-        GlStateManager.scale(-f1, -f1, -f1);
-        GlStateManager.enableBlend();
-        GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
-        mc.fontRendererObj.drawString(text, -width, 0, color);
-        GlStateManager.disableBlend();
-        GlStateManager.popMatrix();
-    }
     
     public static void drawOutlinedBoundingBox(AxisAlignedBB aabb, Color color, float width, float partialTicks) {
         Entity render = Minecraft.getMinecraft().getRenderViewEntity();
@@ -423,22 +399,5 @@ public class RenderUtil {
         GL11.glColor4f(1f, 1f, 1f, 1f);
         GlStateManager.popMatrix();
         GlStateManager.popAttrib();
-    }
-
-    public static void drawLines(List<Vec3> solution, Color color, float f, float partialTicks) {
-        for(int i=0;i<solution.size();i++) {
-            if(i!=solution.size()-1) {
-                draw3DLine(solution.get(i), solution.get(i+1), 3, color, partialTicks);
-            }
-        }
-    }
-    // For drawing pathfinder lines
-    public static void drawEveryOtherLines(List<Vec3> solution, Color color, float f, float partialTicks, boolean b) {
-        for(int i=0;i<solution.size();i++) {
-            if(i%2==0)continue;
-            if(i!=solution.size()-1) {
-                draw3DLine(solution.get(i), solution.get(i+2), 3, color, partialTicks);
-            }
-        }
     }
 }

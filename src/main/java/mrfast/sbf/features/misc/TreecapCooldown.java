@@ -37,7 +37,7 @@ public class TreecapCooldown {
 
     @SubscribeEvent
 	public void onTick(RenderTickEvent event) {
-		if(!Utils.inSkyblock || !SkyblockFeatures.config.treecapitatorCooldown || Minecraft.getMinecraft().currentScreen instanceof GuiScreen) return;
+		if(!Utils.inSkyblock || !SkyblockFeatures.config.treecapitatorCooldown || Minecraft.getMinecraft().currentScreen != null) return;
 		
 		ItemStack item = Minecraft.getMinecraft().thePlayer.getHeldItem();
 		

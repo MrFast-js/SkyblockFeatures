@@ -29,8 +29,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
 
 public class MetalDetectorSolver {
-    List<Vec3> chests = new ArrayList<>();
-    List<BlockPos> foundChests = new ArrayList<>();
+    // Provided by NEU
     List<Vec3> treasureLocations = new ArrayList<>(Arrays.asList(
             new Vec3(-38, -22, 26),
             new Vec3(38, -22, -26),
@@ -124,8 +123,6 @@ public class MetalDetectorSolver {
     int ticks = 0;
     boolean announcedFoundIt = false;
     boolean announcedRecalculating = false;
-
-    BlockPos LastPosition = null;
     @SubscribeEvent
     public void onRenderWorld(ClientTickEvent event) {
         if(Utils.GetMC().thePlayer==null || !SkyblockFeatures.config.MetalDetectorSolver || !CrystalHollowsMap.inCrystalHollows) return;

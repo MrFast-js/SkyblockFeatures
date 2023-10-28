@@ -40,18 +40,14 @@ public class IceTreasureTracker {
     static double coinsPerHour = 0;
     @SubscribeEvent
     public void onload(WorldEvent.Load event) {
-        try {
-            seconds = 0;
-            hidden = true;
-            iceTreasuresMined = 0;
-            redGift = 0;
-            whiteGift = 0;
-            greenGift = 0;
-            talisman = 0;
-            fragment = 0;
-        } catch(Exception e) {
-
-        }
+        seconds = 0;
+        hidden = true;
+        iceTreasuresMined = 0;
+        redGift = 0;
+        whiteGift = 0;
+        greenGift = 0;
+        talisman = 0;
+        fragment = 0;
     }
 
     @SubscribeEvent
@@ -110,7 +106,6 @@ public class IceTreasureTracker {
         new IceTreasureTrackerGui();
     }
 
-    static String display = "";
     public static class IceTreasureTrackerGui extends UIElement {
         public IceTreasureTrackerGui() {
             super("Ice Treasure Tracker", new Point(0.2f, 0.0f));

@@ -65,32 +65,28 @@ public class SkyblockInfo {
         }
     }
 
+    boolean waitingForLocrawResponse = false;
+    boolean gotLocrawResponse = false;
+
     @SubscribeEvent
     public void onChatReceived(ClientChatReceivedEvent event) {
         if(Utils.GetMC().theWorld==null) return;
-        try {
-            String chatMessage = event.message.getUnformattedText();
-            if (isJsonLikeMessage(chatMessage)) {
-                event.setCanceled(true);
-                if(chatMessage.contains("limbo") && Utils.inSkyblock) {
-                    Utils.setTimeout(()->{
-                        Minecraft.getMinecraft().thePlayer.sendChatMessage("/locraw");
-                        System.out.println("Sending /locraw");
-                    }, 2000);
-                }
-                parseMap(chatMessage);
+        String chatMessage = event.message.getUnformattedText();
+        if (isJsonLikeMessage(chatMessage) && waitingForLocrawResponse) {
+            gotLocrawResponse = true;
+            event.setCanceled(true);
+            if(chatMessage.contains("limbo") && Utils.inSkyblock) {
+                Utils.setTimeout(this::sendLocraw, 2000);
             }
-        } catch (Exception e) {
-            // TODO: handle exception
+            parseMap(chatMessage);
         }
-        
     }
     
-    private static boolean worldJustLoaded = false;
 
     @SubscribeEvent
     public void onWorldLoad(WorldEvent.Load event) {
-        worldJustLoaded = true;
+        waitingForLocrawResponse = false;
+        gotLocrawResponse = false;
         location = "";
         map = "";
         ticks = 0;
@@ -102,13 +98,12 @@ public class SkyblockInfo {
     public void onTick(ClientTickEvent event) {
         if (event.phase != Phase.END || Utils.GetMC().theWorld == null) return;
 
-        if (worldJustLoaded) ticks++;
+        if(!waitingForLocrawResponse) ticks++;
 
-        if (ticks >= 80 && worldJustLoaded && Utils.isOnHypixel()) {
+        if (ticks >= 80 && Utils.isOnHypixel() && !waitingForLocrawResponse) {
             ticks = 0;
-            worldJustLoaded = false;
-            Minecraft.getMinecraft().thePlayer.sendChatMessage("/locraw");
-            System.out.println("Sending /locraw");
+            waitingForLocrawResponse = true;
+            sendLocraw();
         }
 
         try {
@@ -157,13 +152,17 @@ public class SkyblockInfo {
                 map = jsonObject.get("map").getAsString();
             } else {
                 Utils.setTimeout(()->{
-                    if(!worldJustLoaded) return;
-                    Minecraft.getMinecraft().thePlayer.sendChatMessage("/locraw");
-                    System.out.println("Sending /locraw");
-                    worldJustLoaded = false;
+                    sendLocraw();
                 }, 1000);
             }
         }
+    }
+
+    public void sendLocraw() {
+        if(gotLocrawResponse || waitingForLocrawResponse) return;
+        waitingForLocrawResponse = true;
+        Minecraft.getMinecraft().thePlayer.sendChatMessage("/locraw");
+        System.out.println("Sending /locraw");
     }
 
 

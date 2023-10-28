@@ -1,7 +1,10 @@
 package mrfast.sbf.events;
 
+import net.minecraft.client.gui.inventory.GuiChest;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.inventory.Container;
+import net.minecraft.inventory.ContainerChest;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraftforge.fml.common.eventhandler.Cancelable;
 import net.minecraftforge.fml.common.eventhandler.Event;
@@ -43,11 +46,20 @@ public abstract class GuiContainerEvent extends Event {
     }
 
     public static class DrawSlotEvent extends GuiContainerEvent {
-
         public Slot slot;
+        public String chestName = "";
 
         public DrawSlotEvent(GuiContainer gui, Container container, Slot slot) {
             super(gui, container);
+
+            if(gui instanceof GuiChest) {
+                if(gui.inventorySlots instanceof ContainerChest) {
+                    ContainerChest chest = (ContainerChest) gui.inventorySlots;
+                    IInventory inv = chest.getLowerChestInventory();
+                    this.chestName = inv.getDisplayName().getUnformattedText().trim();
+                }
+            }
+
             this.slot = slot;
         }
 

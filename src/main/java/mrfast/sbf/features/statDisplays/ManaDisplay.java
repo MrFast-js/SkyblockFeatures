@@ -12,12 +12,12 @@ public class ManaDisplay {
     private static final Minecraft mc = Minecraft.getMinecraft();
 
     static {
-        new JerryTimerGUI();
+        new ManaDisplayGUI();
     }
 
     static String display = Utils.Mana+"/"+Utils.maxMana;
-    public static class JerryTimerGUI extends UIElement {
-        public JerryTimerGUI() {
+    public static class ManaDisplayGUI extends UIElement {
+        public ManaDisplayGUI() {
             super("Mana Display", new Point(0f, 0f));
             SkyblockFeatures.GUIMANAGER.registerElement(this);
         }

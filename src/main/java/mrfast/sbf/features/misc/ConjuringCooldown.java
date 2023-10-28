@@ -34,7 +34,7 @@ public class ConjuringCooldown {
 
     @SubscribeEvent
 	public void getBone(RenderTickEvent event) {
-		if(!Utils.inSkyblock || Minecraft.getMinecraft().currentScreen instanceof GuiScreen || !SkyblockFeatures.config.ConjuringCooldown) return;
+		if(!Utils.inSkyblock || Minecraft.getMinecraft().currentScreen != null || !SkyblockFeatures.config.ConjuringCooldown) return;
 		
 		ItemStack item = Minecraft.getMinecraft().thePlayer.getHeldItem();
 		

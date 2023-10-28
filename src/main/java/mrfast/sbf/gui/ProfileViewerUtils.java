@@ -190,11 +190,10 @@ public class ProfileViewerUtils {
         if(type.equals("Runecrafting")) xpPerLevel = runecraftingXpPerLevel;
 
         int levelCount = 0;
-        for (int i = 0; i < xpPerLevel.length; i++) {
-            if (xp >= xpPerLevel[i]) {
-                int levelXP = xpPerLevel[i];
+        for (int j : xpPerLevel) {
+            if (xp >= j) {
                 levelCount++;
-                xp -= levelXP;
+                xp -= j;
             } else {
                 break;
             }
@@ -260,8 +259,7 @@ public class ProfileViewerUtils {
         hotmXp.put(6, 100000);
         hotmXp.put(7, 150000);
 
-        int level = determineLevel(hotmXp, xp);
-        return level;
+        return determineLevel(hotmXp, xp);
     }
 
     private static int determineLevel(Map<Integer, Integer> xpMap, int xp) {
@@ -692,7 +690,8 @@ public class ProfileViewerUtils {
          try {
             Integer[] tierPrices = {2000, 7500, 20000, 50000,100000};
 
-            if(slayersObject.has("zombie")) {
+             assert slayersObject != null;
+             if(slayersObject.has("zombie")) {
                 JsonObject obj = slayersObject.get("zombie").getAsJsonObject();
                 int xp = 0;
                 if(obj.has("xp")) xp = obj.get("xp").getAsInt();
