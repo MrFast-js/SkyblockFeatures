@@ -36,16 +36,10 @@ public class SkyblockInfo {
     private static long startTime;
     private static boolean waitingForResponse = false;
 
-    public static void getPing(String serverIp) {
-        ServerData test = new ServerData("🫵🤓", serverIp, false);
-       
-        sendServerQuery(test);
-    }
-
-    private static void sendServerQuery(ServerData serverData) {
+    public static void getPing() {
         NetworkManager networkManager = Minecraft.getMinecraft().getNetHandler().getNetworkManager();
         C16PacketClientStatus queryPacket = new C16PacketClientStatus(EnumState.REQUEST_STATS);
- 
+
         // Record the start time
         startTime = System.currentTimeMillis();
 
@@ -65,18 +59,20 @@ public class SkyblockInfo {
         }
     }
 
-    boolean waitingForLocrawResponse = false;
-    boolean gotLocrawResponse = false;
+    static boolean waitingForLocrawResponse = false;
+    static boolean gotLocrawResponse = false;
 
     @SubscribeEvent
     public void onChatReceived(ClientChatReceivedEvent event) {
-        if(Utils.GetMC().theWorld==null) return;
         String chatMessage = event.message.getUnformattedText();
         if (isJsonLikeMessage(chatMessage) && waitingForLocrawResponse) {
             gotLocrawResponse = true;
+            waitingForLocrawResponse = false;
             event.setCanceled(true);
-            if(chatMessage.contains("limbo") && Utils.inSkyblock) {
-                Utils.setTimeout(this::sendLocraw, 2000);
+            if(chatMessage.contains("limbo")) {
+                gotLocrawResponse = false;
+                waitingForLocrawResponse = true;
+                Utils.setTimeout(SkyblockInfo::sendLocraw, 2000);
             }
             parseMap(chatMessage);
         }
@@ -97,12 +93,10 @@ public class SkyblockInfo {
     @SubscribeEvent
     public void onTick(ClientTickEvent event) {
         if (event.phase != Phase.END || Utils.GetMC().theWorld == null) return;
-
         if(!waitingForLocrawResponse) ticks++;
 
-        if (ticks >= 80 && Utils.isOnHypixel() && !waitingForLocrawResponse) {
+        if (ticks >= 20 && Utils.isOnHypixel() && !waitingForLocrawResponse) {
             ticks = 0;
-            waitingForLocrawResponse = true;
             sendLocraw();
         }
 
@@ -122,7 +116,7 @@ public class SkyblockInfo {
             } else if (entry.contains("ф")) {
                 location = entry.substring(2, entry.length());
             }
-            localLocation=location.replaceAll("[^a-zA-Z0-9\\s]", "");
+            localLocation=location.replaceAll("[^a-zA-Z0-9\\s]", "").replaceAll("[^\\x00-\\x7F]", "");
         }
     }
 
@@ -158,7 +152,7 @@ public class SkyblockInfo {
         }
     }
 
-    public void sendLocraw() {
+    public static void sendLocraw() {
         if(gotLocrawResponse || waitingForLocrawResponse) return;
         waitingForLocrawResponse = true;
         Minecraft.getMinecraft().thePlayer.sendChatMessage("/locraw");

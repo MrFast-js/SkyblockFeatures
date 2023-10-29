@@ -35,7 +35,6 @@ public class PricingData {
     public static int getTier(String str) {
         int tier = 0;
         switch (str) {
-            case "COMMON":tier = 0;break;
             case "UNCOMMON":tier = 1;break;
             case "RARE":tier = 2;break;
             case "EPIC":tier = 3;break;

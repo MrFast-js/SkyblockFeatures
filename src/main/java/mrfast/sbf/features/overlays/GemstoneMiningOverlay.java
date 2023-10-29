@@ -26,13 +26,9 @@ public class GemstoneMiningOverlay {
     public static List<Gemstone> gemstones = new ArrayList<>();
     @SubscribeEvent
     public void onload(WorldEvent.Load event) {
-        try {
-            seconds = 0;
-            start = false;
-            gemstones.clear();
-        } catch(Exception ignored) {
-
-        }
+        seconds = 0;
+        start = false;
+        gemstones.clear();
     }
 
     public static class Gemstone {
@@ -99,9 +95,9 @@ public class GemstoneMiningOverlay {
                 }
                 String[] lines = {
                     ChatFormatting.LIGHT_PURPLE+""+ChatFormatting.BOLD+"Gemstone Mining Info",
-                    ChatFormatting.LIGHT_PURPLE+" Time Spent Mining: "+ChatFormatting.GREEN+Utils.secondsToTime(seconds),
-                    ChatFormatting.LIGHT_PURPLE+" Coins Per hour: §6"+Utils.nf.format(total* 12L),
-                    ChatFormatting.LIGHT_PURPLE+" Pristine Count: §a"+gemstones.size()
+                    ChatFormatting.GRAY+" Time Spent Mining: "+ChatFormatting.GREEN+Utils.secondsToTime(seconds),
+                    ChatFormatting.GRAY+" Coins Per hour: §6"+Utils.nf.format(total* 12L),
+                    ChatFormatting.GRAY+" Pristine Count: §a"+ChatFormatting.AQUA+gemstones.size()
                 };
                 int lineCount = 0;
                 for(String line:lines) {

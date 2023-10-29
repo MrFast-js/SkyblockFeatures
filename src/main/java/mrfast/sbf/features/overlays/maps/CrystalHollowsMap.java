@@ -95,7 +95,7 @@ public class CrystalHollowsMap {
         addLocation("khazaddm", "§cBal", location);
         addLocation("mines of divan", "§6Divan", location);
         addLocation("jungle temple", "§aTemple", location);
-        addLocation("goblin queen's den", "§2Queen", location);
+        addLocation("goblin queens den", "§2Queen", location);
     }
     @SubscribeEvent
     public void renderWorld(RenderWorldLastEvent event) {

@@ -184,8 +184,7 @@ public class Utils {
     
     public static double randomNumber(int min,int max) {
         Random rand = new Random();
-        int randomNum = rand.nextInt((max - min) + 1) + min;
-        return randomNum;
+        return rand.nextInt((max - min) + 1) + min;
     }
     
     public static void drawTextWithStyle(String text, float x, float y, int color) {

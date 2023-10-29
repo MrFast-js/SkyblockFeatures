@@ -44,6 +44,6 @@ public class pingCommand extends CommandBase {
 
 	@Override
 	public void processCommand(ICommandSender arg0, String[] args) throws CommandException {
-        SkyblockInfo.getPing("hypixel.net");
+        SkyblockInfo.getPing();
 	}
 }

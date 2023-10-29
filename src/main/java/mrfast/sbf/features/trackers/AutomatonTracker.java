@@ -20,20 +20,12 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 public class AutomatonTracker {
     private static final Minecraft mc = Minecraft.getMinecraft();
 
-    static int total = 0;
     static int Control = 0;
     static int FTX = 0;
     static int Electron = 0;
     static int Robotron = 0;
     static int Superlite = 0;
     static int Synthetic = 0;
-
-    static double ControlPrice = 0;
-    static double FTXPrice = 0;
-    static double ElectronPrice = 0;
-    static double RobotronPrice = 0;
-    static double SuperlitePrice = 0;
-    static double SyntheticPrice = 0;
 
     static boolean hidden = true;
     static int kills = 0;
@@ -95,7 +87,6 @@ public class AutomatonTracker {
         for(int i=0;i<Utils.GetMC().thePlayer.inventory.mainInventory.length;i++) {
             if(Utils.GetMC().thePlayer.inventory.mainInventory[i] != null) {
                 if(i == 0) {
-                    total = 0;
                     Control = 0;
                     FTX = 0;
                     Electron = 0;
@@ -103,45 +94,28 @@ public class AutomatonTracker {
                     Superlite = 0;
                     Synthetic = 0;
                 }
-                try {
-                    ItemStack stack = Utils.GetMC().thePlayer.inventory.mainInventory[i];
-                    String name = Utils.cleanColor(stack.getDisplayName());
-        
-                    if(PricingData.getIdentifier(stack) != null) {
-                        double value = Math.floor(PricingData.lowestBINs.get(PricingData.getIdentifier(stack)));
-                        if(value != 0) {
-                            if(name.contains("Control")) {
-                                Control+=stack.stackSize;
-                                ControlPrice=value*stack.stackSize;
-                            }
-                            if(name.contains("FTX")) {
-                                FTX+=stack.stackSize;
-                                FTXPrice=value*stack.stackSize;
-                            }
-                            if(name.contains("Electron")) {
-                                Electron+=stack.stackSize;
-                                ElectronPrice=value*stack.stackSize;
-                            }
-                            if(name.contains("Robotron")) {
-                                Robotron+=stack.stackSize;
-                                RobotronPrice=value*stack.stackSize;
-                            }
-                            if(name.contains("Superlite")) {
-                                Superlite+=stack.stackSize;
-                                SuperlitePrice=value*stack.stackSize;
-                            }
-                            if(name.contains("Synthetic")) {
-                                Synthetic+=stack.stackSize;
-                                SyntheticPrice=value*stack.stackSize;
-                            }
-                            
-                            if(name.contains("Control") || name.contains("FTX") || name.contains("Electron") || name.contains("Robotron") || name.contains("Superlite") || name.contains("Synthetic")) {
-                                total += (int) (value*stack.stackSize);
-                            }
+                ItemStack stack = Utils.GetMC().thePlayer.inventory.mainInventory[i];
+                String name = Utils.cleanColor(stack.getDisplayName());
+                String item_id = PricingData.getIdentifier(stack);
+                if(item_id != null && PricingData.bazaarPrices.containsKey(item_id)) {
+                        if(name.contains("Control")) {
+                            Control+=stack.stackSize;
                         }
-                    }
-                } catch (Exception e) {
-                    //TODO: handle exception
+                        if(name.contains("FTX")) {
+                            FTX+=stack.stackSize;
+                        }
+                        if(name.contains("Electron")) {
+                            Electron+=stack.stackSize;
+                        }
+                        if(name.contains("Robotron")) {
+                            Robotron+=stack.stackSize;
+                        }
+                        if(name.contains("Superlite")) {
+                            Superlite+=stack.stackSize;
+                        }
+                        if(name.contains("Synthetic")) {
+                            Synthetic += stack.stackSize;
+                        }
                 }
             }
         }
@@ -150,7 +124,6 @@ public class AutomatonTracker {
         new AutomatonTrackerGUI();
     }
 
-    static String display = "";
     public static class AutomatonTrackerGUI extends UIElement {
         public AutomatonTrackerGUI() {
             super("Automaton Tracker", new Point(0.2f, 0.0f));
@@ -161,15 +134,16 @@ public class AutomatonTracker {
         public void drawElement() {
             if (this.getToggled() && Minecraft.getMinecraft().thePlayer != null && mc.theWorld != null && !hidden) {
                 String[] lines = {
-                    ChatFormatting.GREEN+"Time Elapsed: §r"+Utils.secondsToTime(totalSeconds),
-                    ChatFormatting.GREEN+"Automatons Killed: §r"+Utils.nf.format(kills),
-                    ChatFormatting.BLUE+"Control Switch: §r"+Control+" §7("+Utils.nf.format(ControlPrice)+")",
-                    ChatFormatting.BLUE+"FTX 3070: §r"+FTX+" §7("+Utils.nf.format(FTXPrice)+")",
-                    ChatFormatting.BLUE+"Electron Transmitter: §r"+Electron+" §7("+Utils.nf.format(ElectronPrice)+")",
-                    ChatFormatting.BLUE+"Robotron Reflector: §r"+Robotron+" §7("+Utils.nf.format(RobotronPrice)+")",
-                    ChatFormatting.BLUE+"Superlite Motor: §r"+Superlite+" §7("+Utils.nf.format(SuperlitePrice)+")",
-                    ChatFormatting.BLUE+"Synthetic Heart: §r"+Synthetic+" §7("+Utils.nf.format(SyntheticPrice)+")",
-                    ChatFormatting.WHITE+"Total Value: §6"+Utils.nf.format(total)
+                    ChatFormatting.GRAY+""+ChatFormatting.BOLD+"Automaton Loot Tracker",
+                    ChatFormatting.GREEN+"  Time Elapsed: §r"+Utils.secondsToTime(totalSeconds),
+                    ChatFormatting.GREEN+"  Automatons Killed: §r"+Utils.nf.format(kills),
+                    ChatFormatting.YELLOW+""+ChatFormatting.BOLD+" Parts",
+                    ChatFormatting.BLUE+"  • Control Switch: §r"+Control,
+                    ChatFormatting.BLUE+"  • FTX 3070: §r"+FTX,
+                    ChatFormatting.BLUE+"  • Electron Transmitter: §r"+Electron,
+                    ChatFormatting.BLUE+"  • Robotron Reflector: §r"+Robotron,
+                    ChatFormatting.BLUE+"  • Superlite Motor: §r"+Superlite,
+                    ChatFormatting.BLUE+"  • Synthetic Heart: §r"+Synthetic
                 };
                 int lineCount = 0;
                 for(String line:lines) {
@@ -182,13 +156,16 @@ public class AutomatonTracker {
         public void drawElementExample() {
             if(mc.thePlayer == null || !Utils.inSkyblock) return;
             String[] lines = {
-                ChatFormatting.BLUE+"Control Switch: §r"+4,
-                ChatFormatting.BLUE+"FTX 3070: §r"+2,
-                ChatFormatting.BLUE+"Electron Transmitter: §r"+5,
-                ChatFormatting.BLUE+"Robotron Reflector: §r"+1,
-                ChatFormatting.BLUE+"Superlite Motor: §r"+3,
-                ChatFormatting.BLUE+"Synthetic Heart: §r"+6,
-                ChatFormatting.WHITE+"Total Value: §6"+Utils.formatNumber(1231934)
+                    ChatFormatting.GRAY+""+ChatFormatting.BOLD+"Automaton Loot Tracker",
+                    ChatFormatting.GREEN+"  Time Elapsed: §r50m 26s",
+                    ChatFormatting.GREEN+"  Automatons Killed: §r"+494,
+                    ChatFormatting.YELLOW+""+ChatFormatting.BOLD+" Parts",
+                    ChatFormatting.BLUE+"  • Control Switch: §r"+5,
+                    ChatFormatting.BLUE+"  • FTX 3070: §r"+9,
+                    ChatFormatting.BLUE+"  • Electron Transmitter: §r"+3,
+                    ChatFormatting.BLUE+"  • Robotron Reflector: §r"+5,
+                    ChatFormatting.BLUE+"  • Superlite Motor: §r"+2,
+                    ChatFormatting.BLUE+"  • Synthetic Heart: §r"+5
             };
             int lineCount = 0;
             for(String line:lines) {
