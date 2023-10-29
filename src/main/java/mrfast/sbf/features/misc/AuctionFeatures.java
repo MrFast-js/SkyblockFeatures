@@ -380,14 +380,6 @@ public class AuctionFeatures {
                         }
                     }
 
-                    ItemStack possibleBed = gui.inventorySlots.getSlot(31).getStack();
-                    int bedTimer = 0;
-                    if(possibleBed.getItem() instanceof ItemBed) {
-                        for (String line : ItemUtils.getItemLore(possibleBed)) {
-
-                        }
-                    }
-
                     Long lowestBin = (long) (PricingData.lowestBINs.get(auctionIdentifier)*stack.stackSize);
                     Long avgBin = (long) (PricingData.averageLowestBINs.get(auctionIdentifier)*stack.stackSize);
                     Long cost = 0L;

@@ -50,8 +50,9 @@ public abstract class MixinGuiContainer extends GuiScreen {
             GuiChest chest = (GuiChest) Minecraft.getMinecraft().currentScreen;
             ContainerChest cont = (ContainerChest) chest.inventorySlots;
             String name = cont.getLowerChestInventory().getName();
-            
-            MinecraftForge.EVENT_BUS.post(new GuiContainerEvent.TitleDrawnEvent(that, inventorySlots, mouseX, mouseY, partialTicks,name));
+            if(name==null || chest.inventorySlots==null) return;
+
+            MinecraftForge.EVENT_BUS.post(new GuiContainerEvent.TitleDrawnEvent(that, chest.inventorySlots, mouseX, mouseY, partialTicks,name));
         } catch (Throwable e) {
             // e.printStackTrace();
         }

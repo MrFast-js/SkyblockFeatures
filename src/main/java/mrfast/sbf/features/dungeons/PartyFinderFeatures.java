@@ -48,13 +48,10 @@ public class PartyFinderFeatures {
         }
     }
 
-    /*
-    when someone joins it appears on the list at the top with their class and level
-    if dupe it will highlight the dupe in red
-    will only show max of 5 at a time, so it will push out the last ones
-     */
+
     @SubscribeEvent
     public void onDrawSlot(GuiContainerEvent.DrawSlotEvent event) {
+        if(!SkyblockFeatures.config.dungeonPartyDisplay) return;
         if(event.chestName.equals("Catacombs Gate") && event.slot.getSlotIndex()==45) {
             for(String line: ItemUtils.getItemLore(event.slot.getStack())) {
                 line = Utils.cleanColor(line);
@@ -68,6 +65,8 @@ public class PartyFinderFeatures {
 
     @SubscribeEvent
     public void onChat(ClientChatReceivedEvent event) {
+        if(!SkyblockFeatures.config.dungeonPartyDisplay) return;
+
         String message = event.message.getUnformattedText();
         boolean fromServer = !message.contains(":");
         // Clear All
@@ -161,7 +160,7 @@ public class PartyFinderFeatures {
 
         @Override
         public boolean getToggled() {
-            return Utils.inSkyblock;
+            return Utils.inSkyblock && SkyblockFeatures.config.dungeonPartyDisplay;
         }
 
         @Override

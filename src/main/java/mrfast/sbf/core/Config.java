@@ -398,9 +398,18 @@ public class Config extends Vigilant {
             name = "Better Party Finder",
             description = "Creates a better user interface for the dungeon party finder",
             category = "§1§rDungeons",
-            subcategory = "Miscellaneous"
+            subcategory = "Party Finder"
     )
     public boolean betterPartyFinder = false;
+    @Property(
+            type = PropertyType.SWITCH,
+            name = "Dungeon Party Display",
+            description = "Shows who all is in your dungeon party, including class and class lvl",
+            category = "§1§rDungeons",
+            subcategory = "Party Finder"
+    )
+    public boolean dungeonPartyDisplay = false;
+
 
     @Property(
             type = PropertyType.SWITCH,
