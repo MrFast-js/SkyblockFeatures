@@ -21,13 +21,15 @@
 </div>
 <br><br>
 
-*A unSimple 1.8.9 Forge Hypixel Skyblock mod that adds features that are not commonly found in other mods but are very useful*
+*A unSimple 1.8.9 Forge Hypixel Skyblock mod that adds features that are not commonly found in other mods but are very
+useful*
 
 **For Beta Releases, Suggestions, and Support join the discord! https://discord.gg/MDTEAjbNw8**
 
 <div align="center"><img src='https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png'/></div>
 
 ### Quick Start Guide
+
 - Download mod from [releases](https://github.com/MrFast-js/SkyblockFeatures/releases/latest) tab
 - Put mod into mods folder and start up game
 - Type '**/sbf**' for config
@@ -171,6 +173,7 @@
 <div align="center"><img src='https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png'/></div>
 
 ## Cool Commands:
+
 - **/vm** (*Change the item view model*)
 - **/terminal** (*Allows you to practice a f7 dungeon terminal*)
 - **/sky** \<name\> (*gives the link for someone's skyleamoe*)
@@ -183,10 +186,12 @@
 <div align="center"><img src='https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png'/></div>
 
 ## License
+
 This project is licensed under GNU General Public License v3.0 License, see [LICENSE](LICENSE) for more details.
 
 <div align="center"><img src='https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png'/></div>
 
 ## Credits:
-This mod would not be possible without 
+
+This mod would not be possible without
 [NEU](https://github.com/NotEnoughUpdates/NotEnoughUpdates), [Skytils 0.x](https://github.com/Skytils/SkytilsMod/tree/0.x), [SBA](https://github.com/BiscuitDevelopment/SkyblockAddons)

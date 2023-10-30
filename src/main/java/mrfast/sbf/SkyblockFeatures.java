@@ -1,16 +1,5 @@
 package mrfast.sbf;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.InputStreamReader;
-import java.net.URL;
-import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
-import mrfast.sbf.features.dungeons.*;
-import org.lwjgl.input.Keyboard;
-
 import gg.essential.api.EssentialAPI;
 import mrfast.sbf.commands.DungeonsCommand;
 import mrfast.sbf.commands.FakePlayerCommand;
@@ -31,14 +20,13 @@ import mrfast.sbf.core.PricingData;
 import mrfast.sbf.core.SkyblockInfo;
 import mrfast.sbf.events.ChatEventListener;
 import mrfast.sbf.events.SecondPassedEvent;
-import mrfast.sbf.features.statDisplays.ActionBarListener;
-import mrfast.sbf.features.statDisplays.CryptDisplay;
-import mrfast.sbf.features.statDisplays.DefenceDisplay;
-import mrfast.sbf.features.statDisplays.EffectiveHealthDisplay;
-import mrfast.sbf.features.statDisplays.HealthDisplay;
-import mrfast.sbf.features.statDisplays.ManaDisplay;
-import mrfast.sbf.features.statDisplays.SecretDisplay;
-import mrfast.sbf.features.statDisplays.SpeedDisplay;
+import mrfast.sbf.features.dungeons.ChestProfit;
+import mrfast.sbf.features.dungeons.DungeonMap;
+import mrfast.sbf.features.dungeons.DungeonsFeatures;
+import mrfast.sbf.features.dungeons.Nametags;
+import mrfast.sbf.features.dungeons.PartyFinderFeatures;
+import mrfast.sbf.features.dungeons.Reparty;
+import mrfast.sbf.features.dungeons.ShadowAssasinFeatures;
 import mrfast.sbf.features.dungeons.solvers.BlazeSolver;
 import mrfast.sbf.features.dungeons.solvers.CreeperSolver;
 import mrfast.sbf.features.dungeons.solvers.LividFinder;
@@ -86,6 +74,14 @@ import mrfast.sbf.features.render.DynamicFullbright;
 import mrfast.sbf.features.render.HighlightCropArea;
 import mrfast.sbf.features.render.RiftFeatures;
 import mrfast.sbf.features.render.SlayerFeatures;
+import mrfast.sbf.features.statDisplays.ActionBarListener;
+import mrfast.sbf.features.statDisplays.CryptDisplay;
+import mrfast.sbf.features.statDisplays.DefenceDisplay;
+import mrfast.sbf.features.statDisplays.EffectiveHealthDisplay;
+import mrfast.sbf.features.statDisplays.HealthDisplay;
+import mrfast.sbf.features.statDisplays.ManaDisplay;
+import mrfast.sbf.features.statDisplays.SecretDisplay;
+import mrfast.sbf.features.statDisplays.SpeedDisplay;
 import mrfast.sbf.features.trackers.AutomatonTracker;
 import mrfast.sbf.features.trackers.EnderNodeTracker;
 import mrfast.sbf.features.trackers.GhostTracker;
@@ -112,10 +108,23 @@ import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
+import org.lwjgl.input.Keyboard;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.InputStreamReader;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Mod(modid = SkyblockFeatures.MODID, name = SkyblockFeatures.MOD_NAME, version = "1.2.7", acceptedMinecraftVersions = "[1.8.9]", clientSideOnly = true)
 public class SkyblockFeatures {
-    
+
     public static final String MODID = "skyblockfeatures";
     public static final String MOD_NAME = "skyblockfeatures";
     public static String VERSION = "Loading";
@@ -232,10 +241,10 @@ public class SkyblockFeatures {
         );
         features.forEach(MinecraftForge.EVENT_BUS::register);
         // Checks mod folder for version of Skyblock Features your using
-        for(String modName:listFilesUsingJavaIO(Minecraft.getMinecraft().mcDataDir.getAbsolutePath()+"/mods")) {
-            if(modName.contains("Skyblock-Features")) {
+        for (String modName : listFilesUsingJavaIO(Minecraft.getMinecraft().mcDataDir.getAbsolutePath() + "/mods")) {
+            if (modName.contains("Skyblock-Features")) {
                 // Filters out the mod name to just the version
-                VERSION = modName.substring(0, modName.length()-4).replaceAll("Skyblock-Features-", "");
+                VERSION = modName.substring(0, modName.length() - 4).replaceAll("Skyblock-Features-", "");
                 break;
             }
         }
@@ -244,7 +253,7 @@ public class SkyblockFeatures {
         SkyblockFeatures.config.aucFlipperEnabled = false;
 
         SkyblockFeatures.config.forceSave();
-        System.out.println("You have started Skyblock Features up "+SkyblockFeatures.config.timeStartedUp+" times!");
+        System.out.println("You have started Skyblock Features up " + SkyblockFeatures.config.timeStartedUp + " times!");
     }
 
     /*
@@ -256,11 +265,12 @@ public class SkyblockFeatures {
             BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream()));
             String s;
             while ((s = reader.readLine()) != null) {
-                if(s.equals(playerUUID)) {
+                if (s.equals(playerUUID)) {
                     throw new Error("You're blacklisted from using SBF! If you think this is a mistake contact 'mrfast' on discord.");
                 }
             }
-        } catch (Exception ignored) {}
+        } catch (Exception ignored) {
+        }
     }
 
     // List files in a directory (Used only for the mods folder)
@@ -305,23 +315,23 @@ public class SkyblockFeatures {
     public void onTick(TickEvent.ClientTickEvent event) {
         if (event.phase != TickEvent.Phase.START) return;
         // Small items
-        if(start) {
+        if (start) {
             smallItems = config.smallItems;
             start = false;
         } else {
-            if(smallItems && !config.smallItems) {
+            if (smallItems && !config.smallItems) {
                 config.armX = 0;
                 config.armY = 0;
                 config.armZ = 0;
             }
-            if(!smallItems && config.smallItems) {
+            if (!smallItems && config.smallItems) {
                 config.armX = 30;
                 config.armY = -5;
                 config.armZ = -60;
             }
             smallItems = config.smallItems;
         }
-        
+
         if (ticks % 20 == 0) {
             if (mc.thePlayer != null) {
                 Utils.checkForSkyblock();
@@ -339,7 +349,7 @@ public class SkyblockFeatures {
 
     public final static KeyBinding reloadPartyFinder = new KeyBinding("Reload Party Finder", Keyboard.KEY_R, "Skyblock Features");
     public final static KeyBinding openBestFlipKeybind = new KeyBinding("Open Best Flip", Keyboard.KEY_J, "Skyblock Features");
-    
+
     @EventHandler
     public void initKeybinds(FMLInitializationEvent event) {
         MinecraftForge.EVENT_BUS.register(this);
