@@ -1,7 +1,6 @@
 package mrfast.sbf.utils;
 
 import java.awt.Color;
-import java.util.List;
 
 import org.lwjgl.opengl.GL11;
 
@@ -101,7 +100,7 @@ public class RenderUtil {
     
         String distanceText = "(" + (int) Math.sqrt(distance) + "m)";
         int distanceWidth = fontRenderer.getStringWidth(distanceText);
-        fontRenderer.drawString(distanceText, -(distanceWidth / 2), (int) (padding + rectHeight - 1), 0xFFFFFF);
+        fontRenderer.drawString(distanceText, -(distanceWidth / 2), padding + rectHeight - 1, 0xFFFFFF);
     
         GlStateManager.enableDepth();
         GlStateManager.disableBlend();
@@ -162,10 +161,10 @@ public class RenderUtil {
         int j = fontrenderer.getStringWidth(str) / 2;
         GlStateManager.disableTexture2D();
         worldrenderer.begin(7, DefaultVertexFormats.POSITION_COLOR);
-        worldrenderer.pos((double)(-j - 1), (double)(-1 + i), 0.0D).color(0.0F, 0.0F, 0.0F, 0.25F).endVertex();
-        worldrenderer.pos((double)(-j - 1), (double)(8 + i), 0.0D).color(0.0F, 0.0F, 0.0F, 0.25F).endVertex();
-        worldrenderer.pos((double)(j + 1), (double)(8 + i), 0.0D).color(0.0F, 0.0F, 0.0F, 0.25F).endVertex();
-        worldrenderer.pos((double)(j + 1), (double)(-1 + i), 0.0D).color(0.0F, 0.0F, 0.0F, 0.25F).endVertex();
+        worldrenderer.pos(-j - 1, -1 + i, 0.0D).color(0.0F, 0.0F, 0.0F, 0.25F).endVertex();
+        worldrenderer.pos(-j - 1, 8 + i, 0.0D).color(0.0F, 0.0F, 0.0F, 0.25F).endVertex();
+        worldrenderer.pos(j + 1, 8 + i, 0.0D).color(0.0F, 0.0F, 0.0F, 0.25F).endVertex();
+        worldrenderer.pos(j + 1, -1 + i, 0.0D).color(0.0F, 0.0F, 0.0F, 0.25F).endVertex();
         tessellator.draw();
         GlStateManager.enableTexture2D();
         // fontrenderer.drawStringWithShadow(str, -fontrenderer.getStringWidth(str) / 2, i, 553648127);

@@ -48,7 +48,7 @@ public class ProfileViewerUtils {
         if(output.totalXp.doubleValue()!=0) {
             output.hover = new ArrayList<>(Arrays.asList(
                 ChatFormatting.GREEN+skillName,
-                ChatFormatting.GRAY+"Progress: "+ChatFormatting.YELLOW+""+nf.format(output.currentXp)+""+ChatFormatting.GOLD+"/"+ChatFormatting.YELLOW+""+Utils.formatNumber(output.totalXp)+" "+ChatFormatting.GRAY+"("+percent+"%)",
+                ChatFormatting.GRAY+"Progress: "+ChatFormatting.YELLOW+nf.format(output.currentXp)+ChatFormatting.GOLD+"/"+ChatFormatting.YELLOW+Utils.formatNumber(output.totalXp)+" "+ChatFormatting.GRAY+"("+percent+"%)",
                 ChatFormatting.GRAY+"Total XP: "+ChatFormatting.YELLOW+nf.format(xp)
             ));
         } else {
@@ -72,7 +72,7 @@ public class ProfileViewerUtils {
             while (level < 9 && xp >= slayerXP.get(level + 1)) {
                 level++;
             }
-        } catch(Exception a) {
+        } catch(Exception ignored) {
 
         }
         
@@ -233,7 +233,7 @@ public class ProfileViewerUtils {
     }
 
     public static UIComponent createPet(CompletableFuture<BufferedImage> texture,int lvl, String petName,List<String> tooltip, Color color) {
-        UIComponent background =  new UIRoundedRectangle(5f).setColor(color).setWidth(new PixelConstraint(128f/5)).setHeight(new PixelConstraint(128f/5));;
+        UIComponent background =  new UIRoundedRectangle(5f).setColor(color).setWidth(new PixelConstraint(128f/5)).setHeight(new PixelConstraint(128f/5));
         new UIImage(texture).setChildOf(background).setX(new CenterConstraint()).setY(new CenterConstraint()).setWidth(new PixelConstraint(128f/5)).setHeight(new PixelConstraint(120f/5));
         new UIText("LVL "+lvl).setChildOf(background).setY(new SiblingConstraint(2f)).setX(new CenterConstraint()).setTextScale(new PixelConstraint(0.5f));
         return background;
@@ -369,7 +369,7 @@ public class ProfileViewerUtils {
                     "§7Level " + ProfileViewerGui.mole + "§8/190",
                     "",
                     "§7When mining hard stone, you have",
-                    "§7a §a" + ProfileViewerGui.finalOutput + "% §7chance to mine §a"+ + Math.round(ProfileViewerGui.moleStat),
+                    "§7a §a" + ProfileViewerGui.finalOutput + "% §7chance to mine §a"+ Math.round(ProfileViewerGui.moleStat),
                     "§7adjacent ores."),new Vector2f(3f, 1f),ProfileViewerGui.mole>0),
 
             newHotmUpgrade(Lists.newArrayList(EnumChatFormatting.RED+"Powder Buff",

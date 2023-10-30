@@ -1,7 +1,5 @@
 package mrfast.sbf.features.dungeons.solvers;
 
-import java.awt.Color;
-
 import mrfast.sbf.SkyblockFeatures;
 import mrfast.sbf.utils.RenderUtil;
 import mrfast.sbf.utils.Utils;
@@ -22,7 +20,7 @@ public class LividFinder {
     public void onWorldChange(WorldEvent.Load event) {
         try {
             livid = null;
-        } catch(Exception e) {
+        } catch(Exception ignored) {
 
         }
     }
@@ -46,11 +44,13 @@ public class LividFinder {
             String lividName = null;
             switch (color) {
                 case WHITE: lividName="Vendetta"; break;
-                case MAGENTA: lividName="Crossed"; break;
-                case PINK: lividName="Crossed"; break;
+                case MAGENTA:
+                case PINK:
+                    lividName="Crossed"; break;
                 case RED: lividName="Hockey"; break;
-                case SILVER: lividName="Doctor"; break;
-                case GRAY: lividName="Doctor"; break;
+                case SILVER:
+                case GRAY:
+                    lividName="Doctor"; break;
                 case GREEN: lividName="Frog"; break;
                 case LIME: lividName="Smile"; break;
                 case BLUE: lividName="Scream"; break;

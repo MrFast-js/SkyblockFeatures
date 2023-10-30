@@ -18,7 +18,7 @@ public class SpeedDisplay {
     static String display = "123%";
 
     public static String getSpeed() {
-        String text = "";
+        String text;
         String walkSpeed = String.valueOf(Minecraft.getMinecraft().thePlayer.capabilities.getWalkSpeed() * 1000);
         text = walkSpeed.substring(0, Math.min(walkSpeed.length(), 3));
         if (text.endsWith(".")) text = text.substring(0, text.indexOf('.')); //remove trailing periods

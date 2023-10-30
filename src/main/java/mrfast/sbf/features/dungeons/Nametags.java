@@ -1,18 +1,9 @@
 package mrfast.sbf.features.dungeons;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import com.mojang.realmsclient.gui.ChatFormatting;
-
 import mrfast.sbf.SkyblockFeatures;
 import mrfast.sbf.utils.ScoreboardUtil;
 import mrfast.sbf.utils.Utils;
-
-import org.lwjgl.opengl.GL11;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderGlobal;
@@ -22,18 +13,22 @@ import net.minecraft.util.Vec3;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import org.lwjgl.opengl.GL11;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class Nametags {
 
     public Minecraft mc = Minecraft.getMinecraft();
     public RenderGlobal renderGlobal = mc.renderGlobal;
-    public static Map<EntityPlayer, String> players = new HashMap<EntityPlayer, String>();
+    public static Map<EntityPlayer, String> players = new HashMap<>();
 
     @SubscribeEvent
     public void onWorldChange(WorldEvent.Load event) {
         try {
             players.clear();
-        } catch(Exception e) {
+        } catch(Exception ignored) {
 
         }
     }

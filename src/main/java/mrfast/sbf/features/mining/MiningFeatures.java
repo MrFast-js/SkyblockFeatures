@@ -1,11 +1,6 @@
 package mrfast.sbf.features.mining;
 
-import java.awt.Color;
-import java.util.ArrayList;
-import java.util.List;
-
 import com.mojang.realmsclient.gui.ChatFormatting;
-
 import mrfast.sbf.SkyblockFeatures;
 import mrfast.sbf.core.SkyblockInfo;
 import mrfast.sbf.events.BlockChangeEvent;
@@ -31,6 +26,10 @@ import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+
+import java.awt.Color;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MiningFeatures {
 
@@ -65,7 +64,7 @@ public class MiningFeatures {
                 Color endColor = SkyblockFeatures.config.highlightEnderNodesEndstoneColor;
                 Color obiColor = SkyblockFeatures.config.highlightEnderNodesObiColor;
 
-                List<Vec3> drawnPositions = new ArrayList<Vec3>();
+                List<Vec3> drawnPositions = new ArrayList<>();
 
                 for(Vec3 packet:enderParticles) {
                     boolean dupe =false;
@@ -154,8 +153,8 @@ public class MiningFeatures {
         progress = 0;
     }
     BlockPos treasureChest = null;
-    List<Vec3> particles = new ArrayList<Vec3>();
-    List<Vec3> enderParticles = new ArrayList<Vec3>();
+    List<Vec3> particles = new ArrayList<>();
+    List<Vec3> enderParticles = new ArrayList<>();
     int progress = 0;
 
     @SubscribeEvent

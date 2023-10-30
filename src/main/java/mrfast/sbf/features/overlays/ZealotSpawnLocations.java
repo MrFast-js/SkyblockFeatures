@@ -1,13 +1,6 @@
 package mrfast.sbf.features.overlays;
 
-import java.awt.Color;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-
 import com.mojang.realmsclient.gui.ChatFormatting;
-
 import mrfast.sbf.SkyblockFeatures;
 import mrfast.sbf.core.SkyblockInfo;
 import mrfast.sbf.gui.components.Point;
@@ -25,6 +18,12 @@ import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
+
+import java.awt.Color;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
 public class ZealotSpawnLocations {
     List<BlockPos> zealotSpawns = new ArrayList<>(
         Arrays.asList(
@@ -172,7 +171,7 @@ public class ZealotSpawnLocations {
                 canSpawnZealots = false;
             }
             zealotDisplay = EnumChatFormatting.LIGHT_PURPLE + "Zealot Spawn: "+ChatFormatting.DARK_PURPLE+zealotHalfseconds/2+"s";
-        };
+        }
         if(startBruiserTimer && loc.contains("Zealot Bruiser Hideout")) {
             bruiserTicks++;
             if (bruiserTicks % 20 == 0) {
@@ -189,7 +188,7 @@ public class ZealotSpawnLocations {
                 canSpawnBruisers = false;
             }
             bruiserDisplay = EnumChatFormatting.LIGHT_PURPLE + "Bruiser Spawn: "+ChatFormatting.DARK_PURPLE+bruiserHalfseconds/2+"s";
-        };
+        }
     }
 
     static {

@@ -1,10 +1,6 @@
 package mrfast.sbf.features.trackers;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.mojang.realmsclient.gui.ChatFormatting;
-
 import mrfast.sbf.SkyblockFeatures;
 import mrfast.sbf.core.PricingData;
 import mrfast.sbf.core.SkyblockInfo;
@@ -16,6 +12,9 @@ import net.minecraft.client.Minecraft;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class IceTreasureTracker {
     private static final Minecraft mc = Minecraft.getMinecraft();
@@ -78,7 +77,7 @@ public class IceTreasureTracker {
             }
         }
     }
-    List<String> items = new ArrayList<String>();
+    List<String> items = new ArrayList<>();
     @SubscribeEvent
     public void onDrawSlot(SecondPassedEvent event) {
         if(Utils.GetMC().thePlayer == null || !Utils.inSkyblock) return;

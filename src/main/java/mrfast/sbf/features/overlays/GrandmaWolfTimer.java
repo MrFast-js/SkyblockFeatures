@@ -1,8 +1,6 @@
 package mrfast.sbf.features.overlays;
-import java.util.List;
 
 import com.mojang.realmsclient.gui.ChatFormatting;
-
 import mrfast.sbf.SkyblockFeatures;
 import mrfast.sbf.events.GuiContainerEvent;
 import mrfast.sbf.gui.components.Point;
@@ -18,6 +16,8 @@ import net.minecraftforge.client.event.ClientChatReceivedEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
+
+import java.util.List;
 
 public class GrandmaWolfTimer {
     public static Minecraft mc = Utils.GetMC();
@@ -56,7 +56,7 @@ public class GrandmaWolfTimer {
                             String raw = Utils.cleanColor(line);
                             if(!raw.contains("last")) continue;
                             String delayString = raw.split("last")[1];
-                            Double secondsDelay = Double.parseDouble(delayString.replaceAll("[^0-9]", ""))/10;
+                            double secondsDelay = Double.parseDouble(delayString.replaceAll("[^0-9]", ""))/10;
                             if(raw.contains("15 Combo")) {
                                 FifteenComboSeconds=secondsDelay;
                             }
@@ -156,7 +156,7 @@ public class GrandmaWolfTimer {
             if(mc.thePlayer == null || !Utils.inSkyblock || Utils.GetMC().theWorld==null || !SkyblockFeatures.config.GrandmaWolfTimer) return;
             double remaining = Math.floor(SecondsRemaining*100)/100;
             String time = (remaining+"").length()==3?remaining+"0":remaining+"";
-            if(SecondsRemaining>0.05) Utils.drawTextWithStyle3(ChatFormatting.GREEN+""+time+"s", 0, 0);
+            if(SecondsRemaining>0.05) Utils.drawTextWithStyle3(ChatFormatting.GREEN+time+"s", 0, 0);
             else if(fiveComboSeconds==0) {
                 Utils.drawTextWithStyle3(ChatFormatting.RED+"Open Pets Menu", 0, 0);
             }

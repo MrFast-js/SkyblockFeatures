@@ -1,9 +1,5 @@
 package mrfast.sbf.features.statDisplays;
 
-import java.awt.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import mrfast.sbf.SkyblockFeatures;
 import mrfast.sbf.gui.components.Point;
 import mrfast.sbf.gui.components.UIElement;
@@ -12,6 +8,9 @@ import mrfast.sbf.utils.Utils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.network.NetworkPlayerInfo;
 import net.minecraft.client.renderer.GlStateManager;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 public class CryptDisplay {

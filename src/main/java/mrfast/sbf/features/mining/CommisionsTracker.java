@@ -1,12 +1,6 @@
 package mrfast.sbf.features.mining;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import com.mojang.realmsclient.gui.ChatFormatting;
-
 import mrfast.sbf.SkyblockFeatures;
 import mrfast.sbf.core.SkyblockInfo;
 import mrfast.sbf.features.overlays.maps.CrystalHollowsMap;
@@ -16,13 +10,18 @@ import mrfast.sbf.utils.TabListUtils;
 import mrfast.sbf.utils.Utils;
 import net.minecraft.client.Minecraft;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 public class CommisionsTracker {
   private static final Minecraft mc = Minecraft.getMinecraft();
 
   static {
       new CommisionsTrackerGUI();
   }
-  
+
   public static class CommisionsTrackerGUI extends UIElement {
 
       public CommisionsTrackerGUI() {
@@ -37,7 +36,7 @@ public class CommisionsTracker {
               if(mc.thePlayer == null || !Utils.inSkyblock || (!CrystalHollowsMap.inCrystalHollows && !SkyblockInfo.getInstance().map.equals("Dwarven Mines")) || !SkyblockFeatures.config.CommisionsTracker) return;
 
               text.add(ChatFormatting.BLUE+"Commissions");
-              List<String> commissions = new ArrayList<String>();
+              List<String> commissions = new ArrayList<>();
               commissions.add(mc.ingameGUI.getTabList().getPlayerName(TabListUtils.getTabEntries().get(50)));
               commissions.add(mc.ingameGUI.getTabList().getPlayerName(TabListUtils.getTabEntries().get(51)));
 
@@ -55,10 +54,10 @@ public class CommisionsTracker {
                 if(commission.contains("2x")) {
                   matcher = regex.matcher(commission.replace("2x", ""));
                 }
-                
+
                 if(matcher.find()) {
                   String[] a = commission.split(" ");
-                  String amount = Math.round(getTotal(commission) * (Double.valueOf(matcher.group(1)) / 100))+"";
+                  String amount = Math.round(getTotal(commission) * (Double.parseDouble(matcher.group(1)) / 100))+"";
                   String mid = ChatFormatting.LIGHT_PURPLE+"["+
                   ChatFormatting.GREEN+amount+
                   ChatFormatting.GOLD+"/"+

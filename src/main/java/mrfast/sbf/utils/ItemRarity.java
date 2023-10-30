@@ -67,7 +67,7 @@ public enum ItemRarity {
     public static ItemRarity getRarityFromName(String name) {
         for (ItemRarity rarity : values())
         {
-            if (rarity.name.toString().equals(name))
+            if (rarity.name.equals(name))
             {
                 return rarity;
             }

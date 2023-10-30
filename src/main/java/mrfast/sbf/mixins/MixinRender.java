@@ -1,6 +1,5 @@
 package mrfast.sbf.mixins;
 
-import org.lwjgl.opengl.GL11;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -13,9 +12,7 @@ import mrfast.sbf.utils.Utils;
 import net.minecraft.client.renderer.culling.ICamera;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.passive.EntityBat;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 
 @Mixin(Render.class)
@@ -27,7 +24,7 @@ public abstract class MixinRender<T extends Entity> {
         }
         
         try {
-            if (MinecraftForge.EVENT_BUS.post(new CheckRenderEntityEvent<T>(livingEntity, camera, camX, camY, camZ))) cir.setReturnValue(false);
+            if (MinecraftForge.EVENT_BUS.post(new CheckRenderEntityEvent<>(livingEntity, camera, camX, camY, camZ))) cir.setReturnValue(false);
         } catch (Throwable e) {
             e.printStackTrace();
         }

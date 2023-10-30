@@ -1,25 +1,14 @@
 package mrfast.sbf.features.mining;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import com.mojang.realmsclient.gui.ChatFormatting;
-
 import mrfast.sbf.SkyblockFeatures;
-import mrfast.sbf.core.SkyblockInfo;
 import mrfast.sbf.features.overlays.maps.CrystalHollowsMap;
 import mrfast.sbf.gui.GuiManager;
 import mrfast.sbf.utils.RenderUtil;
 import mrfast.sbf.utils.Utils;
-
-import java.awt.Color;
-
 import net.minecraft.block.BlockChest;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityArmorStand;
-import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.Vec3;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
@@ -27,6 +16,11 @@ import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
+
+import java.awt.Color;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class MetalDetectorSolver {
     // Provided by NEU
@@ -152,7 +146,6 @@ public class MetalDetectorSolver {
             if(sameDistance>=2 && bestPos == null) {
                 ticks = 0;
                 PossibletreasureLocations = treasureLocations;
-                bestPos = null;
                 for(Vec3 pos:PossibletreasureLocations) {
                     if(bestPos == null) {
                         bestPos = pos;

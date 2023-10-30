@@ -1,20 +1,19 @@
 package mrfast.sbf.features.misc;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import mrfast.sbf.SkyblockFeatures;
-import mrfast.sbf.events.SlotClickedEvent;
 import mrfast.sbf.events.GuiContainerEvent.TitleDrawnEvent;
+import mrfast.sbf.events.SlotClickedEvent;
 import mrfast.sbf.utils.Utils;
 import net.minecraft.init.Blocks;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ChronomotronSolver {
     static int lastChronomatronRound = 0;

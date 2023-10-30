@@ -1,17 +1,14 @@
 package mrfast.sbf.commands;
 
-import java.util.Collections;
-import java.util.Objects;
-import java.util.Set;
-
-import javax.annotation.Nullable;
-
 import gg.essential.api.commands.Command;
 import gg.essential.api.commands.DefaultHandler;
 import gg.essential.api.utils.GuiUtil;
 import mrfast.sbf.features.items.ViewModel;
-import mrfast.sbf.utils.Utils;
-import net.minecraft.util.ChatComponentText;
+
+import javax.annotation.Nullable;
+import java.util.Collections;
+import java.util.Objects;
+import java.util.Set;
 
 public class ViewModelCommand extends Command {
 

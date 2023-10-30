@@ -16,9 +16,7 @@ public class DamageOverlays {
     boolean loaded = false;
     @SubscribeEvent
     public void onWorldChange(WorldEvent.Load event) {
-        Utils.setTimeout(()->{
-            loaded = true;
-        }, 1000);
+        Utils.setTimeout(()-> loaded = true, 1000);
     }
     @SubscribeEvent
     public void onWorldChange(WorldEvent.Unload event) {

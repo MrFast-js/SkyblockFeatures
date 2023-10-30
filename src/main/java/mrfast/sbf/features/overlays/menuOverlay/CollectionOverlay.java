@@ -1,17 +1,16 @@
 package mrfast.sbf.features.overlays.menuOverlay;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-
 import mrfast.sbf.SkyblockFeatures;
 import mrfast.sbf.events.GuiContainerEvent.TitleDrawnEvent;
-import mrfast.sbf.features.dungeons.Reparty;
 import mrfast.sbf.utils.ItemUtils;
 import mrfast.sbf.utils.Utils;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 
 public class CollectionOverlay {
     @SubscribeEvent

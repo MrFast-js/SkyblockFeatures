@@ -36,8 +36,12 @@ import org.lwjgl.input.Mouse;
 
 import java.io.ByteArrayInputStream;
 import java.nio.charset.StandardCharsets;
-import java.util.*;
-import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.List;
+import java.util.Objects;
 
 public class AutoAuctionFlip {
     static Auction bestAuction = null;
@@ -59,9 +63,9 @@ public class AutoAuctionFlip {
     static long startMs;
     static int stage = 0;
     public static class Auction {
-        String auctionId = "";
-        JsonObject item_Data = null;
-        Double profit = 0d;
+        String auctionId;
+        JsonObject item_Data;
+        Double profit;
 
         public Auction(String aucId,JsonObject itemData,Double profit) {
             this.profit=profit;
@@ -100,30 +104,22 @@ public class AutoAuctionFlip {
             if(chestName.contains("BIN Auction View") && !clicking) {
                 clicking = true;
                 Utils.GetMC().playerController.windowClick(Utils.GetMC().thePlayer.openContainer.windowId, 31, 0, 0, Utils.GetMC().thePlayer);
-                Utils.setTimeout(()->{
-                    AutoAuctionFlip.clicking = false;
-                },500);
+                Utils.setTimeout(()-> AutoAuctionFlip.clicking = false,500);
             }
             else if(chestName.contains("Confirm Purchase") && !clicking2) {
                 clicking2 = true;
                 Utils.GetMC().playerController.windowClick(Utils.GetMC().thePlayer.openContainer.windowId, 11, 0, 0, Utils.GetMC().thePlayer);
-                Utils.setTimeout(()->{
-                    AutoAuctionFlip.clicking2 = false;
-                },500);
+                Utils.setTimeout(()-> AutoAuctionFlip.clicking2 = false,500);
             }
             else if(chestName.contains("Auction View") && !clicking) {
                 clicking = true;
                 Utils.GetMC().playerController.windowClick(Utils.GetMC().thePlayer.openContainer.windowId, 29, 0, 0, Utils.GetMC().thePlayer);
-                Utils.setTimeout(()->{
-                    AutoAuctionFlip.clicking = false;
-                },500);
+                Utils.setTimeout(()-> AutoAuctionFlip.clicking = false,500);
             }
             else if(chestName.contains("Confirm Bid") && !clicking2) {
                 clicking2 = true;
                 Utils.GetMC().playerController.windowClick(Utils.GetMC().thePlayer.openContainer.windowId, 11, 0, 0, Utils.GetMC().thePlayer);
-                Utils.setTimeout(()->{
-                    AutoAuctionFlip.clicking2 = false;
-                },500);
+                Utils.setTimeout(()-> AutoAuctionFlip.clicking2 = false,500);
             }
         }
     }
@@ -152,9 +148,7 @@ public class AutoAuctionFlip {
                     Utils.GetMC().thePlayer.sendChatMessage("/viewauction "+bestAuction.auctionId);
                     sent = true;
                     auctionFlips.remove(auctionFlips.get(0));
-                    Utils.setTimeout(()-> {
-                        AutoAuctionFlip.sent = false;
-                    }, 1000);
+                    Utils.setTimeout(()-> AutoAuctionFlip.sent = false, 1000);
                 } else {
                     Utils.SendMessage(ChatFormatting.RED+"Best flip not found! Keep holding to open next.");
                 }
@@ -417,7 +411,7 @@ public class AutoAuctionFlip {
 
                         double currentTime = (double) System.currentTimeMillis();
                         long msTillEnd = (long) Math.abs(itemData.get("end").getAsDouble()-currentTime);
-                        Double bidPrice = itemData.get("highest_bid_amount").getAsDouble();
+                        double bidPrice = itemData.get("highest_bid_amount").getAsDouble();
                         if(bidPrice==0) bidPrice = itemData.get("starting_bid").getAsDouble();
                         
                         // Load lowest and average BIN prices
@@ -430,7 +424,7 @@ public class AutoAuctionFlip {
                         Integer valueOfTheItem = (int) (SkyblockFeatures.config.autoFlipAddEnchAndStar?estimatedPrice:lowestBinPrice);
                         JsonObject auctionData = PricingData.getItemAuctionInfo(id);
                         String auctionId = itemData.get("uuid").toString().replaceAll("\"","");
-                        Long enchantValue = ItemUtils.getEnchantsWorth(extraAttributes);;
+                        Long enchantValue = ItemUtils.getEnchantsWorth(extraAttributes);
                         Long starValue = ItemUtils.getStarCost(extraAttributes);
                         int volume = 20;
 
@@ -441,7 +435,7 @@ public class AutoAuctionFlip {
                             if(lowestBinPrice>1.10*avgBinPrice) valueOfTheItem=avgBinPrice.intValue();
                         }
 
-                        Double profit = valueOfTheItem-bidPrice;
+                        double profit = valueOfTheItem-bidPrice;
                         double percentage = Math.floor(((valueOfTheItem/bidPrice)-1)*100);
 
                         String[] lore = itemData.get("item_lore").getAsString().split("Â");
@@ -467,8 +461,8 @@ public class AutoAuctionFlip {
                             String currentProfit = Utils.formatNumber(profit.longValue());
                             String currentPrice = Utils.formatNumber(bidPrice.longValue());
                             String itemValue = Utils.formatNumber(valueOfTheItem.longValue());
-                            String ePrice = Utils.formatNumber(enchantValue.longValue());
-                            String sPrice = Utils.formatNumber(starValue.longValue());
+                            String ePrice = Utils.formatNumber(enchantValue);
+                            String sPrice = Utils.formatNumber(starValue);
 
                             // Filter out any auctions with duplicate ids
                             boolean dupe = auctionFlips.stream().anyMatch(auc -> Objects.equals(auc.auctionId, auctionId));
@@ -611,7 +605,7 @@ public class AutoAuctionFlip {
     static String display = "Auction API update in 60s";
     
     public static class AutoAuctionGui extends UIElement {
-        private ArrayList<String> lines = new ArrayList<>();
+        private final ArrayList<String> lines = new ArrayList<>();
 
         public AutoAuctionGui() {
             super("Auto Auction Flip Counter", new Point(0.2f, 0.0f));

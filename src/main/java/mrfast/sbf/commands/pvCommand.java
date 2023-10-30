@@ -1,25 +1,17 @@
 package mrfast.sbf.commands;
 
-import java.util.List;
-import java.util.Locale;
-import java.util.Objects;
-
 import com.google.common.collect.Lists;
 import com.mojang.realmsclient.gui.ChatFormatting;
-
 import gg.essential.api.utils.GuiUtil;
-import mrfast.sbf.SkyblockFeatures;
-import mrfast.sbf.gui.EditLocationsGui;
 import mrfast.sbf.gui.ProfileViewerGui;
-import mrfast.sbf.gui.ConfigGui;
 import mrfast.sbf.utils.APIUtils;
 import mrfast.sbf.utils.Utils;
-import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.util.BlockPos;
-import net.minecraft.util.ChatComponentText;
+
+import java.util.List;
 
 public class pvCommand extends CommandBase {
 
@@ -55,7 +47,6 @@ public class pvCommand extends CommandBase {
 
             Utils.SendMessage(ChatFormatting.YELLOW+"Opening "+username+"'s Profile "+ChatFormatting.GRAY+"(This may take a second)");
             GuiUtil.open(new ProfileViewerGui(true,username,"auto"));
-            return;
         } else {
             String playerUuid = APIUtils.getUUID(args[0]);
             if(playerUuid==null) {

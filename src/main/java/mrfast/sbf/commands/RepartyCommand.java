@@ -1,16 +1,14 @@
 package mrfast.sbf.commands;
 
-import java.util.Collections;
-import java.util.List;
-
 import com.google.common.collect.Lists;
-
 import mrfast.sbf.features.dungeons.Reparty;
 import mrfast.sbf.utils.Utils;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.util.BlockPos;
+
+import java.util.List;
 
 public class RepartyCommand extends CommandBase {
 

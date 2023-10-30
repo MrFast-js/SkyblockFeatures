@@ -1,24 +1,15 @@
 package mrfast.sbf.commands;
 
-import java.net.URL;
-import java.nio.charset.StandardCharsets;
-import java.util.Objects;
-import java.util.UUID;
-
-import mrfast.sbf.utils.APIUtils;
-import org.apache.commons.io.IOUtils;
-
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import com.mojang.authlib.GameProfile;
-
-import mrfast.sbf.features.dungeons.solvers.LividFinder;
+import mrfast.sbf.utils.APIUtils;
 import mrfast.sbf.utils.Utils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityOtherPlayerMP;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
+
+import java.util.UUID;
 
 public class FakePlayerCommand extends CommandBase {
 

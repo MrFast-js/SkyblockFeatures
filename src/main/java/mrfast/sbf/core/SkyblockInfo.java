@@ -3,12 +3,10 @@ package mrfast.sbf.core;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.mojang.realmsclient.gui.ChatFormatting;
-
 import mrfast.sbf.events.PacketEvent;
 import mrfast.sbf.utils.ScoreboardUtil;
 import mrfast.sbf.utils.Utils;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.client.C16PacketClientStatus;
 import net.minecraft.network.play.client.C16PacketClientStatus.EnumState;
@@ -112,9 +110,9 @@ public class SkyblockInfo {
             if (entry.contains("Purse:") || entry.contains("Piggy:")) {
                 coins = parseCoins(entry.replaceAll("[^0-9]", ""));
             } else if (entry.contains("⏣")) {
-                location = entry.substring(2, entry.length());
+                location = entry.substring(2);
             } else if (entry.contains("ф")) {
-                location = entry.substring(2, entry.length());
+                location = entry.substring(2);
             }
             localLocation=location.replaceAll("[^a-zA-Z0-9\\s]", "").replaceAll("[^\\x00-\\x7F]", "");
         }

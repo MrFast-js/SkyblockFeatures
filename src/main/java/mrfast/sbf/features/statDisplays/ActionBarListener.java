@@ -1,13 +1,13 @@
 package mrfast.sbf.features.statDisplays;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import mrfast.sbf.SkyblockFeatures;
 import mrfast.sbf.utils.Utils;
 import net.minecraft.util.ChatComponentText;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class ActionBarListener {
 
@@ -33,9 +33,9 @@ public class ActionBarListener {
 			String[] actionBarSplit = actionBar.split(" ");
 			for (String piece : actionBarSplit) {
 				String trimmed = piece.trim();
-				String colorsStripped = Utils.cleanColor(trimmed).replaceAll(",", "");;
+				String colorsStripped = Utils.cleanColor(trimmed).replaceAll(",", "");
 
-				if(trimmed.isEmpty()) continue;
+                if(trimmed.isEmpty()) continue;
 				String shortString = colorsStripped.substring(0, colorsStripped.length() - 1).replaceAll(",", "");
 				if(trimmed.endsWith("❤")) {
 					parseAndSetHealth(shortString);

@@ -1,5 +1,30 @@
 package mrfast.sbf.features.misc;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.mojang.realmsclient.gui.ChatFormatting;
+import mrfast.sbf.SkyblockFeatures;
+import mrfast.sbf.core.PricingData;
+import mrfast.sbf.events.DrawSignEvent;
+import mrfast.sbf.events.GuiContainerEvent;
+import mrfast.sbf.events.GuiContainerEvent.TitleDrawnEvent;
+import mrfast.sbf.events.SecondPassedEvent;
+import mrfast.sbf.events.SlotClickedEvent;
+import mrfast.sbf.utils.APIUtils;
+import mrfast.sbf.utils.ItemUtils;
+import mrfast.sbf.utils.Utils;
+import net.minecraft.client.gui.Gui;
+import net.minecraft.client.gui.inventory.GuiChest;
+import net.minecraft.inventory.ContainerChest;
+import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.Slot;
+import net.minecraft.item.ItemStack;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
+
 import java.awt.Color;
 import java.io.File;
 import java.io.FileReader;
@@ -9,40 +34,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import net.minecraft.item.ItemBed;
-import org.lwjgl.input.Keyboard;
-
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.mojang.realmsclient.gui.ChatFormatting;
-
-import mrfast.sbf.SkyblockFeatures;
-import mrfast.sbf.core.PricingData;
-import mrfast.sbf.events.DrawSignEvent;
-import mrfast.sbf.events.GuiContainerEvent;
-import mrfast.sbf.events.SecondPassedEvent;
-import mrfast.sbf.events.SlotClickedEvent;
-import mrfast.sbf.events.GuiContainerEvent.TitleDrawnEvent;
-import mrfast.sbf.utils.APIUtils;
-import mrfast.sbf.utils.ItemUtils;
-import mrfast.sbf.utils.Utils;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Gui;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.gui.inventory.GuiChest;
-import net.minecraft.inventory.ContainerChest;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.Slot;
-import net.minecraft.item.ItemStack;
-import net.minecraftforge.client.event.GuiScreenEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
-
 public class AuctionFeatures {
-    public static HashMap<ItemStack, Double> items = new HashMap<ItemStack, Double>();
+    public static HashMap<ItemStack, Double> items = new HashMap<>();
     public static List<Auction> selfItems = new ArrayList<>();
     public static int sec = 0;
     public static double itemCount = 0;
@@ -125,7 +118,7 @@ public class AuctionFeatures {
                 Double lowestBin = PricingData.lowestBINs.get(auctionIdentifier)*currentlySellingStack.stackSize;
                 Double avgBin = PricingData.averageLowestBINs.get(auctionIdentifier)*currentlySellingStack.stackSize;
                 int yHeight = (Utils.GetMC().currentScreen.height/8);
-                Utils.drawGraySquareWithBorder((Utils.GetMC().currentScreen.width/2)+60, yHeight, 6*("Suggested Listing Price: "+lowestBin.toString()).length(), 5*Utils.GetMC().fontRendererObj.FONT_HEIGHT,3);
+                Utils.drawGraySquareWithBorder((Utils.GetMC().currentScreen.width/2)+60, yHeight, 6*("Suggested Listing Price: "+ lowestBin).length(), 5*Utils.GetMC().fontRendererObj.FONT_HEIGHT,3);
                 Float priceToSellAt = (float) Math.round(((lowestBin*0.6+avgBin*0.4))*0.99);
                 String avgBinString = avgBin != null?ChatFormatting.GOLD+Utils.nf.format(avgBin):ChatFormatting.RED+"Unknown";
                 String lowestBinString = lowestBin != null?ChatFormatting.GOLD+Utils.nf.format(lowestBin):ChatFormatting.RED+"Unknown";
@@ -143,7 +136,7 @@ public class AuctionFeatures {
         }
     }
 
-    public class Auction {
+    public static class Auction {
         public Double profit;
         public ItemStack stack;
         public String identifer;
@@ -218,8 +211,8 @@ public class AuctionFeatures {
                             Double BinValue = PricingData.lowestBINs.get(identifier)*stack.stackSize;
                             if(BinValue != null) {
                                 Double profit = (BinValue - price);
-                                Boolean dupe = false;
-                                Auction auction = new Auction(profit, stack, identifier,event.slot,uuid);
+                                boolean dupe = false;
+                                Auction auction = new Auction(profit, stack, identifier, event.slot, uuid);
 
                                 for(Auction auc:selfItems) {
                                     if (auc.stack == auction.stack || auc.identifer.equals(auction.identifer) || auc.profit.equals(auction.profit)) {
@@ -263,7 +256,7 @@ public class AuctionFeatures {
                         if (identifier != null && price != 0) {
                             Double profit = (double) price;
                             boolean dupe = false;
-                            Auction auction = new Auction(profit, stack, identifier,event.slot,uuid);
+                            Auction auction = new Auction(profit, stack, identifier, event.slot, uuid);
 
                             for(Auction auc:selfItems) {
                                 if(auc.stack == auction.stack || auc.identifer.equals(auction.identifer) || auc.profit.equals(auction.profit)) {
@@ -296,9 +289,7 @@ public class AuctionFeatures {
             if(chestName.contains("Auction Stats")) {
                 if(profitData==null && !gettingData) {
                     gettingData = true;
-                    new Thread(()->{
-                        profitData = APIUtils.getJSONResponse("https://sky.coflnet.com/api/flip/stats/player/"+APIUtils.getUUID(Utils.GetMC().thePlayer.getName())+"?days=7");
-                    }).start();
+                    new Thread(()-> profitData = APIUtils.getJSONResponse("https://sky.coflnet.com/api/flip/stats/player/"+APIUtils.getUUID(Utils.GetMC().thePlayer.getName())+"?days=7")).start();
                 }
                 if(profitData!=null) {
                     Integer totalProfit = profitData.get("totalProfit").getAsInt();
@@ -391,7 +382,7 @@ public class AuctionFeatures {
                     for(String line : ItemUtils.getItemLore(stack)) {
                         line = Utils.cleanColor(line);
                         if(line.contains("Sold for")) {
-                            endTime = ChatFormatting.WHITE+"Status: "+ChatFormatting.DARK_GREEN+""+ChatFormatting.BOLD+"Sold";
+                            endTime = ChatFormatting.WHITE+"Status: "+ChatFormatting.DARK_GREEN+ChatFormatting.BOLD+"Sold";
                         }
                         if(line.contains("Buy it now:")) {
                             binAuc = true;
@@ -465,7 +456,7 @@ public class AuctionFeatures {
                         if (auctionIdentifier != null) {
                             Double lowestBin = PricingData.lowestBINs.get(auctionIdentifier)*stack.stackSize;
                             Double avgBin = PricingData.averageLowestBINs.get(auctionIdentifier)*stack.stackSize;
-                            Utils.drawGraySquareWithBorder(180, 0, 6*("Suggested Listing Price: "+lowestBin.toString()).length(), 6*Utils.GetMC().fontRendererObj.FONT_HEIGHT,3);
+                            Utils.drawGraySquareWithBorder(180, 0, 6*("Suggested Listing Price: "+ lowestBin).length(), 6*Utils.GetMC().fontRendererObj.FONT_HEIGHT,3);
                         
                             String avgBinString = avgBin != null?ChatFormatting.GOLD+Utils.nf.format(avgBin):ChatFormatting.RED+"Unknown";
                             String lowestBinString = lowestBin != null?ChatFormatting.GOLD+Utils.nf.format(lowestBin):ChatFormatting.RED+"Unknown";
@@ -553,7 +544,7 @@ public class AuctionFeatures {
                 int ended = 0;
                 int winning = 0;
                 int losing = 0;
-                List<String> winningAuctions = new ArrayList<String>();
+                List<String> winningAuctions = new ArrayList<>();
                 for (Auction auction : selfItems) {
                     ItemStack stack = auction.stack;
                     for(String line : ItemUtils.getItemLore(stack)) {

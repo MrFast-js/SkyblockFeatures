@@ -1,9 +1,6 @@
 package mrfast.sbf.features.misc;
 
-import java.util.HashMap;
-
 import com.mojang.realmsclient.gui.ChatFormatting;
-
 import mrfast.sbf.SkyblockFeatures;
 import mrfast.sbf.events.CheckRenderEntityEvent;
 import mrfast.sbf.utils.RenderUtil;
@@ -26,9 +23,11 @@ import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
+import java.util.HashMap;
+
 public class PlayerDiguiser {
-    public static HashMap<Entity,Entity> tracker = new HashMap<Entity,Entity>();
-    public static HashMap<Entity,String> tabnameTracker = new HashMap<Entity,String>();
+    public static HashMap<Entity,Entity> tracker = new HashMap<>();
+    public static HashMap<Entity,String> tabnameTracker = new HashMap<>();
     @SubscribeEvent
     public void onWorldChange(WorldEvent.Load event) {
         try {
@@ -123,7 +122,7 @@ public class PlayerDiguiser {
                     tracker.put(event.entity, disguise);
                 }
             }
-        } catch (Exception e) {
+        } catch (Exception ignored) {
 
         }
     }

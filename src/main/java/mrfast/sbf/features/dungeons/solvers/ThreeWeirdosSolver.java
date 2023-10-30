@@ -1,11 +1,6 @@
 package mrfast.sbf.features.dungeons.solvers;
 
-import java.awt.Color;
-import java.util.ArrayList;
-import java.util.List;
-
 import com.mojang.realmsclient.gui.ChatFormatting;
-
 import mrfast.sbf.SkyblockFeatures;
 import mrfast.sbf.utils.RenderUtil;
 import mrfast.sbf.utils.Utils;
@@ -13,7 +8,6 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockChest;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityArmorStand;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.BlockPos;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
@@ -21,6 +15,10 @@ import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+
+import java.awt.Color;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ThreeWeirdosSolver {
     String[] riddleAnswers = {"The reward is not in my chest!",
@@ -46,7 +44,7 @@ public class ThreeWeirdosSolver {
             if(!message.contains(riddleAnswer)) continue;
             
             String npcName = message.substring(6, message.indexOf(":"));
-            Utils.SendMessage(ChatFormatting.RED+""+ChatFormatting.BOLD+npcName+ChatFormatting.YELLOW+""+ChatFormatting.BOLD+" has the reward!");
+            Utils.SendMessage(ChatFormatting.RED+""+ChatFormatting.BOLD+npcName+ChatFormatting.YELLOW+ChatFormatting.BOLD+" has the reward!");
             for(Entity entity:Utils.GetMC().theWorld.loadedEntityList) {
                 if(!(entity instanceof EntityArmorStand)) continue;
                 if(!entity.getCustomNameTag().contains(npcName)) continue;

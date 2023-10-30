@@ -1,12 +1,7 @@
 package mrfast.sbf.features.overlays;
 
-import java.util.HashMap;
-import java.util.List;
-
 import com.google.gson.JsonObject;
-
 import com.mojang.realmsclient.gui.ChatFormatting;
-
 import mrfast.sbf.SkyblockFeatures;
 import mrfast.sbf.commands.InventoryCommand;
 import mrfast.sbf.commands.InventoryCommand.Inventory;
@@ -19,6 +14,9 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+
+import java.util.HashMap;
+import java.util.List;
 public class BaitCounterOverlay {
     public static Integer seconds = 0;
     public static HashMap<String,Integer> typesOfBait = new HashMap<>();
@@ -99,7 +97,7 @@ public class BaitCounterOverlay {
         public void drawElementExample() {
             if(mc.thePlayer == null || !Utils.inSkyblock) return;
             Utils.drawTextWithStyle3(ChatFormatting.AQUA+"Bait:", 0, 0);
-            Utils.drawTextWithStyle3(ChatFormatting.WHITE+" Corrupted Bait "+ChatFormatting.DARK_GRAY+"x218", 0, 1*(10)+10);
+            Utils.drawTextWithStyle3(ChatFormatting.WHITE+" Corrupted Bait "+ChatFormatting.DARK_GRAY+"x218", 0, (10) +10);
             Utils.drawTextWithStyle3(ChatFormatting.GREEN+" Blessed Bait "+ChatFormatting.DARK_GRAY+"x381", 0, 2*(10)+10);
             Utils.drawTextWithStyle3(ChatFormatting.GREEN+" Shark Bait "+ChatFormatting.DARK_GRAY+"x313", 0, 3*(10)+10);
             Utils.drawTextWithStyle3(ChatFormatting.WHITE+" Corrupted Bait "+ChatFormatting.DARK_GRAY+"x831", 0, 4*(10)+10);

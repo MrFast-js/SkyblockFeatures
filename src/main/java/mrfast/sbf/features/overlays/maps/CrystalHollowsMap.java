@@ -1,15 +1,5 @@
 package mrfast.sbf.features.overlays.maps;
 
-import java.awt.Color;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
-import javax.vecmath.Vector2d;
-
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL14;
-
 import mrfast.sbf.SkyblockFeatures;
 import mrfast.sbf.core.SkyblockInfo;
 import mrfast.sbf.gui.components.Point;
@@ -31,6 +21,14 @@ import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL14;
+
+import javax.vecmath.Vector2d;
+import java.awt.Color;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 public class CrystalHollowsMap {
     // Map Asset Inspired by Skyblock Extra's
@@ -101,9 +99,7 @@ public class CrystalHollowsMap {
     public void renderWorld(RenderWorldLastEvent event) {
         if (Minecraft.getMinecraft().thePlayer == null || Minecraft.getMinecraft().theWorld == null || !SkyblockFeatures.config.CrystalHollowsMap || SkyblockInfo.getInstance().getLocation() != null && !CrystalHollowsMap.inCrystalHollows) return;
 
-        locations.forEach((locationName,pos)->{
-            RenderUtil.drawWaypoint(pos,Color.green,locationName,event.partialTicks,true);
-        });
+        locations.forEach((locationName,pos)-> RenderUtil.drawWaypoint(pos,Color.green,locationName,event.partialTicks,true));
     }
 
     private void addLocation(String keyword, String locationName, BlockPos location) {
@@ -184,10 +180,9 @@ public class CrystalHollowsMap {
                         lastPlayerX = x;
                         lastPlayerZ = z;
                         if(SkyblockFeatures.config.CrystalHollowsMapHeads) {
-                            AbstractClientPlayer aplayer = (AbstractClientPlayer) player;
-                            ResourceLocation skin = aplayer.getLocationSkin();
+                            ResourceLocation skin = ((AbstractClientPlayer) player).getLocationSkin();
                             GlStateManager.pushMatrix();
-                            DrawHead(x, z, skin, (float) player.rotationYawHead);
+                            DrawHead(x, z, skin, player.rotationYawHead);
                             GlStateManager.popMatrix();
                         } else {
                             GlStateManager.color(1, 1, 1, 1);

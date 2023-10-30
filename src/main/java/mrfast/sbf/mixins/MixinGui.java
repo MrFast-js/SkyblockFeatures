@@ -8,7 +8,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import mrfast.sbf.SkyblockFeatures;
 import mrfast.sbf.utils.Utils;
 import net.minecraft.client.gui.Gui;
-import net.minecraft.client.gui.inventory.GuiChest;
 
 @Mixin(Gui.class)
 public abstract class MixinGui {

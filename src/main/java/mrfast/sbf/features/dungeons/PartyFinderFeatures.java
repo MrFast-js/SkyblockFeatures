@@ -27,7 +27,11 @@ import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import org.lwjgl.input.Keyboard;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -116,7 +120,7 @@ public class PartyFinderFeatures {
             sorted.sort((a, b) -> Math.toIntExact(b.addedAt - a.addedAt));
             for (PartyFinderMonkey monkey : sorted) {
                 stillNeededClasses.remove(monkey.selectedClass);
-                boolean dupe = partyFinderMonkeys.values().stream().anyMatch((a)->{return !a.name.equals(monkey.name) && Objects.equals(a.selectedClass, monkey.selectedClass);});
+                boolean dupe = partyFinderMonkeys.values().stream().anyMatch((a)-> !a.name.equals(monkey.name) && Objects.equals(a.selectedClass, monkey.selectedClass));
 
                 String name = monkey.name;
                 if(Objects.equals(name, Utils.GetMC().thePlayer.getName())) name = "§5"+name;
@@ -192,9 +196,7 @@ public class PartyFinderFeatures {
             canRefresh = false;
 
             Utils.GetMC().playerController.windowClick(Utils.GetMC().thePlayer.openContainer.windowId, 46, 0, 0, Utils.GetMC().thePlayer);
-            Utils.setTimeout(()->{
-                canRefresh = true;
-            }, 3300);
+            Utils.setTimeout(()-> canRefresh = true, 3300);
         }
     }
     ItemStack hoverItemStack = null;

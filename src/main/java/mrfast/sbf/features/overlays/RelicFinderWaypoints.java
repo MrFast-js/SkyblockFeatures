@@ -1,14 +1,9 @@
 package mrfast.sbf.features.overlays;
 
-import java.awt.Color;
-import java.util.HashSet;
-import java.util.Iterator;
-
 import mrfast.sbf.SkyblockFeatures;
 import mrfast.sbf.utils.RenderUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.item.ItemEgg;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntitySkull;
@@ -16,6 +11,10 @@ import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.BlockPos;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+
+import java.awt.Color;
+import java.util.HashSet;
+import java.util.Iterator;
 
 public class RelicFinderWaypoints {
 
@@ -33,7 +32,7 @@ public class RelicFinderWaypoints {
          Iterator<TileEntity> var3 = mc.theWorld.loadedTileEntityList.iterator();
          BlockPos closestOne = null;
          while(var3.hasNext()) {
-            TileEntity entity = (TileEntity)var3.next();
+            TileEntity entity = var3.next();
             if (entity instanceof TileEntitySkull) {
                TileEntitySkull skull = (TileEntitySkull) entity;
                BlockPos pos = entity.getPos();

@@ -1,11 +1,5 @@
 package mrfast.sbf.commands;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
-import java.util.Random;
 import com.mojang.realmsclient.gui.ChatFormatting;
 import gg.essential.api.utils.GuiUtil;
 import mrfast.sbf.utils.Utils;
@@ -16,6 +10,13 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.init.Blocks;
 import net.minecraft.inventory.InventoryBasic;
 import net.minecraft.item.ItemStack;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
+import java.util.Random;
 
 public class TerminalCommand extends CommandBase {
 
@@ -33,7 +34,7 @@ public class TerminalCommand extends CommandBase {
 	public int getRequiredPermissionLevel() {
 		return 0;
 	}
-	public static List<Integer> clicked = new ArrayList<Integer>();
+	public static List<Integer> clicked = new ArrayList<>();
 	public static long start = 0;
 	public static int[] paneSlots = {
 		11, 12, 13, 14, 15,

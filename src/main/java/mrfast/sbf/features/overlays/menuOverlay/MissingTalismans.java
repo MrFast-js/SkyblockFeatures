@@ -1,13 +1,9 @@
 package mrfast.sbf.features.overlays.menuOverlay;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.mojang.realmsclient.gui.ChatFormatting;
-
 import mrfast.sbf.SkyblockFeatures;
 import mrfast.sbf.core.PricingData;
 import mrfast.sbf.events.GuiContainerEvent;
@@ -19,6 +15,9 @@ import net.minecraft.inventory.ContainerChest;
 import net.minecraft.inventory.IInventory;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class MissingTalismans {
     boolean inAccessoryBag = false;
@@ -54,8 +53,8 @@ public class MissingTalismans {
                     String latestProfile = APIUtils.getLatestProfileID(uuid);
                     if (latestProfile == null) {
                         return;
-                    };
-                    
+                    }
+
                     String profileURL = "https://sky.shiiyu.moe/api/v2/profile/"+username;
                     JsonObject profileResponse = APIUtils.getJSONResponse(profileURL);
                     profileResponse = profileResponse.get("profiles").getAsJsonObject();

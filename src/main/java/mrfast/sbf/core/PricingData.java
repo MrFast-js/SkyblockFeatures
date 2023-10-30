@@ -1,17 +1,10 @@
 package mrfast.sbf.core;
 
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
-
-import org.apache.commons.lang3.time.StopWatch;
-
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-
 import mrfast.sbf.SkyblockFeatures;
 import mrfast.sbf.utils.APIUtils;
 import mrfast.sbf.utils.ItemUtils;
@@ -20,6 +13,11 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
+import org.apache.commons.lang3.time.StopWatch;
+
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
 
 public class PricingData {
     public static final HashMap<String, Double> lowestBINs = new HashMap<>();
@@ -107,15 +105,13 @@ public class PricingData {
 
             // Get extra auction data, like sales per day
             if (SkyblockFeatures.config.auctionGuis || SkyblockFeatures.config.aucFlipperEnabled) {
-                new Thread(() -> {
-                    AuctionUtil.getMyApiGZIPAsync("https://moulberry.codes/auction_averages/3day.json.gz", (jsonObject) -> {
-                        auctionPricesJson = jsonObject;
+                new Thread(() -> AuctionUtil.getMyApiGZIPAsync("https://moulberry.codes/auction_averages/3day.json.gz", (jsonObject) -> {
+                    auctionPricesJson = jsonObject;
 //                        for (Map.Entry<String, JsonElement> items : auctionPricesJson.entrySet()) {
 //                            Double value = auctionPricesJson.get(items.getKey()).getAsJsonObject().get("price").getAsDouble();
 //                            averageLowestBINs.put(items.getKey(), Math.floor(value));
 //                        }
-                    }, ()->{});
-                }).start();
+                }, ()->{})).start();
             }
 
             // Get bazaar prices

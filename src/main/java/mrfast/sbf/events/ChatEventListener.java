@@ -1,5 +1,11 @@
 package mrfast.sbf.events;
 
+import com.google.gson.JsonObject;
+import com.mojang.realmsclient.gui.ChatFormatting;
+import mrfast.sbf.SkyblockFeatures;
+import mrfast.sbf.utils.APIUtils;
+import mrfast.sbf.utils.ItemUtils;
+import mrfast.sbf.utils.Utils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.event.ClickEvent;
 import net.minecraft.event.HoverEvent;
@@ -22,14 +28,6 @@ import java.util.Base64;
 import java.util.Collections;
 import java.util.List;
 
-import com.google.gson.JsonObject;
-import com.mojang.realmsclient.gui.ChatFormatting;
-
-import mrfast.sbf.SkyblockFeatures;
-import mrfast.sbf.utils.APIUtils;
-import mrfast.sbf.utils.ItemUtils;
-import mrfast.sbf.utils.Utils;
-
 public class ChatEventListener {
     public static Minecraft mc = Minecraft.getMinecraft();
 
@@ -44,17 +42,17 @@ public class ChatEventListener {
     @SubscribeEvent(receiveCanceled = true, priority = EventPriority.HIGHEST)
     public void onChat(ClientChatReceivedEvent event) {
         if (!Utils.isOnHypixel()) return;
-        String delimiter = EnumChatFormatting.RED.toString() + EnumChatFormatting.STRIKETHROUGH.toString() + "" + EnumChatFormatting.BOLD + "---------------------------";
+        String delimiter = EnumChatFormatting.RED.toString() + EnumChatFormatting.STRIKETHROUGH + EnumChatFormatting.BOLD + "---------------------------";
         String unformatted = Utils.cleanColor(event.message.getUnformattedText());
 
         if(event.message.getFormattedText().contains(": ")) {
             if (SkyblockFeatures.config.DisguisePlayersAs == 8 && SkyblockFeatures.config.playerDiguiser && Utils.inSkyblock) {
                 String name = event.message.getFormattedText().split(": ")[0];
                 String message = event.message.getFormattedText().split(": ")[1];
-                String monkiMessage = "";
+                StringBuilder monkiMessage = new StringBuilder();
                 for(String word:message.split(" ")) {
                     List<String> words = Arrays.asList("Ooh","ooh","ah","Ee","Hoo","Grrr","uuh");
-                    monkiMessage+=words.get((int) Utils.randomNumber(0, 6))+" ";
+                    monkiMessage.append(words.get((int) Utils.randomNumber(0, 6))).append(" ");
                 }
                 event.setCanceled(true);
                 Utils.GetMC().thePlayer.addChatMessage(new ChatComponentText(name+": "+monkiMessage));
@@ -63,9 +61,7 @@ public class ChatEventListener {
 
         if(unformatted.startsWith("You have joined ") && unformatted.contains("party!") && SkyblockFeatures.config.autoPartyChat) {
             Utils.GetMC().thePlayer.sendChatMessage("/chat p");
-            Utils.setTimeout(()->{
-                Utils.SendMessage(EnumChatFormatting.YELLOW + "Auto Joined Party Chat.");
-            },10);
+            Utils.setTimeout(()-> Utils.SendMessage(EnumChatFormatting.YELLOW + "Auto Joined Party Chat."),10);
         }
 
         if (unformatted.startsWith("Party Finder")) {
@@ -140,14 +136,11 @@ public class ChatEventListener {
                                     itemLore = itemName+"\n"+String.join("\n",Collections.unmodifiableList(loreAsList));
                                 }
                                 // NBT is served boots -> helmet
-                                switch (i) {
-                                    case 0:
-                                        weapon = itemName;
-                                        weaponLore = itemLore;
-                                        break;
-                                    default:
-                                        System.err.println("An error has occurred.");
-                                        break;
+                                if (i == 0) {
+                                    weapon = itemName;
+                                    weaponLore = itemLore;
+                                } else {
+                                    System.err.println("An error has occurred.");
                                 }
                             }
                             inventoryStream.close();

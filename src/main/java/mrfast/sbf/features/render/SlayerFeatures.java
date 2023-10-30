@@ -1,7 +1,5 @@
 package mrfast.sbf.features.render;
 
-import java.awt.Color;
-
 import mrfast.sbf.SkyblockFeatures;
 import mrfast.sbf.core.SkyblockInfo;
 import mrfast.sbf.utils.RenderUtil;

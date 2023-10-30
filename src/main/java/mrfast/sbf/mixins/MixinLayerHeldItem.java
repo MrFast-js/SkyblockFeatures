@@ -63,7 +63,7 @@ public abstract class MixinLayerHeldItem {
             }
             GlStateManager.translate(-0.0625f, 0.4375f, 0.0625f);
             if (((EntityPlayer)entitylivingbaseIn).fishEntity != null) {
-                itemstack = new ItemStack((Item) Items.fishing_rod, 0);
+                itemstack = new ItemStack(Items.fishing_rod, 0);
             }
         }
         else {

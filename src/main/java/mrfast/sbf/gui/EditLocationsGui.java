@@ -1,12 +1,5 @@
 package mrfast.sbf.gui;
 
-import java.awt.Color;
-import java.util.HashMap;
-import java.util.Map;
-
-import org.lwjgl.input.Mouse;
-import org.lwjgl.opengl.Display;
-
 import mrfast.sbf.SkyblockFeatures;
 import mrfast.sbf.gui.components.MoveableFeature;
 import mrfast.sbf.gui.components.UIElement;
@@ -15,6 +8,11 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
+import org.lwjgl.input.Mouse;
+
+import java.awt.Color;
+import java.util.HashMap;
+import java.util.Map;
 
 public class EditLocationsGui extends GuiScreen {
 

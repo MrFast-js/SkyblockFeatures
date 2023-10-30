@@ -1,18 +1,9 @@
 package mrfast.sbf.features.overlays;
 
-import java.awt.Color;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Iterator;
-
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonPrimitive;
-
 import mrfast.sbf.SkyblockFeatures;
 import mrfast.sbf.utils.RenderUtil;
 import mrfast.sbf.utils.Utils;
@@ -24,6 +15,14 @@ import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+
+import java.awt.Color;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Iterator;
 
 public class FairySoulWaypoints {
 
@@ -102,7 +101,7 @@ public class FairySoulWaypoints {
             
             GlStateManager.disableDepth();
             while(var3.hasNext()) {
-               Entity entity = (Entity)var3.next();
+               Entity entity = var3.next();
                if (entity instanceof EntityArmorStand ) {
                   if(((EntityArmorStand)entity).getCurrentArmor(3) != null && SkyblockFeatures.config.fairySoulHelper) {
                      String id = ((EntityArmorStand)entity).getCurrentArmor(3).serializeNBT().getCompoundTag("tag").getCompoundTag("SkullOwner").getCompoundTag("Properties").toString();

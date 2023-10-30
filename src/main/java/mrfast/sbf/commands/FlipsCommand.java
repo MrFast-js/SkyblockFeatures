@@ -1,21 +1,14 @@
 package mrfast.sbf.commands;
 
-import java.awt.Desktop;
-import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
-
 import com.mojang.realmsclient.gui.ChatFormatting;
-
 import mrfast.sbf.utils.APIUtils;
 import mrfast.sbf.utils.Utils;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
-import net.minecraft.event.ClickEvent;
-import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.ChatStyle;
-import net.minecraft.util.EnumChatFormatting;
+
+import java.awt.Desktop;
+import java.net.URI;
 
 public class FlipsCommand extends CommandBase {
 
@@ -36,7 +29,7 @@ public class FlipsCommand extends CommandBase {
 	
 	@Override
 	public void processCommand(ICommandSender arg0, String[] arg1) throws CommandException {
-        String username = "";
+        String username;
         if (arg1.length == 0) {
             username = Utils.GetMC().thePlayer.getName();
         } else {

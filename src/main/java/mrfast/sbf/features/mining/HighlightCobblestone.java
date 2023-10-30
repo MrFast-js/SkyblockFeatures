@@ -1,9 +1,5 @@
 package mrfast.sbf.features.mining;
 
-import java.awt.Color;
-import java.util.ArrayList;
-import java.util.List;
-
 import mrfast.sbf.SkyblockFeatures;
 import mrfast.sbf.core.SkyblockInfo;
 import mrfast.sbf.events.BlockChangeEvent;
@@ -18,8 +14,11 @@ import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class HighlightCobblestone {
-    List<BlockPos> cobblestonePostitions = new ArrayList<BlockPos>();
+    List<BlockPos> cobblestonePostitions = new ArrayList<>();
     
     @SubscribeEvent
     public void onBlockPlace(BlockChangeEvent event) {
@@ -38,7 +37,7 @@ public class HighlightCobblestone {
         try {
             if(!SkyblockFeatures.config.highlightCobblestone) return;
             cobblestonePostitions.clear();
-        } catch(Exception e) {
+        } catch(Exception ignored) {
 
         }
     }

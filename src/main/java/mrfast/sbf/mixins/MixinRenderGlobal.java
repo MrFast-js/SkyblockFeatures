@@ -151,10 +151,9 @@ public abstract class MixinRenderGlobal {
                     boolean flag1 = (entity.isInRangeToRender3d(x, y, z) && (entity.ignoreFrustumCheck || camera.isBoundingBoxInFrustum(entity.getEntityBoundingBox())) && entity instanceof EntityPlayer && !Utils.isNPC(entity));
                     // Dungeon Player Glowing
                     if ((entity != mc.getRenderViewEntity() || mc.gameSettings.thirdPersonView != 0 || flag) && flag1 && Nametags.players.containsKey(entity) && SkyblockFeatures.config.glowingDungeonPlayers && Utils.inDungeons) {
-                        outlineColor(entity, (String)Nametags.players.get(entity));
-                        Entity copy = entity;
-                        copy.setInvisible(false);
-                        renderManager.renderEntitySimple(copy, partialTicks);
+                        outlineColor(entity, Nametags.players.get(entity));
+                        entity.setInvisible(false);
+                        renderManager.renderEntitySimple(entity, partialTicks);
                     }
                     // General Player Glowing
                     if ((entity != mc.getRenderViewEntity() || mc.gameSettings.thirdPersonView != 0 || flag) && flag1 && SkyblockFeatures.config.glowingPlayers && mc.thePlayer.canEntityBeSeen(entity)) {
@@ -171,7 +170,7 @@ public abstract class MixinRenderGlobal {
                         renderManager.renderEntitySimple(entity, partialTicks);
                     }
                 }
-            } catch (NullPointerException e) {
+            } catch (NullPointerException ignored) {
                 
             }
             GlStateManager.depthFunc(GL11.GL_LEQUAL);

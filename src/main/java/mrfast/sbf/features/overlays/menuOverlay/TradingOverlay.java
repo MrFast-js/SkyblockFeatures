@@ -1,12 +1,6 @@
 package mrfast.sbf.features.overlays.menuOverlay;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-
 import com.mojang.realmsclient.gui.ChatFormatting;
-
 import mrfast.sbf.SkyblockFeatures;
 import mrfast.sbf.core.PricingData;
 import mrfast.sbf.events.GuiContainerEvent;
@@ -16,6 +10,11 @@ import net.minecraft.client.gui.inventory.GuiChest;
 import net.minecraft.inventory.ContainerChest;
 import net.minecraft.inventory.IInventory;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
 
 public class TradingOverlay {
     List<Integer> topSelfSlotIds = new ArrayList<>(Arrays.asList(0,1,2,3));
@@ -94,7 +93,7 @@ public class TradingOverlay {
     }
 
     public void drawOtherPersonValue(Double total,HashMap<String,Double> items) {
-        Utils.drawGraySquareWithBorder(180, 0, 150, (int) ((items.size()+3)*2*Utils.GetMC().fontRendererObj.FONT_HEIGHT),3);
+        Utils.drawGraySquareWithBorder(180, 0, 150, (items.size()+3)*2*Utils.GetMC().fontRendererObj.FONT_HEIGHT,3);
                 
         List<String> lines = new ArrayList<>(Arrays.asList(ChatFormatting.WHITE+"Total Value: "+ChatFormatting.GOLD+Utils.formatNumber(total),""));
         for(String itemName:items.keySet()) {
@@ -110,7 +109,7 @@ public class TradingOverlay {
     }
 
     public void drawSelfPersonValue(Double total,HashMap<String,Double> items) {
-        Utils.drawGraySquareWithBorder(-155, 0, 150, (int) ((items.size()+3)*2*Utils.GetMC().fontRendererObj.FONT_HEIGHT),3);
+        Utils.drawGraySquareWithBorder(-155, 0, 150, (items.size()+3)*2*Utils.GetMC().fontRendererObj.FONT_HEIGHT,3);
                 
         List<String> lines = new ArrayList<>(Arrays.asList(ChatFormatting.WHITE+"Total Value: "+ChatFormatting.GOLD+Utils.formatNumber(total),""));
         for(String itemName:items.keySet()) {

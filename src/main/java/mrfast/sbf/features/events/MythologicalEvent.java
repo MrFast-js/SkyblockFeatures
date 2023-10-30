@@ -1,14 +1,8 @@
 package mrfast.sbf.features.events;
 
-import java.awt.Color;
-import java.util.ArrayList;
-import java.util.List;
-
 import com.mojang.realmsclient.gui.ChatFormatting;
-
 import mrfast.sbf.SkyblockFeatures;
 import mrfast.sbf.core.SkyblockInfo;
-import mrfast.sbf.events.PacketEvent;
 import mrfast.sbf.events.PacketEvent.ReceiveEvent;
 import mrfast.sbf.utils.RenderUtil;
 import mrfast.sbf.utils.Utils;
@@ -28,6 +22,10 @@ import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
+
+import java.awt.Color;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MythologicalEvent {
     private BlockPos burrow = null;
@@ -162,9 +160,9 @@ public class MythologicalEvent {
         if (SkyblockFeatures.config.MythologicalHelper) {
             Vec3 prev = null;
             try {
-                double xDif = 0;
-                double zDif = 0;
-                double yDif = 0;
+                double xDif;
+                double zDif;
+                double yDif;
                 double index = 0;
                 for (Vec3 particle : particles) {
                     index++;

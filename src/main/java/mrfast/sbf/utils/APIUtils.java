@@ -6,7 +6,6 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 
-import mrfast.sbf.commands.FakePlayerCommand;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpVersion;
@@ -74,7 +73,7 @@ public class APIUtils {
                         return gson.fromJson(in, JsonObject.class);
                     }
                 } else {
-                    System.out.println(EnumChatFormatting.RED+"Unexpected Server Response: " + statusCode+" "+response.toString()+"  "+response.getStatusLine().getReasonPhrase());
+                    System.out.println(EnumChatFormatting.RED+"Unexpected Server Response: " + statusCode+" "+ response +"  "+response.getStatusLine().getReasonPhrase());
                 }
             }
         } catch (Exception ex) {
@@ -174,7 +173,7 @@ public class APIUtils {
         return input.replaceAll("(.{8})(.{4})(.{4})(.{4})(.{12})", "$1-$2-$3-$4-$5");
     }
 
-    private static HashMap<String,String> nameCache = new HashMap<>();
+    private static final HashMap<String,String> nameCache = new HashMap<>();
     public static String getName(String uuid) {
         if(nameCache.containsKey(uuid)) return nameCache.get(uuid);
         try {
@@ -215,7 +214,7 @@ public class APIUtils {
             }
         }
         // This happens if the person hasnt logged on in a while
-        if(latestProfile.equals("")) {
+        if(latestProfile.isEmpty()) {
             System.out.println("No currentt profile found, selecting first");
             JsonObject profileJSON = profilesArray.get(0).getAsJsonObject();
             latestProfile = profileJSON.get("profile_id").getAsString();

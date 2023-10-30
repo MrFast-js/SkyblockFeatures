@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -14,7 +13,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import mrfast.sbf.core.PricingData;
-import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.JsonToNBT;
@@ -116,7 +114,7 @@ public class ItemUtils {
         if (extraAttributes != null) {
             String itemId = extraAttributes.getString("id");
 
-            if (!itemId.equals("")) {
+            if (!itemId.isEmpty()) {
                 return itemId;
             }
         }
@@ -124,7 +122,7 @@ public class ItemUtils {
         return null;
     }
 
-    private static HashMap<String, ItemStack> itemDataCache = new HashMap<>();
+    private static final HashMap<String, ItemStack> itemDataCache = new HashMap<>();
     public static ItemStack getSkyblockItem(String id) {
         if(itemDataCache.containsKey(id)) {
             return itemDataCache.get(id).copy();
@@ -135,7 +133,7 @@ public class ItemUtils {
         return stack;
     }
 
-    public class CustomItemData {
+    public static class CustomItemData {
         public String internalname;
         public String itemid;
         public String displayname;
@@ -308,7 +306,7 @@ public class ItemUtils {
     public static HashMap<String,JsonObject> skyhelperItemMap = new HashMap<>();
     
     public static long getEstimatedItemValue(ItemStack stack) {
-        if(skyhelperItemMap.size()==0) {
+        if(skyhelperItemMap.isEmpty()) {
             JsonArray items = APIUtils.getArrayResponse("https://raw.githubusercontent.com/Altpapier/SkyHelper-Networth/abb278d6be1e13b3204ccb05f47c5e8aaf614733/constants/items.json");
             for(int i=0;i<items.size();i++) {
                 JsonObject a = items.get(i).getAsJsonObject();
@@ -318,7 +316,7 @@ public class ItemUtils {
 
         String id = PricingData.getIdentifier(stack);
         NBTTagCompound ExtraAttributes = getExtraAttributes(stack);
-        Long total = 0l;
+        Long total = 0L;
 
         try {
             // Add lowest bin as a base price
@@ -340,7 +338,7 @@ public class ItemUtils {
     }
 
     public static Integer getEstimatedItemValue(NBTTagCompound ExtraAttributes) {
-        if(skyhelperItemMap.size()==0) {
+        if(skyhelperItemMap.isEmpty()) {
             new Thread(()->{
                 JsonArray items = APIUtils.getArrayResponse("https://raw.githubusercontent.com/Altpapier/SkyHelper-Networth/abb278d6be1e13b3204ccb05f47c5e8aaf614733/constants/items.json");
                 for(int i=0;i<items.size();i++) {
@@ -394,7 +392,7 @@ public class ItemUtils {
 
     public static Long getStarCost(NBTTagCompound extraAttributes) {
         String id = extraAttributes.getString("id");
-        int stars = 0;
+        int stars;
         int masterStars = 0;
         int totalEssence = 0;
         String essenceType = "WITHER";
@@ -413,7 +411,7 @@ public class ItemUtils {
                     stars = 5;
                 }
             } else {
-                return 0l;
+                return 0L;
             }
             JsonArray upgradeCosts = skyhelperItemMap.get(id).get("upgrade_costs").getAsJsonArray();
             for(int i=0;i<stars;i++) {
@@ -470,7 +468,7 @@ public class ItemUtils {
     }
 
     public static Long getEnchantsWorth(NBTTagCompound extraAttributes) {
-        if(!extraAttributes.hasKey("enchantments")) return 0l;
+        if(!extraAttributes.hasKey("enchantments")) return 0L;
         NBTTagCompound nbt = extraAttributes.getCompoundTag("enchantments");
         long total = 0;
         for(String enchant:nbt.getKeySet()) {

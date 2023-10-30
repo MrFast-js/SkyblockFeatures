@@ -1,15 +1,6 @@
 package mrfast.sbf.features.dungeons;
 
-import java.awt.Color;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map.Entry;
-
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL14;
-
 import com.mojang.realmsclient.gui.ChatFormatting;
-
 import mrfast.sbf.SkyblockFeatures;
 import mrfast.sbf.events.SecondPassedEvent;
 import mrfast.sbf.gui.components.Point;
@@ -28,12 +19,17 @@ import net.minecraft.client.resources.DefaultPlayerSkin;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemMap;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Vec4b;
 import net.minecraft.world.storage.MapData;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL14;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map.Entry;
 
 public class DungeonMap {
     public static final ResourceLocation map = new ResourceLocation("skyblockfeatures","map/DungeonMap.png");
@@ -104,9 +100,9 @@ public class DungeonMap {
     }
 
 	public static class MapPosition {
-	    double rotation = 0;
-		double x = 0;
-		double y = 0;
+	    double rotation;
+		double x;
+		double y;
 		public MapPosition(double x,double y, double rotation) {
 			this.x = x;
 			this.y = y;
@@ -115,9 +111,9 @@ public class DungeonMap {
 	}
 
 
-	static HashMap<String, NetworkPlayerInfo> dungeonTeammates = new HashMap<String, NetworkPlayerInfo>();
-	static HashMap<Integer, ResourceLocation> playerSkins = new HashMap<Integer, ResourceLocation>();
-	static HashMap<Integer, String> playerNames = new HashMap<Integer, String>();
+	static HashMap<String, NetworkPlayerInfo> dungeonTeammates = new HashMap<>();
+	static HashMap<Integer, ResourceLocation> playerSkins = new HashMap<>();
+	static HashMap<Integer, String> playerNames = new HashMap<>();
 	static HashMap<String, MapPosition> farplayerPosition = new HashMap<>();
 	static HashMap<String, MapPosition> closePlayerPosition = new HashMap<>();
 
@@ -166,10 +162,10 @@ public class DungeonMap {
 			double f3 = (b0 % 4 + 1) / 4.0;
 			double f4 = (Math.floor(b0 / 4) + 1) / 4.0;
 			worldrenderer.begin(7, DefaultVertexFormats.POSITION_TEX);
-			worldrenderer.pos(-1.0D, 1.0D, (double) ((float) k * -0.001F)).tex((double) f1, (double) f2).endVertex();
-			worldrenderer.pos(1.0D, 1.0D, (double) ((float) k * -0.001F)).tex((double) f3, (double) f2).endVertex();
-			worldrenderer.pos(1.0D, -1.0D, (double) ((float) k * -0.001F)).tex((double) f3, (double) f4).endVertex();
-			worldrenderer.pos(-1.0D, -1.0D, (double) ((float) k * -0.001F)).tex((double) f1, (double) f4).endVertex();
+			worldrenderer.pos(-1.0D, 1.0D, (float) k * -0.001F).tex(f1, f2).endVertex();
+			worldrenderer.pos(1.0D, 1.0D, (float) k * -0.001F).tex(f3, f2).endVertex();
+			worldrenderer.pos(1.0D, -1.0D, (float) k * -0.001F).tex(f3, f4).endVertex();
+			worldrenderer.pos(-1.0D, -1.0D, (float) k * -0.001F).tex(f1, f4).endVertex();
 			tessellator.draw();
 			GlStateManager.popMatrix();
 			k++;
@@ -181,10 +177,10 @@ public class DungeonMap {
 		GlStateManager.scale(0.0F, 0.0F, -0.04F);
 		GlStateManager.translate(1.0F, 1.0F, 1.0F);
 		GlStateManager.popMatrix();
-	};
+	}
 
-	
-	// Draw head on map
+
+    // Draw head on map
 	public static void DrawHead(Double x,Double z,ResourceLocation skin, Float rotation,String name) {
 		if(SkyblockFeatures.config.dungeonMapPlayerNames) drawPlayerNameOnMap(x,z,name);
 		if(!SkyblockFeatures.config.dungeonMapHeads) return;
@@ -370,8 +366,8 @@ public class DungeonMap {
 							}
 							double x = Math.round((mapEntry.getValue().func_176112_b()/2)+64);
 							double z = Math.round((mapEntry.getValue().func_176113_c()/2)+64);
-							double rotation = mapEntry.getValue().func_176111_d()* 360F;;
-							if(farplayerPosition.containsKey(shortName)) {
+							double rotation = mapEntry.getValue().func_176111_d()* 360F;
+                            if(farplayerPosition.containsKey(shortName)) {
 								x = farplayerPosition.get(shortName).x;
 								z = farplayerPosition.get(shortName).y;
 								rotation = farplayerPosition.get(shortName).rotation;

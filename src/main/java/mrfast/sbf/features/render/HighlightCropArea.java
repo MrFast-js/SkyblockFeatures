@@ -1,9 +1,5 @@
 package mrfast.sbf.features.render;
 
-import java.awt.Color;
-import java.util.ArrayList;
-import java.util.List;
-
 import mrfast.sbf.SkyblockFeatures;
 import mrfast.sbf.core.SkyblockInfo;
 import mrfast.sbf.events.BlockChangeEvent;
@@ -18,6 +14,10 @@ import net.minecraft.util.BlockPos;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+
+import java.awt.Color;
+import java.util.ArrayList;
+import java.util.List;
 
 public class HighlightCropArea {
     List<AxisAlignedBB> cropAreas = new ArrayList<>();
@@ -53,7 +53,7 @@ public class HighlightCropArea {
     @SubscribeEvent
     public void onRender(RenderWorldLastEvent event) {
         if(SkyblockInfo.getInstance()==null || !SkyblockFeatures.config.GardenBlocksToRemove || Utils.GetMC().theWorld==null) return;
-        try {if(!SkyblockInfo.getInstance().map.equals("Garden")) return;} catch (Exception e) {}
+        try {if(!SkyblockInfo.getInstance().map.equals("Garden")) return;} catch (Exception ignored) {}
         
         if(cropAreas.isEmpty()) {
             for(int x=-192;x<192;x+=96) {
@@ -96,8 +96,6 @@ public class HighlightCropArea {
         if(SkyblockInfo.getInstance()==null || !SkyblockFeatures.config.GardenBlocksToRemove || Utils.GetMC().theWorld==null) return;
         try {if(!SkyblockInfo.getInstance().map.equals("Garden")) return;} catch (Exception ignored) {}
 
-        if(blocksToDestroy.contains(event.pos)) {
-            blocksToDestroy.remove(blocksToDestroy.indexOf(event.pos));
-        }
+        blocksToDestroy.remove(event.pos);
     }
 }

@@ -1,21 +1,14 @@
 package mrfast.sbf.commands;
 
-import java.lang.management.ManagementFactory;
-import java.util.List;
-import java.util.Locale;
-import java.util.Objects;
-
 import com.google.common.collect.Lists;
 import com.mojang.realmsclient.gui.ChatFormatting;
-
 import gg.essential.api.utils.GuiUtil;
 import mrfast.sbf.SkyblockFeatures;
 import mrfast.sbf.core.SkyblockInfo;
+import mrfast.sbf.gui.ConfigGui;
 import mrfast.sbf.gui.EditLocationsGui;
 import mrfast.sbf.gui.GuiManager;
-import mrfast.sbf.gui.ConfigGui;
 import mrfast.sbf.gui.components.Point;
-import mrfast.sbf.utils.APIUtils;
 import mrfast.sbf.utils.Utils;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.command.CommandBase;
@@ -28,6 +21,10 @@ import javax.management.JMX;
 import javax.management.MBeanServer;
 import javax.management.MXBean;
 import javax.management.ObjectName;
+import java.lang.management.ManagementFactory;
+import java.util.List;
+import java.util.Locale;
+import java.util.Objects;
 
 public class configCommand extends CommandBase {
 

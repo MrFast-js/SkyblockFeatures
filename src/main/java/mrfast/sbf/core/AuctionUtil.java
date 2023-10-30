@@ -19,6 +19,11 @@
 
 package mrfast.sbf.core;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import net.minecraft.nbt.NBTTagCompound;
+import org.apache.commons.io.IOUtils;
+
 import java.io.IOException;
 import java.net.URL;
 import java.net.URLConnection;
@@ -28,20 +33,13 @@ import java.util.concurrent.Executors;
 import java.util.function.Consumer;
 import java.util.zip.GZIPInputStream;
 
-import org.apache.commons.io.IOUtils;
-
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-
-import net.minecraft.nbt.NBTTagCompound;
-
 /*
  * Modified from NotEnoughUpdates
  * https://github.com/NotEnoughUpdates/NotEnoughUpdates/blob/master/src/main/java/io/github/moulberry/notenoughupdates/auction/APIManager.java
  */
 
 public class AuctionUtil {
-    private static Gson gson = new Gson();
+    private static final Gson gson = new Gson();
 
     public static JsonObject getApiGZIPSync(String urlS) throws IOException {
         URL url = new URL(urlS);
@@ -51,8 +49,7 @@ public class AuctionUtil {
 
         String response = IOUtils.toString(new GZIPInputStream(connection.getInputStream()), StandardCharsets.UTF_8);
 
-        JsonObject json = gson.fromJson(response, JsonObject.class);
-        return json;
+        return gson.fromJson(response, JsonObject.class);
     }
 
     private final static ExecutorService es = Executors.newFixedThreadPool(3);
@@ -79,7 +76,7 @@ public class AuctionUtil {
 
             if("PET".equals(internalname)) {
                 String petInfo = ea.getString("petInfo");
-                if(petInfo.length() > 0) {
+                if(!petInfo.isEmpty()) {
                     JsonObject petInfoObject = gson.fromJson(petInfo, JsonObject.class);
                     internalname = petInfoObject.get("type").getAsString();
                     String tier = petInfoObject.get("tier").getAsString();

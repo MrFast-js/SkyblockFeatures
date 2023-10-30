@@ -1,8 +1,5 @@
 package mrfast.sbf.features.dungeons;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-
 import mrfast.sbf.SkyblockFeatures;
 import mrfast.sbf.core.PricingData;
 import mrfast.sbf.events.GuiContainerEvent.TitleDrawnEvent;
@@ -15,14 +12,17 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
 public class ChestProfit {
 
     @SubscribeEvent
     public void onGUIDrawnEvent(TitleDrawnEvent event) {
         if (event.gui == null || !SkyblockFeatures.config.dungeonChestProfit || !Utils.inSkyblock) return;
         if (event.gui instanceof GuiChest) {
-            HashMap<ItemStack,Double> items = new HashMap<ItemStack,Double>();    
-            ContainerChest chest = (ContainerChest) ((GuiChest) event.gui).inventorySlots;
+            HashMap<ItemStack,Double> items = new HashMap<>();
+            ContainerChest chest = (ContainerChest) event.gui.inventorySlots;
             IInventory inv = chest.getLowerChestInventory();
             if (inv.getDisplayName().getUnformattedText().endsWith(" Chest")) {
                 int chestValue = 0;

@@ -1,16 +1,5 @@
 package mrfast.sbf.gui;
 
-import java.awt.Color;
-import java.awt.Desktop;
-import java.lang.reflect.Field;
-import java.net.URI;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.SortedMap;
-import java.util.TreeMap;
-
 import com.mojang.realmsclient.gui.ChatFormatting;
 import gg.essential.api.utils.GuiUtil;
 import gg.essential.elementa.ElementaVersion;
@@ -49,6 +38,17 @@ import mrfast.sbf.SkyblockFeatures;
 import mrfast.sbf.core.Config;
 import mrfast.sbf.utils.Utils;
 
+import java.awt.Color;
+import java.awt.Desktop;
+import java.lang.reflect.Field;
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.SortedMap;
+import java.util.TreeMap;
+
 public class ConfigGui extends WindowScreen {
     public static SortedMap<String, SortedMap<String,List<Property>>> categories = new TreeMap<>();
     public static HashMap<Property, Object> valueMap = new HashMap<>();
@@ -78,7 +78,7 @@ public class ConfigGui extends WindowScreen {
 
     Color editGuiUnhovered = SkyblockFeatures.config.editGuiUnhovered;
     Color editGuiHovered = SkyblockFeatures.config.editGuiHovered;
-    
+
     Color clear = new Color(0,0,0,0);
     public ConfigGui(Boolean doAnimation) {
         super(ElementaVersion.V2);
@@ -93,7 +93,7 @@ public class ConfigGui extends WindowScreen {
             .setChildOf(getWindow())
             .setColor(mainBackground)
             .enableEffect(new ScissorEffect());
-        
+
         String outlinePath = furfSkyThemed?"/assets/skyblockfeatures/gui/largeOutlineFurf.png":"/assets/skyblockfeatures/gui/largeOutline.png";
         UIImage.ofResourceCached(outlinePath).setChildOf(box)
             .setX(new PixelConstraint(0f))
@@ -103,7 +103,7 @@ public class ConfigGui extends WindowScreen {
         float guiWidth = box.getWidth();
         float guiHeight = box.getHeight();
         double fontScale = screenHeight/540d;
-        
+
         UIComponent titleArea = new UIBlock().setColor(clear).setChildOf(box)
             .setX(new CenterConstraint())
             .setWidth(new PixelConstraint(guiWidth))
@@ -117,7 +117,7 @@ public class ConfigGui extends WindowScreen {
             .setY(new CenterConstraint())
             .enableEffect(new ScissorEffect())
             .setTextScale(new PixelConstraint((float) (doAnimation?1*fontScale:4*fontScale)));
-        
+
         new UIText("v"+SkyblockFeatures.VERSION)
             .setColor(versionText)
             .setChildOf(titleArea)
@@ -129,7 +129,7 @@ public class ConfigGui extends WindowScreen {
         if(Utils.isDeveloper()) {
             // new Inspector(getWindow()).setChildOf(getWindow());
         }
-        
+
         UIComponent searchBox = new UIRoundedRectangle(5f)
             .setChildOf(titleArea)
             .setX(new PixelConstraint(guiWidth-90))
@@ -144,11 +144,11 @@ public class ConfigGui extends WindowScreen {
             .setWidth(new PixelConstraint(80))
             .setHeight(new PixelConstraint(15f))
             .setY(new PixelConstraint(3f));
-        
+
         titleArea.onMouseClickConsumer((event)->{
-            input.grabWindowFocus();;
+            input.grabWindowFocus();
         });
-        
+
         // Gray horizontal line 1px from bottom of the title area
         new UIBlock().setChildOf(titleArea)
             .setWidth(new PixelConstraint(guiWidth-2))
@@ -173,7 +173,7 @@ public class ConfigGui extends WindowScreen {
             reloadFeatures(loadedFeaturesList,guiHeight,guiWidth,fontScale);
             return Unit.INSTANCE;
         });
-        
+
         // Side bar on the left that holds the categories
         UIComponent sidebarArea = new UIBlock()
             .setX(new PixelConstraint(-5f))
@@ -208,7 +208,7 @@ public class ConfigGui extends WindowScreen {
                 .setY(new SiblingConstraint((float) (2.5f*fontScale)))
                 .enableEffect(new RecursiveFadeEffect())
                 .setTextScale(new PixelConstraint((float) fontScale*1.5f));
-                
+
             // Set color of selected category
             if(categoryName.equals(selectedCategory)) {
                 ExampleCategory.setColor(selectedCategoryColor);
@@ -222,7 +222,7 @@ public class ConfigGui extends WindowScreen {
                 if(!categoryName.equals(selectedCategory)) ExampleCategory.setColor(defaultCategory);
             });
             ExampleCategory.onMouseClickConsumer((event)->{
-                if(selectedCategory==categoryName) return;
+                if(selectedCategory.equals(categoryName)) return;
                 selectedCategory = categoryName;
                 LoadCategory(categoryName);
             });
@@ -247,18 +247,14 @@ public class ConfigGui extends WindowScreen {
                     .setWidth(new PixelConstraint(0.70f * 0.25f * guiWidth))
                     .setChildOf(sidebarArea);
         }
-        
+
         new UIText("Edit Gui Locations").setColor(editGuiText).setChildOf(editGuiButton)
             .setTextScale(new PixelConstraint((float) fontScale))
             .setX(new CenterConstraint())
             .setY(new CenterConstraint());
 
-        editGuiButton.onMouseEnterRunnable(()->{
-            editGuiButton.setColor(editGuiHovered);
-        });
-        editGuiButton.onMouseLeaveRunnable(()->{
-            editGuiButton.setColor(editGuiUnhovered);
-        });
+        editGuiButton.onMouseEnterRunnable(()-> editGuiButton.setColor(editGuiHovered));
+        editGuiButton.onMouseLeaveRunnable(()-> editGuiButton.setColor(editGuiUnhovered));
         // Open gui locations gui when clicked
         editGuiButton.onMouseClickConsumer((event)->{
             if(isShiftKeyDown()) {
@@ -295,7 +291,7 @@ public class ConfigGui extends WindowScreen {
         box.addChild(sidebarSeperator);
         box.addChild(loadedFeaturesList);
         box.addChild(editGuiButton);
-        
+
         if(doAnimation) {
             box.setWidth(new PixelConstraint(0f));
 
@@ -319,12 +315,8 @@ public class ConfigGui extends WindowScreen {
                 .setX(new CenterConstraint())
                 .setY(new CenterConstraint());
 
-            resetGuiColorsButton.onMouseEnterRunnable(()->{
-                resetGuiColorsButton.setColor(editGuiHovered);
-            });
-            resetGuiColorsButton.onMouseLeaveRunnable(()->{
-                resetGuiColorsButton.setColor(editGuiUnhovered);
-            });
+            resetGuiColorsButton.onMouseEnterRunnable(()-> resetGuiColorsButton.setColor(editGuiHovered));
+            resetGuiColorsButton.onMouseLeaveRunnable(()-> resetGuiColorsButton.setColor(editGuiUnhovered));
             // Open gui locations gui when clicked
             resetGuiColorsButton.onMouseClickConsumer((event)->{
                 SkyblockFeatures.config.guiLines = new Color(0x808080);
@@ -349,24 +341,24 @@ public class ConfigGui extends WindowScreen {
         categories.clear();
         Config field = SkyblockFeatures.config;
         Field[] fieldsOfFieldClass = Config.class.getFields();
-        for(int i = 0;i < fieldsOfFieldClass.length; i++) {
+        for (Field offieldclass : fieldsOfFieldClass) {
             try {
-                Object value = fieldsOfFieldClass[i].get(field);
-                if (fieldsOfFieldClass[i].isAnnotationPresent(Property.class)) {
-                    Property feature = fieldsOfFieldClass[i].getAnnotation(Property.class);
+                Object value = offieldclass.get(field);
+                if (offieldclass.isAnnotationPresent(Property.class)) {
+                    Property feature = offieldclass.getAnnotation(Property.class);
                     // Create category if not exist already
-                    if(!categories.containsKey(feature.category())) {
+                    if (!categories.containsKey(feature.category())) {
                         categories.put(feature.category(), new TreeMap<>());
                     }
                     SortedMap<String, List<Property>> category = categories.get(feature.category());
 
                     // Create subcategory if not exist already
-                    if(!category.containsKey(feature.subcategory())) {
+                    if (!category.containsKey(feature.subcategory())) {
                         category.put(feature.subcategory(), new ArrayList<>());
                     }
                     List<Property> subcategory = category.get(feature.subcategory());
-            
-                    if(!subcategory.contains(feature)) {
+
+                    if (!subcategory.contains(feature)) {
                         valueMap.put(feature, value);
                         subcategory.add(feature);
                     }
@@ -376,7 +368,7 @@ public class ConfigGui extends WindowScreen {
             }
         }
     }
-    public class ExpandableComponent {
+    public static class ExpandableComponent {
         Boolean enabled = false;
         UIComponent parent = null;
         String parentName = "";
@@ -468,7 +460,7 @@ public class ConfigGui extends WindowScreen {
                         .setY(new PixelConstraint(0f))
                         .setWidth(new PixelConstraint(0.90f*0.75f*guiWidth))
                         .setHeight(new ChildBasedSizeConstraint());
-                    
+
                     if(feature.type() == PropertyType.SLIDER) {
                         border.setHeight(new RelativeConstraint(0.15f));
                         exampleFeature.setHeight(new RelativeConstraint(1f));
@@ -487,7 +479,7 @@ public class ConfigGui extends WindowScreen {
                             .setWidth(new PixelConstraint(0.08f*0.75f*guiWidth))
                             .setHeight(new PixelConstraint(0.08f*0.75f*guiHeight))
                             .enableEffect(new OutlineEffect(Color.yellow, 1f));
-                            
+
                         border.setHeight(new RelativeConstraint(0.16f));
                         exampleFeature.setHeight(new RelativeConstraint(1f));
 
@@ -498,7 +490,7 @@ public class ConfigGui extends WindowScreen {
                             .setX(new PixelConstraint(4f))
                             .setTextScale(new PixelConstraint((float) fontScale*2f));
                     }
-        
+
                     // Feature description
                     if(feature.type() == PropertyType.PARAGRAPH) {
                         new UIWrappedText(feature.description()).setChildOf(exampleFeature)
@@ -506,32 +498,32 @@ public class ConfigGui extends WindowScreen {
                             .setWidth(new RelativeConstraint(0.5f))
                             .setColor(featureDescription)
                             .setY(new PixelConstraint(23f*(float) fontScale))
-                            .setTextScale(new PixelConstraint((float) fontScale*1f));
+                            .setTextScale(new PixelConstraint((float) fontScale));
                     } else if(feature.type() == PropertyType.TEXT) {
                         new UIWrappedText(feature.description()).setChildOf(exampleFeature)
                             .setX(new PixelConstraint(4f))
                             .setWidth(new RelativeConstraint(0.75f))
                             .setColor(featureDescription)
                             .setY(new PixelConstraint(23f*(float) fontScale))
-                            .setTextScale(new PixelConstraint((float) fontScale*1f));
+                            .setTextScale(new PixelConstraint((float) fontScale));
                     } else {
                         UIComponent text =  new UIWrappedText(feature.description()).setChildOf(exampleFeature)
                             .setX(new PixelConstraint(4f))
                             .setWidth(new RelativeConstraint(0.75f))
                             .setColor(featureDescription)
                             .setY(new PixelConstraint(23f*(float) fontScale))
-                            .setTextScale(new PixelConstraint((float) fontScale*1f));
+                            .setTextScale(new PixelConstraint((float) fontScale));
                         text.setHeight(new PixelConstraint(text.getHeight()+6));
                     }
-                    
-        
+
+
                     if(feature.type() == PropertyType.SWITCH) {
                         UIComponent comp = new SwitchComponent((Boolean) valueMap.get(feature)).setChildOf(exampleFeature);
                         // Sub subs
                         comp.onMouseClickConsumer((event)->{
                             Boolean val = (Boolean) getVariable(feature.name());
                             setVariable(feature.name(),!val);
-                            
+
                             if(feature.searchTags().length>0) {
                                 String tag = feature.searchTags()[0];
                                 if(tag.equals("parent")) {
@@ -551,7 +543,7 @@ public class ConfigGui extends WindowScreen {
 
                     if(feature.type() == PropertyType.COLOR) {
                         UIComponent comp = new ColorComponent((Color) valueMap.get(feature),false).setChildOf(exampleFeature);
-                        
+
                         final UIComponent finalColorPreview = colorPreview;
 
                         comp.onMouseClick((event,a)->{
@@ -574,7 +566,7 @@ public class ConfigGui extends WindowScreen {
                             return Unit.INSTANCE;
                         });
                     }
-        
+
                     if(feature.type() == PropertyType.CHECKBOX) {
                         UIComponent comp = new CheckboxComponent((Boolean) valueMap.get(feature)).setChildOf(exampleFeature);
                         comp.onMouseClickConsumer((event)->{
@@ -582,7 +574,7 @@ public class ConfigGui extends WindowScreen {
                             setVariable(feature.name(),!val);
                         });
                     }
-        
+
                     if(feature.type() == PropertyType.SELECTOR) {
                         UIComponent comp = new SelectorComponent((int) valueMap.get(feature),getOptions(feature.name())).setChildOf(exampleFeature);
                         ((SelectorComponent) comp).onValueChange((value)->{
@@ -620,26 +612,26 @@ public class ConfigGui extends WindowScreen {
                             .setY(new PixelConstraint(4f));
 
                         newcomp.onMouseClickConsumer((event)->{
-                            newcomp.grabWindowFocus();;
+                            newcomp.grabWindowFocus();
                         });
                         newcomp.setText(valueMap.get(feature)+"");
-                        
+
                         newcomp.onKeyType((component, character, integer) -> {
-                            String cleanNumber = ((String) newcomp.getText()).replaceAll("[^0-9]", "");
-                            if(cleanNumber.length()==0) {
+                            String cleanNumber = newcomp.getText().replaceAll("[^0-9]", "");
+                            if(cleanNumber.isEmpty()) {
                                 comp.setColor(new Color(0x401613));
                                 newcomp.setText("0");
                             } else {
                                 comp.setColor(new Color(0x232323));
                             }
-                            Integer value = 0;
+                            int value = 0;
                             try {
                                 value = Integer.parseInt(cleanNumber);
                             } catch (Exception e) {
                                 // TODO: handle exception
                             }
                             setVariable(feature.name(),value);
-                            newcomp.setText(cleanNumber+"");
+                            newcomp.setText(cleanNumber);
                             return Unit.INSTANCE;
                         });
                     }
@@ -672,7 +664,7 @@ public class ConfigGui extends WindowScreen {
                         } else {
                             if(parentStuff.get(tag)!=null) {
                                 Boolean enabled = parentStuff.get(tag).enabled;
-                                border.setWidth(new RelativeConstraint(.85f));  
+                                border.setWidth(new RelativeConstraint(.85f));
                                 exampleFeature.setWidth(new RelativeConstraint(1f));
                                 parentStuff.get(tag).children.add(border);
 
@@ -680,7 +672,7 @@ public class ConfigGui extends WindowScreen {
                                     border.hide();
                                     // exampleFeature.hide();
                                     continue;
-                                };
+                                }
                             }
                         }
                     }

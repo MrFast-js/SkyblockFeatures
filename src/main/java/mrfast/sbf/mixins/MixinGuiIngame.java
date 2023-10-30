@@ -23,7 +23,6 @@ import net.minecraft.scoreboard.ScoreObjective;
 import net.minecraft.scoreboard.ScorePlayerTeam;
 import net.minecraft.scoreboard.Scoreboard;
 import net.minecraft.util.EnumChatFormatting;
-import net.minecraftforge.common.MinecraftForge;
 
 @Mixin(GuiIngame.class)
 public class MixinGuiIngame {
@@ -35,13 +34,7 @@ public class MixinGuiIngame {
         Minecraft mc = Utils.GetMC();
         Scoreboard scoreboard = objective.getScoreboard();
         Collection<Score> collection = scoreboard.getSortedScores(objective);
-        List<Score> list = Lists.newArrayList(Iterables.filter(collection, new Predicate<Score>()
-        {
-            public boolean apply(Score p_apply_1_)
-            {
-                return p_apply_1_.getPlayerName() != null && !p_apply_1_.getPlayerName().startsWith("#");
-            }
-        }));
+        List<Score> list = Lists.newArrayList(Iterables.filter(collection, p_apply_1_ -> p_apply_1_.getPlayerName() != null && !p_apply_1_.getPlayerName().startsWith("#")));
 
         if (list.size() > 15)
         {
@@ -73,7 +66,7 @@ public class MixinGuiIngame {
             String s1 = ScorePlayerTeam.formatPlayerName(scoreplayerteam1, score1.getPlayerName());
             if(SkyblockFeatures.config.hideHypixelSidebar && s1.contains("www.hypixel") && score1.getScorePoints()==1) {
                 hypixelLine = score1;
-            };
+            }
         }
         if(hypixelLine!=null) {
             collection.remove(hypixelLine);

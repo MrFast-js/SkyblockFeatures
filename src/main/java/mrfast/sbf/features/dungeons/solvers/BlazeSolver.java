@@ -1,11 +1,14 @@
 package mrfast.sbf.features.dungeons.solvers;
 
+import mrfast.sbf.SkyblockFeatures;
+import mrfast.sbf.utils.RenderUtil;
+import mrfast.sbf.utils.Utils;
 import net.minecraft.block.Block;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.Entity;
 import net.minecraft.init.Blocks;
-import net.minecraft.util.*;
+import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.event.world.WorldEvent;
@@ -14,11 +17,8 @@ import net.minecraftforge.fml.common.gameevent.TickEvent;
 
 import java.awt.Color;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
-
-import mrfast.sbf.SkyblockFeatures;
-import mrfast.sbf.utils.RenderUtil;
-import mrfast.sbf.utils.Utils;
 
 /**
  * Modified from SkyblockMod under GNU Lesser General Public License v3.0
@@ -98,9 +98,7 @@ public class BlazeSolver {
         if (Utils.inDungeons && SkyblockFeatures.config.blazeSolver) {
             if (foundChest) {
                 // Low-High
-                blazes.sort((a,b)->{
-                    return a.health-b.health;
-                });
+                blazes.sort(Comparator.comparingInt(a -> a.health));
 
                 
                 Entity currentBlaze = null;

@@ -1,10 +1,6 @@
 package mrfast.sbf.features.overlays;
 
-import java.awt.Color;
-import java.util.ArrayList;
-
 import com.mojang.realmsclient.gui.ChatFormatting;
-
 import mrfast.sbf.SkyblockFeatures;
 import mrfast.sbf.core.SkyblockInfo;
 import mrfast.sbf.utils.RenderUtil;
@@ -22,11 +18,14 @@ import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
+import java.awt.Color;
+import java.util.ArrayList;
+
 public class GiftTracker {
 
     public Minecraft mc = Minecraft.getMinecraft();
 
-    public static ArrayList<Entity> gifts = new ArrayList<Entity>();
+    public static ArrayList<Entity> gifts = new ArrayList<>();
 
     @SubscribeEvent
     public void onAttack(AttackEntityEvent event) {

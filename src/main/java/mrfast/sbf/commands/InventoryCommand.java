@@ -1,19 +1,8 @@
 package mrfast.sbf.commands;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Base64;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Objects;
-
 import com.google.gson.JsonObject;
 import com.mojang.realmsclient.gui.ChatFormatting;
-
 import gg.essential.api.utils.GuiUtil;
-import mrfast.sbf.SkyblockFeatures;
 import mrfast.sbf.utils.APIUtils;
 import mrfast.sbf.utils.Utils;
 import net.minecraft.client.gui.inventory.GuiChest;
@@ -29,6 +18,13 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumChatFormatting;
+
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Base64;
+import java.util.Collections;
+import java.util.List;
 
 public class InventoryCommand extends CommandBase {
 
@@ -145,8 +141,8 @@ public class InventoryCommand extends CommandBase {
     }
 
 	public static List<ItemStack> decodeItem(Inventory inventory,Boolean offset) {
+        List<ItemStack> itemStack = new ArrayList<>();
         if (inventory != null) {
-            List<ItemStack> itemStack = new ArrayList<>();
             byte[] decode = Base64.getDecoder().decode(inventory.getData());
 
             try {
@@ -161,16 +157,14 @@ public class InventoryCommand extends CommandBase {
             }
 			if(offset) Collections.rotate(itemStack, -9);
 
-            return itemStack;
         } else {
-            List<ItemStack> itemStack = new ArrayList<>();
             ItemStack barrier = new ItemStack(Blocks.barrier);
             barrier.setStackDisplayName(EnumChatFormatting.RESET + "" + EnumChatFormatting.RED + "Item is not available!");
 
             for (int i = 0; i < 36; ++i) {
                 itemStack.add(barrier);
             }
-            return itemStack;
         }
+        return itemStack;
     }
 }

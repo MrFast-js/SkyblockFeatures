@@ -1,11 +1,12 @@
 package mrfast.sbf.gui.components;
-import java.awt.Color;
 
 import mrfast.sbf.utils.Utils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
+
+import java.awt.Color;
 
 public class MoveableFeature extends GuiButton {
 
@@ -40,10 +41,10 @@ public class MoveableFeature extends GuiButton {
 
         int screenWidth = sr.getScaledWidth();
         int screenHeight = sr.getScaledHeight();
-        Float actualX = screenWidth*x;
-        Float actualY = screenHeight*y;
-        Float xWidth = actualX+element.getWidth()+4;
-        Float yHeight = actualY+element.getHeight()+4;
+        float actualX = screenWidth*x;
+        float actualY = screenHeight*y;
+        float xWidth = actualX+element.getWidth()+4;
+        float yHeight = actualY+element.getHeight()+4;
 
         hovered = mouseX >= actualX && mouseY >= actualY && mouseX < xWidth && mouseY < yHeight;
         Color c = new Color(255, 255, 255, hovered ? 100 : 40);

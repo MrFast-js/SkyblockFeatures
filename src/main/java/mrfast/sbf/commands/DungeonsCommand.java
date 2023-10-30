@@ -1,25 +1,13 @@
 package mrfast.sbf.commands;
 
+import com.mojang.realmsclient.gui.ChatFormatting;
+import mrfast.sbf.utils.Utils;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.event.HoverEvent;
-import net.minecraft.util.BlockPos;
-import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.EnumChatFormatting;
 
-import java.text.DecimalFormat;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-
-import com.google.gson.JsonObject;
-import com.mojang.realmsclient.gui.ChatFormatting;
-
-import mrfast.sbf.SkyblockFeatures;
-import mrfast.sbf.utils.APIUtils;
-import mrfast.sbf.utils.Utils;
 
 public class DungeonsCommand extends CommandBase {
 

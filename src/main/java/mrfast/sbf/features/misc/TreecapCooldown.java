@@ -1,7 +1,5 @@
 package mrfast.sbf.features.misc;
 
-import java.awt.Color;
-
 import mrfast.sbf.SkyblockFeatures;
 import mrfast.sbf.events.BlockChangeEvent;
 import mrfast.sbf.events.SecondPassedEvent;
@@ -9,13 +7,14 @@ import mrfast.sbf.utils.Utils;
 import net.minecraft.block.BlockAir;
 import net.minecraft.block.BlockLog;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.RenderTickEvent;
+
+import java.awt.Color;
 
 public class TreecapCooldown {
     public static int seconds = 2;
@@ -51,7 +50,7 @@ public class TreecapCooldown {
     			int guiTop = (sr.getScaledHeight() - 222) / 2;
     			
                 float x = guiLeft + 82.5f;
-    			int y = guiTop + (int) 120; 
+    			int y = guiTop + 120;
 
                 if(seconds <= 10) x = guiLeft + 85;
     			
@@ -62,7 +61,7 @@ public class TreecapCooldown {
     			int guiTop = (sr.getScaledHeight() - 222) / 2;
     			
     			int x = guiLeft + 85;
-    			int y = guiTop + (int) 120;
+    			int y = guiTop + 120;
     			
     			Minecraft.getMinecraft().fontRendererObj.drawString("✔", x, y, new Color(85, 255, 85).getRGB(), true);
 			}
@@ -78,7 +77,6 @@ public class TreecapCooldown {
         }
         if (seconds == 0) {
             ready = true;
-            return;
         }
     }
 
