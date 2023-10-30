@@ -43,7 +43,7 @@ public class CapeUtils {
                 String capeName = s.split(" ")[1];
                 name_list.put(name, capeName);
             }
-            if(SkyblockFeatures.config.playerCapeURL!="") {
+            if(!SkyblockFeatures.config.playerCapeURL.isEmpty()) {
                 if(convertImageToResourceLocation(SkyblockFeatures.config.playerCapeURL)!=null) {
                     name_list.put(Utils.GetMC().thePlayer.getName().toLowerCase(), SkyblockFeatures.config.playerCapeURL);
                 }

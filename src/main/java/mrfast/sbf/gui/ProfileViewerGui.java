@@ -71,15 +71,17 @@ import net.minecraft.init.Items;
 import net.minecraft.inventory.InventoryBasic;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.client.config.GuiUtils;
+import org.jetbrains.annotations.NotNull;
 
 
 public class ProfileViewerGui extends WindowScreen {
-//  The player in the specified profile
+    //  The player in the specified profile
     static JsonObject ProfilePlayerResponse = null;
-//  The specified profile
+    //  The specified profile's data
     JsonObject ProfileResponse = null;
-//  The users profiles according to hypixel
+    //  The users profiles according to hypixel
     JsonArray hypixelProfilesResponse = null;
+    // Hoverables are what is used for the lore popups for skills, etc.
     static HashMap<UIComponent,List<String>> generalHoverables = new HashMap<>();
     static HashMap<UIComponent,List<String>> HOTMHoverables = new HashMap<>();
     static HashMap<UIComponent,List<String>> petHoverables = new HashMap<>();
@@ -87,9 +89,9 @@ public class ProfileViewerGui extends WindowScreen {
 
     String playerLocation = "";
     String selectedProfileUUID = "";
-    GameProfile profile = null;
+    GameProfile profile;
     public static List<String> renderTooltip = null;
-    
+
     @Override
     public void onDrawScreen(UMatrixStack matrixStack,int mouseX, int mouseY, float partialTicks) {
         super.onDrawScreen(matrixStack, mouseX, mouseY, partialTicks);
@@ -100,7 +102,7 @@ public class ProfileViewerGui extends WindowScreen {
         if(selectedCategory.equals("Skills")) hoverables = HOTMHoverables;
         if(selectedCategory.equals("Pets")) hoverables = petHoverables;
         if(selectedCategory.equals("Dungeons")) hoverables = dungeonHoverables;
-        
+
         try {
             if(hoverables!=null) {
                 for(Entry<UIComponent, List<String>> entry:hoverables.entrySet()) {
@@ -214,7 +216,7 @@ public class ProfileViewerGui extends WindowScreen {
                 .setY(new PixelConstraint(0f))
                 .setWidth(new RelativeConstraint(1f))
                 .setHeight(new RelativeConstraint(1f));
-            
+
             UIComponent titleArea = new UIBlock().setColor(clear).setChildOf(box)
                 .setX(new CenterConstraint())
                 .setWidth(new PixelConstraint(guiWidth))
@@ -238,7 +240,7 @@ public class ProfileViewerGui extends WindowScreen {
                 .setY(new CenterConstraint())
                 .enableEffect(new ScissorEffect())
                 .setTextScale(new PixelConstraint((float) (doAnimation?1*fontScale:3*fontScale)));
-            
+
             // Gray horizontal line 1px from bottom of the title area
             new UIBlock().setChildOf(titleArea)
                 .setWidth(new PixelConstraint(guiWidth-2))
@@ -266,7 +268,7 @@ public class ProfileViewerGui extends WindowScreen {
 
             box.addChild(titleArea);
             box.addChild(sidebarSeperator);
-            
+
             if(doAnimation) {
                 box.setWidth(new PixelConstraint(0f));
 
@@ -279,7 +281,7 @@ public class ProfileViewerGui extends WindowScreen {
                 titleText.animateTo(animation);
             }
         }
-        
+
 		new Thread(() -> {
 			System.out.println("Starting thread ");
 
@@ -292,7 +294,7 @@ public class ProfileViewerGui extends WindowScreen {
 
             System.out.println("Fetching Hypixel profile...");
             JsonObject profiles = APIUtils.getJSONResponse(profileURL);
-            
+
             JsonObject locationJson = APIUtils.getJSONResponse(locationURL);
             achievementsJson = APIUtils.getJSONResponse(achievmentsURL).get("achievements").getAsJsonObject();
             Boolean playerOnline = locationJson.get("session").getAsJsonObject().get("online").getAsBoolean();
@@ -343,7 +345,7 @@ public class ProfileViewerGui extends WindowScreen {
     public void displayError(String error) {
         cleanBox();
         selectedCategory = "error";
-        
+
         new UIWrappedText(ChatFormatting.RED + error)
             .setTextScale(new PixelConstraint(2f))
             .setChildOf(box)
@@ -443,7 +445,7 @@ public class ProfileViewerGui extends WindowScreen {
                 }
             }
         }
-        
+
 
         if(profileUUID==null) return;
         selectedProfileUUID = profileUUID;
@@ -454,7 +456,7 @@ public class ProfileViewerGui extends WindowScreen {
                 ProfileResponse = profile.getAsJsonObject();
             }
         });
-        
+
         resetSkillsAndSlayers();
         setSkillsAndSlayers(ProfilePlayerResponse);
 
@@ -474,7 +476,7 @@ public class ProfileViewerGui extends WindowScreen {
         float guiWidth = box.getWidth();
         float guiHeight = box.getHeight();
         double fontScale = screenHeight/540d;
-        
+
         UIComponent titleArea = new UIBlock().setColor(clear).setChildOf(box)
             .setX(new CenterConstraint())
             .setWidth(new PixelConstraint(guiWidth))
@@ -489,7 +491,7 @@ public class ProfileViewerGui extends WindowScreen {
             .setY(new PixelConstraint(3f,true))
             .enableEffect(new ScissorEffect())
             .setTextScale(new PixelConstraint(((float)fontScale)));
-        
+
         // Title text
         UIComponent titleText = new UIText(profile.getName())
             .setColor(titleColor)
@@ -498,10 +500,10 @@ public class ProfileViewerGui extends WindowScreen {
             .setY(new CenterConstraint())
             .enableEffect(new ScissorEffect())
             .setTextScale(new PixelConstraint((float) (3f*fontScale)));
-        
+
         // Gray horizontal line 1px from bottom of the title area
         new UIBlock().setChildOf(titleArea).setWidth(new PixelConstraint(guiWidth-2)).setHeight(new PixelConstraint(1f)).setX(new CenterConstraint()).setY(new PixelConstraint(titleArea.getHeight()-1)).setColor(guiLines);
-        
+
         // Area of where the stats are all contained
         statsAreaContainer = new ScrollComponent("", 10f, featureBoxOutline, false, true, false, false, 25f, 1f, null)
             .setX(new PixelConstraint(0.25f*guiWidth))
@@ -513,7 +515,7 @@ public class ProfileViewerGui extends WindowScreen {
         UIComponent statsAreaLeft = new UIBlock(clear).setX(new PixelConstraint(0f)).setY(new PixelConstraint((0.09f*guiHeight)-1)).setChildOf(statsAreaContainer).setWidth(new PixelConstraint(0.75f*guiWidth*0.30f)).setHeight(new PixelConstraint(((0.35f*guiHeight)-1)));
         UIComponent statsAreaMid = new UIBlock(clear).setX(new PixelConstraint(0.25f*guiWidth)).setY(new PixelConstraint((0.09f*guiHeight)-1)).setChildOf(statsAreaContainer).setWidth(new PixelConstraint(0.75f*guiWidth*0.30f)).setHeight(new PixelConstraint(((0.35f*guiHeight)-1)));
         UIComponent statsAreaRight = new UIBlock(clear).setX(new PixelConstraint(0.50f*guiWidth)).setY(new PixelConstraint((0.09f*guiHeight)-1)).setChildOf(statsAreaContainer).setWidth(new PixelConstraint(0.75f*guiWidth*0.30f)).setHeight(new PixelConstraint(((0.35f*guiHeight)-1)));
-        
+
         drawProgressbar(sbLevelCurrXp,100,statsAreaTop,"Level "+sbLevel,new ItemStack(Items.diamond),null, false);
         drawProgressbar(tamingLevel.currentXp,tamingLevel.totalXp,statsAreaLeft,"Taming "+tamingLevel.level,new ItemStack(Items.spawn_egg),tamingLevel.hover,true);
         drawProgressbar(miningLevel.currentXp,miningLevel.totalXp,statsAreaLeft,"Mining "+miningLevel.level,new ItemStack(Items.iron_pickaxe),miningLevel.hover,true);
@@ -558,7 +560,7 @@ public class ProfileViewerGui extends WindowScreen {
         String fairySouls = ProfilePlayerResponse.get("fairy_souls_collected").getAsInt()+" / 240";
 
         UIComponent topRow = new UIBlock(clear).setWidth(new RelativeConstraint(1f)).setY(new PixelConstraint(0f)).setChildOf(generalInfoContainer).setHeight(new RelativeConstraint(0.15f));
-        UIComponent midRow = new UIBlock(clear).setWidth(new RelativeConstraint(1f)).setY(new SiblingConstraint(2f)).setChildOf(generalInfoContainer).setHeight(new RelativeConstraint(0.15f));   
+        UIComponent midRow = new UIBlock(clear).setWidth(new RelativeConstraint(1f)).setY(new SiblingConstraint(2f)).setChildOf(generalInfoContainer).setHeight(new RelativeConstraint(0.15f));
         UIComponent lastRow = new UIBlock(clear).setWidth(new RelativeConstraint(1f)).setY(new SiblingConstraint(2f)).setChildOf(generalInfoContainer).setHeight(new RelativeConstraint(0.15f));
 
         new UIText(g+"Profile Name: "+bold+Utils.convertToTitleCase(cute_name)).setX(new SiblingConstraint(10f)).setChildOf(topRow);
@@ -640,7 +642,7 @@ public class ProfileViewerGui extends WindowScreen {
             Inventory items = new Inventory(inventoryBase64);
             List<ItemStack> a = InventoryCommand.decodeItem(items,true);
             List<ItemStack> b = new ArrayList<>(Arrays.asList(null,null,null,null));
-            
+
             int index = 0;
             for(ItemStack item: a) {
                 index++;
@@ -659,7 +661,7 @@ public class ProfileViewerGui extends WindowScreen {
                     .setWidth(new PixelConstraint(20f))
                     .setX(new SiblingConstraint(1f))
                     .setColor(new Color(100,100,100,200));
-                    
+
                 backgroundSlot.addChild(new ItemStackComponent(item)
                     .setHeight(new PixelConstraint(20f))
                     .setWidth(new PixelConstraint(20f))
@@ -686,7 +688,7 @@ public class ProfileViewerGui extends WindowScreen {
                     .setWidth(new PixelConstraint(16f))
                     .setX(new SiblingConstraint(1f))
                     .setColor(new Color(100,100,100,200));
-            
+
                 backgroundSlot.addChild(new ItemStackComponent(item)
                     .setX(new CenterConstraint())
                     .setY(new CenterConstraint()));
@@ -714,7 +716,7 @@ public class ProfileViewerGui extends WindowScreen {
         titleText.setTextScale(new PixelConstraint((float) (3.0*fontScale)));
         loadCollectionsCategories();
 
-        
+
         loadNetworth(profileUUID,playerUuid,Purse,Bank,networthComponent);
     }
 
@@ -744,7 +746,7 @@ public class ProfileViewerGui extends WindowScreen {
                     }
                 }
             }
-            
+
             JsonObject museumResponse = APIUtils.getJSONResponse("https://api.hypixel.net/skyblock/museum?profile="+profileUUID);
 
             JsonObject networthCategories = networthResponse.get("types").getAsJsonObject();
@@ -810,8 +812,8 @@ public class ProfileViewerGui extends WindowScreen {
             generalHoverables.put(networthComponent, networthTooltip);
         }).start();
     }
-    
-    
+
+
     /**
      * @param v Value
      * @param m Max
@@ -831,7 +833,7 @@ public class ProfileViewerGui extends WindowScreen {
             .setY(new SiblingConstraint(8f, false))
             .setX(new CenterConstraint());
         generalHoverables.put(container,hover);
-    
+
         // Title
         UIComponent labelText = new UIText(label).setChildOf(container)
             .setX(new PixelConstraint(20f))
@@ -845,7 +847,7 @@ public class ProfileViewerGui extends WindowScreen {
             .setChildOf(container)
             .setWidth(new RelativeConstraint(1f))
             .setHeight(new RelativeConstraint(0.6f));
-            
+
         UIComponent progressBarBackground = new UIRoundedRectangle(5f)
             .setColor(new Color(100,100,100))
             .setWidth(new RelativeConstraint(1f))
@@ -904,7 +906,7 @@ public class ProfileViewerGui extends WindowScreen {
                 .setY(new CenterConstraint());
         }
     }
-    
+
     public void resetSkillsAndSlayers() {
         System.out.println("Resetting Skills & Slayers");
         skillApiDisabled = false;
@@ -1047,7 +1049,7 @@ public class ProfileViewerGui extends WindowScreen {
             .setTextScale(new PixelConstraint(1.5f))
             .setChildOf(insideTextContainer);
     }
-    
+
     public static String selectedCategory = "General";
 
     public void loadCategory(String categoryName) {
@@ -1058,7 +1060,7 @@ public class ProfileViewerGui extends WindowScreen {
 
         if(categoryName.equals("Inventories")) {
             if(ProfilePlayerResponse.has("inv_contents")) {
-                { // Inventory, armor, equipment, wardrope 
+                { // Inventory, armor, equipment, wardrope
                     InventoryBasic inv = new InventoryBasic("Test#1",true, 36);
                     if(ProfilePlayerResponse.has("inv_contents")) {
                         String inventoryBase64 = ProfilePlayerResponse.get("inv_contents").getAsJsonObject().get("data").getAsString();
@@ -1108,7 +1110,7 @@ public class ProfileViewerGui extends WindowScreen {
                         .setX(new SiblingConstraint(10f))
                         .setChildOf(container);
                 }
-            
+
                 { // Talisman Bag, 3 pages
                     InventoryBasic accessoryBag1 = new InventoryBasic("Test#1",true, 45);
                     InventoryBasic accessoryBag2 = new InventoryBasic("Test#1",true, 45);
@@ -1152,7 +1154,7 @@ public class ProfileViewerGui extends WindowScreen {
                             .setTextScale(new PixelConstraint((float) (fontScale * 1.3f)))
                             .setX(new CenterConstraint())
                             .setY(new PixelConstraint(0f));
-                    
+
                     String selectedPower = "None";
                     try {
                         selectedPower = ProfilePlayerResponse.get("accessory_bag_storage").getAsJsonObject().get("selected_power").getAsString();
@@ -1193,14 +1195,14 @@ public class ProfileViewerGui extends WindowScreen {
                         .setChildOf(container)
                         .setX(new SiblingConstraint(10f));
                 }
-                
+
                 { // Enderchest, 3 pages
                     if (ProfilePlayerResponse.has("ender_chest_contents")) {
                         String inventoryBase64 = ProfilePlayerResponse.get("ender_chest_contents").getAsJsonObject().get("data").getAsString();
                         Inventory items = new Inventory(inventoryBase64);
                         List<ItemStack> a = InventoryCommand.decodeItem(items, false);
                         int numPages = (int) Math.ceil(a.size() / 45.0);
-                    
+
                         int pageIndex = 0;
                         UIComponent container = null;
                         while (pageIndex < numPages) {
@@ -1213,7 +1215,7 @@ public class ProfileViewerGui extends WindowScreen {
                             for (int i = startIndex; i < endIndex; i++) {
                                 enderchestPage.setInventorySlotContents(i - startIndex, a.get(i));
                             }
-                    
+
                             if (pageIndex % 3 == 0) {
                                 container = new UIBlock(clear)
                                         .setWidth(new RelativeConstraint(1f))
@@ -1222,11 +1224,11 @@ public class ProfileViewerGui extends WindowScreen {
                                         .setChildOf(statsAreaContainer)
                                         .setHeight(new RelativeConstraint(0.33f));
                             }
-                    
+
                             new InventoryComponent(enderchestPage, "Enderchest Page " + (pageIndex + 1))
                                     .setChildOf(container)
                                     .setX(new SiblingConstraint(10f));
-                    
+
                             pageIndex++;
                         }
                     }
@@ -1286,7 +1288,7 @@ public class ProfileViewerGui extends WindowScreen {
                     .setY(new CenterConstraint());
             }
         }
-        
+
         if(categoryName.equals("General")) {
             loadProfile(ProfileResponse.get("cute_name").getAsString(),false);
         }
@@ -1302,19 +1304,19 @@ public class ProfileViewerGui extends WindowScreen {
                 JsonObject obj = profiles.get(id).getAsJsonObject();
                 UIComponent statsAreaLeft = new UIBlock(clear).setX(new PixelConstraint(0f)).setY(new RelativeConstraint(0f)).setChildOf(statsAreaContainer).setWidth(new RelativeConstraint(0.95f*0.50f)).setHeight(new RelativeConstraint(0.4f));
                 UIComponent statsAreaRight = new UIBlock(clear).setX(new RelativeConstraint(0.50f)).setY(new RelativeConstraint(0f)).setChildOf(statsAreaContainer).setWidth(new RelativeConstraint(0.95f*0.5f)).setHeight(new RelativeConstraint((0.4f)));
-                
+
                 JsonObject dungeons = obj.get("data").getAsJsonObject().get("dungeons").getAsJsonObject();
                 JsonObject essences = obj.get("data").getAsJsonObject().get("essence").getAsJsonObject();
                 JsonObject catacombs = dungeons.get("catacombs").getAsJsonObject();
                 JsonObject mastermode = dungeons.get("master_catacombs").getAsJsonObject();
-                
+
                 Integer secrets = dungeons.get("secrets_found").getAsInt();
                 String selectedClass = ProfileViewerUtils.formatTitle(dungeons.get("selected_class").getAsString());
                 double classAverage = Math.floor(dungeons.get("class_average").getAsJsonObject().get("avrg_level").getAsDouble()*10)/10;;
                 int itemBoost = catacombs.get("bonuses").getAsJsonObject().get("item_boost").getAsInt();
                 String highestFloorNormal = ProfileViewerUtils.formatTitle(catacombs.get("highest_floor").getAsString());
                 String highestFloorMaster = ProfileViewerUtils.formatTitle(mastermode.get("highest_floor").getAsString());
-                
+
                 JsonObject classes = dungeons.get("classes").getAsJsonObject();
                 JsonObject archerClass = classes.get("archer").getAsJsonObject().get("experience").getAsJsonObject();
                 JsonObject healerClass = classes.get("healer").getAsJsonObject().get("experience").getAsJsonObject();
@@ -1342,7 +1344,7 @@ public class ProfileViewerGui extends WindowScreen {
                 drawProgressbar(mageClass.get("xpCurrent").getAsInt(),nextMageXp,statsAreaRight,"Mage "+mageClass.get("level").getAsInt(),new ItemStack(Items.blaze_rod),null,false);
                 drawProgressbar(berserkClass.get("xpCurrent").getAsInt(),nextBersXp,statsAreaRight,"Berserk "+berserkClass.get("level").getAsInt(),new ItemStack(Items.iron_sword),null,false);
                 drawProgressbar(tankClass.get("xpCurrent").getAsInt(),nextTankXp,statsAreaRight,"Tank "+tankClass.get("level").getAsInt(),new ItemStack(Items.leather_chestplate),null,false);
-                
+
                 UIComponent container =  new UIBlock(clear)
                     .setWidth(new RelativeConstraint(1f))
                     .setY(new RelativeConstraint(0.26f))
@@ -1365,7 +1367,7 @@ public class ProfileViewerGui extends WindowScreen {
                     .setX(new SiblingConstraint(10f))
                     .setChildOf(container)
                     .setHeight(new RelativeConstraint(0.3f));
-                    
+
                 new UIText(g+"Wither Essence: "+bold+nf.format(essences.get("wither").getAsInt())).setX(new SiblingConstraint(3f)).setChildOf(right);
                 new UIText(g+ChatFormatting.GREEN+"Spider Essence: "+bold+nf.format(essences.get("spider").getAsInt())).setY(new SiblingConstraint(3f)).setChildOf(right);
                 new UIText(g+ChatFormatting.AQUA+"Ice Essence: "+bold+nf.format(essences.get("ice").getAsInt())).setY(new SiblingConstraint(3f)).setChildOf(right);
@@ -1373,12 +1375,12 @@ public class ProfileViewerGui extends WindowScreen {
                 new UIText(g+ChatFormatting.YELLOW+"Undead Essence: "+bold+nf.format(essences.get("undead").getAsInt())).setY(new SiblingConstraint(3f)).setChildOf(right);
                 new UIText(g+ChatFormatting.DARK_AQUA+"Diamond Essence: "+bold+nf.format(essences.get("diamond").getAsInt())).setY(new SiblingConstraint(3f)).setChildOf(right);
                 new UIText(g+ChatFormatting.GOLD+"Gold Essence: "+bold+nf.format(essences.get("gold").getAsInt())).setY(new SiblingConstraint(3f)).setChildOf(right);
-                
+
                 totalDungeonRuns = 1;
 
                 addDungeonFloors(catacombs);
                 addDungeonFloors(mastermode);
-                
+
                 Double averageSecrets = Math.round((secrets.doubleValue()/totalDungeonRuns.doubleValue())*100.0)/100.0;
                 UIComponent avgSecretComponent = new UIText(g+"Average Secrets Per Run: "+bold+nf.format(averageSecrets)).setY(new SiblingConstraint(3f)).setChildOf(left);
 
@@ -1394,9 +1396,9 @@ public class ProfileViewerGui extends WindowScreen {
             UIComponent farmingContainer = new UIBlock(clear).setWidth(new RelativeConstraint(0.45f)).setY(new PixelConstraint(0f)).setChildOf(farmingFishingContainer).setHeight(new RelativeConstraint(1f));
             UIComponent fishingContainer = new UIBlock(clear).setWidth(new RelativeConstraint(0.45f)).setY(new PixelConstraint(0f)).setX(new SiblingConstraint(10f)).setChildOf(farmingFishingContainer).setHeight(new RelativeConstraint(1f));
 
-            {// Mining 
+            {// Mining
                 new UIText(ChatFormatting.YELLOW+""+ChatFormatting.BOLD+"Mining").setChildOf(miningContainer).setY(new SiblingConstraint(4f)).setX(new CenterConstraint()).setTextScale(new PixelConstraint(2f));
-                
+
                 JsonObject miningCore = ProfilePlayerResponse.get("mining_core").getAsJsonObject();
                 int hotmExperience = 0;
                 int mithrilPowder = 0;
@@ -1405,7 +1407,7 @@ public class ProfileViewerGui extends WindowScreen {
                 if(miningCore.has("experience")) hotmExperience = miningCore.get("experience").getAsInt();
                 if(miningCore.has("powder_mithril")) mithrilPowder = miningCore.get("powder_mithril").getAsInt();
                 if(miningCore.has("powder_gemstone")) gemstonePowder = miningCore.get("powder_gemstone").getAsInt();
-                
+
                 // JsonObject skyblockAchievements = achievmentsJson.get("skyblock").getAsJsonObject().get("tiered").getAsJsonObject()
                 JsonArray tutorial = ProfilePlayerResponse.get("tutorial").getAsJsonArray();
                 int commisionsMilestone = 0;
@@ -1427,12 +1429,12 @@ public class ProfileViewerGui extends WindowScreen {
                     .setY(new SiblingConstraint(4f))
                     .setChildOf(miningContainer)
                     .setHeight(new RelativeConstraint(1f));
-                
+
                 new UIText(ChatFormatting.YELLOW+""+ChatFormatting.BOLD+"Dwarven Mines and Crystal Hollows").setChildOf(left).setY(new SiblingConstraint(4f)).setX(new CenterConstraint());
                 new UIText(g+"Commission Milestone: "+bold+commisionsMilestone).setY(new SiblingConstraint(2f)).setChildOf(left);
                 new UIText(g+"Crystal Hollows Pass: "+bold+passStatus).setY(new SiblingConstraint(2f)).setChildOf(left);
                 new UIText(g+"Crystal Nucleus: "+bold+"Completed "+nucleusRuns+" times").setY(new SiblingConstraint(2f)).setChildOf(left);
-                
+
                 new UIText(ChatFormatting.YELLOW+""+ChatFormatting.BOLD+"Heart of the Mountain").setChildOf(left).setY(new SiblingConstraint(10f)).setX(new CenterConstraint());
                 int hotmTier = 0;
                 int tokensSpent = 0;
@@ -1492,7 +1494,7 @@ public class ProfileViewerGui extends WindowScreen {
                 new UIText(g+"Treasures Found: "+bold+treasure).setY(new SiblingConstraint(2f)).setChildOf(fishingContainer);
             }
         }
-        
+
         if(categoryName.equals("Pets")) {
             UIComponent loadingText = new UIText(ChatFormatting.RED+"Waiting for SkyCrypt..")
                     .setTextScale(new PixelConstraint(2f))
@@ -1519,23 +1521,7 @@ public class ProfileViewerGui extends WindowScreen {
 
                 UIComponent otherPetsContainer = new UIBlock(clear).setY(new SiblingConstraint(10f)).setHeight(new ChildBasedSizeConstraint()).setWidth(new RelativeConstraint(1f)).setChildOf(statsAreaContainer);
                 new UIText(bold+"Active Pet").setChildOf(otherPetsContainer).setY(new PixelConstraint(2f)).setX(new PixelConstraint(1f)).setTextScale(new PixelConstraint((float) (1f*fontScale)));
-                List<JsonObject> sortedPets = new ArrayList<>();
-                JsonObject activePet = null;
-                for(JsonElement element:pets) {
-                    JsonObject pet = element.getAsJsonObject();
-                    boolean isActive = pet.get("active").getAsBoolean();
-                    if(!isActive) sortedPets.add(pet);
-                    else {
-                        activePet = pet;
-                    }
-                }
-                sortedPets.sort((a,b)->{
-                    String aRarity = a.get("tier").getAsString();
-                    String bRarity = b.get("tier").getAsString();
-
-                    return APIUtils.getPetRarity(bRarity)-APIUtils.getPetRarity(aRarity);
-                });
-                sortedPets.add(0, activePet);
+                List<JsonObject> sortedPets = getJsonObjects(pets);
                 for(JsonObject pet:sortedPets) {
                     if(pet==null)continue;
                     String texturePath = pet.get("texture_path").getAsString();
@@ -1557,7 +1543,7 @@ public class ProfileViewerGui extends WindowScreen {
                             imageFuture.completeExceptionally(e);
                         }
                     });
-                    
+
                     String name = pet.get("display_name").getAsString();
                     int lvl = pet.get("level").getAsJsonObject().get("level").getAsInt();
                     String coloredName = "AA";
@@ -1571,7 +1557,7 @@ public class ProfileViewerGui extends WindowScreen {
                                                         .setChildOf(otherPetsContainer)
                                                         .setX(new PixelConstraint(0f))
                                                         .setY(new SiblingConstraint(3f));
-                        
+
                         new UIText(bold+"Other pets").setChildOf(otherPetsContainer).setY(new SiblingConstraint(13f)).setX(new PixelConstraint(1f)).setTextScale(new PixelConstraint((float) (1f*fontScale)));
                         petHoverables.put(petComponent, tooltip);
                         continue;
@@ -1579,30 +1565,48 @@ public class ProfileViewerGui extends WindowScreen {
                     float x = (float) ((index-(Math.floor(index/16f)*16))*30f);
                     float y = (float) (Math.floor(index/16f)*35f)+63;
                     UIComponent petComponent = ProfileViewerUtils.createPet(imageFuture,lvl,coloredName,tooltip,ProfileViewerUtils.getPetColor(tier)).setChildOf(otherPetsContainer).setX(new PixelConstraint(x)).setY(new PixelConstraint(y));
-                    
+
                     petHoverables.put(petComponent, tooltip);
                     otherPetsContainer.setHeight(new PixelConstraint(45f*(Math.round(petHoverables.size()/16)+1)));
                     index++;
                 }
             }).start();;
         }
-        
+
         if(categoryName.equals("Collections")) {
             setCollectionsScreen();
         }
-        
+
         if(categoryName.equals("Crimson")) {
-            
+
         }
-        
+
         if(categoryName.equals("Misc Stats")) {
-            
+
         }
     }
 
-    private int itemWidth = 20; // Adjust this value as needed
-    private int itemSpacing = 5; // Adjust this value as needed
-    private int maxItemsPerRow = 11; // Adjust this value as needed
+    @NotNull
+    private static List<JsonObject> getJsonObjects(JsonArray pets) {
+        List<JsonObject> sortedPets = new ArrayList<>();
+        JsonObject activePet = null;
+        for(JsonElement element: pets) {
+            JsonObject pet = element.getAsJsonObject();
+            boolean isActive = pet.get("active").getAsBoolean();
+            if(!isActive) sortedPets.add(pet);
+            else {
+                activePet = pet;
+            }
+        }
+        sortedPets.sort((a,b)->{
+            String aRarity = a.get("tier").getAsString();
+            String bRarity = b.get("tier").getAsString();
+
+            return APIUtils.getPetRarity(bRarity)-APIUtils.getPetRarity(aRarity);
+        });
+        sortedPets.add(0, activePet);
+        return sortedPets;
+    }
 
     private static JsonObject collectionsData = null;
     private static HashMap<String, JsonObject> categoryDataCache = new HashMap<>();
@@ -1682,7 +1686,7 @@ public class ProfileViewerGui extends WindowScreen {
     }
 
     HashMap<String,String> coopNames = new HashMap<>();
-    public class CoopCollector {
+    public static class CoopCollector {
         long total;
         String username;
         
@@ -1698,7 +1702,9 @@ public class ProfileViewerGui extends WindowScreen {
     public int loadCollectionsCategory(JsonObject category, UIComponent component) {
         JsonObject items = category.get("items").getAsJsonObject();
 
+        int maxItemsPerRow = 11;
         int numRows = (int) Math.ceil((double) items.entrySet().size() / maxItemsPerRow);
+        int itemSpacing = 5;
         int totalHeight = numRows * (20 + itemSpacing) - itemSpacing; // Calculate total height for all rows
 
         int xStart = 0;
@@ -1739,7 +1745,7 @@ public class ProfileViewerGui extends WindowScreen {
                     // TODO: handle exception
                 }
                 total+=value;
-                collectors.add(new CoopCollector(coopNames.get(member.getKey()),value));
+                collectors.add(new CoopCollector(coopNames.get(member.getKey()), value));
             }
             // Create a list of CoopCollector objects
             // Sort the list based on the 'total' field in descending order
@@ -1770,7 +1776,8 @@ public class ProfileViewerGui extends WindowScreen {
             int yPos = yStart + row * (20 + itemSpacing);
             Color color = new Color(100, 100, 100, 200);
             if(rank.maxed) color = new Color(218,165,32,200);
-            
+
+            int itemWidth = 20;
             UIComponent backgroundSlot = new UIRoundedRectangle(3f)
                     .setChildOf(component)
                     .setHeight(new PixelConstraint(20f))
@@ -1828,11 +1835,11 @@ public class ProfileViewerGui extends WindowScreen {
     }
     public CollectionTier getCollectionTier(JsonObject itemObj, long total) {
         JsonArray tiers = itemObj.get("tiers").getAsJsonArray();
-        Integer maxTiers = itemObj.get("maxTiers").getAsInt();
+        int maxTiers = itemObj.get("maxTiers").getAsInt();
         boolean maxed = false;
         int tier = -1;
         int untilNext = -1;
-        Double progress = 0.0;
+        double progress = 0.0;
 
         for (int i = 0; i < tiers.size(); i++) {
             JsonObject tierObj = tiers.get(i).getAsJsonObject();
@@ -1922,7 +1929,7 @@ public class ProfileViewerGui extends WindowScreen {
 
     public void addDungeonFloors(JsonObject mode) {
         JsonObject floors = mode.get("floors").getAsJsonObject();
-        Boolean masterMode = !mode.get("id").getAsString().equals("dungeon_catacombs");
+        boolean masterMode = !mode.get("id").getAsString().equals("dungeon_catacombs");
         int index = 0;
         Color c = new Color(100,100,100,100);
 
@@ -1981,7 +1988,7 @@ public class ProfileViewerGui extends WindowScreen {
 
             try {
                 if(!masterMode) {
-                    Integer timesPlayed = floorStats.get("times_played").getAsInt();
+                    int timesPlayed = floorStats.get("times_played").getAsInt();
                     totalDungeonRuns += timesPlayed; 
                     new UIText(g + "  Times Played: " + bold + timesPlayed)
                         .setY(new SiblingConstraint(6f))
@@ -1991,7 +1998,7 @@ public class ProfileViewerGui extends WindowScreen {
                 // TODO: handle exception
             }   
             try {
-                Integer timesPlayed = floorStats.get("tier_completions").getAsInt();
+                int timesPlayed = floorStats.get("tier_completions").getAsInt();
                 totalDungeonRuns += timesPlayed;
                 new UIText(g + "  Times Completed: " + bold + timesPlayed)
                     .setY(new SiblingConstraint(2f))
@@ -2003,7 +2010,7 @@ public class ProfileViewerGui extends WindowScreen {
                     .setChildOf(box);
             }
             try {
-                Integer score = floorStats.get("best_score").getAsInt();
+                int score = floorStats.get("best_score").getAsInt();
                 new UIText(g+"  Best Score: "+bold+score+" " /*+ScoreCalculation.getScore(score)*/)
                     .setY(new SiblingConstraint(2f))
                     .setChildOf(box);

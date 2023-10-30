@@ -112,8 +112,6 @@ public class RenderUtil {
     
     }
     
-
-
     public static void draw3DString(Vec3 pos, String text, int color, float partialTicks) {
         Minecraft mc = Minecraft.getMinecraft();
         EntityPlayer player = mc.thePlayer;
@@ -131,22 +129,20 @@ public class RenderUtil {
         GlStateManager.rotate(-renderManager.playerViewY, 0f, 1f, 0f);
         GlStateManager.rotate(renderManager.playerViewX, 1f, 0f, 0f);
         GlStateManager.scale(-f1, -f1, -f1);
-        // GlStateManager.enableBlend();
-                GlStateManager.disableBlend();
+        GlStateManager.disableBlend();
         GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
         mc.fontRendererObj.drawString(text, -width, 0, color);
         GlStateManager.popMatrix();
     }
 
     public static void draw3DStringWithShadow(Vec3 pos, String str, int color, float partialTicks) {
-        Minecraft mc = Minecraft.getMinecraft();
-        EntityPlayer player = mc.thePlayer;
+        EntityPlayer player = Utils.GetMC().thePlayer;
         double x = (pos.xCoord - player.lastTickPosX) + ((pos.xCoord - player.posX) - (pos.xCoord - player.lastTickPosX)) * partialTicks;
         double y = (pos.yCoord - player.lastTickPosY) + ((pos.yCoord - player.posY) - (pos.yCoord - player.lastTickPosY)) * partialTicks;
         double z = (pos.zCoord - player.lastTickPosZ) + ((pos.zCoord - player.posZ) - (pos.zCoord - player.lastTickPosZ)) * partialTicks;
-        RenderManager renderManager = mc.getRenderManager();
+        RenderManager renderManager = Utils.GetMC().getRenderManager();
 
-        FontRenderer fontrenderer = mc.fontRendererObj;
+        FontRenderer fontrenderer = Utils.GetMC().fontRendererObj;
         float f = 1.6F;
         float f1 = 0.016666668F * f;
         GlStateManager.pushMatrix();
