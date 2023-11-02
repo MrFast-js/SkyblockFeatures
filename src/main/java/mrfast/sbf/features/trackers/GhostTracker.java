@@ -129,13 +129,15 @@ public class GhostTracker {
             if (this.getToggled() && Minecraft.getMinecraft().thePlayer != null && mc.theWorld != null && !hidden) {
                 if(!SkyblockInfo.getInstance().localLocation.contains("Mist")) return;
                 String[] lines = {
-                    ChatFormatting.GREEN+"Time Elapsed: §r"+Utils.secondsToTime(totalSeconds),
-                    ChatFormatting.GREEN+"Ghosts Killed: §r"+Utils.nf.format(kills),
-                    ChatFormatting.BLUE+"Volta: §r"+Volta,
-                    ChatFormatting.BLUE+"Sorrow: §r"+Sorrow,
-                    ChatFormatting.GOLD+"Plasma: §r"+Plasma,
-                    ChatFormatting.LIGHT_PURPLE+"Ghostly Boots: §r"+Boots,
-                    ChatFormatting.YELLOW+"Ghosts/Sorrow: §r"+(Sorrow>0?Math.round(kills/Sorrow):"Undefined"),
+                        ChatFormatting.YELLOW+""+ChatFormatting.BOLD+"Ghost Loot Tracker",
+                        ChatFormatting.GREEN+"  Time Elapsed: §r"+Utils.secondsToTime(totalSeconds),
+                        ChatFormatting.GREEN+"  Ghosts Killed: §r"+Utils.nf.format(kills),
+                        ChatFormatting.GREEN+"  Ghosts/Sorrow: §r"+(Sorrow>0?Math.round(kills/Sorrow):"Undefined"),
+                        ChatFormatting.AQUA+""+ChatFormatting.BOLD+" Drops",
+                        ChatFormatting.BLUE+"  • Volta: §r"+Volta,
+                        ChatFormatting.BLUE+"  • Sorrow: §r"+Sorrow,
+                        ChatFormatting.GOLD+"  • Plasma: §r"+Plasma,
+                        ChatFormatting.LIGHT_PURPLE+"Ghostly Boots: §r"+Boots,
                 };
                 int lineCount = 0;
                 for(String line:lines) {
@@ -148,13 +150,15 @@ public class GhostTracker {
         public void drawElementExample() {
             if(mc.thePlayer == null || !Utils.inSkyblock) return;
             String[] lines = {
-                ChatFormatting.GREEN+"Time Elapsed: §r27m 3s",
-                ChatFormatting.GREEN+"Ghosts Killed: §r203",
-                ChatFormatting.BLUE+"Volta: §r3",
-                ChatFormatting.BLUE+"Sorrow: §r1",
-                ChatFormatting.GOLD+"Plasma: §r2",
-                ChatFormatting.LIGHT_PURPLE+"Ghostly Boots: §r1",
-                ChatFormatting.YELLOW+"Ghosts/Sorrow: §r129",
+                ChatFormatting.AQUA+""+ChatFormatting.BOLD+"Ghost Loot Tracker",
+                ChatFormatting.GREEN+"  Time Elapsed: §r27m 3s",
+                ChatFormatting.GREEN+"  Ghosts Killed: §r203",
+                ChatFormatting.GREEN+"  Ghosts/Sorrow: §r129",
+                ChatFormatting.YELLOW+""+ChatFormatting.BOLD+" Drops",
+                ChatFormatting.BLUE+"  • Volta: §r3",
+                ChatFormatting.BLUE+"  • Sorrow: §r1",
+                ChatFormatting.GOLD+"  • Plasma: §r2",
+                ChatFormatting.LIGHT_PURPLE+"  • Ghostly Boots: §r1",
             };
             int lineCount = 0;
             for(String line:lines) {
@@ -170,7 +174,7 @@ public class GhostTracker {
 
         @Override
         public int getHeight() {
-            return Utils.GetMC().fontRendererObj.FONT_HEIGHT*7;
+            return Utils.GetMC().fontRendererObj.FONT_HEIGHT*9;
         }
 
         @Override

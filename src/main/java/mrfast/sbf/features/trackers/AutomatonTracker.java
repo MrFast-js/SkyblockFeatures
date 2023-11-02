@@ -181,12 +181,12 @@ public class AutomatonTracker {
 
         @Override
         public int getHeight() {
-            return Utils.GetMC().fontRendererObj.FONT_HEIGHT*11;
+            return Utils.GetMC().fontRendererObj.FONT_HEIGHT*10;
         }
 
         @Override
         public int getWidth() {
-            return Utils.GetMC().fontRendererObj.getStringWidth("Electron Transmitter: 10");
+            return Utils.GetMC().fontRendererObj.getStringWidth("  • Electron Transmitter: §r3.");
         }
     }
 }

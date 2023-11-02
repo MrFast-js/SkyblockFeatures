@@ -116,15 +116,16 @@ public class IceTreasureTracker {
         public void drawElement() {
             if (this.getToggled() && Minecraft.getMinecraft().thePlayer != null && mc.theWorld != null && !hidden && SkyblockInfo.getInstance().localLocation.contains("Glacial")) {
                 String[] lines = {
-                    ChatFormatting.GREEN+"Time Elapsed: §r"+Utils.secondsToTime(totalSeconds),
-                    ChatFormatting.AQUA+"Treasures Mined: §r"+Utils.nf.format(iceTreasuresMined),
-                    ChatFormatting.RED+"Red Gift: §r"+redGift+" §7("+Utils.nf.format(redGiftTotal)+")",
-                    ChatFormatting.GREEN+"Green Gift: §r"+greenGift+" §7("+Utils.nf.format(greenGiftTotal)+")",
-                    ChatFormatting.WHITE+"White Gift: §r"+whiteGift+" §7("+Utils.nf.format(whiteGiftTotal)+")",
-                    ChatFormatting.LIGHT_PURPLE+"Fragment: §r"+fragment+" §7("+Utils.nf.format(fragmentTotal)+")",
-                    ChatFormatting.GOLD+"Talisman: §r"+talisman+" §7("+Utils.nf.format(talismanTotal)+")",
-                    ChatFormatting.BLUE+"Est. Coins/Hour: §6"+Utils.nf.format(coinsPerHour),
-                    ChatFormatting.WHITE+"Total Value: §6"+Utils.nf.format(totalMoney)
+                    ChatFormatting.YELLOW+""+ChatFormatting.BOLD+"Ghost Loot Tracker",
+                    ChatFormatting.GREEN+"  Time Elapsed: §r"+Utils.secondsToTime(totalSeconds),
+                    ChatFormatting.GREEN+"  Treasures Mined: §r"+Utils.nf.format(iceTreasuresMined),
+                    ChatFormatting.GREEN+"  Total Value: §6"+Utils.nf.format(totalMoney),
+                    ChatFormatting.AQUA+""+ChatFormatting.BOLD+" Drops",
+                    ChatFormatting.RED+"  • Red Gift: §r"+redGift+" §7("+Utils.nf.format(redGiftTotal)+")",
+                    ChatFormatting.GREEN+"  • Green Gift: §r"+greenGift+" §7("+Utils.nf.format(greenGiftTotal)+")",
+                    ChatFormatting.WHITE+"  • White Gift: §r"+whiteGift+" §7("+Utils.nf.format(whiteGiftTotal)+")",
+                    ChatFormatting.LIGHT_PURPLE+"  • Fragment: §r"+fragment+" §7("+Utils.nf.format(fragmentTotal)+")",
+                    ChatFormatting.GOLD+"  • Talisman: §r"+talisman+" §7("+Utils.nf.format(talismanTotal)+")"
                 };
                 int lineCount = 0;
                 for(String line:lines) {
@@ -137,14 +138,16 @@ public class IceTreasureTracker {
         public void drawElementExample() {
             if(mc.thePlayer == null || !Utils.inSkyblock) return;
             String[] lines = {
-                ChatFormatting.GREEN+"Time Elapsed: §r"+Utils.secondsToTime(203),
-                ChatFormatting.AQUA+"Treasures Mined: §r17",
-                ChatFormatting.RED+"Red Gift: §r4",
-                ChatFormatting.GREEN+"Green Gift: §r1",
-                ChatFormatting.WHITE+"White Gift: §r10",
-                ChatFormatting.LIGHT_PURPLE+"Fragment: §r3",
-                ChatFormatting.GOLD+"Talisman: §r2", 
-                ChatFormatting.WHITE+"Total Value: §6100,000"
+                ChatFormatting.YELLOW+""+ChatFormatting.BOLD+"Ice Treasure Tracker",
+                ChatFormatting.GREEN+"  Time Elapsed: §r"+Utils.secondsToTime(576),
+                ChatFormatting.GREEN+"  Treasures Mined: §r"+Utils.nf.format(233),
+                ChatFormatting.GREEN+"  Total Value: §6"+Utils.nf.format(654323),
+                ChatFormatting.AQUA+""+ChatFormatting.BOLD+" Drops",
+                ChatFormatting.RED+"  • Red Gift: §r"+1,
+                ChatFormatting.GREEN+"  • Green Gift: §r"+19,
+                ChatFormatting.WHITE+"  • White Gift: §r"+67,
+                ChatFormatting.LIGHT_PURPLE+"  • Fragment: §r"+4,
+                ChatFormatting.GOLD+"  • Talisman: §r"+1
             };
             int lineCount = 0;
             for(String line:lines) {
@@ -160,7 +163,7 @@ public class IceTreasureTracker {
 
         @Override
         public int getHeight() {
-            return Utils.GetMC().fontRendererObj.FONT_HEIGHT*8;
+            return Utils.GetMC().fontRendererObj.FONT_HEIGHT*10;
         }
 
         @Override

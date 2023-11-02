@@ -85,13 +85,15 @@ public class EnderNodeTracker {
         public void drawElement() {
             if (this.getToggled() && Minecraft.getMinecraft().thePlayer != null && mc.theWorld != null && !hidden) {
                 String[] lines = {
-                    ChatFormatting.LIGHT_PURPLE+"Time Elapsed: §r"+Utils.secondsToTime(totalSeconds),
-                    ChatFormatting.AQUA+"Nodes Mined: §r"+Utils.nf.format(enderNodesMined),
-                    ChatFormatting.RED+"Endermite Nest: §r"+nests,
-                    ChatFormatting.BLUE+"Titanic Exp: §r"+titanic,
-                    ChatFormatting.GREEN+"Grand Exp: §r"+grand,
-                    ChatFormatting.GREEN+"Ench. Endestone: §r"+ enchantedEndstone,
-                    ChatFormatting.GREEN+"Ench. Obsidian: §r"+ enchantedObsidian
+                    ChatFormatting.LIGHT_PURPLE+""+ChatFormatting.BOLD+"Ender Node Tracker",
+                    ChatFormatting.DARK_PURPLE+"  Time Elapsed: §r"+Utils.secondsToTime(totalSeconds),
+                    ChatFormatting.DARK_PURPLE+"  Nodes Mined: §r"+Utils.nf.format(enderNodesMined),
+                    ChatFormatting.YELLOW+""+ChatFormatting.BOLD+" Drops",
+                    ChatFormatting.RED+"  • Endermite Nest: §r"+nests,
+                    ChatFormatting.BLUE+"  • Titanic Exp: §r"+titanic,
+                    ChatFormatting.GREEN+"  • Grand Exp: §r"+grand,
+                    ChatFormatting.GREEN+"  • Ench. Endestone: §r"+ enchantedEndstone,
+                    ChatFormatting.GREEN+"  • Ench. Obsidian: §r"+ enchantedObsidian
                 };
                 int lineCount = 0;
                 for(String line:lines) {
@@ -104,13 +106,15 @@ public class EnderNodeTracker {
         public void drawElementExample() {
             if(mc.thePlayer == null || !Utils.inSkyblock) return;
             String[] lines = {
-                ChatFormatting.LIGHT_PURPLE+"Time Elapsed: §r"+Utils.secondsToTime(304),
-                ChatFormatting.AQUA+"Nodes Mined: §r107",
-                ChatFormatting.RED+"Endermite Nest: §r3",
-                ChatFormatting.BLUE+"Titanic Exp: §r2",
-                ChatFormatting.GREEN+"Grand Exp: §r9",
-                ChatFormatting.GREEN+"Ench. Endestone: §r4",
-                ChatFormatting.GREEN+"Ench. Obsidian: §r2"
+                ChatFormatting.LIGHT_PURPLE+""+ChatFormatting.BOLD+"Ender Node Tracker",
+                ChatFormatting.DARK_PURPLE+"  Time Elapsed: §r5m 4s",
+                ChatFormatting.DARK_PURPLE+"  Nodes Mined: §r107",
+                ChatFormatting.YELLOW+""+ChatFormatting.BOLD+" Drops",
+                ChatFormatting.RED+"  • Endermite Nest: §r3",
+                ChatFormatting.BLUE+"  • Titanic Exp: §r2",
+                ChatFormatting.GREEN+"  • Grand Exp: §r9",
+                ChatFormatting.GREEN+"  • Ench. Endestone: §r4",
+                ChatFormatting.GREEN+"  • Ench. Obsidian: §r2"
             };
             int lineCount = 0;
             for(String line:lines) {
@@ -126,12 +130,12 @@ public class EnderNodeTracker {
 
         @Override
         public int getHeight() {
-            return Utils.GetMC().fontRendererObj.FONT_HEIGHT*7;
+            return Utils.GetMC().fontRendererObj.FONT_HEIGHT*9;
         }
 
         @Override
         public int getWidth() {
-            return Utils.GetMC().fontRendererObj.getStringWidth("Endermite Nest: §r2910");
+            return Utils.GetMC().fontRendererObj.getStringWidth("Ender   Node    Tracker");
         }
     }
 }

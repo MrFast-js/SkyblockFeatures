@@ -97,7 +97,7 @@ public class GemstoneMiningOverlay {
                     ChatFormatting.LIGHT_PURPLE+""+ChatFormatting.BOLD+"Gemstone Mining Info",
                     ChatFormatting.GRAY+" Time Spent Mining: "+ChatFormatting.GREEN+Utils.secondsToTime(seconds),
                     ChatFormatting.GRAY+" Coins Per hour: §6"+Utils.nf.format(total* 12L),
-                    ChatFormatting.GRAY+" Pristine Count: §a"+ChatFormatting.AQUA+gemstones.size()
+                    ChatFormatting.GRAY+" Pristine Count: "+ChatFormatting.AQUA+gemstones.size()
                 };
                 int lineCount = 0;
                 for(String line:lines) {
@@ -113,9 +113,9 @@ public class GemstoneMiningOverlay {
             if(mc.thePlayer == null || !Utils.inSkyblock) return;
             String[] lines = {
                 ChatFormatting.LIGHT_PURPLE+""+ChatFormatting.BOLD+"Gemstone Mining Info",
-                ChatFormatting.LIGHT_PURPLE+"Time Spent Mining: 19m 27s",
-                ChatFormatting.LIGHT_PURPLE+"Coins Per hour: §6123,456",
-                ChatFormatting.LIGHT_PURPLE+"Pristine Count: §a3"
+                ChatFormatting.GRAY+" Time Spent Mining: §a19m 27s",
+                ChatFormatting.GRAY+" Coins Per hour: §6123,456",
+                ChatFormatting.GRAY+" Pristine Count: "+ChatFormatting.AQUA+"3"
             };
             int lineCount = 0;
             for(String line:lines) {
@@ -136,7 +136,7 @@ public class GemstoneMiningOverlay {
 
         @Override
         public int getWidth() {
-            return Utils.GetMC().fontRendererObj.getStringWidth(" Coins Per hour: §6123,456");
+            return Utils.GetMC().fontRendererObj.getStringWidth("Time Spent Mining: §a19m 27s");
         }
     }
 }
