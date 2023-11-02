@@ -395,20 +395,67 @@ public class Config extends Vigilant {
 
     @Property(
             type = PropertyType.SWITCH,
-            name = "Better Party Finder",
+            name = "Better Party Finder Menu",
             description = "Creates a better user interface for the dungeon party finder",
             category = "§1§rDungeons",
-            subcategory = "Party Finder"
+            subcategory = "Party Finder",
+            searchTags = {"parent"}
     )
     public boolean betterPartyFinder = false;
+    @Property(
+            type = PropertyType.SWITCH,
+            name = "Side Menu",
+            description = "Displays the hovered party info in a separate area",
+            category = "§1§rDungeons",
+            subcategory = "Party Finder",
+            searchTags = {"Better Party Finder Menu"}
+    )
+    public boolean betterPartyFinderSideMenu = true;
+    @Property(
+            type = PropertyType.SWITCH,
+            name = "Block Carries",
+            description = "Ignore parties that are dungeon carries",
+            category = "§1§rDungeons",
+            subcategory = "Party Finder",
+            searchTags = {"Better Party Finder Menu"}
+    )
+    public boolean betterPartyFinderNoCarry = true;
+    @Property(
+            type = PropertyType.SWITCH,
+            name = "Block Dupes",
+            description = "Ignore parties that already have a player of your class",
+            category = "§1§rDungeons",
+            subcategory = "Party Finder",
+            searchTags = {"Better Party Finder Menu"}
+    )
+    public boolean betterPartyFinderNoDupe = true;
+
     @Property(
             type = PropertyType.SWITCH,
             name = "Dungeon Party Display",
             description = "Shows who all is in your dungeon party, including class and class lvl",
             category = "§1§rDungeons",
-            subcategory = "Party Finder"
+            subcategory = "Party Finder",
+            searchTags = {"parent"}
     )
     public boolean dungeonPartyDisplay = false;
+    @Property(
+            type = PropertyType.SWITCH,
+            name = "Highlight Duplicate Class",
+            description = "Highlight Duplicate Classes in the Dungeon Party Display",
+            category = "§1§rDungeons",
+            subcategory = "Party Finder",
+            searchTags = {"Dungeon Party Display"}
+    )
+    public boolean dungeonPartyDisplayDupes = true;
+    @Property(
+            type = PropertyType.SWITCH,
+            name = "Party Finder Join Info",
+            description = "Shows stats of players when they join such as, avg secrets, cata lvl, etc.",
+            category = "§1§rDungeons",
+            subcategory = "Party Finder"
+    )
+    public boolean partyFinderJoinMessages = false;
 
 
     @Property(

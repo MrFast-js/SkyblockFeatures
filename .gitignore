@@ -11,3 +11,5 @@ build/
 .vscode/
 
 *.bat
+
+run/

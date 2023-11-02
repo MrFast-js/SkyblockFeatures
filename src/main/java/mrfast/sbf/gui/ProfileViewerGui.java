@@ -75,7 +75,7 @@ import org.jetbrains.annotations.NotNull;
 
 
 public class ProfileViewerGui extends WindowScreen {
-    //  The player in the specified profile
+    //  The player in the specified profile from hypixel
     static JsonObject ProfilePlayerResponse = null;
     //  The specified profile's data
     JsonObject ProfileResponse = null;

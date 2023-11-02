@@ -1,10 +1,13 @@
 package mrfast.sbf.features.dungeons;
 
+import com.google.gson.JsonObject;
+import com.mojang.realmsclient.gui.ChatFormatting;
 import mrfast.sbf.SkyblockFeatures;
 import mrfast.sbf.events.GuiContainerEvent;
 import mrfast.sbf.features.items.HideGlass;
 import mrfast.sbf.gui.components.Point;
 import mrfast.sbf.gui.components.UIElement;
+import mrfast.sbf.utils.APIUtils;
 import mrfast.sbf.utils.ItemUtils;
 import mrfast.sbf.utils.Utils;
 import net.minecraft.client.Minecraft;
@@ -13,13 +16,17 @@ import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.inventory.GuiChest;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.event.ClickEvent;
+import net.minecraft.event.HoverEvent;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.ContainerChest;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemSkull;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.util.ChatComponentText;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
 import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
@@ -27,6 +34,9 @@ import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import org.lwjgl.input.Keyboard;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -34,6 +44,7 @@ import java.util.regex.Pattern;
 public class PartyFinderFeatures {
     static List<String> neededClasses = new ArrayList<>(Arrays.asList("Mage","Archer","Tank","Healer","Berserk"));
     static HashMap<String,PartyFinderMonkey> partyFinderMonkeys = new HashMap<>();
+    String selfPlayerClass = "";
 
     public static class PartyFinderMonkey {
         String name;
@@ -56,6 +67,7 @@ public class PartyFinderFeatures {
             for(String line: ItemUtils.getItemLore(event.slot.getStack())) {
                 line = Utils.cleanColor(line);
                 if(line.contains("Currently Selected")) {
+                    selfPlayerClass = Utils.cleanColor(line.split(": ")[1]);
                     PartyFinderMonkey monkey = new PartyFinderMonkey(Utils.GetMC().thePlayer.getName(),"",line.split(": ")[1]);
                     partyFinderMonkeys.put(Utils.GetMC().thePlayer.getName(),monkey);
                 }
@@ -65,9 +77,14 @@ public class PartyFinderFeatures {
 
     @SubscribeEvent
     public void onChat(ClientChatReceivedEvent event) {
+        String message = event.message.getUnformattedText();
+        boolean partyFinderJoin = message.startsWith("Party Finder > ") && message.contains(" joined the dungeon group! (");
+        if(partyFinderJoin && SkyblockFeatures.config.partyFinderJoinMessages) {
+            String playerName = Utils.cleanColor(message.split(" ")[3]);
+            showDungeonPlayerInfo(playerName);
+        }
         if(!SkyblockFeatures.config.dungeonPartyDisplay) return;
 
-        String message = event.message.getUnformattedText();
         boolean fromServer = !message.contains(":");
         // Clear All
         if((message.contains("The party was disbanded") || message.contains(" has disbanded the party!") || message.contains("You left the party.")) && fromServer) {
@@ -83,7 +100,7 @@ public class PartyFinderFeatures {
                 partyFinderMonkeys.remove(matcher.group(1));
             }
         }
-        if(message.startsWith("Party Finder > ") && message.contains(" joined the dungeon group! (")) {
+        if(partyFinderJoin) {
             String className = message.split(" ")[8].replace("(","");
             String classLvl = message.split(" ")[10].replace(")","");
             String playerName = message.split(" ")[3];
@@ -91,6 +108,200 @@ public class PartyFinderFeatures {
             PartyFinderMonkey monkey = new PartyFinderMonkey(playerName,classLvl,className);
             partyFinderMonkeys.put(playerName,monkey);
         }
+    }
+
+    private void showDungeonPlayerInfo(String name) {
+        new Thread(() -> {
+            // Get UUID for Hypixel API requests
+            String uuid = APIUtils.getUUID(name);
+
+            // Find stats of latest profile
+            String latestProfile = APIUtils.getLatestProfileID(uuid);
+            if (latestProfile == null) return;
+
+            String profileURL = "https://api.hypixel.net/skyblock/profile?profile=" + latestProfile+"#PartyFinderJoinMsg";
+            JsonObject profileResponse = APIUtils.getJSONResponse(profileURL);
+            if (!profileResponse.get("success").getAsBoolean()) {
+                String reason = profileResponse.get("cause").getAsString();
+                Utils.SendMessage(ChatFormatting.RED + "Failed with reason: " + reason);
+                return;
+            }
+
+            String playerURL = "https://api.hypixel.net/player?uuid=" + uuid+"#PartyFinderJoinMsg";
+            System.out.println("Fetching player data...");
+            JsonObject playerResponse = APIUtils.getJSONResponse(playerURL);
+            JsonObject profilePlayerResponse = profileResponse.get("profile").getAsJsonObject().get("members").getAsJsonObject().get(uuid).getAsJsonObject();
+
+            if(!playerResponse.get("success").getAsBoolean()){
+                String reason = profileResponse.get("cause").getAsString();
+                Utils.SendMessage(ChatFormatting.RED + "Failed with reason: " + reason);
+                return;
+            }
+
+            JsonObject dungeonsObject = profilePlayerResponse.getAsJsonObject().get("dungeons").getAsJsonObject();
+            JsonObject catacombsObject = dungeonsObject.get("dungeon_types").getAsJsonObject().get("catacombs").getAsJsonObject();
+            double catacombs = Utils.xpToDungeonsLevel(catacombsObject.get("experience").getAsDouble());
+            int secrets = playerResponse.get("player").getAsJsonObject().get("achievements").getAsJsonObject().get("skyblock_treasure_hunter").getAsInt();
+
+            String armourBase64 = profilePlayerResponse.getAsJsonObject().get("inv_armor").getAsJsonObject().get("data").getAsString();
+            InputStream armourStream = new ByteArrayInputStream(Base64.getDecoder().decode(armourBase64));
+
+            try {
+                String inventoryBase64 = profilePlayerResponse.getAsJsonObject().get("inv_contents").getAsJsonObject().get("data").getAsString();
+                InputStream inventoryStream = new ByteArrayInputStream(Base64.getDecoder().decode(inventoryBase64));
+
+                NBTTagCompound armour = CompressedStreamTools.readCompressed(armourStream);
+                NBTTagList armourList = armour.getTagList("i", 10);
+
+                String weapon = ChatFormatting.RED + "None";
+                String weaponLore = ChatFormatting.RED + "None";
+
+                if(!profilePlayerResponse.getAsJsonObject().has("inv_contents")) {
+                    weapon = ChatFormatting.RED+"This player has there API disabled!";
+                    weaponLore = ChatFormatting.RED+"This player has there API disabled!";
+                } else {
+                    NBTTagCompound inventory = CompressedStreamTools.readCompressed(inventoryStream);
+                    NBTTagList inventoryList = inventory.getTagList("i", 10);
+
+                    for (int i = 0; i < inventoryList.tagCount(); i++) {
+                        NBTTagCompound item = inventoryList.getCompoundTagAt(i);
+                        if (item.hasNoTags()) continue;
+                        NBTTagCompound display = item.getCompoundTag("tag").getCompoundTag("display");
+                        String itemName = item.getCompoundTag("tag").getCompoundTag("display").getString("Name");
+                        String itemLore = "";
+                        if (display.hasKey("Lore", ItemUtils.NBT_LIST)) {
+                            NBTTagList lore = display.getTagList("Lore", ItemUtils.NBT_STRING);
+
+                            List<String> loreAsList = new ArrayList<>();
+                            for (int lineNumber = 0; lineNumber < lore.tagCount(); lineNumber++) {
+                                loreAsList.add(lore.getStringTagAt(lineNumber));
+                            }
+
+                            itemLore = itemName+"\n"+String.join("\n",Collections.unmodifiableList(loreAsList));
+                        }
+                        // NBT is served boots -> helmet
+                        if (i == 0) {
+                            weapon = itemName;
+                            weaponLore = itemLore;
+                        } else {
+                            System.err.println("An error has occurred.");
+                        }
+                    }
+                    inventoryStream.close();
+                }
+
+                int magicPower = profilePlayerResponse.get("accessory_bag_storage").getAsJsonObject().get("highest_magical_power").getAsInt();
+
+                String helmet = ChatFormatting.RED + "None";
+                String chest = ChatFormatting.RED + "None";
+                String legs = ChatFormatting.RED + "None";
+                String boots = ChatFormatting.RED + "None";
+                String helmetLore = ChatFormatting.RED + "None";
+                String chestLore = ChatFormatting.RED + "None";
+                String legsLore = ChatFormatting.RED + "None";
+                String bootsLore = ChatFormatting.RED + "None";
+                // Loop through armour
+                for (int i = 0; i < armourList.tagCount(); i++) {
+                    NBTTagCompound armourPiece = armourList.getCompoundTagAt(i);
+                    if (armourPiece.hasNoTags()) continue;
+                    NBTTagCompound display = armourPiece.getCompoundTag("tag").getCompoundTag("display");
+                    String armourPieceName = armourPiece.getCompoundTag("tag").getCompoundTag("display").getString("Name");
+                    String armourPieceLore = "";
+                    if (display.hasKey("Lore", ItemUtils.NBT_LIST)) {
+                        NBTTagList lore = display.getTagList("Lore", ItemUtils.NBT_STRING);
+
+                        List<String> loreAsList = new ArrayList<>();
+                        for (int lineNumber = 0; lineNumber < lore.tagCount(); lineNumber++) {
+                            loreAsList.add(lore.getStringTagAt(lineNumber));
+                        }
+
+                        armourPieceLore = armourPieceName+"\n"+String.join("\n",Collections.unmodifiableList(loreAsList));
+                    }
+                    // NBT is served boots -> helmet
+                    switch (i) {
+                        case 0:
+                            boots = armourPieceName;
+                            bootsLore = armourPieceLore;
+                            break;
+                        case 1:
+                            legs = armourPieceName;
+                            legsLore = armourPieceLore;
+                            break;
+                        case 2:
+                            chest = armourPieceName;
+                            chestLore = armourPieceLore;
+                            break;
+                        case 3:
+                            helmet = armourPieceName;
+                            helmetLore = armourPieceLore;
+                            break;
+                        default:
+                            System.err.println("An error has occurred.");
+                            break;
+                    }
+                }
+                armourStream.close();
+
+                ChatComponentText nameComponent = new ChatComponentText(ChatFormatting.AQUA+" Data For: " +ChatFormatting.YELLOW+ name + "\n ");
+                ChatComponentText kickComponent = new ChatComponentText("\n"+ChatFormatting.GREEN+"Click here to remove "+ChatFormatting.LIGHT_PURPLE+nameComponent+ChatFormatting.GREEN+" from the party");
+                ChatComponentText weaponComponent = new ChatComponentText(ChatFormatting.DARK_AQUA + weapon + "\n ");
+                ChatComponentText helmetComponent = new ChatComponentText(" "+ChatFormatting.DARK_AQUA + helmet + "\n ");
+                ChatComponentText chestComponent = new ChatComponentText(ChatFormatting.DARK_AQUA + chest + "\n ");
+                ChatComponentText legComponent = new ChatComponentText(ChatFormatting.DARK_AQUA + legs + "\n ");
+                ChatComponentText bootComponent = new ChatComponentText(ChatFormatting.DARK_AQUA + boots + "\n ");
+
+                weaponComponent.setChatStyle(weaponComponent.getChatStyle().setChatHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ChatComponentText(weaponLore))));
+                helmetComponent.setChatStyle(helmetComponent.getChatStyle().setChatHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ChatComponentText(helmetLore))));
+                chestComponent.setChatStyle(chestComponent.getChatStyle().setChatHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ChatComponentText(chestLore))));
+                legComponent.setChatStyle(legComponent.getChatStyle().setChatHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ChatComponentText(legsLore))));
+                kickComponent.setChatStyle(kickComponent.getChatStyle().setChatClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND,"/p kick "+name)));
+                bootComponent.setChatStyle(bootComponent.getChatStyle().setChatHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ChatComponentText(bootsLore))));
+
+                StringBuilder completionsHoverString = new StringBuilder();
+                int highestFloor = catacombsObject.get("highest_tier_completed").getAsInt();
+                JsonObject completionObj = catacombsObject.get("tier_completions").getAsJsonObject();
+                int totalRuns = 1;
+                for (int i = 0; i <= highestFloor; i++) {
+                    completionsHoverString
+                            .append(ChatFormatting.AQUA)
+                            .append(i == 0 ? "Entrance: " : "Floor " + i + ": ")
+                            .append(ChatFormatting.YELLOW)
+                            .append(completionObj.get(String.valueOf(i)).getAsInt())
+                            .append(i < highestFloor ? "\n": "");
+
+                    totalRuns = totalRuns + completionObj.get(String.valueOf(i)).getAsInt();
+                }
+                completionsHoverString.append("\n"+ChatFormatting.GOLD+"Total: "+ChatFormatting.RESET+totalRuns);
+
+                ChatComponentText completions = new ChatComponentText(ChatFormatting.AQUA + " Floor Completions: "+ChatFormatting.GRAY+"(Hover)");
+
+                completions.setChatStyle(completions.getChatStyle().setChatHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ChatComponentText(completionsHoverString.toString()))));
+                String delimiter = ChatFormatting.RED.toString() + ChatFormatting.STRIKETHROUGH + ChatFormatting.BOLD + "---------------------------";
+
+                Utils.SendMessage(
+                        new ChatComponentText(delimiter)
+                                .appendText("\n")
+                                .appendSibling(nameComponent)
+                                .appendText(ChatFormatting.GREEN+"☠ Cata Level: "+ChatFormatting.YELLOW+catacombs+"\n")
+                                .appendText(ChatFormatting.GREEN+"• Total Secrets Found: "+ChatFormatting.YELLOW+secrets+"\n")
+                                .appendText(ChatFormatting.GREEN+"• Average Secrets: "+ChatFormatting.YELLOW+((secrets/totalRuns))+"\n")
+                                .appendText(ChatFormatting.GRAY+"• Magic Power: "+ChatFormatting.GOLD+magicPower+"\n\n")
+                                .appendSibling(helmetComponent)
+                                .appendSibling(chestComponent)
+                                .appendSibling(legComponent)
+                                .appendSibling(bootComponent)
+                                .appendSibling(weaponComponent)
+                                .appendText("\n")
+                                .appendSibling(completions)
+                                .appendText("\n")
+                                .appendSibling(new ChatComponentText(delimiter))
+                                .appendSibling(kickComponent)
+                );
+            } catch (IOException ex) {
+                System.out.println(ex);
+                Utils.SendMessage(ChatFormatting.RED+"Error! This player may not have there API on.");
+            }
+        }).start();
     }
 
 
@@ -117,6 +328,7 @@ public class PartyFinderFeatures {
             for (PartyFinderMonkey monkey : sorted) {
                 stillNeededClasses.remove(monkey.selectedClass);
                 boolean dupe = partyFinderMonkeys.values().stream().anyMatch((a)->{return !a.name.equals(monkey.name) && Objects.equals(a.selectedClass, monkey.selectedClass);});
+                if(SkyblockFeatures.config.dungeonPartyDisplayDupes && dupe) dupe=false;
 
                 String name = monkey.name;
                 if(Objects.equals(name, Utils.GetMC().thePlayer.getName())) name = "§5"+name;
@@ -202,7 +414,7 @@ public class PartyFinderFeatures {
     @SubscribeEvent
     public void onTooltip(ItemTooltipEvent event) {
         if (!(Minecraft.getMinecraft().currentScreen instanceof GuiChest)) return;
-        if(!SkyblockFeatures.config.betterPartyFinder) return;
+        if(!SkyblockFeatures.config.betterPartyFinder || !SkyblockFeatures.config.betterPartyFinderSideMenu) return;
 
         GuiChest chest = (GuiChest) Minecraft.getMinecraft().currentScreen;
         ContainerChest cont = (ContainerChest) chest.inventorySlots;
@@ -219,7 +431,7 @@ public class PartyFinderFeatures {
     @SubscribeEvent
     public void onDrawContainerTitle(GuiContainerEvent.TitleDrawnEvent event) {
         Minecraft mc = Minecraft.getMinecraft();
-        if (!(mc.currentScreen instanceof GuiChest) || event.gui == null || !SkyblockFeatures.config.betterPartyFinder) {
+        if (!(mc.currentScreen instanceof GuiChest) || event.gui == null || !SkyblockFeatures.config.betterPartyFinder || !SkyblockFeatures.config.betterPartyFinderSideMenu) {
             return;
         }
 
@@ -279,28 +491,38 @@ public class PartyFinderFeatures {
                 NBTTagCompound nbt = s.getStack().getTagCompound();
                 if (nbt == null || nbt.hasNoTags()) continue;
                 NBTTagCompound display = nbt.getCompoundTag("display");
-                if (display.hasNoTags()) return;
+                if (display.hasNoTags()) continue;
                 NBTTagList lore = display.getTagList("Lore", 8);
                 int classLvReq = 0;
                 int cataLvReq = 0;
                 boolean Req = false;
                 String note = "";
+                List<String> memberStrings = new ArrayList<>();
                 for (int n = 0; n < lore.tagCount(); n++) {
                     String str = lore.getStringTagAt(n);
-                    if (str.startsWith("§7Dungeon Level Required: §b")) cataLvReq = Integer.parseInt(str.substring(28));
-                    if (str.startsWith("§7Class Level Required: §b")) classLvReq = Integer.parseInt(str.substring(26));
-                    if (str.startsWith("§7§7Note:")) note = Utils.cleanColor(str.substring(10));
-                    if (str.startsWith("§cRequires")) Req = true;
+                    if(str.startsWith("§7Dungeon Level Required: §b")) cataLvReq = Integer.parseInt(str.substring(28));
+                    if(str.startsWith("§7Class Level Required: §b")) classLvReq = Integer.parseInt(str.substring(26));
+                    if(str.startsWith("§7§7Note:")) note = Utils.cleanColor(str.substring(10));
+                    if(str.startsWith("§cRequires")) Req = true;
+                    if(str.contains("(")&&str.contains(")")&&str.contains(":")) {
+                        memberStrings.add(Utils.cleanColor(str.split(" ")[2]));
+                    }
                 }
 
                 int x = s.xDisplayPosition;
                 int y = s.yDisplayPosition;
+                boolean blockSlot = false;
                 if (Req) {
-                    Gui.drawRect(x, y, x + 16, y + 16, 0x77AA0000);
+                    blockSlot = true;
                 } else {
-
-                    if (note.toLowerCase().contains("car")) {
-                        fr.drawStringWithShadow("C", x + 1, y + 1, 0xFFFF0000);
+                    if(memberStrings.contains(selfPlayerClass) && SkyblockFeatures.config.betterPartyFinderNoDupe) {
+                        blockSlot = true;
+                    } else if (note.toLowerCase().contains("car")) {
+                        if(SkyblockFeatures.config.betterPartyFinderNoCarry) {
+                            blockSlot = true;
+                        } else {
+                            fr.drawStringWithShadow("C", x + 1, y + 1, 0xFFFF0000);
+                        }
                     } else if (note.toLowerCase().replace(" ", "").contains("s/s+")) {
                         fr.drawStringWithShadow("S+", x + 1, y + 1, 0xFFFFFF00);
                     } else if (note.toLowerCase().contains("s+")) {
@@ -312,7 +534,9 @@ public class PartyFinderFeatures {
                     }
                     fr.drawStringWithShadow("§e"+Integer.max(classLvReq, cataLvReq), x + 1, y + fr.FONT_HEIGHT, 0xFFFFFFFF);
                 }
-
+                if(blockSlot) {
+                    Gui.drawRect(x, y, x + 16, y + 16, 0x77AA0000);
+                }
             }
         } catch (Throwable e) {
             e.printStackTrace();

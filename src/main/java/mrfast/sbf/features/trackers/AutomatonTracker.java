@@ -181,7 +181,7 @@ public class AutomatonTracker {
 
         @Override
         public int getHeight() {
-            return Utils.GetMC().fontRendererObj.FONT_HEIGHT*7;
+            return Utils.GetMC().fontRendererObj.FONT_HEIGHT*11;
         }
 
         @Override
