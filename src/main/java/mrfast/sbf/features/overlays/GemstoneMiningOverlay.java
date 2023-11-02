@@ -136,7 +136,7 @@ public class GemstoneMiningOverlay {
 
         @Override
         public int getWidth() {
-            return Utils.GetMC().fontRendererObj.getStringWidth("Time Spent Mining: §a19m 27s");
+            return Utils.GetMC().fontRendererObj.getStringWidth("Time Spent Mining: §a19m 27 s");
         }
     }
 }

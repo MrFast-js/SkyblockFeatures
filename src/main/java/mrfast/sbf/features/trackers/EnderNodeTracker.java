@@ -135,7 +135,7 @@ public class EnderNodeTracker {
 
         @Override
         public int getWidth() {
-            return Utils.GetMC().fontRendererObj.getStringWidth("Ender   Node    Tracker");
+            return Utils.GetMC().fontRendererObj.getStringWidth("Ender   Node   Tracker");
         }
     }
 }
