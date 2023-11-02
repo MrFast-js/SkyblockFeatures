@@ -179,7 +179,7 @@ public class GhostTracker {
 
         @Override
         public int getWidth() {
-            return Utils.GetMC().fontRendererObj.getStringWidth("Electron Transmitter: 10");
+            return Utils.GetMC().fontRendererObj.getStringWidth("Ghost  Loot   Tracker");
         }
     }
 }

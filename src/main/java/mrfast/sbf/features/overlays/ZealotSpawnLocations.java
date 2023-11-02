@@ -150,8 +150,7 @@ public class ZealotSpawnLocations {
     public static boolean startBruiserTimer = false;
     public static  String bruiserDisplay = "";
     private static final Minecraft mc = Minecraft.getMinecraft();
-    RenderManager renderManager = mc.getRenderManager();
-    
+
     @SubscribeEvent
     public void onSeconds(TickEvent.ClientTickEvent event) {
         if(!Utils.inSkyblock || !SkyblockFeatures.config.showZealotSpawns) return;
@@ -228,7 +227,7 @@ public class ZealotSpawnLocations {
 
         @Override
         public int getWidth() {
-            return 12 + Utils.GetMC().fontRendererObj.getStringWidth(zealotDisplay);
+            return Utils.GetMC().fontRendererObj.getStringWidth("Bruiser Spawn: Ready ");
         }
     }
 }
