@@ -32,13 +32,10 @@ import net.minecraft.init.Items;
 import net.minecraft.inventory.ContainerChest;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemMonsterPlacer;
+import net.minecraft.item.ItemSkull;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.play.server.S2APacketParticles;
-import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.BlockPos;
-import net.minecraft.util.EnumParticleTypes;
-import net.minecraft.util.MovingObjectPosition;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.*;
 import net.minecraftforge.client.event.DrawBlockHighlightEvent;
 import net.minecraftforge.client.event.RenderBlockOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
@@ -190,18 +187,18 @@ public class MiscFeatures {
     @SubscribeEvent
     public void onDrawContainerTitle(TitleDrawnEvent event) {
         if (event.gui instanceof GuiChest && SkyblockFeatures.config.extraProfileInfo) {
-            GuiChest gui = (GuiChest) event.gui;
-            ContainerChest chest = (ContainerChest) gui.inventorySlots;
-            IInventory inv = chest.getLowerChestInventory();
-            String chestName = inv.getDisplayName().getUnformattedText().trim();
-            List<String> lines = new ArrayList<>();
-            if(!chestName.contains("Profile") || chestName.contains("Management")) return;
+            String chestName = event.displayName;
+
+            boolean hasProfileHead = event.gui.inventorySlots.getSlot(22).getHasStack();
+            if(!hasProfileHead) return;
+            ItemStack profileHead = event.gui.inventorySlots.getSlot(22).getStack();
+            if(!(profileHead.getItem() instanceof ItemSkull) || !ItemUtils.getItemLore(profileHead).toString().contains("SkyBlock Level:")) return;
 
             if(!gotNetworth && !tryingNetworth) {
                 tryingNetworth = true;
                 new Thread(() -> {
                     // Get UUID for Hypixel API requests
-                    String username = chestName.substring(0, chestName.indexOf("'"));
+                    String username = Utils.cleanColor(profileHead.getDisplayName());
                     String uuid = APIUtils.getUUID(username);
                     // Find stats of latest profile
                     String latestProfile = APIUtils.getLatestProfileID(uuid);
@@ -209,7 +206,7 @@ public class MiscFeatures {
                         apiOff = true;
                         return;
                     };
-                    
+
                     String profileURL = "https://sky.shiiyu.moe/api/v2/profile/"+username+"#extraProfileInfo";
                     JsonObject profileResponse = APIUtils.getJSONResponse(profileURL);
                     try {
@@ -228,6 +225,7 @@ public class MiscFeatures {
                     }
                 }).start();
             }
+            List<String> lines = new ArrayList<>();
 
             if(gotNetworth) {
                 lines.add(ChatFormatting.WHITE+"Networth: "+ChatFormatting.GOLD+Utils.nf.format(Math.floor(networth)));
