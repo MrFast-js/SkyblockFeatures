@@ -59,8 +59,8 @@ import gg.essential.vigilance.gui.settings.DropDownComponent;
 import gg.essential.vigilance.utils.ResourceImageFactory;
 import kotlin.Unit;
 import mrfast.sbf.SkyblockFeatures;
-import mrfast.sbf.commands.InventoryCommand;
-import mrfast.sbf.commands.InventoryCommand.Inventory;
+import mrfast.sbf.utils.ItemUtils;
+import mrfast.sbf.utils.ItemUtils.Inventory;
 import mrfast.sbf.core.PricingData;
 import mrfast.sbf.gui.components.InventoryComponent;
 import mrfast.sbf.gui.components.ItemStackComponent;
@@ -82,6 +82,7 @@ public class ProfileViewerGui extends WindowScreen {
     //  The specified profile's data
     JsonObject ProfileResponse = null;
     //  The users profiles according to hypixel
+
     JsonArray hypixelProfilesResponse = null;
     // Hoverables are what is used for the lore popups for skills, etc.
     static HashMap<UIComponent,List<String>> generalHoverables = new HashMap<>();
@@ -93,6 +94,16 @@ public class ProfileViewerGui extends WindowScreen {
     String selectedProfileUUID = "";
     GameProfile profile;
     public static List<String> renderTooltip = null;
+    static boolean quickSwapping = false;
+
+    @Override
+    public void onScreenClose() {
+        if(quickSwapping) {
+            quickSwapping = false;
+        } else {
+            Utils.GetMC().gameSettings.guiScale = Utils.lastGuiScale;
+        }
+    }
 
     @Override
     public void onDrawScreen(UMatrixStack matrixStack,int mouseX, int mouseY, float partialTicks) {
@@ -194,6 +205,10 @@ public class ProfileViewerGui extends WindowScreen {
         super(ElementaVersion.V2);
 
         UUID uuid = UUID.fromString(APIUtils.getUUID(username,true));
+        if(doAnimation) Utils.saveGuiScale();
+
+        screenHeight = Utils.GetMC().currentScreen.height;
+        fontScale = (screenHeight/540d);
 
         profile = new GameProfile(uuid, username);
         selectedCategory = "";
@@ -380,7 +395,6 @@ public class ProfileViewerGui extends WindowScreen {
             .enableEffect(new ScissorEffect())
             .setChildOf(getWindow());
     JsonObject profiles = new JsonObject();
-    static String lastProfileID = "";
     static JsonObject networthResponse = null;
 
     public void loadProfile(String cute_name,Boolean initial) {
@@ -477,7 +491,6 @@ public class ProfileViewerGui extends WindowScreen {
         cleanBox();
         float guiWidth = box.getWidth();
         float guiHeight = box.getHeight();
-        double fontScale = screenHeight/540d;
 
         UIComponent titleArea = new UIBlock().setColor(clear).setChildOf(box)
             .setX(new CenterConstraint())
@@ -629,6 +642,7 @@ public class ProfileViewerGui extends WindowScreen {
         coopSelector.getSelectedText().onSetValue((value)->{
             ProfileViewerUtils.animateX(lastSelectedButton, 8f);
             System.out.println("Loading PROFILEEE: "+value+" "+selectedProfileUUID);
+            quickSwapping = true;
             Utils.openGui(new ProfileViewerGui(false,value,selectedProfileUUID));
             return Unit.INSTANCE;
         });
@@ -642,7 +656,7 @@ public class ProfileViewerGui extends WindowScreen {
         if(ProfilePlayerResponse.has("inv_armor")) {
             String inventoryBase64 = ProfilePlayerResponse.get("inv_armor").getAsJsonObject().get("data").getAsString();
             Inventory items = new Inventory(inventoryBase64);
-            List<ItemStack> a = InventoryCommand.decodeItem(items,true);
+            List<ItemStack> a = ItemUtils.decodeItem(items,true);
             List<ItemStack> b = new ArrayList<>(Arrays.asList(null,null,null,null));
 
             int index = 0;
@@ -682,7 +696,7 @@ public class ProfileViewerGui extends WindowScreen {
         if(ProfilePlayerResponse.has("equippment_contents")) {
             String inventoryBase64 = ProfilePlayerResponse.get("equippment_contents").getAsJsonObject().get("data").getAsString();
             Inventory items = new Inventory(inventoryBase64);
-            List<ItemStack> a = InventoryCommand.decodeItem(items,false);
+            List<ItemStack> a = ItemUtils.decodeItem(items,false);
 
             for(ItemStack item: a) {
                 UIComponent backgroundSlot = new UIRoundedRectangle(3f)
@@ -1067,7 +1081,7 @@ public class ProfileViewerGui extends WindowScreen {
                     if(ProfilePlayerResponse.has("inv_contents")) {
                         String inventoryBase64 = ProfilePlayerResponse.get("inv_contents").getAsJsonObject().get("data").getAsString();
                         Inventory items = new Inventory(inventoryBase64);
-                        List<ItemStack> a = InventoryCommand.decodeItem(items,true);
+                        List<ItemStack> a = ItemUtils.decodeItem(items,true);
 
                         int index = 0;
                         for(ItemStack item: a) {
@@ -1081,7 +1095,7 @@ public class ProfileViewerGui extends WindowScreen {
                     if(ProfilePlayerResponse.has("wardrobe_contents")) {
                         String inventoryBase64 = ProfilePlayerResponse.get("wardrobe_contents").getAsJsonObject().get("data").getAsString();
                         Inventory items = new Inventory(inventoryBase64);
-                        List<ItemStack> a = InventoryCommand.decodeItem(items,false);
+                        List<ItemStack> a = ItemUtils.decodeItem(items,false);
 
                         int index = 0;
                         for(ItemStack item: a) {
@@ -1126,7 +1140,7 @@ public class ProfileViewerGui extends WindowScreen {
                     if(ProfilePlayerResponse.has("talisman_bag")) {
                         String inventoryBase64 = ProfilePlayerResponse.get("talisman_bag").getAsJsonObject().get("data").getAsString();
                         Inventory items = new Inventory(inventoryBase64);
-                        List<ItemStack> a = InventoryCommand.decodeItem(items,false);
+                        List<ItemStack> a = ItemUtils.decodeItem(items,false);
 
                         int index = 0;
                         for(ItemStack item: a) {
@@ -1202,7 +1216,7 @@ public class ProfileViewerGui extends WindowScreen {
                     if (ProfilePlayerResponse.has("ender_chest_contents")) {
                         String inventoryBase64 = ProfilePlayerResponse.get("ender_chest_contents").getAsJsonObject().get("data").getAsString();
                         Inventory items = new Inventory(inventoryBase64);
-                        List<ItemStack> a = InventoryCommand.decodeItem(items, false);
+                        List<ItemStack> a = ItemUtils.decodeItem(items, false);
                         int numPages = (int) Math.ceil(a.size() / 45.0);
 
                         int pageIndex = 0;
@@ -1253,7 +1267,7 @@ public class ProfileViewerGui extends WindowScreen {
                             JsonObject backpack = a.getValue().getAsJsonObject();
                             String inventoryBase64 = backpack.get("data").getAsString();
                             Inventory items = new Inventory(inventoryBase64);
-                            List<ItemStack> b = InventoryCommand.decodeItem(items, false);
+                            List<ItemStack> b = ItemUtils.decodeItem(items, false);
                             InventoryBasic backpackInv = new InventoryBasic("Backpack: " + a.getKey(), true, b.size());
 
                             for (int i = 0; i < b.size(); i++) {

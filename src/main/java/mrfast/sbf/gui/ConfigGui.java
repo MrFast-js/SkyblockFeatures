@@ -54,10 +54,16 @@ public class ConfigGui extends WindowScreen {
     public static String selectedCategory = "General";
     public String searchQuery = "";
     static Boolean furfSkyThemed = false;
+    static boolean quickSwapping = false;
 
     @Override
 	public void onScreenClose() {
 		SkyblockFeatures.config.forceSave();
+        if(quickSwapping) {
+            quickSwapping = false;
+        } else {
+            Utils.GetMC().gameSettings.guiScale = Utils.lastGuiScale;
+        }
 	}
 
     // Text/Lines colors
@@ -81,6 +87,12 @@ public class ConfigGui extends WindowScreen {
     Color clear = new Color(0,0,0,0);
     public ConfigGui(Boolean doAnimation) {
         super(ElementaVersion.V2);
+
+        // init && not quickswap
+        if(doAnimation) {
+            Utils.saveGuiScale();
+        }
+
         reloadAllCategories();
         furfSkyThemed = SkyblockFeatures.config.furfSkyThemed;
         int screenHeight = Utils.GetMC().displayHeight/2;
@@ -339,6 +351,7 @@ public class ConfigGui extends WindowScreen {
                 SkyblockFeatures.config.editGuiText = new Color(0xFFFFFF);
                 SkyblockFeatures.config.titleColor = new Color(0x00FFFF);
                 SkyblockFeatures.config.versionColor = new Color(0xFFFFFF);
+                quickSwapping = true;
                 Utils.openGui(new ConfigGui(false));
             });
         }
@@ -724,6 +737,7 @@ public class ConfigGui extends WindowScreen {
 
 
     public void LoadCategory(String categoryName) {
+        quickSwapping = true;
         Utils.openGui(new ConfigGui(false));
     }
 }

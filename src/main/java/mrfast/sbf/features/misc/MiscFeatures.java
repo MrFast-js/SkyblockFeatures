@@ -199,6 +199,7 @@ public class MiscFeatures {
                 new Thread(() -> {
                     // Get UUID for Hypixel API requests
                     String username = Utils.cleanColor(profileHead.getDisplayName());
+                    if(username.split(" ").length>1) username = username.split(" ")[1];
                     String uuid = APIUtils.getUUID(username);
                     // Find stats of latest profile
                     String latestProfile = APIUtils.getLatestProfileID(uuid);

@@ -1,10 +1,8 @@
 package mrfast.sbf.utils;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -14,13 +12,12 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import mrfast.sbf.core.PricingData;
+import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.JsonToNBT;
-import net.minecraft.nbt.NBTException;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
+import net.minecraft.nbt.*;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.common.util.Constants;
 
 public class ItemUtils {
@@ -481,5 +478,49 @@ public class ItemUtils {
             }
         }
         return total;
+    }
+
+    public static class Inventory {
+        private final String data;
+
+        public Inventory(String data)
+        {
+            this.data = data;
+        }
+
+        public String getData()
+        {
+            return this.data.replace("\\u003d", "=");
+        }
+    }
+
+    public static List<ItemStack> decodeItem(Inventory inventory,Boolean offset) {
+        if (inventory != null) {
+            List<ItemStack> itemStack = new ArrayList<>();
+            byte[] decode = Base64.getDecoder().decode(inventory.getData());
+
+            try {
+                NBTTagCompound compound = CompressedStreamTools.readCompressed(new ByteArrayInputStream(decode));
+                NBTTagList list = compound.getTagList("i", 10);
+
+                for (int i = 0; i < list.tagCount(); ++i) {
+                    itemStack.add(ItemStack.loadItemStackFromNBT(list.getCompoundTagAt(i)));
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            if(offset) Collections.rotate(itemStack, -9);
+
+            return itemStack;
+        } else {
+            List<ItemStack> itemStack = new ArrayList<>();
+            ItemStack barrier = new ItemStack(Blocks.barrier);
+            barrier.setStackDisplayName(EnumChatFormatting.RESET + "" + EnumChatFormatting.RED + "Item is not available!");
+
+            for (int i = 0; i < 36; ++i) {
+                itemStack.add(barrier);
+            }
+            return itemStack;
+        }
     }
 }

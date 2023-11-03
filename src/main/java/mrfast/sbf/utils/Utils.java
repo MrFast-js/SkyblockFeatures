@@ -15,6 +15,8 @@ import java.util.TimerTask;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
+import mrfast.sbf.gui.ConfigGui;
+import mrfast.sbf.gui.ProfileViewerGui;
 import net.minecraft.client.gui.GuiOptions;
 import net.minecraft.client.gui.GuiScreen;
 import org.apache.commons.lang3.time.DurationFormatUtils;
@@ -368,7 +370,12 @@ public class Utils {
             }
         }, ms);
     }
+    public static int lastGuiScale = 0;
 
+    public static void saveGuiScale() {
+        lastGuiScale = Utils.GetMC().gameSettings.guiScale;
+        Utils.GetMC().gameSettings.guiScale = 2;
+    }
     public static void openGui(GuiScreen screen) {
         Utils.setTimeout(()->{
             Utils.GetMC().displayGuiScreen(screen);

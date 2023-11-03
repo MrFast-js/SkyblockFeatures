@@ -8,12 +8,12 @@ import com.google.gson.JsonObject;
 import com.mojang.realmsclient.gui.ChatFormatting;
 
 import mrfast.sbf.SkyblockFeatures;
-import mrfast.sbf.commands.InventoryCommand;
-import mrfast.sbf.commands.InventoryCommand.Inventory;
 import mrfast.sbf.events.SecondPassedEvent;
 import mrfast.sbf.gui.components.Point;
 import mrfast.sbf.gui.components.UIElement;
 import mrfast.sbf.utils.APIUtils;
+import mrfast.sbf.utils.ItemUtils;
+import mrfast.sbf.utils.ItemUtils.Inventory;
 import mrfast.sbf.utils.Utils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
@@ -55,7 +55,7 @@ public class BaitCounterOverlay {
                 if(profileResponse.get("profile").getAsJsonObject().get("members").getAsJsonObject().get(uuid).getAsJsonObject().has("fishing_bag")) {
                     String inventoryBase64 = profileResponse.get("profile").getAsJsonObject().get("members").getAsJsonObject().get(uuid).getAsJsonObject().get("fishing_bag").getAsJsonObject().get("data").getAsString();
                     Inventory items = new Inventory(inventoryBase64);
-                    List<ItemStack> a = InventoryCommand.decodeItem(items,true);
+                    List<ItemStack> a = ItemUtils.decodeItem(items,true);
                     for(ItemStack item: a) {
                         if(item==null) continue;
                         String name = item.getDisplayName();

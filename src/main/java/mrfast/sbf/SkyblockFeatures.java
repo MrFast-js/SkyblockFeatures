@@ -16,7 +16,6 @@ import org.lwjgl.input.Keyboard;
 import mrfast.sbf.commands.DungeonsCommand;
 import mrfast.sbf.commands.FakePlayerCommand;
 import mrfast.sbf.commands.FlipsCommand;
-import mrfast.sbf.commands.InventoryCommand;
 import mrfast.sbf.commands.RepartyCommand;
 import mrfast.sbf.commands.ShrugCommand;
 import mrfast.sbf.commands.SkyCommand;
@@ -280,7 +279,6 @@ public class SkyblockFeatures {
         commands.add(new TerminalCommand());
         commands.add(new ShrugCommand());
         commands.add(new FlipsCommand());
-        commands.add(new InventoryCommand());
         commands.add(new DungeonsCommand());
         commands.add(new RepartyCommand());
         commands.add(new pingCommand());
