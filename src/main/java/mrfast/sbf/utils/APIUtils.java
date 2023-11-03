@@ -39,9 +39,9 @@ public class APIUtils {
             if (urlString.contains("#")) {
                 String url = urlString.split("#")[0];
                 String reason = urlString.split("#")[1];
-                System.out.println("Sending request to " + url + " Reason: " + reason);
+//                System.out.println("Sending request to " + url + " Reason: " + reason);
             } else {
-                System.out.println("Sending request to " + urlString);
+//                System.out.println("Sending request to " + urlString);
             }
         }
         // Split between 4 proxies to reduce lag

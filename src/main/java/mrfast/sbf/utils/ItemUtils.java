@@ -135,7 +135,7 @@ public class ItemUtils {
         return stack;
     }
 
-    public class CustomItemData {
+    public static class CustomItemData {
         public String internalname;
         public String itemid;
         public String displayname;

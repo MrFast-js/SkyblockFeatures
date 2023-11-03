@@ -13,8 +13,12 @@ import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
+import net.minecraft.client.gui.GuiOptions;
+import net.minecraft.client.gui.GuiScreen;
 import org.apache.commons.lang3.time.DurationFormatUtils;
+import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL14;
 import org.lwjgl.util.vector.Vector2f;
@@ -355,13 +359,20 @@ public class Utils {
         } else return false;
     }
 
+
     public static void setTimeout(Runnable code, int ms) {
         new Timer().schedule(new TimerTask() {
             @Override
             public void run() {
-                code.run();
+                Utils.GetMC().addScheduledTask(code);
             }
         }, ms);
+    }
+
+    public static void openGui(GuiScreen screen) {
+        Utils.setTimeout(()->{
+            Utils.GetMC().displayGuiScreen(screen);
+        },50);
     }
 
     public static String convertIdToLocation(String id) {

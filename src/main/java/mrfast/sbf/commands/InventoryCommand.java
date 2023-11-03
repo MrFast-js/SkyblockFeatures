@@ -12,7 +12,6 @@ import java.util.Objects;
 import com.google.gson.JsonObject;
 import com.mojang.realmsclient.gui.ChatFormatting;
 
-import gg.essential.api.utils.GuiUtil;
 import mrfast.sbf.SkyblockFeatures;
 import mrfast.sbf.utils.APIUtils;
 import mrfast.sbf.utils.Utils;
@@ -125,7 +124,7 @@ public class InventoryCommand extends CommandBase {
 				}
 			}
 
-			GuiUtil.open(new GuiChest(Utils.GetMC().thePlayer.inventory, TargetInventory));
+			Utils.openGui(new GuiChest(Utils.GetMC().thePlayer.inventory, TargetInventory));
 		}).start();
 	}
 

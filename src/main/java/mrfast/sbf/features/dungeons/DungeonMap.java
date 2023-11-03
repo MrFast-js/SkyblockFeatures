@@ -82,7 +82,7 @@ public class DungeonMap {
 	int seconds = 0;
 	@SubscribeEvent
 	public void onSecond(SecondPassedEvent event) {
-		if(!Utils.inDungeons || !SkyblockFeatures.config.dungeonMap) return;
+		if(!Utils.inDungeons || !SkyblockFeatures.config.dungeonMap || Utils.GetMC().theWorld==null) return;
 		seconds++;
 		if(seconds==5) {
 			seconds = 0;

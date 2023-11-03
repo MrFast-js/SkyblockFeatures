@@ -7,7 +7,6 @@ import java.util.Objects;
 import com.google.common.collect.Lists;
 import com.mojang.realmsclient.gui.ChatFormatting;
 
-import gg.essential.api.utils.GuiUtil;
 import mrfast.sbf.SkyblockFeatures;
 import mrfast.sbf.gui.EditLocationsGui;
 import mrfast.sbf.gui.ProfileViewerGui;
@@ -54,8 +53,7 @@ public class pvCommand extends CommandBase {
             String username = Utils.GetMC().thePlayer.getName();
 
             Utils.SendMessage(ChatFormatting.YELLOW+"Opening "+username+"'s Profile "+ChatFormatting.GRAY+"(This may take a second)");
-            GuiUtil.open(new ProfileViewerGui(true,username,"auto"));
-            return;
+            Utils.openGui(new ProfileViewerGui(true,username,"auto"));
         } else {
             String playerUuid = APIUtils.getUUID(args[0]);
             if(playerUuid==null) {
@@ -63,7 +61,7 @@ public class pvCommand extends CommandBase {
                 return;
             }
             Utils.SendMessage(ChatFormatting.YELLOW+"Opening "+args[0]+"'s Profile "+ChatFormatting.GRAY+"(This may take a second)");
-            GuiUtil.open(new ProfileViewerGui(true,args[0],"auto"));
+            Utils.openGui(new ProfileViewerGui(true,args[0],"auto"));
         }
     }
 }

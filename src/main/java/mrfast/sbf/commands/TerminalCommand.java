@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Random;
 import com.mojang.realmsclient.gui.ChatFormatting;
-import gg.essential.api.utils.GuiUtil;
 import mrfast.sbf.utils.Utils;
 import net.minecraft.client.gui.inventory.GuiChest;
 import net.minecraft.command.CommandBase;
@@ -70,7 +69,7 @@ public class TerminalCommand extends CommandBase {
 				Terminal.setInventorySlotContents(slot, new ItemStack(Blocks.stained_glass_pane, 1, 14).setStackDisplayName(ChatFormatting.RESET+""));
 			}
 
-			GuiUtil.open(Objects.requireNonNull(new GuiChest(Utils.GetMC().thePlayer.inventory, Terminal)));
+			Utils.openGui(new GuiChest(Utils.GetMC().thePlayer.inventory, Terminal));
 		} else if(termId==2) {
 			mazeIndex = 1;
 			InventoryBasic Terminal = new InventoryBasic(ChatFormatting.GREEN+"✯ Solve Maze", true, 54);
@@ -88,7 +87,7 @@ public class TerminalCommand extends CommandBase {
 				Terminal.setInventorySlotContents(slot, new ItemStack(Blocks.stained_glass_pane, 1, 0).setStackDisplayName(ChatFormatting.RESET+""));
 			}
 
-			GuiUtil.open(Objects.requireNonNull(new GuiChest(Utils.GetMC().thePlayer.inventory, Terminal)));
+			Utils.openGui(new GuiChest(Utils.GetMC().thePlayer.inventory, Terminal));
 		} else if(termId==3) {
 			TerminalCommand.orderNumber = 1;
 			InventoryBasic Terminal = new InventoryBasic(ChatFormatting.GREEN+"✯ Click in order", true, 36);
@@ -112,7 +111,7 @@ public class TerminalCommand extends CommandBase {
 				index++;
 			}
 
-			GuiUtil.open(Objects.requireNonNull(new GuiChest(Utils.GetMC().thePlayer.inventory, Terminal)));
+			Utils.openGui(new GuiChest(Utils.GetMC().thePlayer.inventory, Terminal));
 		}
 	}
 }

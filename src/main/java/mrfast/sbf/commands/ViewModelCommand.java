@@ -1,32 +1,32 @@
 package mrfast.sbf.commands;
 
-import java.util.Collections;
 import java.util.Objects;
-import java.util.Set;
 
-import javax.annotation.Nullable;
-
-import gg.essential.api.commands.Command;
-import gg.essential.api.commands.DefaultHandler;
-import gg.essential.api.utils.GuiUtil;
 import mrfast.sbf.features.items.ViewModel;
 import mrfast.sbf.utils.Utils;
-import net.minecraft.util.ChatComponentText;
+import net.minecraft.command.CommandBase;
+import net.minecraft.command.CommandException;
+import net.minecraft.command.ICommandSender;
 
-public class ViewModelCommand extends Command {
+public class ViewModelCommand extends CommandBase {
 
-    public ViewModelCommand() {
-        super("vm");
-    }
-    
-    @DefaultHandler
-    public void handle() {
-        GuiUtil.open(Objects.requireNonNull(new ViewModel.ViewModelScreen()));
-    }
-
-    @Nullable
     @Override
-    public Set<Alias> getCommandAliases() {
-        return Collections.singleton(new Alias("vm"));
+    public String getCommandName() {
+        return "vm";
+    }
+
+    @Override
+    public String getCommandUsage(ICommandSender sender) {
+        return "/vm";
+    }
+
+    @Override
+    public int getRequiredPermissionLevel() {
+        return 0;
+    }
+
+    @Override
+    public void processCommand(ICommandSender arg0, String[] arg1) throws CommandException {
+        Utils.openGui(new ViewModel.ViewModelScreen());
     }
 }

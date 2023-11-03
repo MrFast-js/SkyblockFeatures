@@ -27,9 +27,11 @@ import com.google.gson.JsonObject;
 import com.mojang.authlib.GameProfile;
 import com.mojang.realmsclient.gui.ChatFormatting;
 
+//import gg.essential.api.EssentialAPI;
+//import gg.essential.api.gui.EmulatedPlayerBuilder;
+//import gg.essential.api.utils.GuiUtil;
 import gg.essential.api.EssentialAPI;
 import gg.essential.api.gui.EmulatedPlayerBuilder;
-import gg.essential.api.utils.GuiUtil;
 import gg.essential.elementa.ElementaVersion;
 import gg.essential.elementa.UIComponent;
 import gg.essential.elementa.WindowScreen;
@@ -627,7 +629,7 @@ public class ProfileViewerGui extends WindowScreen {
         coopSelector.getSelectedText().onSetValue((value)->{
             ProfileViewerUtils.animateX(lastSelectedButton, 8f);
             System.out.println("Loading PROFILEEE: "+value+" "+selectedProfileUUID);
-            GuiUtil.open(new ProfileViewerGui(false,value,selectedProfileUUID));
+            Utils.openGui(new ProfileViewerGui(false,value,selectedProfileUUID));
             return Unit.INSTANCE;
         });
 

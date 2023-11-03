@@ -26,15 +26,17 @@ minecraft {
     runDir = "run"
     mappings = "stable_22"
     makeObfSourceJar = false
-    clientRunArgs += '--tweakClass gg.essential.loader.stage0.EssentialSetupTweaker'
     clientRunArgs += '--mixin mixins.skyblockfeatures.json'
+//    clientRunArgs += '--tweakClass gg.essential.loader.stage0.EssentialSetupTweaker'
 }
 
 repositories {
     mavenCentral()
+    jcenter();
     maven { url "https://repo.spongepowered.org/repository/maven-public/" }
-    maven { url "https://repo.sk1er.club/repository/maven-public" }
+//    maven { url "https://repo.sk1er.club/repository/maven-public" }
     maven { url "https://jitpack.io/" }
+    maven { url "https://repo.essential.gg/repository/maven-public" }
 }
 
 
@@ -45,8 +47,10 @@ configurations {
 
 
 dependencies {
-    packageLib "gg.essential:loader-launchwrapper:1.1.1"
-    implementation "gg.essential:essential-1.8.9-forge:11520+gf8b441d20"
+    implementation "gg.essential:essential-1.8.9-forge:12132+g6e2bf4dc5"
+
+    // Kotlin Standard Library
+    implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.6.10'
 
     implementation "org.spongepowered:mixin:0.7.11-SNAPSHOT"
     packageLib("org.spongepowered:mixin:0.7.11-SNAPSHOT")
@@ -64,7 +68,7 @@ jar {
             "MixinConfigs": "mixins.skyblockfeatures.json",
             "FMLAT": "mrfast_at.cfg",
             "ModSide": "CLIENT",
-            "TweakClass": "gg.essential.loader.stage0.EssentialSetupTweaker",
+//            "TweakClass": "gg.essential.loader.stage0.EssentialSetupTweaker",
             "TweakOrder": "0"
     )
     from {

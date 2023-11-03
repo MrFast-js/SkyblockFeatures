@@ -11,7 +11,6 @@ import java.util.stream.Stream;
 import mrfast.sbf.features.dungeons.*;
 import org.lwjgl.input.Keyboard;
 
-import gg.essential.api.EssentialAPI;
 import mrfast.sbf.commands.DungeonsCommand;
 import mrfast.sbf.commands.FakePlayerCommand;
 import mrfast.sbf.commands.FlipsCommand;
@@ -147,8 +146,6 @@ public class SkyblockFeatures {
         // Save the config
         config.preload();
         SkyblockFeatures.config.forceSave();
-
-        EssentialAPI.getCommandRegistry().registerCommand(new ViewModelCommand());
 
         // Features to load
         List<Object> features = Arrays.asList(
@@ -288,6 +285,7 @@ public class SkyblockFeatures {
         commands.add(new RepartyCommand());
         commands.add(new pingCommand());
         commands.add(new sidebarCommand());
+        commands.add(new ViewModelCommand());
         commands.add(new FakePlayerCommand());
         commands.add(new pvCommand());
 
