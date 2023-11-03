@@ -5,6 +5,7 @@ import java.awt.image.BufferedImage;
 import java.text.NumberFormat;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
+import java.util.stream.Collectors;
 
 import com.google.common.collect.Lists;
 import com.google.gson.JsonObject;
@@ -169,25 +170,42 @@ public class ProfileViewerUtils {
         SLAYER_XP.put("vampire", vampireXP);
     }
     
-    public static int[] skillXPPerLevel = {50     , 125    , 200    , 300    , 500    , 750    , 1000   , 1500   , 2000   , 3500, // lvl 10
-                                           5000   , 7500   , 10000  , 15000  , 20000  , 30000  , 50000  , 75000  , 100000 , 200000, // lvl 20
-                                           300000 , 400000 , 500000 , 600000 , 700000 , 800000 , 900000 , 1000000, 1100000, 1200000, // lvl 30
-                                           1300000, 1400000, 1500000, 1600000, 1700000, 1800000, 1900000, 2000000, 2100000, 2200000, // lvl 40
-                                           2300000, 2400000, 2500000, 2600000, 2750000, 2900000, 3100000, 3400000, 3700000, 4000000}; // lvl 50
-                                     //    4300000, 4600000, 4900000, 5200000, 5500000, 5800000, 6100000, 6400000, 6700000, 7000000}; // lvl 60
+    public static Integer[] skillXPPerLevel = {50     , 125    , 200    , 300    , 500    , 750    , 1000   , 1500   , 2000   , 3500, // lvl 10
+                                               5000   , 7500   , 10000  , 15000  , 20000  , 30000  , 50000  , 75000  , 100000 , 200000, // lvl 20
+                                               300000 , 400000 , 500000 , 600000 , 700000 , 800000 , 900000 , 1000000, 1100000, 1200000, // lvl 30
+                                               1300000, 1400000, 1500000, 1600000, 1700000, 1800000, 1900000, 2000000, 2100000, 2200000, // lvl 40
+                                               2300000, 2400000, 2500000, 2600000, 2750000, 2900000, 3100000, 3400000, 3700000, 4000000, // lvl 50
+                                               4300000, 4600000, 4900000, 5200000, 5500000, 5800000, 6100000, 6400000, 6700000, 7000000}; // lvl 60
 
-    public static int[] socialXpPerLevel = {0,50,100,150,250,500,750,1000,1250,1500,2000,// lvl 10
+    public static Integer[] socialXpPerLevel = {0,50,100,150,250,500,750,1000,1250,1500,2000,// lvl 10
                                             2500,3000,3750,4500,6000,8000,10000,12500,15000,20000,// lvl 20
                                             25000,30000,35000,40000,50000};// lvl 25
 
-    public static int[] runecraftingXpPerLevel = {50,100,125,160,200,250,315,400,500,625,// lvl 10
+    public static Integer[] runecraftingXpPerLevel = {50,100,125,160,200,250,315,400,500,625,// lvl 10
                                                   785,1000,1250,1600,2000,2465,3125,4000,5000,6200,// lvl 20
                                                   7800,9800,12200,15300,19050};//lvl 25
 
+    public static Integer[] getMaxSkillLevel(String type) {
+        List<Integer> skillXpList = Arrays.stream(skillXPPerLevel).collect(Collectors.toList());
+        List<String> skillList = Arrays.stream(lvl60Skills).collect(Collectors.toList());
+
+        System.out.println(skillXpList.size()+" "+type);
+
+        boolean lvl60Skill = skillList.contains(type);
+
+        if(!lvl60Skill) {
+            skillXpList = skillXpList.subList(0,50);
+        }
+
+        if(type.equals("Social")) skillXpList = Arrays.stream(socialXpPerLevel).collect(Collectors.toList());;
+        if(type.equals("Runecrafting")) skillXpList = Arrays.stream(runecraftingXpPerLevel).collect(Collectors.toList());;
+
+        System.out.println(skillXpList.size()+" "+skillXpList.toString());
+        return skillXpList.toArray(new Integer[skillXpList.size()]);
+    }
+    public static String[] lvl60Skills = {"Farming","Mining","Combat","Enchanting"};
     public static int convertXpToSkillLevel(double xp,String type) {
-        int[] xpPerLevel = skillXPPerLevel;
-        if(type.equals("Social")) xpPerLevel = socialXpPerLevel;
-        if(type.equals("Runecrafting")) xpPerLevel = runecraftingXpPerLevel;
+        Integer[] xpPerLevel = getMaxSkillLevel(type);
 
         int levelCount = 0;
         for (int j : xpPerLevel) {
@@ -216,9 +234,7 @@ public class ProfileViewerUtils {
     }
 
     private static double getXpAtLevel(int level,String type) {
-        int[] xpPerLevel = skillXPPerLevel;
-        if(type.equals("Social")) xpPerLevel = socialXpPerLevel;
-        if(type.equals("Runecrafting")) xpPerLevel = runecraftingXpPerLevel;
+        Integer[] xpPerLevel = getMaxSkillLevel(type);
 
         if (level >= 0 && level < xpPerLevel.length) {
             return xpPerLevel[level - 1];

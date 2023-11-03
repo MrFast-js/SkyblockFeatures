@@ -46,7 +46,10 @@ public class FakePlayerCommand extends CommandBase {
             mc.theWorld.removeEntity(fakePlayer);
         }
         UUID uuid = UUID.fromString(APIUtils.getUUID(args[0],true));
-		fakePlayer = new EntityOtherPlayerMP(mc.theWorld, new GameProfile(uuid, args[0]));
+        GameProfile profile = new GameProfile(uuid, args[0]);
+        Utils.GetMC().getSessionService().fillProfileProperties(profile, true);
+
+		fakePlayer = new EntityOtherPlayerMP(mc.theWorld,profile);
         fakePlayer.copyLocationAndAnglesFrom(mc.thePlayer);
         fakePlayer.rotationYawHead = mc.thePlayer.rotationYawHead;
 

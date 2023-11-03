@@ -55,9 +55,9 @@ public class pvCommand extends CommandBase {
             Utils.SendMessage(ChatFormatting.YELLOW+"Opening "+username+"'s Profile "+ChatFormatting.GRAY+"(This may take a second)");
             Utils.openGui(new ProfileViewerGui(true,username,"auto"));
         } else {
-            String playerUuid = APIUtils.getUUID(args[0]);
+            String playerUuid = APIUtils.getUUID(args[0],true);
             if(playerUuid==null) {
-                Utils.SendMessage(ChatFormatting.RED+"This player doesn't exist or has never played Skyblock");
+                Utils.SendMessage(ChatFormatting.RED+"A player with that username doesn't exist");
                 return;
             }
             Utils.SendMessage(ChatFormatting.YELLOW+"Opening "+args[0]+"'s Profile "+ChatFormatting.GRAY+"(This may take a second)");

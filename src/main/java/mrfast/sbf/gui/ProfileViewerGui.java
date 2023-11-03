@@ -204,7 +204,9 @@ public class ProfileViewerGui extends WindowScreen {
     public ProfileViewerGui(Boolean doAnimation,String username,String profileString) {
         super(ElementaVersion.V2);
 
-        UUID uuid = UUID.fromString(APIUtils.getUUID(username,true));
+        String uuidString = APIUtils.getUUID(username,true);
+        UUID uuid = UUID.fromString(uuidString);
+
         if(doAnimation) Utils.saveGuiScale();
 
         screenHeight = Utils.GetMC().currentScreen.height;
@@ -216,7 +218,7 @@ public class ProfileViewerGui extends WindowScreen {
         // This sets the skin from the uuid
         Utils.GetMC().getSessionService().fillProfileProperties(profile, true);
 
-        playerUuid = uuid.toString().replaceAll("-","");
+        playerUuid = uuidString.replaceAll("-","");
         {
             box = new UIRoundedRectangle(10f)
                     .setX(new CenterConstraint())
@@ -1506,8 +1508,8 @@ public class ProfileViewerGui extends WindowScreen {
                 if(ProfilePlayerResponse.has("fishing_treasure_caught")) {
                     treasure = ProfilePlayerResponse.get("fishing_treasure_caught").getAsInt();
                 }
-                new UIText(g+"Trophy Fish Caught: "+bold+caught).setY(new SiblingConstraint(2f)).setChildOf(fishingContainer);
-                new UIText(g+"Treasures Found: "+bold+treasure).setY(new SiblingConstraint(2f)).setChildOf(fishingContainer);
+                new UIText(g+"Trophy Fish Caught: "+bold+Utils.nf.format(caught)).setY(new SiblingConstraint(2f)).setChildOf(fishingContainer);
+                new UIText(g+"Treasures Found: "+bold+Utils.nf.format(treasure)).setY(new SiblingConstraint(2f)).setChildOf(fishingContainer);
             }
         }
 
