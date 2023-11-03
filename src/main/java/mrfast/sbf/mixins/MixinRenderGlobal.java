@@ -118,8 +118,7 @@ public abstract class MixinRenderGlobal {
 
     
     private void displayOutlines(List<Entity> entities, double x, double y, double z, ICamera camera, float partialTicks) {
-        if (isRenderEntityOutlines()) // Replaced isRenderEntityOutlines call with the conditions themselves
-        {
+        if (isRenderEntityOutlines()) {
             Minecraft mc = Minecraft.getMinecraft();
             RenderGlobal renderGlobal = mc.renderGlobal;
 
@@ -171,7 +170,7 @@ public abstract class MixinRenderGlobal {
                         renderManager.renderEntitySimple(entity, partialTicks);
                     }
                 }
-            } catch (NullPointerException e) {
+            } catch (NullPointerException ignored) {
                 
             }
             GlStateManager.depthFunc(GL11.GL_LEQUAL);

@@ -31,6 +31,6 @@ public class MixinModelBiped extends ModelBase
 
     @Inject(method = { "setRotationAngles" }, at = { @At(value = "FIELD", target = "Lnet/minecraft/client/model/ModelRenderer;rotateAngleY:F", ordinal = 6, shift = At.Shift.AFTER) })
     private void setRotationAngleY(final float limbSwing, final float limbSwingAmount, final float ageInTicks, final float netHeadYaw, final float headPitch, final float scaleFactor, final Entity entityIn, final CallbackInfo ci) {
-        this.bipedRightArm.rotateAngleY = (SkyblockFeatures.config.oldAnimations ? 0.0f : -0.5235988f); // for future, this is the block animation thing
+        if(SkyblockFeatures.config.oldAnimations) this.bipedRightArm.rotateAngleY = 0.0f;
     }
 }

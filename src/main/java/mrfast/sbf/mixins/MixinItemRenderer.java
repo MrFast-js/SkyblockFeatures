@@ -31,17 +31,12 @@ public class MixinItemRenderer {
     private Minecraft mc;
     private float swingProgress;
 
-    @Inject(
-        method = "Lnet/minecraft/client/renderer/ItemRenderer;renderItemInFirstPerson(F)V",
-        at = @At(
-            value = "INVOKE",
-            shift = At.Shift.AFTER,
-            target = "Lnet/minecraft/client/renderer/GlStateManager;pushMatrix()V"
-        )
-    )
+    @Inject(method = "Lnet/minecraft/client/renderer/ItemRenderer;renderItemInFirstPerson(F)V",at = @At(value = "INVOKE",shift = At.Shift.AFTER, target = "Lnet/minecraft/client/renderer/GlStateManager;pushMatrix()V"))
     public void transformFirstPersonItem(CallbackInfo ci) {
+        if(!SkyblockFeatures.config.smallItems) return;
+
         if(Utils.GetMC().thePlayer.getHeldItem() != null) {
-            GlStateManager.translate(SkyblockFeatures.config.armX*0.01, SkyblockFeatures.config.armY*0.01, SkyblockFeatures.config.armZ*0.01);
+            GlStateManager.translate(30*0.01, -5*0.01, -60*0.01);
         }
     }
 
@@ -86,18 +81,18 @@ public class MixinItemRenderer {
 
     @Inject(method = "transformFirstPersonItem", at = {@At("HEAD")})
     private void transformFirstPersonItem(float equipProgress, float swingProgress, CallbackInfo ci) {
-        if (SkyblockFeatures.config.oldAnimations && this.mc != null && this.mc.thePlayer != null && this.mc.thePlayer.getItemInUse() != null && this.mc.thePlayer.getItemInUse().getItem() != null && Item.getIdFromItem(this.mc.thePlayer.getItemInUse().getItem()) == 261) { // bow
+        if(!SkyblockFeatures.config.oldAnimations) return;
+
+        if (this.mc != null && this.mc.thePlayer != null && this.mc.thePlayer.getItemInUse() != null && this.mc.thePlayer.getItemInUse().getItem() != null && Item.getIdFromItem(this.mc.thePlayer.getItemInUse().getItem()) == 261) { // bow
             GlStateManager.translate(-0.01f, 0.05f, -0.06f);
         }
-        if (SkyblockFeatures.config.oldAnimations && this.mc != null && this.mc.thePlayer != null && this.mc.thePlayer.getCurrentEquippedItem() != null && this.mc.thePlayer.getCurrentEquippedItem().getItem() != null && (Item.getIdFromItem(this.mc.thePlayer.getCurrentEquippedItem().getItem()) == 346 || Item.getIdFromItem(this.mc.thePlayer.getCurrentEquippedItem().getItem()) == 398)) { // rod
+        if (this.mc != null && this.mc.thePlayer != null && this.mc.thePlayer.getCurrentEquippedItem() != null && this.mc.thePlayer.getCurrentEquippedItem().getItem() != null && (Item.getIdFromItem(this.mc.thePlayer.getCurrentEquippedItem().getItem()) == 346 || Item.getIdFromItem(this.mc.thePlayer.getCurrentEquippedItem().getItem()) == 398)) { // rod
             GlStateManager.translate(0.08f, -0.027f, -0.33f);
             GlStateManager.scale(0.93f, 1.0f, 1.0f);
         }
-        if (SkyblockFeatures.config.oldAnimations && this.mc != null && this.mc.thePlayer != null && this.mc.thePlayer.isSwingInProgress  && this.mc.thePlayer.getCurrentEquippedItem() != null && !this.mc.thePlayer.isEating() && !this.mc.thePlayer.isBlocking()) { // swing
+        if (this.mc != null && this.mc.thePlayer != null && this.mc.thePlayer.isSwingInProgress  && this.mc.thePlayer.getCurrentEquippedItem() != null && !this.mc.thePlayer.isEating() && !this.mc.thePlayer.isBlocking()) { // swing
             GlStateManager.scale(0.85f, 0.85f, 0.85f);
             GlStateManager.translate(-0.078f, 0.003f, 0.05f);
         }
     }
-
-    
 }

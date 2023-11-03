@@ -8,7 +8,9 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import com.mojang.realmsclient.gui.ChatFormatting;
 import mrfast.sbf.features.dungeons.*;
+import net.minecraftforge.fml.common.ModContainer;
 import org.lwjgl.input.Keyboard;
 
 import mrfast.sbf.commands.DungeonsCommand;
@@ -19,7 +21,6 @@ import mrfast.sbf.commands.RepartyCommand;
 import mrfast.sbf.commands.ShrugCommand;
 import mrfast.sbf.commands.SkyCommand;
 import mrfast.sbf.commands.TerminalCommand;
-import mrfast.sbf.commands.ViewModelCommand;
 import mrfast.sbf.commands.configCommand;
 import mrfast.sbf.commands.getNbtCommand;
 import mrfast.sbf.commands.pingCommand;
@@ -112,12 +113,11 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 
-@Mod(modid = SkyblockFeatures.MODID, name = SkyblockFeatures.MOD_NAME, version = "1.2.7", acceptedMinecraftVersions = "[1.8.9]", clientSideOnly = true)
+@Mod(modid = SkyblockFeatures.MODID, name = SkyblockFeatures.MOD_NAME, acceptedMinecraftVersions = "[1.8.9]", clientSideOnly = true)
 public class SkyblockFeatures {
-    
     public static final String MODID = "skyblockfeatures";
     public static final String MOD_NAME = "skyblockfeatures";
-    public static String VERSION = "Loading";
+    public static String VERSION = ChatFormatting.RED+"Unknown";
     public static Minecraft mc = Minecraft.getMinecraft();
 
     public static Config config = new Config();
@@ -229,10 +229,10 @@ public class SkyblockFeatures {
         );
         features.forEach(MinecraftForge.EVENT_BUS::register);
         // Checks mod folder for version of Skyblock Features your using
-        for(String modName:listFilesUsingJavaIO(Minecraft.getMinecraft().mcDataDir.getAbsolutePath()+"/mods")) {
-            if(modName.contains("Skyblock-Features")) {
-                // Filters out the mod name to just the version
-                VERSION = modName.substring(0, modName.length()-4).replaceAll("Skyblock-Features-", "");
+        List<ModContainer> modList = Loader.instance().getModList();
+        for(ModContainer mod:modList) {
+            if(mod.getModId().equals(MODID)) {
+                VERSION = mod.getDisplayVersion();
                 break;
             }
         }
@@ -285,7 +285,6 @@ public class SkyblockFeatures {
         commands.add(new RepartyCommand());
         commands.add(new pingCommand());
         commands.add(new sidebarCommand());
-        commands.add(new ViewModelCommand());
         commands.add(new FakePlayerCommand());
         commands.add(new pvCommand());
 
@@ -296,30 +295,11 @@ public class SkyblockFeatures {
         }
     }
 
-    public static boolean smallItems = false;
-    public boolean start = true;
-
     @SubscribeEvent
     public void onTick(TickEvent.ClientTickEvent event) {
         if (event.phase != TickEvent.Phase.START) return;
         // Small items
-        if(start) {
-            smallItems = config.smallItems;
-            start = false;
-        } else {
-            if(smallItems && !config.smallItems) {
-                config.armX = 0;
-                config.armY = 0;
-                config.armZ = 0;
-            }
-            if(!smallItems && config.smallItems) {
-                config.armX = 30;
-                config.armY = -5;
-                config.armZ = -60;
-            }
-            smallItems = config.smallItems;
-        }
-        
+
         if (ticks % 20 == 0) {
             if (mc.thePlayer != null) {
                 Utils.checkForSkyblock();

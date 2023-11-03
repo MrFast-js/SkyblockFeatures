@@ -1714,36 +1714,6 @@ public class Config extends Vigilant {
             subcategory = "Other"
     )
     public boolean autoPartyChat = false;
-
-    @Property(
-            type = PropertyType.SLIDER,
-            name = "X",
-            description = "",
-            category = "General",
-            subcategory = "Item Fov",
-            hidden = true
-    )
-    public int armX = 0;
-
-     @Property(
-            type = PropertyType.SLIDER,
-            name = "Y",
-            description = "",
-            category = "General",
-            subcategory = "Item Fov",
-            hidden = true
-    )
-    public int armY = 0;
-
-     @Property(
-            type = PropertyType.SLIDER,
-            name = "Z",
-            description = "",
-            category = "General",
-            subcategory = "Item Fov",
-            hidden = true
-    )
-    public int armZ = 0;
     
     @Property(
             type = PropertyType.SLIDER,

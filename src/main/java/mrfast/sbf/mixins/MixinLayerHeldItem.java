@@ -38,35 +38,29 @@ public abstract class MixinLayerHeldItem {
 
     @Inject(method = { "doRenderLayer" }, at = { @At(value = "INVOKE", target = "Lnet/minecraft/client/model/ModelBiped;postRenderArm(F)V", ordinal = 0) }, cancellable = true, locals = LocalCapture.CAPTURE_FAILEXCEPTION)
     private void doRenderLayer(final EntityLivingBase entitylivingbaseIn, final float p_177141_2_, final float p_177141_3_, final float partialTicks, final float p_177141_5_, final float p_177141_6_, final float p_177141_7_, final float scale, final CallbackInfo ci, ItemStack itemstack) {
+        if(!SkyblockFeatures.config.oldAnimations) return;
+
         if (entitylivingbaseIn instanceof EntityPlayer) {
-            if (SkyblockFeatures.config.oldAnimations) { // block
-                if (((EntityPlayer)entitylivingbaseIn).isBlocking()) {
-                    if (entitylivingbaseIn.isSneaking()) {
-                        ((ModelBiped)this.livingEntityRenderer.getMainModel()).postRenderArm(0.0325f);
-                        GlStateManager.scale(1.05f, 1.05f, 1.05f);
-                        GlStateManager.translate(-0.58f, 0.32f, -0.07f);
-                        GlStateManager.rotate(-24405.0f, 137290.0f, -2009900.0f, -2654900.0f);
-                    }
-                    else {
-                        ((ModelBiped)this.livingEntityRenderer.getMainModel()).postRenderArm(0.0325f);
-                        GlStateManager.scale(1.05f, 1.05f, 1.05f);
-                        GlStateManager.translate(-0.45f, 0.25f, -0.07f);
-                        GlStateManager.rotate(-24405.0f, 137290.0f, -2009900.0f, -2654900.0f);
-                    }
+            if (((EntityPlayer)entitylivingbaseIn).isBlocking()) {
+                if (entitylivingbaseIn.isSneaking()) {
+                    ((ModelBiped)this.livingEntityRenderer.getMainModel()).postRenderArm(0.0325f);
+                    GlStateManager.scale(1.05f, 1.05f, 1.05f);
+                    GlStateManager.translate(-0.58f, 0.32f, -0.07f);
+                    GlStateManager.rotate(-24405.0f, 137290.0f, -2009900.0f, -2654900.0f);
+                } else {
+                    ((ModelBiped)this.livingEntityRenderer.getMainModel()).postRenderArm(0.0325f);
+                    GlStateManager.scale(1.05f, 1.05f, 1.05f);
+                    GlStateManager.translate(-0.45f, 0.25f, -0.07f);
+                    GlStateManager.rotate(-24405.0f, 137290.0f, -2009900.0f, -2654900.0f);
                 }
-                else {
-                    ((ModelBiped)this.livingEntityRenderer.getMainModel()).postRenderArm(0.0625f);
-                }
-            }
-            else {
+            } else {
                 ((ModelBiped)this.livingEntityRenderer.getMainModel()).postRenderArm(0.0625f);
             }
             GlStateManager.translate(-0.0625f, 0.4375f, 0.0625f);
             if (((EntityPlayer)entitylivingbaseIn).fishEntity != null) {
                 itemstack = new ItemStack((Item) Items.fishing_rod, 0);
             }
-        }
-        else {
+        } else {
             ((ModelBiped)this.livingEntityRenderer.getMainModel()).postRenderArm(0.0625f);
             GlStateManager.translate(-0.0625f, 0.4375f, 0.0625f);
         }

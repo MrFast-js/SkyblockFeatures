@@ -27,14 +27,12 @@ minecraft {
     mappings = "stable_22"
     makeObfSourceJar = false
     clientRunArgs += '--mixin mixins.skyblockfeatures.json'
-//    clientRunArgs += '--tweakClass gg.essential.loader.stage0.EssentialSetupTweaker'
 }
 
 repositories {
     mavenCentral()
     jcenter();
     maven { url "https://repo.spongepowered.org/repository/maven-public/" }
-//    maven { url "https://repo.sk1er.club/repository/maven-public" }
     maven { url "https://jitpack.io/" }
     maven { url "https://repo.essential.gg/repository/maven-public" }
 }
@@ -68,42 +66,37 @@ jar {
             "MixinConfigs": "mixins.skyblockfeatures.json",
             "FMLAT": "mrfast_at.cfg",
             "ModSide": "CLIENT",
-//            "TweakClass": "gg.essential.loader.stage0.EssentialSetupTweaker",
             "TweakOrder": "0"
     )
     from {
         configurations.packageLib.collect { it.isDirectory() ? it : zipTree(it) }
     }
-    destinationDir = file("C:/Users/jedij/AppData/Roaming/.minecraft/mods")
 }
 
 
-processResources
-        {
-            // this will ensure that this task is redone when the versions change.
-            inputs.property "version", project.version
-            inputs.property "mcversion", project.minecraft.version
+processResources {
+    // this will ensure that this task is redone when the versions change.
+    inputs.property "version", project.version
+    inputs.property "mcversion", project.minecraft.version
 
-            // replace stuff in mcmod.info, nothing else
-            from(sourceSets.main.resources.srcDirs) {
-                include 'mcmod.info'
+    // replace stuff in mcmod.info, nothing else
+    from(sourceSets.main.resources.srcDirs) {
+        include 'mcmod.info'
 
-                // replace version and mcversion
-                expand 'version':project.version, 'mcversion':project.minecraft.version
-            }
-            // copy everything else, thats not the mcmod.info
-            from(sourceSets.main.resources.srcDirs) {
-                exclude 'mcmod.info'
-            }
-        }
+        // replace version and mcversion
+        expand 'version':project.version, 'mcversion':project.minecraft.version
+    }
+    // copy everything else, thats not the mcmod.info
+    from(sourceSets.main.resources.srcDirs) {
+        exclude 'mcmod.info'
+    }
+}
 
 println 'Attempting to compile SBF at \u001B[33m'+(new Date())+"\u001B[0m"
 
-// Runs a script once built to crash my game so i can quickly restart with updated version
-task finalize {
+tasks.register('finalize') {
     doLast {
-        println 'Mod Compiled at \u001B[33m'+(new Date())+"\u001B[0m"
-        Runtime.getRuntime().exec("cmd /c start \"\" finish.bat");
+        println 'Mod Compiled at \u001B[33m' + (new Date()) + "\u001B[0m"
     }
 }
 build.finalizedBy(finalize)
