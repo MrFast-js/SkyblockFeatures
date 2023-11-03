@@ -12,7 +12,6 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 
 import com.mojang.realmsclient.gui.ChatFormatting;
-import gg.essential.api.utils.GuiUtil;
 import gg.essential.elementa.ElementaVersion;
 import gg.essential.elementa.UIComponent;
 import gg.essential.elementa.WindowScreen;
@@ -84,7 +83,7 @@ public class ConfigGui extends WindowScreen {
         super(ElementaVersion.V2);
         reloadAllCategories();
         furfSkyThemed = SkyblockFeatures.config.furfSkyThemed;
-        int screenHeight = Utils.GetMC().currentScreen.height;
+        int screenHeight = Utils.GetMC().displayHeight/2;
         UIComponent box = new UIRoundedRectangle(10f)
             .setX(new CenterConstraint())
             .setY(new CenterConstraint())
@@ -272,7 +271,7 @@ public class ConfigGui extends WindowScreen {
                 Utils.playSound("random.orb", 0.1);
                 return;
             }
-            GuiUtil.open(new EditLocationsGui());
+            Utils.openGui(new EditLocationsGui());
         });
         UIComponent discordButton = new ShadowIcon(new ResourceImageFactory("/assets/skyblockfeatures/gui/discord.png",true),true)
             .setX(new RelativeConstraint(0.025f))
@@ -340,7 +339,7 @@ public class ConfigGui extends WindowScreen {
                 SkyblockFeatures.config.editGuiText = new Color(0xFFFFFF);
                 SkyblockFeatures.config.titleColor = new Color(0x00FFFF);
                 SkyblockFeatures.config.versionColor = new Color(0xFFFFFF);
-                GuiUtil.open(new ConfigGui(false));
+                Utils.openGui(new ConfigGui(false));
             });
         }
     }
@@ -725,6 +724,6 @@ public class ConfigGui extends WindowScreen {
 
 
     public void LoadCategory(String categoryName) {
-        GuiUtil.open(new ConfigGui(false));
+        Utils.openGui(new ConfigGui(false));
     }
 }
