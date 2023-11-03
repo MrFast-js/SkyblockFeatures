@@ -256,7 +256,7 @@ public class DungeonsFeatures {
   
         @Override
         public boolean getToggled() {
-            return Utils.inSkyblock && SkyblockFeatures.config.blessingViewer;
+            return Utils.inSkyblock && SkyblockFeatures.config.blessingViewer && Utils.inDungeons;
         }
   
         @Override

@@ -11,7 +11,7 @@ public class DynamicFullbright {
     @SubscribeEvent
     public void onTick(ClientTickEvent event) {
         if(SkyblockFeatures.config.DynamicFullbright) {
-            String loc = SkyblockInfo.getInstance().getMap();
+            String loc = SkyblockInfo.getMap();
             try {
                 if(loc.equals("Dynamic") || CrystalHollowsMap.inCrystalHollows|| Utils.inDungeons) {
                     Utils.GetMC().gameSettings.gammaSetting=((float) SkyblockFeatures.config.DynamicFullbrightDisabled /10);

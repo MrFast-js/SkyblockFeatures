@@ -17,8 +17,8 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 public class SlayerFeatures {
     @SubscribeEvent
     public void onRenderWorld(RenderWorldLastEvent event) {
-        if(Utils.GetMC().theWorld == null || Utils.GetMC().thePlayer == null || SkyblockInfo.getInstance().getLocation()==null) return;
-        if(!SkyblockFeatures.config.highlightBeacons || !SkyblockInfo.getInstance().map.equals("The End")) return;
+        if(Utils.GetMC().theWorld == null || Utils.GetMC().thePlayer == null || SkyblockInfo.getLocation()==null) return;
+        if(!SkyblockFeatures.config.highlightBeacons || !SkyblockInfo.map.equals("The End")) return;
 
         for(TileEntity e:Utils.GetMC().theWorld.loadedTileEntityList) {
             if(e instanceof TileEntityBeacon) {

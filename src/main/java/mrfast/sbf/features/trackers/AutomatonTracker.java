@@ -5,6 +5,7 @@ import com.mojang.realmsclient.gui.ChatFormatting;
 import mrfast.sbf.SkyblockFeatures;
 import mrfast.sbf.core.PricingData;
 import mrfast.sbf.events.SecondPassedEvent;
+import mrfast.sbf.features.overlays.maps.CrystalHollowsMap;
 import mrfast.sbf.gui.components.Point;
 import mrfast.sbf.gui.components.UIElement;
 import mrfast.sbf.utils.Utils;
@@ -176,7 +177,7 @@ public class AutomatonTracker {
 
         @Override
         public boolean getToggled() {
-            return Utils.inSkyblock && SkyblockFeatures.config.AutomatonTracker;
+            return Utils.inSkyblock && SkyblockFeatures.config.AutomatonTracker && CrystalHollowsMap.inCrystalHollows;
         }
 
         @Override

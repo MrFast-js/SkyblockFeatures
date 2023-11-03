@@ -106,8 +106,7 @@ public class GuiManager {
                 GlStateManager.pushMatrix();
                 GlStateManager.translate((element.getX()*(Utils.GetMC().displayWidth/2)), (element.getY()*(Utils.GetMC().displayHeight/2)), 0);
                 GlStateManager.scale(1, 1, 0);
-
-                element.drawElement(); 
+                if(element.getToggled())  element.drawElement();
                 GlStateManager.popMatrix();
             } catch (Exception ex) {
                 ex.printStackTrace();

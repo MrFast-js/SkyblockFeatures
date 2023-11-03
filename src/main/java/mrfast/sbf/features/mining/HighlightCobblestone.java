@@ -23,7 +23,7 @@ public class HighlightCobblestone {
     
     @SubscribeEvent
     public void onBlockPlace(BlockChangeEvent event) {
-        if(!SkyblockFeatures.config.highlightCobblestone || SkyblockInfo.getInstance().getLocation() != null && !CrystalHollowsMap.inCrystalHollows) return;
+        if(!SkyblockFeatures.config.highlightCobblestone || SkyblockInfo.getLocation() != null && !CrystalHollowsMap.inCrystalHollows) return;
         if(event.getNew().getBlock() == Blocks.cobblestone && !cobblestonePostitions.contains(event.pos) && Utils.GetMC().thePlayer.getDistance(event.pos.getX(), event.pos.getY(), event.pos.getZ())<10) {
             if(Utils.GetMC().thePlayer.getHeldItem()!=null) {
                 if(Utils.GetMC().thePlayer.getHeldItem().getDisplayName().contains("Cobblestone")) {

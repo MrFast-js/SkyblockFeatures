@@ -114,7 +114,7 @@ public class IceTreasureTracker {
 
         @Override
         public void drawElement() {
-            if (this.getToggled() && Minecraft.getMinecraft().thePlayer != null && mc.theWorld != null && !hidden && SkyblockInfo.getInstance().localLocation.contains("Glacial")) {
+            if (this.getToggled() && Minecraft.getMinecraft().thePlayer != null && mc.theWorld != null && !hidden) {
                 String[] lines = {
                     ChatFormatting.YELLOW+""+ChatFormatting.BOLD+"Ghost Loot Tracker",
                     ChatFormatting.GREEN+"  Time Elapsed: §r"+Utils.secondsToTime(totalSeconds),
@@ -158,7 +158,7 @@ public class IceTreasureTracker {
 
         @Override
         public boolean getToggled() {
-            return Utils.inSkyblock && SkyblockFeatures.config.IceTreasureTracker;
+            return Utils.inSkyblock && SkyblockFeatures.config.IceTreasureTracker && SkyblockInfo.localLocation.contains("Glacial");
         }
 
         @Override

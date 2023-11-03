@@ -3,6 +3,7 @@ package mrfast.sbf.features.trackers;
 import com.mojang.realmsclient.gui.ChatFormatting;
 
 import mrfast.sbf.SkyblockFeatures;
+import mrfast.sbf.core.SkyblockInfo;
 import mrfast.sbf.events.SecondPassedEvent;
 import mrfast.sbf.gui.components.Point;
 import mrfast.sbf.gui.components.UIElement;
@@ -21,11 +22,10 @@ public class EnderNodeTracker {
     static int enchantedObsidian = 0;
     static int grand = 0;
     static int titanic = 0;
-
     static boolean hidden = true;
     static int seconds = 0;
     static int totalSeconds = 0;
-    static double coinsPerHour = 0;
+
     @SubscribeEvent
     public void onload(WorldEvent.Load event) {
         seconds = 0;
@@ -40,6 +40,8 @@ public class EnderNodeTracker {
 
     @SubscribeEvent
     public void onChat(ClientChatReceivedEvent event) {
+        if(!Utils.inSkyblock || !SkyblockFeatures.config.EnderNodeTracker || !SkyblockInfo.map.contains("The End")) return;
+
         String raw = event.message.getUnformattedText();
         if(raw.contains("ENDER NODE")) {
             seconds = 300;
@@ -58,7 +60,7 @@ public class EnderNodeTracker {
 
     @SubscribeEvent
     public void onSecond(SecondPassedEvent event) {
-        if(Minecraft.getMinecraft().thePlayer != null && Minecraft.getMinecraft().theWorld != null && SkyblockFeatures.config.EnderNodeTracker) {
+        if(Utils.inSkyblock && SkyblockFeatures.config.EnderNodeTracker && SkyblockInfo.map.contains("The End")) {
             if(!hidden) {
                 seconds--;
             }
@@ -74,7 +76,6 @@ public class EnderNodeTracker {
         new EnderNodeGui();
     }
 
-    static String display = "";
     public static class EnderNodeGui extends UIElement {
         public EnderNodeGui() {
             super("Ender Node Tracker", new Point(0.2f, 0.0f));
@@ -125,7 +126,7 @@ public class EnderNodeTracker {
 
         @Override
         public boolean getToggled() {
-            return Utils.inSkyblock && SkyblockFeatures.config.EnderNodeTracker;
+            return Utils.inSkyblock && SkyblockFeatures.config.EnderNodeTracker && SkyblockInfo.map.contains("The End");
         }
 
         @Override

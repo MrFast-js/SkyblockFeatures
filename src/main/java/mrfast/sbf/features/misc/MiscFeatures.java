@@ -99,7 +99,7 @@ public class MiscFeatures {
                 }
             }
             
-            if(!dupe && type == EnumParticleTypes.SPELL_MOB && SkyblockInfo.getInstance().localLocation.contains("Glowing")) {
+            if(!dupe && type == EnumParticleTypes.SPELL_MOB && SkyblockInfo.localLocation.contains("Glowing")) {
                 particles.add(pos);
             }
         }
@@ -149,7 +149,7 @@ public class MiscFeatures {
 
     @SubscribeEvent
     public void onRender(RenderWorldLastEvent event) {
-        if(SkyblockInfo.getInstance().localLocation.contains("Glowing") && SkyblockFeatures.config.highlightMushrooms) {
+        if(SkyblockInfo.localLocation.contains("Glowing") && SkyblockFeatures.config.highlightMushrooms) {
             try {
                 for(Vec3 packet:particles) {
                     Color color = SkyblockFeatures.config.highlightMushroomsColor;

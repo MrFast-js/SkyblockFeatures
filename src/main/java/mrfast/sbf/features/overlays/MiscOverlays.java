@@ -83,11 +83,11 @@ public class MiscOverlays {
 
         @Override
         public void drawElement() {
-            if(mc.thePlayer == null || !Utils.inSkyblock || Utils.GetMC().theWorld==null || SkyblockInfo.getInstance().getLocation()==null) return;
+            if(mc.thePlayer == null || !Utils.inSkyblock || Utils.GetMC().theWorld==null || SkyblockInfo.getLocation()==null) return;
             if (CrystalHollowsMap.inCrystalHollows && SkyblockFeatures.config.dayTracker) {
-                Long time = Utils.GetMC().theWorld.getWorldTime();
-                Double timeDouble = time.doubleValue()/20/60/20;
-                Double day = (Math.round(timeDouble*100.0))/100.0;
+                long time = Utils.GetMC().theWorld.getWorldTime();
+                double timeDouble = (double) time /20/60/20;
+                double day = (Math.round(timeDouble*100.0))/100.0;
                 Utils.drawTextWithStyle3(ChatFormatting.GREEN+"Day "+day, 0, 0);
             }
         }
@@ -100,7 +100,7 @@ public class MiscOverlays {
 
         @Override
         public boolean getToggled() {
-            return SkyblockFeatures.config.dayTracker;
+            return SkyblockFeatures.config.dayTracker && CrystalHollowsMap.inCrystalHollows && Utils.inSkyblock;
         }
 
         @Override

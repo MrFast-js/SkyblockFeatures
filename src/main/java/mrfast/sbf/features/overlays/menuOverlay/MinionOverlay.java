@@ -165,7 +165,7 @@ public class MinionOverlay {
     Entity closestMinion = null;
     @SubscribeEvent
     public void onRecievePacket(RenderWorldLastEvent event) {
-        if(Utils.inSkyblock && SkyblockInfo.getInstance().map.equals("Private Island") && SkyblockFeatures.config.minionOverlay) {
+        if(Utils.inSkyblock && SkyblockInfo.map.equals("Private Island") && SkyblockFeatures.config.minionOverlay) {
             for(Entity e : Utils.GetMC().theWorld.loadedEntityList){
                 if(e instanceof EntityArmorStand) {
                     if(isMinion((EntityArmorStand) e)) {

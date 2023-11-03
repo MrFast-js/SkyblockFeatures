@@ -8,6 +8,7 @@ import com.mojang.realmsclient.gui.ChatFormatting;
 
 import mrfast.sbf.SkyblockFeatures;
 import mrfast.sbf.core.PricingData;
+import mrfast.sbf.core.SkyblockInfo;
 import mrfast.sbf.events.SecondPassedEvent;
 import mrfast.sbf.features.overlays.maps.CrystalHollowsMap;
 import mrfast.sbf.gui.components.Point;
@@ -126,7 +127,7 @@ public class GemstoneMiningOverlay {
 
         @Override
         public boolean getToggled() {
-            return Utils.inSkyblock && SkyblockFeatures.config.gemstoneTracker;
+            return Utils.inSkyblock && SkyblockFeatures.config.gemstoneTracker && SkyblockInfo.map.equals("Dwarven Mines");
         }
 
         @Override
