@@ -3,6 +3,7 @@ package mrfast.sbf.features.trackers;
 import com.mojang.realmsclient.gui.ChatFormatting;
 
 import mrfast.sbf.SkyblockFeatures;
+import mrfast.sbf.core.SkyblockInfo;
 import mrfast.sbf.events.SecondPassedEvent;
 import mrfast.sbf.gui.components.Point;
 import mrfast.sbf.gui.components.UIElement;
@@ -86,9 +87,9 @@ public class PowderTracker {
                     ChatFormatting.GREEN+"  Treasure Chests Found: §r"+Utils.nf.format(treasureChestsFound),
                     ChatFormatting.AQUA+""+ChatFormatting.BOLD+" Drops",
                     ChatFormatting.LIGHT_PURPLE+"  • Gemstone Powder: §r"+Utils.nf.format(gemstonePowderGained),
-                    ChatFormatting.LIGHT_PURPLE+"  • Gemstone Powder Per Hour: §r"+gemPowderPerHour,
+                    ChatFormatting.LIGHT_PURPLE+"  • GP / Hour: §r"+gemPowderPerHour,
                     ChatFormatting.DARK_GREEN+"  • Mithril Powder: §r"+Utils.nf.format(mithrilPowderGained),
-                    ChatFormatting.DARK_GREEN+"  • Gemstone Powder Per Hour: §r"+mithrilPowderPerHour,
+                    ChatFormatting.DARK_GREEN+"  • MP / Hour: §r"+mithrilPowderPerHour,
                 };
                 int lineCount = 0;
                 for(String line:lines) {
@@ -121,7 +122,7 @@ public class PowderTracker {
 
         @Override
         public boolean getToggled() {
-            return Utils.inSkyblock && SkyblockFeatures.config.PowderTracker;
+            return Utils.inSkyblock && SkyblockFeatures.config.PowderTracker && SkyblockInfo.getMap().equals("Crystal Hollows");
         }
 
         @Override

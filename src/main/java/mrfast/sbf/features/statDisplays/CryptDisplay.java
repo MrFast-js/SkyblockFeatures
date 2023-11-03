@@ -69,7 +69,7 @@ public class CryptDisplay {
 
         @Override
         public boolean getToggled() {
-            return Utils.inSkyblock && SkyblockFeatures.config.cryptCount;
+            return Utils.inSkyblock && SkyblockFeatures.config.cryptCount && Utils.inDungeons;
         }
 
         @Override

@@ -55,7 +55,7 @@ public class MythologicalEvent {
 
         if (type == EnumParticleTypes.FOOTSTEP) {
             handleBurrowParticles(packet);
-        } else if (SkyblockInfo.getInstance().localLocation.contains("Volcano")) {
+        } else if (SkyblockInfo.localLocation.contains("Volcano")) {
             handleVolcanoParticles(packet,event);
         }
 

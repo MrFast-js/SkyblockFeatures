@@ -77,7 +77,7 @@ public class SecretDisplay {
 
         @Override
         public boolean getToggled() {
-            return SkyblockFeatures.config.SecretsDisplay;
+            return SkyblockFeatures.config.SecretsDisplay && Utils.inSkyblock && Utils.inDungeons;
         }
 
         @Override

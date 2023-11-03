@@ -40,7 +40,7 @@ public class GiftTracker {
       Minecraft mc = Minecraft.getMinecraft();
       if(mc.theWorld == null || Utils.inDungeons || !Utils.inSkyblock) return;
       if(SkyblockFeatures.config.icecaveHighlightWalls) GlStateManager.disableDepth();
-      boolean inGlacialCave = SkyblockInfo.getInstance().localLocation.contains("Glacial");
+      boolean inGlacialCave = SkyblockInfo.localLocation.contains("Glacial");
       for(Entity entity:mc.theWorld.loadedEntityList) {
          if (SkyblockFeatures.config.presentWaypoints && entity instanceof EntityArmorStand && !inGlacialCave && ((EntityArmorStand)entity).getCurrentArmor(3) != null && ((EntityArmorStand)entity).getCurrentArmor(3).serializeNBT().getCompoundTag("tag").getCompoundTag("SkullOwner").getCompoundTag("Properties").toString().contains("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMTBmNTM5ODUxMGIxYTA1YWZjNWIyMDFlYWQ4YmZjNTgzZTU3ZDcyMDJmNTE5M2IwYjc2MWZjYmQwYWUyIn19fQ=")) {
             boolean isPlayerGift = false;

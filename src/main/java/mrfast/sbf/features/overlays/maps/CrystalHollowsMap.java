@@ -56,7 +56,7 @@ public class CrystalHollowsMap {
     public void onTick(TickEvent.ClientTickEvent event) {
         if(Minecraft.getMinecraft().thePlayer == null || Minecraft.getMinecraft().theWorld == null || !SkyblockFeatures.config.CrystalHollowsMap) return;
 
-        if (SkyblockInfo.getInstance().getLocation() != null && SkyblockInfo.getInstance().getMap().equals("Crystal Hollows")) {
+        if (SkyblockInfo.getLocation() != null && SkyblockInfo.getMap().equals("Crystal Hollows")) {
             inCrystalHollows = true;
         }
 
@@ -99,7 +99,7 @@ public class CrystalHollowsMap {
     }
     @SubscribeEvent
     public void renderWorld(RenderWorldLastEvent event) {
-        if (Minecraft.getMinecraft().thePlayer == null || Minecraft.getMinecraft().theWorld == null || !SkyblockFeatures.config.CrystalHollowsMap || SkyblockInfo.getInstance().getLocation() != null && !CrystalHollowsMap.inCrystalHollows) return;
+        if (Minecraft.getMinecraft().thePlayer == null || Minecraft.getMinecraft().theWorld == null || !SkyblockFeatures.config.CrystalHollowsMap || SkyblockInfo.getLocation() != null && !CrystalHollowsMap.inCrystalHollows) return;
 
         locations.forEach((locationName,pos)->{
             RenderUtil.drawWaypoint(pos,Color.green,locationName,event.partialTicks,true);
@@ -107,7 +107,7 @@ public class CrystalHollowsMap {
     }
 
     private void addLocation(String keyword, String locationName, BlockPos location) {
-        String position = SkyblockInfo.getInstance().localLocation.toLowerCase();
+        String position = SkyblockInfo.localLocation.toLowerCase();
         if (position.contains(keyword) && !locations.containsKey(locationName)) {
             locations.put(locationName, location);
         }
@@ -129,7 +129,7 @@ public class CrystalHollowsMap {
         @Override
         public void drawElement() {
             try {
-                if (loaded && Minecraft.getMinecraft().thePlayer != null && Utils.inSkyblock && Minecraft.getMinecraft().theWorld != null && this.getToggled() && CrystalHollowsMap.inCrystalHollows) {
+                if (loaded && Minecraft.getMinecraft().thePlayer != null && Utils.inSkyblock && Minecraft.getMinecraft().theWorld != null) {
                     GlStateManager.pushMatrix(); 
                         GlStateManager.enableBlend();
                         GlStateManager.color(1, 1, 1, 1);
@@ -229,7 +229,7 @@ public class CrystalHollowsMap {
 
         @Override
         public boolean getToggled() {
-            return SkyblockFeatures.config.CrystalHollowsMap && Utils.inSkyblock;
+            return SkyblockFeatures.config.CrystalHollowsMap && Utils.inSkyblock && CrystalHollowsMap.inCrystalHollows;
         }
 
         @Override

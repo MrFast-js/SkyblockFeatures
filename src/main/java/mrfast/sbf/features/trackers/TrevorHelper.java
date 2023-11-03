@@ -52,8 +52,8 @@ public class TrevorHelper {
     String location = "";
     @SubscribeEvent
     public void onChatMessage(ClientChatReceivedEvent event) {
-        if(!Utils.inSkyblock || SkyblockInfo.getInstance().getLocation()==null || !SkyblockFeatures.config.trevorHelper) return;
-        if(!SkyblockInfo.getInstance().map.contains("The Farming Islands")) return;
+        if(!Utils.inSkyblock || SkyblockInfo.getLocation()==null || !SkyblockFeatures.config.trevorHelper) return;
+        if(!SkyblockInfo.map.contains("The Farming Islands")) return;
 
         String msg = event.message.getUnformattedText();
         if(msg.contains("[NPC] Trevor")) {
@@ -102,8 +102,8 @@ public class TrevorHelper {
 
     @SubscribeEvent
     public void onTick(RenderWorldLastEvent event) {
-        if(!Utils.inSkyblock || SkyblockInfo.getInstance().getLocation()==null || !SkyblockFeatures.config.trevorHelper) return;
-        if(!SkyblockInfo.getInstance().map.contains("The Farming Islands")) return;
+        if(!Utils.inSkyblock || SkyblockInfo.getLocation()==null || !SkyblockFeatures.config.trevorHelper) return;
+        if(!SkyblockInfo.map.contains("The Farming Islands")) return;
         
         for (NetworkPlayerInfo pi : TabListUtils.getTabEntries()) {
             String name = Utils.GetMC().ingameGUI.getTabList().getPlayerName(pi);

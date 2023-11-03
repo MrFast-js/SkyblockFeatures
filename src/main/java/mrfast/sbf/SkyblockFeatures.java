@@ -152,7 +152,7 @@ public class SkyblockFeatures {
             this,
             new ChatEventListener(),
             GUIMANAGER,
-            SkyblockInfo.getInstance(),
+            new SkyblockInfo(),
             new SpamHider(),
             new PricingData(),
             new APIUtils(),

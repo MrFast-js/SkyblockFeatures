@@ -20,18 +20,10 @@ import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 
 public class SkyblockInfo {
-    private static SkyblockInfo instance;
-    public String location = "";
-    public String localLocation = "";
-    public String map = "";
-    public int coins = 0;
-
-    public static SkyblockInfo getInstance() {
-        if (instance == null) {
-            instance = new SkyblockInfo();
-        }
-        return instance;
-    }
+    public static String location = "";
+    public static String localLocation = "";
+    public static String map = "";
+    public static int coins = 0;
 
     private static long startTime;
     private static boolean waitingForResponse = false;
@@ -160,15 +152,15 @@ public class SkyblockInfo {
     }
 
 
-    public String getLocation() {
+    public static String getLocation() {
         return location;
     }
 
-    public int getCoins() {
+    public static int getCoins() {
         return coins;
     }
 
-    public String getMap() {
+    public static String getMap() {
         return map;
     }
 }

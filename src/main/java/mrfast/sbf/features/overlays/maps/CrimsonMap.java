@@ -61,8 +61,8 @@ public class CrimsonMap {
         @Override
         public void drawElement() {
             try {
-                if(SkyblockInfo.getInstance().getLocation()==null) return;
-                if (loaded && Minecraft.getMinecraft().thePlayer != null && Utils.inSkyblock && Minecraft.getMinecraft().theWorld != null && SkyblockFeatures.config.crimsonsIslesMap && SkyblockInfo.getInstance().map.equals("Crimson Isle")) {
+                if(SkyblockInfo.getLocation()==null) return;
+                if (loaded && Minecraft.getMinecraft().thePlayer != null && Utils.inSkyblock && Minecraft.getMinecraft().theWorld != null && SkyblockFeatures.config.crimsonsIslesMap) {
                     GlStateManager.pushMatrix(); 
                         GlStateManager.enableBlend();
                         GlStateManager.color(1, 1, 1, 1);
@@ -132,7 +132,7 @@ public class CrimsonMap {
 
         @Override
         public boolean getToggled() {
-            return SkyblockFeatures.config.crimsonsIslesMap && Utils.inSkyblock;
+            return SkyblockFeatures.config.crimsonsIslesMap && Utils.inSkyblock && SkyblockInfo.map.equals("Crimson Isle");
         }
 
         @Override

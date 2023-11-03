@@ -570,7 +570,7 @@ public class AutoAuctionFlip {
             if(debugLogging) System.out.println(itemName+" Auction Removed Because less than profit margin :"+profit +" Item Value:"+valueOfTheItem+"   Price of item:"+binPrice+" "+aucId); 
             returnValue = true;
         }
-        else if(SkyblockFeatures.config.autoAuctionFlipSetPurse && SkyblockInfo.getInstance().coins<binPrice) {
+        else if(SkyblockFeatures.config.autoAuctionFlipSetPurse && SkyblockInfo.getCoins()<binPrice) {
             if(debugLogging) System.out.println(itemName+" Auction Removed Because Purse Filter");
             returnValue = true;
         }

@@ -26,8 +26,8 @@ public class HighlightCropArea {
     int seconds = 0;
     @SubscribeEvent
     public void secondPassed(SecondPassedEvent event) {
-        if(SkyblockInfo.getInstance()==null || !SkyblockFeatures.config.GardenBlocksToRemove || Utils.GetMC().theWorld==null) return;
-        try {if(!SkyblockInfo.getInstance().map.equals("Garden")) return;} catch (Exception ignored) {}
+        if(!SkyblockFeatures.config.GardenBlocksToRemove || Utils.GetMC().theWorld==null) return;
+        try {if(!SkyblockInfo.map.equals("Garden")) return;} catch (Exception ignored) {}
     
         for(String line:ScoreboardUtil.getSidebarLines()) {
             if (line.contains("Cleanup") && blocksToDestroy.isEmpty()) {
@@ -52,8 +52,8 @@ public class HighlightCropArea {
     
     @SubscribeEvent
     public void onRender(RenderWorldLastEvent event) {
-        if(SkyblockInfo.getInstance()==null || !SkyblockFeatures.config.GardenBlocksToRemove || Utils.GetMC().theWorld==null) return;
-        try {if(!SkyblockInfo.getInstance().map.equals("Garden")) return;} catch (Exception e) {}
+        if(!SkyblockFeatures.config.GardenBlocksToRemove || Utils.GetMC().theWorld==null) return;
+        try {if(!SkyblockInfo.map.equals("Garden")) return;} catch (Exception e) {}
         
         if(cropAreas.isEmpty()) {
             for(int x=-192;x<192;x+=96) {
@@ -93,8 +93,8 @@ public class HighlightCropArea {
 
     @SubscribeEvent
     public void onBlockChange(BlockChangeEvent event) {
-        if(SkyblockInfo.getInstance()==null || !SkyblockFeatures.config.GardenBlocksToRemove || Utils.GetMC().theWorld==null) return;
-        try {if(!SkyblockInfo.getInstance().map.equals("Garden")) return;} catch (Exception ignored) {}
+        if(!SkyblockFeatures.config.GardenBlocksToRemove || Utils.GetMC().theWorld==null) return;
+        try {if(!SkyblockInfo.map.equals("Garden")) return;} catch (Exception ignored) {}
 
         if(blocksToDestroy.contains(event.pos)) {
             blocksToDestroy.remove(blocksToDestroy.indexOf(event.pos));

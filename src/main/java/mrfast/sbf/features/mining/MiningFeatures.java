@@ -59,7 +59,7 @@ public class MiningFeatures {
     @SubscribeEvent
     public void onRenderWorld(RenderWorldLastEvent event) {
         if (!Utils.inSkyblock) return;
-        if(SkyblockFeatures.config.highlightEnderNodes && SkyblockInfo.getInstance().getMap().contains("The End")) {
+        if(SkyblockFeatures.config.highlightEnderNodes && SkyblockInfo.getMap().contains("The End")) {
             try {
                 if(SkyblockFeatures.config.highlightEnderNodesWalls) GlStateManager.disableDepth();
                 Color endColor = SkyblockFeatures.config.highlightEnderNodesEndstoneColor;

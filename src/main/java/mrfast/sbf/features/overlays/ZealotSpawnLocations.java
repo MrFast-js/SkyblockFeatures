@@ -76,7 +76,7 @@ public class ZealotSpawnLocations {
     public void onRender(RenderWorldLastEvent event) {
         if(!SkyblockFeatures.config.showZealotSpawns) return;
 
-        loc = SkyblockInfo.getInstance().localLocation;
+        loc = SkyblockInfo.localLocation;
         inNest = loc.contains("Dragons Nest");
         if(inNest) {
             for(BlockPos pos:zealotSpawns) {
@@ -95,7 +95,7 @@ public class ZealotSpawnLocations {
             }
         }
         // Track Spawn locations
-        // if(SkyblockInfo.getInstance().localLocation.contains("Bruiser")) {
+        // if(SkyblockInfo.localLocation.contains("Bruiser")) {
         //     for(Entity e:bruisers.keySet()) {
         //         BlockPos pos = bruisers.get(e);
         //         MiscFeatures.drawParticleESP(
@@ -117,8 +117,8 @@ public class ZealotSpawnLocations {
 
     @SubscribeEvent
     public void onEntityJoinWorld(EntityJoinWorldEvent event) {
-        if(Utils.GetMC().theWorld == null || Utils.GetMC().thePlayer == null || SkyblockInfo.getInstance().getLocation()==null) return;
-        if(SkyblockFeatures.config.showZealotSpawns && Utils.inSkyblock && SkyblockInfo.getInstance().map.equals("The End")) {
+        if(Utils.GetMC().theWorld == null || Utils.GetMC().thePlayer == null || SkyblockInfo.getLocation()==null) return;
+        if(SkyblockFeatures.config.showZealotSpawns && Utils.inSkyblock && SkyblockInfo.map.equals("The End")) {
             for(Entity entity:Utils.GetMC().theWorld.loadedEntityList) {
                 if(entity instanceof EntityArmorStand && !zealots.contains(entity) && inNest) {
                     if(entity.getCustomNameTag().contains("Zealot")) {
@@ -203,7 +203,7 @@ public class ZealotSpawnLocations {
         @Override
         public void drawElement() {
             if(mc.thePlayer == null || !Utils.inSkyblock) return;
-            if (this.getToggled() && Minecraft.getMinecraft().thePlayer != null && mc.theWorld != null && (inNest||loc.contains("Zealot Bruiser Hideout"))) {
+            if (this.getToggled() && Minecraft.getMinecraft().thePlayer != null && mc.theWorld != null) {
                 mc.fontRendererObj.drawStringWithShadow(zealotDisplay, 0, 0, 0xFFFFFF);
                 mc.fontRendererObj.drawStringWithShadow(bruiserDisplay, 0, (float) (Utils.GetMC().fontRendererObj.FONT_HEIGHT+0.1), 0xFFFFFF);
             }
@@ -217,7 +217,7 @@ public class ZealotSpawnLocations {
 
         @Override
         public boolean getToggled() {
-            return Utils.inSkyblock && SkyblockFeatures.config.showZealotSpawns;
+            return Utils.inSkyblock && SkyblockFeatures.config.showZealotSpawns && SkyblockInfo.map.equals("The End");
         }
 
         @Override

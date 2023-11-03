@@ -75,7 +75,7 @@ public class RiftFeatures {
 
     @SubscribeEvent
     public void onRenderWorld(RenderWorldLastEvent event) {
-        String location = Utils.cleanColor(SkyblockInfo.getInstance().localLocation);
+        String location = Utils.cleanColor(SkyblockInfo.localLocation);
         if(location.contains("Mirrorverse") && SkyblockFeatures.config.riftMirrorverseHelper) {
             // Laser puzzle
             if(Utils.GetMC().thePlayer.getPosition().getX()<-297) {

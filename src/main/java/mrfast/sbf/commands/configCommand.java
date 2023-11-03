@@ -70,7 +70,7 @@ public class configCommand extends CommandBase {
                 Utils.SendMessage(ChatFormatting.YELLOW+"Your using Skyblock Features v"+SkyblockFeatures.VERSION);
                 break;
             case "loc":
-                Utils.SendMessage(ChatFormatting.GRAY+"Local:'"+SkyblockInfo.getInstance().localLocation+"' Map:"+SkyblockInfo.getInstance().map+" Location:'"+SkyblockInfo.getInstance().location+"'");
+                Utils.SendMessage(ChatFormatting.GRAY+"Local:'"+SkyblockInfo.localLocation+"' Map:"+SkyblockInfo.map+" Location:'"+SkyblockInfo.location+"'");
                 break;
             case "resetgui":
                 GuiManager.GuiPositions.forEach((name,point)->{

@@ -443,7 +443,7 @@ public class DungeonMap {
 
         @Override
         public boolean getToggled() {
-            return SkyblockFeatures.config.dungeonMap;
+            return Utils.inSkyblock && SkyblockFeatures.config.dungeonMap && Utils.inDungeons;
         }
 
         @Override
