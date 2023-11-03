@@ -311,8 +311,6 @@ public class SkyblockFeatures {
     }
 
     private KeyBinding toggleSprint;
-    private static boolean toggled = true;
-
     public final static KeyBinding reloadPartyFinder = new KeyBinding("Reload Party Finder", Keyboard.KEY_R, "Skyblock Features");
     public final static KeyBinding openBestFlipKeybind = new KeyBinding("Open Best Flip", Keyboard.KEY_J, "Skyblock Features");
     
@@ -321,21 +319,21 @@ public class SkyblockFeatures {
         MinecraftForge.EVENT_BUS.register(this);
         ClientRegistry.registerKeyBinding(openBestFlipKeybind);
 
-        toggleSprint = new KeyBinding("Toggle Sprint", Keyboard.KEY_I, "Skyblock Features");
+        toggleSprint = new KeyBinding("Toggle Sprint", 0, "Skyblock Features");
         ClientRegistry.registerKeyBinding(toggleSprint);
     }
 
     @SubscribeEvent
     public void onTick2(TickEvent.ClientTickEvent e) {
         if (toggleSprint.isPressed()) {
-            if (toggled) {
+            if (config.toggleSprint) {
                 Utils.SendMessage(EnumChatFormatting.RED + "Togglesprint disabled.");
             } else {
                 Utils.SendMessage(EnumChatFormatting.GREEN + "Togglesprint enabled.");
             }
-            toggled = !toggled;
+            config.toggleSprint = !config.toggleSprint;
         }
-        if (toggled) {
+        if(config.toggleSprint) {
             KeyBinding.setKeyBindState(mc.gameSettings.keyBindSprint.getKeyCode(), true);
         }
     }

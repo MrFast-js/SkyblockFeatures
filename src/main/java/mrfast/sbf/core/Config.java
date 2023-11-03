@@ -1714,6 +1714,16 @@ public class Config extends Vigilant {
             subcategory = "Other"
     )
     public boolean autoPartyChat = false;
+
+    @Property(
+            type = PropertyType.SWITCH,
+            name = "toggle sprint",
+            description = "",
+            category = "General",
+            subcategory = "Item Fov",
+            hidden = true
+    )
+    public boolean toggleSprint = false;
     
     @Property(
             type = PropertyType.SLIDER,
