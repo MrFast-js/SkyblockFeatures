@@ -218,6 +218,11 @@ public class ProfileViewerGui extends WindowScreen {
         // This sets the skin from the uuid
         Utils.GetMC().getSessionService().fillProfileProperties(profile, true);
 
+        generalHoverables = new HashMap<>();
+        HOTMHoverables = new HashMap<>();
+        petHoverables = new HashMap<>();
+        dungeonHoverables = new HashMap<>();
+
         playerUuid = uuidString.replaceAll("-","");
         {
             box = new UIRoundedRectangle(10f)
@@ -2036,7 +2041,7 @@ public class ProfileViewerGui extends WindowScreen {
                 // TODO: handle exception
             }
             try {
-                new UIText(g+"  Fastest Time: "+bold+(Utils.secondsToTime(floorStats.get("fastest_time").getAsInt()/1000)))
+                new UIText(g+"  Best Time: "+bold+(Utils.secondsToTime(floorStats.get("fastest_time").getAsInt()/1000)))
                     .setY(new SiblingConstraint(2f))
                     .setChildOf(box);   
             } catch (Exception e) {
