@@ -187,12 +187,10 @@ public class MiscFeatures {
     @SubscribeEvent
     public void onDrawContainerTitle(TitleDrawnEvent event) {
         if (event.gui instanceof GuiChest && SkyblockFeatures.config.extraProfileInfo) {
-            String chestName = event.displayName;
-
             boolean hasProfileHead = event.gui.inventorySlots.getSlot(22).getHasStack();
             if(!hasProfileHead) return;
             ItemStack profileHead = event.gui.inventorySlots.getSlot(22).getStack();
-            if(!(profileHead.getItem() instanceof ItemSkull) || !ItemUtils.getItemLore(profileHead).toString().contains("SkyBlock Level:")) return;
+            if(!(profileHead.getItem() instanceof ItemSkull) || !ItemUtils.getItemLore(profileHead).toString().contains("Oldest Profile:")) return;
 
             if(!gotNetworth && !tryingNetworth) {
                 tryingNetworth = true;
