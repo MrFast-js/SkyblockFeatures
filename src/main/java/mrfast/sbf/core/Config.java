@@ -729,7 +729,7 @@ public class Config extends Vigilant {
             category = "Miscellaneous",
             subcategory = "Mayor Jerry"
     )
-    public boolean jerry = false;
+    public boolean jerryTimer = false;
 
     @Property(
             type = PropertyType.SWITCH,

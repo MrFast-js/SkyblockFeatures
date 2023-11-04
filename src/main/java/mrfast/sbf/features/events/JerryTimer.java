@@ -1,12 +1,13 @@
 package mrfast.sbf.features.events;
 
+import com.google.gson.JsonObject;
 import mrfast.sbf.SkyblockFeatures;
 import mrfast.sbf.events.SecondPassedEvent;
 import mrfast.sbf.gui.components.Point;
 import mrfast.sbf.gui.components.UIElement;
+import mrfast.sbf.utils.APIUtils;
 import mrfast.sbf.utils.Utils;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -16,12 +17,25 @@ public class JerryTimer {
     public static int seconds = 360;
     public static  String display = EnumChatFormatting.LIGHT_PURPLE + "Jerry: " + "6:00";
     private static final Minecraft mc = Minecraft.getMinecraft();
-    RenderManager renderManager = mc.getRenderManager();
-    
+    static boolean checkedMayor = false;
+    static boolean isJerryMayor = false;
+
     @SubscribeEvent
     public void onSeconds(SecondPassedEvent event) {
-        if (!SkyblockFeatures.config.jerry) { return; }
-        if(!Utils.inSkyblock) { return; }
+        if (!SkyblockFeatures.config.jerryTimer || !Utils.inSkyblock) return;
+
+        if(!checkedMayor) {
+            checkedMayor = true;
+            new Thread(()->{
+                JsonObject mayorResponse = APIUtils.getJSONResponse("https://api.hypixel.net/resources/skyblock/election");
+                String currentMayor = mayorResponse.get("mayor").getAsJsonObject().get("name").getAsString();
+                if(currentMayor.equals("Jerry")) {
+                    isJerryMayor = true;
+                }
+            }).start();
+        }
+        if(!isJerryMayor) return;
+
         if (seconds < 361 && seconds > 0) {
             seconds--;
         }
@@ -36,9 +50,11 @@ public class JerryTimer {
             display = EnumChatFormatting.LIGHT_PURPLE + "Jerry: " + EnumChatFormatting.RED + seconds / 60 + ":" + secondsDisplay;
         }
     }
+
     @SubscribeEvent
     public void onChat(ClientChatReceivedEvent event) {
-        if (!SkyblockFeatures.config.jerry) { return; }
+        if (!SkyblockFeatures.config.jerryTimer || !isJerryMayor) return;
+
         String unformatted = event.message.getUnformattedText();
         if (unformatted.contains("☺") && unformatted.contains("Jerry") && !unformatted.contains("Jerry Box")) {
             seconds = 359;
@@ -68,7 +84,7 @@ public class JerryTimer {
 
         @Override
         public boolean getToggled() {
-            return Utils.inSkyblock && !Utils.inDungeons && SkyblockFeatures.config.jerry;
+            return Utils.inSkyblock && isJerryMayor && SkyblockFeatures.config.jerryTimer;
         }
 
         @Override
