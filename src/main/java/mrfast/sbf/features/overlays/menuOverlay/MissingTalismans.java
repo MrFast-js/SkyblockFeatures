@@ -1,9 +1,6 @@
 package mrfast.sbf.features.overlays.menuOverlay;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -76,11 +73,12 @@ public class MissingTalismans {
         if (event.gui instanceof GuiChest) {
             if(inAccessoryBag) {
                 if(MissingTalismans==null) {
-                    GuiUtils.drawText(ChatFormatting.RED+"Waiting for SkyCrypt..",0,0, GuiUtils.TextStyle.DROP_SHADOW);
+                    GuiUtils.drawSideMenu(Arrays.asList(new String[]{ChatFormatting.RED+"Waiting for SkyCrypt.."}),GuiUtils.TextStyle.DROP_SHADOW);
                     return;
                 }
-                int index = 1;
-                Utils.GetMC().fontRendererObj.drawStringWithShadow(ChatFormatting.WHITE+"Missing Talismans ("+MissingTalismans.size()+")", 190, -90, -1);
+                List<String> formatted = new ArrayList<>();
+
+                formatted.add(ChatFormatting.WHITE+"Missing Talismans ("+MissingTalismans.size()+")");
                 LinkedHashMap<String,Integer> accessories = new LinkedHashMap<>();
                 LinkedHashMap<String,Integer> sortedMap = new LinkedHashMap<>();
 
@@ -98,7 +96,6 @@ public class MissingTalismans {
                     .stream()
                     .sorted(Map.Entry.comparingByValue())
                     .forEachOrdered(x -> sortedMap.put(x.getKey(), x.getValue()));
-                List<String> formatted = new ArrayList<>();
                 for(String itemName:sortedMap.keySet()) {
                     String price = ChatFormatting.GOLD+" ("+(Utils.nf.format(sortedMap.get(itemName)))+")";
                     if(sortedMap.get(itemName)==0) price=ChatFormatting.RED+" No Price Found";
