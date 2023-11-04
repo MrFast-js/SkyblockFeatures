@@ -3,6 +3,7 @@ package mrfast.sbf.features.items;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import mrfast.sbf.utils.GuiUtils;
 import org.lwjgl.input.Keyboard;
 
 import com.mojang.realmsclient.gui.ChatFormatting;
@@ -193,7 +194,7 @@ public class HideGlass {
                         int y = chest.inventorySlots.get(i).yDisplayPosition;
                         GlStateManager.pushMatrix();
                         GlStateManager.translate(0, 0, 700);
-                        Utils.drawTextWithStyle3(ChatFormatting.GREEN+""+i, x+6, y+6);
+                        GuiUtils.drawText(ChatFormatting.GREEN+""+i,x+6, y+6, GuiUtils.TextStyle.BLACK_OUTLINE);
                         GlStateManager.popMatrix();
                     }
                 }

@@ -1,6 +1,8 @@
 package mrfast.sbf.features.overlays.menuOverlay;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.google.gson.JsonArray;
@@ -13,6 +15,7 @@ import mrfast.sbf.core.PricingData;
 import mrfast.sbf.events.GuiContainerEvent;
 import mrfast.sbf.events.GuiContainerEvent.TitleDrawnEvent;
 import mrfast.sbf.utils.APIUtils;
+import mrfast.sbf.utils.GuiUtils;
 import mrfast.sbf.utils.Utils;
 import net.minecraft.client.gui.inventory.GuiChest;
 import net.minecraft.inventory.ContainerChest;
@@ -73,11 +76,9 @@ public class MissingTalismans {
         if (event.gui instanceof GuiChest) {
             if(inAccessoryBag) {
                 if(MissingTalismans==null) {
-                    Utils.drawGraySquareWithBorder(180, 0, 200, 3*Utils.GetMC().fontRendererObj.FONT_HEIGHT,3);
-                    Utils.GetMC().fontRendererObj.drawStringWithShadow(ChatFormatting.RED+"Waiting for SkyCrypt..", 190, (10), -1);
+                    GuiUtils.drawText(ChatFormatting.RED+"Waiting for SkyCrypt..",0,0, GuiUtils.TextStyle.DROP_SHADOW);
                     return;
                 }
-                Utils.drawGraySquareWithBorder(180, -100, 200, (int) (MissingTalismans.size()*1.15*Utils.GetMC().fontRendererObj.FONT_HEIGHT),3);
                 int index = 1;
                 Utils.GetMC().fontRendererObj.drawStringWithShadow(ChatFormatting.WHITE+"Missing Talismans ("+MissingTalismans.size()+")", 190, -90, -1);
                 LinkedHashMap<String,Integer> accessories = new LinkedHashMap<>();
@@ -97,12 +98,13 @@ public class MissingTalismans {
                     .stream()
                     .sorted(Map.Entry.comparingByValue())
                     .forEachOrdered(x -> sortedMap.put(x.getKey(), x.getValue()));
+                List<String> formatted = new ArrayList<>();
                 for(String itemName:sortedMap.keySet()) {
                     String price = ChatFormatting.GOLD+" ("+(Utils.nf.format(sortedMap.get(itemName)))+")";
                     if(sortedMap.get(itemName)==0) price=ChatFormatting.RED+" No Price Found";
-                    Utils.GetMC().fontRendererObj.drawStringWithShadow(itemName+price, 190, (index*(Utils.GetMC().fontRendererObj.FONT_HEIGHT+1)+10)-100, -1);
-                    index++;
+                    formatted.add(itemName+price);
                 }
+                GuiUtils.drawSideMenu(formatted, GuiUtils.TextStyle.DROP_SHADOW);
             }
         }
     }

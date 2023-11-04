@@ -10,6 +10,7 @@ import com.mojang.realmsclient.gui.ChatFormatting;
 import mrfast.sbf.SkyblockFeatures;
 import mrfast.sbf.core.PricingData;
 import mrfast.sbf.events.GuiContainerEvent;
+import mrfast.sbf.utils.GuiUtils;
 import mrfast.sbf.utils.ItemUtils;
 import mrfast.sbf.utils.Utils;
 import net.minecraft.client.gui.inventory.GuiChest;
@@ -94,34 +95,22 @@ public class TradingOverlay {
     }
 
     public void drawOtherPersonValue(Double total,HashMap<String,Double> items) {
-        Utils.drawGraySquareWithBorder(180, 0, 150, (int) ((items.size()+3)*2*Utils.GetMC().fontRendererObj.FONT_HEIGHT),3);
-                
         List<String> lines = new ArrayList<>(Arrays.asList(ChatFormatting.WHITE+"Total Value: "+ChatFormatting.GOLD+Utils.formatNumber(total),""));
         for(String itemName:items.keySet()) {
             String name = itemName;
             if(itemName.length()>21) name = itemName.substring(0, 20)+"..";
             lines.add(name+" "+ChatFormatting.DARK_GRAY+ChatFormatting.ITALIC+"("+Utils.formatNumber(items.get(itemName))+")");
         }
-        int lineCount = 0;
-        for(String line:lines) {
-            Utils.GetMC().fontRendererObj.drawStringWithShadow(line, 190, lineCount*(Utils.GetMC().fontRendererObj.FONT_HEIGHT+1)+10, -1);
-            lineCount++;
-        }
+        GuiUtils.drawSideMenu(lines, GuiUtils.TextStyle.DROP_SHADOW);
     }
 
     public void drawSelfPersonValue(Double total,HashMap<String,Double> items) {
-        Utils.drawGraySquareWithBorder(-155, 0, 150, (int) ((items.size()+3)*2*Utils.GetMC().fontRendererObj.FONT_HEIGHT),3);
-                
         List<String> lines = new ArrayList<>(Arrays.asList(ChatFormatting.WHITE+"Total Value: "+ChatFormatting.GOLD+Utils.formatNumber(total),""));
         for(String itemName:items.keySet()) {
             String name = itemName;
             if(itemName.length()>21) name = itemName.substring(0, 20)+"..";
             lines.add(name+" "+ChatFormatting.DARK_GRAY+ChatFormatting.ITALIC+"("+Utils.formatNumber(items.get(itemName))+")");
         }
-        int lineCount = 0;
-        for(String line:lines) {
-            Utils.GetMC().fontRendererObj.drawStringWithShadow(line, -145, lineCount*(Utils.GetMC().fontRendererObj.FONT_HEIGHT+1)+10, -1);
-            lineCount++;
-        }
+        GuiUtils.drawSideMenu(lines, GuiUtils.TextStyle.DROP_SHADOW,true);
     }
 }

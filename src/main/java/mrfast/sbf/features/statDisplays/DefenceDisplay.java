@@ -3,6 +3,7 @@ package mrfast.sbf.features.statDisplays;
 import mrfast.sbf.SkyblockFeatures;
 import mrfast.sbf.gui.components.Point;
 import mrfast.sbf.gui.components.UIElement;
+import mrfast.sbf.utils.GuiUtils;
 import mrfast.sbf.utils.Utils;
 import net.minecraft.client.Minecraft;
 
@@ -27,14 +28,15 @@ public class DefenceDisplay {
             if(mc.thePlayer == null || !Utils.inSkyblock) return;
             display = Utils.Defence+"";
             if (this.getToggled() && Minecraft.getMinecraft().thePlayer != null && mc.theWorld != null) {
-                Utils.drawTextWithStyle(display, 0, 0, 0x55FF55);
+                GuiUtils.drawText("§a"+display, 0, 0, GuiUtils.TextStyle.BLACK_OUTLINE);
             }
         }
         @Override
         public void drawElementExample() {
             if(mc.thePlayer == null || !Utils.inSkyblock) return;
             display = Utils.Defence+"";
-            Utils.drawTextWithStyle(display, 0, 0, 0x55FF55);
+            GuiUtils.drawText("§a"+display, 0, 0, GuiUtils.TextStyle.BLACK_OUTLINE);
+
         }
 
         @Override

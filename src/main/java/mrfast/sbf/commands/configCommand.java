@@ -15,6 +15,7 @@ import mrfast.sbf.gui.GuiManager;
 import mrfast.sbf.gui.ConfigGui;
 import mrfast.sbf.gui.components.Point;
 import mrfast.sbf.utils.APIUtils;
+import mrfast.sbf.utils.GuiUtils;
 import mrfast.sbf.utils.Utils;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.command.CommandBase;
@@ -60,7 +61,7 @@ public class configCommand extends CommandBase {
         EntityPlayerSP player = (EntityPlayerSP) sender;
         if (args.length == 0) {
             // GuiUtil.open(Objects.requireNonNull(skyblockfeatures.config.gui()));
-            Utils.openGui(new ConfigGui(true));
+            GuiUtils.openGui(new ConfigGui(true));
             return;
         }
         String subcommand = args[0].toLowerCase(Locale.ENGLISH);
@@ -80,7 +81,7 @@ public class configCommand extends CommandBase {
                 Utils.SendMessage("Gui Positions Reset!");
                 break;
             case "config":
-                Utils.openGui(new ConfigGui(true));
+                GuiUtils.openGui(new ConfigGui(true));
                 break;
             case "help":
                 player.addChatMessage(new ChatComponentText("§9➜ Skyblock Features Commands and Info" + "\n" +
@@ -101,7 +102,7 @@ public class configCommand extends CommandBase {
                 " §3/sky §l➡ §bGives the link to the specified players Skycrypt profile."));
                 break;
             case "edit":
-                Utils.openGui(new EditLocationsGui());
+                GuiUtils.openGui(new EditLocationsGui());
                 break;
             default:
                 player.addChatMessage(new ChatComponentText("§bSBF ➜ §cThis command doesn't exist!\n  §cUse §b/sbf help§c for a full list of commands"));

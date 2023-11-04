@@ -10,6 +10,7 @@ import mrfast.sbf.core.SkyblockInfo;
 import mrfast.sbf.features.overlays.maps.CrystalHollowsMap;
 import mrfast.sbf.gui.components.Point;
 import mrfast.sbf.gui.components.UIElement;
+import mrfast.sbf.utils.GuiUtils;
 import mrfast.sbf.utils.Utils;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
@@ -49,14 +50,14 @@ public class MiscOverlays {
         public void drawElement() {
             if(mc.thePlayer == null || !Utils.inSkyblock) return;
             if (this.getToggled() && Minecraft.getMinecraft().thePlayer != null && mc.theWorld != null) {
-                Utils.drawTextWithStyle3("["+getTime()+"]", 0, 0);
+                GuiUtils.drawText("["+getTime()+"]",0,0, GuiUtils.TextStyle.BLACK_OUTLINE);
             }
         }
 
         @Override
         public void drawElementExample() {
             if(mc.thePlayer == null || !Utils.inSkyblock) return;
-            Utils.drawTextWithStyle3("["+getTime()+"]", 0, 0);
+            GuiUtils.drawText("["+getTime()+"]",0,0, GuiUtils.TextStyle.BLACK_OUTLINE);
         }
 
         @Override
@@ -88,14 +89,16 @@ public class MiscOverlays {
                 long time = Utils.GetMC().theWorld.getWorldTime();
                 double timeDouble = (double) time /20/60/20;
                 double day = (Math.round(timeDouble*100.0))/100.0;
-                Utils.drawTextWithStyle3(ChatFormatting.GREEN+"Day "+day, 0, 0);
+
+                GuiUtils.drawText(ChatFormatting.GREEN+"Day "+day,0,0, GuiUtils.TextStyle.BLACK_OUTLINE);
             }
         }
 
         @Override
         public void drawElementExample() {
             if(mc.thePlayer == null || !Utils.inSkyblock) return;
-            Utils.drawTextWithStyle3(ChatFormatting.GREEN+"Day 2.12", 0, 0);
+            GuiUtils.drawText(ChatFormatting.GREEN+"Day "+2,0,0, GuiUtils.TextStyle.BLACK_OUTLINE);
+
         }
 
         @Override

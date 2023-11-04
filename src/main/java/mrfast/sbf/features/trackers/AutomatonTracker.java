@@ -83,7 +83,7 @@ public class AutomatonTracker {
     }
 
     @SubscribeEvent
-    public void onDrawSlot(SecondPassedEvent event) {
+    public void onSecond2(SecondPassedEvent event) {
         if(Utils.GetMC().thePlayer == null || !Utils.inSkyblock || !SkyblockFeatures.config.AutomatonTracker) return;
         for(int i=0;i<Utils.GetMC().thePlayer.inventory.mainInventory.length;i++) {
             if(Utils.GetMC().thePlayer.inventory.mainInventory[i] != null) {

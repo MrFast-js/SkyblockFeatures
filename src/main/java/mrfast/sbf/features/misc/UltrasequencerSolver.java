@@ -8,6 +8,7 @@ import mrfast.sbf.SkyblockFeatures;
 import mrfast.sbf.events.SlotClickedEvent;
 import mrfast.sbf.events.GuiContainerEvent.TitleDrawnEvent;
 import mrfast.sbf.features.items.HideGlass;
+import mrfast.sbf.utils.GuiUtils;
 import mrfast.sbf.utils.Utils;
 import net.minecraft.client.gui.inventory.GuiChest;
 import net.minecraft.inventory.ContainerChest;
@@ -118,9 +119,9 @@ public class UltrasequencerSolver {
     public void onDrawSlot(GuiScreenEvent.DrawScreenEvent.Post event) {
         if(!SkyblockFeatures.config.enchantingSolvers) return;
         if(slotX ==0) return;
-        Utils.drawLineInGui(slotX +400, slotY+168, event.mouseX, event.mouseY, new Color(0x00FF00), 2,1);
+        GuiUtils.drawLineInGui(slotX +400, slotY+168, event.mouseX, event.mouseY, new Color(0x00FF00), 2,1);
         if(nextslotX ==0) return;
-        Utils.drawLineInGui(slotX +400, slotY+168, nextslotX +400, nextslotY+168, new Color(0xFFFF00), 2,0.6);
+        GuiUtils.drawLineInGui(slotX +400, slotY+168, nextslotX +400, nextslotY+168, new Color(0xFFFF00), 2,0.6);
     }
 
     @SubscribeEvent

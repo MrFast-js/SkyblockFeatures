@@ -13,7 +13,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
-import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -27,9 +26,6 @@ import com.google.gson.JsonObject;
 import com.mojang.authlib.GameProfile;
 import com.mojang.realmsclient.gui.ChatFormatting;
 
-//import gg.essential.api.EssentialAPI;
-//import gg.essential.api.gui.EmulatedPlayerBuilder;
-//import gg.essential.api.utils.GuiUtil;
 import gg.essential.api.EssentialAPI;
 import gg.essential.api.gui.EmulatedPlayerBuilder;
 import gg.essential.elementa.ElementaVersion;
@@ -66,7 +62,6 @@ import mrfast.sbf.gui.components.InventoryComponent;
 import mrfast.sbf.gui.components.ItemStackComponent;
 import mrfast.sbf.utils.APIUtils;
 import mrfast.sbf.utils.ItemRarity;
-import mrfast.sbf.utils.ItemUtils;
 import mrfast.sbf.utils.Utils;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -101,7 +96,7 @@ public class ProfileViewerGui extends WindowScreen {
         if(quickSwapping) {
             quickSwapping = false;
         } else {
-            Utils.GetMC().gameSettings.guiScale = Utils.lastGuiScale;
+            Utils.GetMC().gameSettings.guiScale = mrfast.sbf.utils.GuiUtils.lastGuiScale;
         }
     }
 
@@ -207,7 +202,7 @@ public class ProfileViewerGui extends WindowScreen {
         String uuidString = APIUtils.getUUID(username,true);
         UUID uuid = UUID.fromString(uuidString);
 
-        if(doAnimation) Utils.saveGuiScale();
+        if(doAnimation) mrfast.sbf.utils.GuiUtils.saveGuiScale();
 
         screenHeight = Utils.GetMC().currentScreen.height;
         fontScale = (screenHeight/540d);
@@ -665,7 +660,7 @@ public class ProfileViewerGui extends WindowScreen {
             ProfileViewerUtils.animateX(lastSelectedButton, 8f);
             System.out.println("Loading PROFILEEE: "+value+" "+selectedProfileUUID);
             quickSwapping = true;
-            Utils.openGui(new ProfileViewerGui(false,value,selectedProfileUUID));
+            mrfast.sbf.utils.GuiUtils.openGui(new ProfileViewerGui(false,value,selectedProfileUUID));
             return Unit.INSTANCE;
         });
 

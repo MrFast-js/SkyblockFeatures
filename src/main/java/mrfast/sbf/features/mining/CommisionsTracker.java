@@ -12,6 +12,7 @@ import mrfast.sbf.core.SkyblockInfo;
 import mrfast.sbf.features.overlays.maps.CrystalHollowsMap;
 import mrfast.sbf.gui.components.Point;
 import mrfast.sbf.gui.components.UIElement;
+import mrfast.sbf.utils.GuiUtils;
 import mrfast.sbf.utils.TabListUtils;
 import mrfast.sbf.utils.Utils;
 import net.minecraft.client.Minecraft;
@@ -73,9 +74,7 @@ public class CommisionsTracker {
               }
           } catch (Exception ignored) {}
 
-          for (int i = 0; i < text.size(); i++) {
-            Utils.drawTextWithStyle3(text.get(i), 0, i * 10);
-          }
+          GuiUtils.drawTextLines(text,0,0, GuiUtils.TextStyle.BLACK_OUTLINE);
       }
 
       @Override
@@ -85,9 +84,7 @@ public class CommisionsTracker {
           text.add(" Upper Mines Titanium: "+ChatFormatting.LIGHT_PURPLE+"["+ChatFormatting.GREEN+"7"+ChatFormatting.GOLD+"/"+ChatFormatting.GREEN+"10"+ChatFormatting.LIGHT_PURPLE+"]");
           text.add(" Goblin Raid: "+ChatFormatting.LIGHT_PURPLE+"["+ChatFormatting.GREEN+"0"+ChatFormatting.GOLD+"/"+ChatFormatting.GREEN+"1"+ChatFormatting.LIGHT_PURPLE+"]");
 
-          for (int i = 0; i < text.size(); i++) {
-            Utils.drawTextWithStyle3(text.get(i), 0, i * 10);
-          }
+          GuiUtils.drawTextLines(text,0,0, GuiUtils.TextStyle.BLACK_OUTLINE);
       }
 
       @Override

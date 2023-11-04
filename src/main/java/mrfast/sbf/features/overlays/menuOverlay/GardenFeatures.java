@@ -1,6 +1,7 @@
 package mrfast.sbf.features.overlays.menuOverlay;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import com.mojang.realmsclient.gui.ChatFormatting;
@@ -10,6 +11,7 @@ import mrfast.sbf.core.PricingData;
 import mrfast.sbf.events.GuiContainerEvent.TitleDrawnEvent;
 import mrfast.sbf.events.SecondPassedEvent;
 import mrfast.sbf.gui.GuiManager;
+import mrfast.sbf.utils.GuiUtils;
 import mrfast.sbf.utils.ItemUtils;
 import mrfast.sbf.utils.Utils;
 import net.minecraft.client.gui.inventory.GuiChest;
@@ -54,7 +56,7 @@ public class GardenFeatures {
                             required.add(" "+line);
                         }
                     }
-                    int index = 0;
+
                     List<String> lines = new ArrayList<>();
                     lines.add(ChatFormatting.YELLOW+"Items Required: ");
                     lines.addAll(required);
@@ -62,11 +64,7 @@ public class GardenFeatures {
                     lines.add(ChatFormatting.AQUA+"Copper Reward: "+ChatFormatting.RED+Utils.nf.format(copperCount));
                     lines.add(ChatFormatting.AQUA+"Cost to fill: "+ChatFormatting.GOLD+(totalCost!=0?Utils.nf.format(totalCost):ChatFormatting.RED+"Unknown Price"));
 
-                    Utils.drawGraySquareWithBorder(180, 0, 200, (int) (lines.size()*1.25*Utils.GetMC().fontRendererObj.FONT_HEIGHT),3);
-                    for(String line:lines) {
-                        Utils.GetMC().fontRendererObj.drawStringWithShadow(line, 190, (index*(Utils.GetMC().fontRendererObj.FONT_HEIGHT+1)+3), -1);
-                        index++;
-                    }
+                    GuiUtils.drawSideMenu(lines, GuiUtils.TextStyle.DROP_SHADOW);
                 }
             }
         }
@@ -144,12 +142,7 @@ public class GardenFeatures {
                         ChatFormatting.WHITE+"Fuel Runs Out: "+ChatFormatting.YELLOW+timeTillFuelGone
                 };
 
-                Utils.drawGraySquareWithBorder(180, 0, 150, (int) ((lines.length+2.2)*Utils.GetMC().fontRendererObj.FONT_HEIGHT),3);
-                int lineCount = 0;
-                for(String line:lines) {
-                    Utils.GetMC().fontRendererObj.drawStringWithShadow(line, 190, lineCount*(Utils.GetMC().fontRendererObj.FONT_HEIGHT+1)+10, -1);
-                    lineCount++;
-                }
+                GuiUtils.drawSideMenu(Arrays.asList(lines), GuiUtils.TextStyle.DROP_SHADOW);
             }
         }
     }

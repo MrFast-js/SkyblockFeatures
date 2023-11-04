@@ -197,19 +197,19 @@ public class APIUtils {
         } else {
             Utils.SendMessage(ChatFormatting.RED+"There was a problem with the "+ChatFormatting.YELLOW+"Hypixel API"+ChatFormatting.RED+". Is it down?");
             System.out.println("FAILED https://api.hypixel.net/skyblock/profiles?uuid=" + uuid);
-            Utils.openGui(null);
+            GuiUtils.openGui(null);
         }
 
         if (profilesResponse.has("error")) {
             String reason = profilesResponse.get("error").getAsString();
             Utils.SendMessage(EnumChatFormatting.RED + "Failed with reason: " + reason);
-            Utils.openGui(null);
+            GuiUtils.openGui(null);
             return null;
         }
 
         if (!profilesResponse.has("profiles") || profilesResponse.get("profiles").isJsonNull()) {
             Utils.SendMessage(EnumChatFormatting.RED + "This player has no Skyblock profiles!");
-            Utils.openGui(null);
+            GuiUtils.openGui(null);
             return null;
         }
 

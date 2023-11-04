@@ -7,6 +7,7 @@ import java.util.List;
 
 import javax.vecmath.Vector2d;
 
+import mrfast.sbf.utils.GuiUtils;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL14;
 
@@ -135,7 +136,7 @@ public class CrystalHollowsMap {
                         GlStateManager.color(1, 1, 1, 1);
                         GlStateManager.pushMatrix();
                             Utils.GetMC().getTextureManager().bindTexture(MAP);
-                            Utils.drawTexturedRect(0, 0, 512/4,512/4, 0, 1, 0, 1, GL11.GL_NEAREST);
+                            GuiUtils.drawTexturedRect(0, 0, 512/4,512/4, 0, 1, 0, 1, GL11.GL_NEAREST);
                         GlStateManager.popMatrix();
 
                         if(SkyblockFeatures.config.CrystalHollowsMapTrail) {
@@ -147,7 +148,7 @@ public class CrystalHollowsMap {
 
                                     double distance = Math.sqrt(Math.pow(Math.abs(p1.y - p2.y), 2) + Math.pow(Math.abs(p1.x - p2.x), 2));
                                     if(distance<40) {
-                                        Utils.drawLine((int) playerBreadcrumbs.get(i).x, (int) playerBreadcrumbs.get(i).y,(int)  playerBreadcrumbs.get(i+1).x,(int)  playerBreadcrumbs.get(i+1).y, new Color(0,0,0),5);
+                                        GuiUtils.drawLine((int) playerBreadcrumbs.get(i).x, (int) playerBreadcrumbs.get(i).y,(int)  playerBreadcrumbs.get(i+1).x,(int)  playerBreadcrumbs.get(i+1).y, new Color(0,0,0),5);
                                     }
                                 }
                             }
@@ -162,10 +163,10 @@ public class CrystalHollowsMap {
                             GlStateManager.color(1, 1, 1, 1);
                             Utils.GetMC().getTextureManager().bindTexture(locationIcon);
                             GlStateManager.pushMatrix();
-                                Utils.drawTexturedRect((float)(locationX-3.5),(float) (locationZ-4), 7, 8, 0, 1, 0, 1, GL11.GL_NEAREST);
+                                GuiUtils.drawTexturedRect((float)(locationX-3.5),(float) (locationZ-4), 7, 8, 0, 1, 0, 1, GL11.GL_NEAREST);
                                 int textWidth = Utils.GetMC().fontRendererObj.getStringWidth(name);
                                 GlStateManager.translate(locationX-textWidth/2, locationZ-10, 0);
-                                Utils.drawTextWithStyle2(name,0, 0);
+                                GuiUtils.drawText(name,0,0, GuiUtils.TextStyle.BLACK_OUTLINE);
                                 GlStateManager.translate(-locationX+textWidth/2, -locationZ+10, 0);
                             GlStateManager.popMatrix();
                         }
@@ -196,7 +197,7 @@ public class CrystalHollowsMap {
                                 GlStateManager.translate(x, z, 0);
                                 GlStateManager.rotate(player.rotationYawHead-180, 0, 0, 1);
                                 GlStateManager.translate(-x, -z, 0);
-                                Utils.drawTexturedRect((float)(x-2.5),(float) (z-3.5), 5, 7, 0, 1, 0, 1, GL11.GL_NEAREST);
+                                GuiUtils.drawTexturedRect((float)(x-2.5),(float) (z-3.5), 5, 7, 0, 1, 0, 1, GL11.GL_NEAREST);
                             GlStateManager.popMatrix();
                         }
                     GlStateManager.popMatrix();
@@ -212,7 +213,7 @@ public class CrystalHollowsMap {
                 GlStateManager.color(1, 1, 1, 1);
                 GlStateManager.pushMatrix();
                     Utils.GetMC().getTextureManager().bindTexture(MAP);
-                    Utils.drawTexturedRect(0, 0, 512/4,512/4, 0, 1, 0, 1, GL11.GL_NEAREST);
+                    GuiUtils.drawTexturedRect(0, 0, 512/4,512/4, 0, 1, 0, 1, GL11.GL_NEAREST);
                 GlStateManager.popMatrix();
 
                 double x = Math.round((323-202)/4.9);
@@ -222,7 +223,7 @@ public class CrystalHollowsMap {
                     GlStateManager.translate(x, z, 0);
                     GlStateManager.rotate(-128, 0, 0, 1);
                     GlStateManager.translate(-x, -z, 0);
-                    Utils.drawTexturedRect((float)(x-2.5),(float) (z-3.5), 5, 7, 0, 1, 0, 1, GL11.GL_NEAREST);
+                    GuiUtils.drawTexturedRect((float)(x-2.5),(float) (z-3.5), 5, 7, 0, 1, 0, 1, GL11.GL_NEAREST);
                 GlStateManager.popMatrix();
             GlStateManager.popMatrix();
         }

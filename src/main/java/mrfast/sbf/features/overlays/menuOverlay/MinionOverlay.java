@@ -3,6 +3,7 @@ package mrfast.sbf.features.overlays.menuOverlay;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,6 +19,7 @@ import mrfast.sbf.core.PricingData;
 import mrfast.sbf.core.SkyblockInfo;
 import mrfast.sbf.events.SlotClickedEvent;
 import mrfast.sbf.events.GuiContainerEvent.TitleDrawnEvent;
+import mrfast.sbf.utils.GuiUtils;
 import mrfast.sbf.utils.ItemRarity;
 import mrfast.sbf.utils.ItemUtils;
 import mrfast.sbf.utils.Utils;
@@ -81,49 +83,36 @@ public class MinionOverlay {
                 }
                 if(generating != null && ItemUtils.getRarity(generating) == ItemRarity.COMMON) {
                     String identifier = PricingData.getIdentifier(generating);
+                    String[] lines;
                     if (identifier != null) {
-                        Utils.drawGraySquareWithBorder(180, 0, 150, 8*Utils.GetMC().fontRendererObj.FONT_HEIGHT,3);
                         Double sellPrice = PricingData.bazaarPrices.get(identifier);
                         if(sellPrice != null) {
                             Double perHour = Math.floor(((double) 3600 /secondsPerAction)*sellPrice);
                             String duration = "Unknown";
                             if(closestMinion != null && lastCollected.containsKey(closestMinion.getPosition().toString())) {
-                                duration = Utils.msToDuration(lastCollected.get(closestMinion.getPosition().toString()));
+                                long timeElapsed = (System.currentTimeMillis()-lastCollected.get(closestMinion.getPosition().toString()))/1000L;
+                                duration = Utils.secondsToTime(timeElapsed);
                             }
-                            String[] lines = {
-                                ChatFormatting.LIGHT_PURPLE+chestName,
-                                ChatFormatting.WHITE+"Time Between Actions: "+ChatFormatting.GREEN+secondsPerAction+"s",
-                                ChatFormatting.WHITE+"Coins Per Hour: "+ChatFormatting.GOLD+Utils.nf.format(perHour),
-                                ChatFormatting.WHITE+"Total Value: "+ChatFormatting.GOLD+Utils.formatNumber(totalValue),
-                                ChatFormatting.WHITE+"Last Collected: "+ChatFormatting.AQUA+duration
+                            lines = new String[]{
+                                    ChatFormatting.LIGHT_PURPLE + chestName,
+                                    ChatFormatting.WHITE + "Time Between Actions: " + ChatFormatting.GREEN + secondsPerAction + "s",
+                                    ChatFormatting.WHITE + "Coins Per Hour: " + ChatFormatting.GOLD + Utils.nf.format(perHour),
+                                    ChatFormatting.WHITE + "Total Value: " + ChatFormatting.GOLD + Utils.formatNumber(totalValue),
+                                    ChatFormatting.WHITE + "Last Collected: " + ChatFormatting.AQUA + duration
                             };
-                            int lineCount = 0;
-                            for(String line:lines) {
-                                Utils.GetMC().fontRendererObj.drawStringWithShadow(line, 190, lineCount*(Utils.GetMC().fontRendererObj.FONT_HEIGHT+1)+10, -1);
-                                lineCount++;
-                            }
                         } else {
-                            String[] lines = {
-                                ChatFormatting.RED+"Unable to get item price!",
-                                ChatFormatting.RED+"Minion Generates: "+identifier
+                            lines = new String[]{
+                                    ChatFormatting.RED + "Unable to get item price!",
+                                    ChatFormatting.RED + "Minion Generates: " + identifier
                             };
-                            int lineCount = 0;
-                            for(String line:lines) {
-                                Utils.GetMC().fontRendererObj.drawStringWithShadow(line, 190, lineCount*(Utils.GetMC().fontRendererObj.FONT_HEIGHT+1)+10, -1);
-                                lineCount++;
-                            }
                         }
                     } else {
-                        String[] lines = {
-                            ChatFormatting.RED+"Unable to get item id!",
-                            ChatFormatting.RED+"Minion Generates: "+ null
+                        lines = new String[]{
+                                ChatFormatting.RED + "Unable to get item id!",
+                                ChatFormatting.RED + "Minion Generates: " + null
                         };
-                        int lineCount = 0;
-                        for(String line:lines) {
-                            Utils.GetMC().fontRendererObj.drawStringWithShadow(line, 190, lineCount*(Utils.GetMC().fontRendererObj.FONT_HEIGHT+1)+10, -1);
-                            lineCount++;
-                        }
                     }
+                    GuiUtils.drawSideMenu(Arrays.asList(lines), GuiUtils.TextStyle.DROP_SHADOW);
                 }
             }
         }
@@ -142,20 +131,19 @@ public class MinionOverlay {
             String chestName = inv.getDisplayName().getUnformattedText().trim();
             try {
                 if(chestName.contains(" Minion ") && !chestName.contains("Recipe")) {
-                if(event.slot.getHasStack()) {
-                    String nameOfItem = Utils.cleanColor(event.slot.getStack().getDisplayName());
-                    if(nameOfItem.contains("Collect All") || isSlotFromMinion(event.slot.slotNumber)) {
-                        if(closestMinion!=null) {
-                            lastCollected.put(closestMinion.getPosition().toString(), System.currentTimeMillis());
-                            saveConfig();
+                    if(event.slot.getHasStack()) {
+                        String nameOfItem = Utils.cleanColor(event.slot.getStack().getDisplayName());
+                        if(nameOfItem.contains("Collect All") || isSlotFromMinion(event.slot.slotNumber)) {
+                            if(closestMinion!=null) {
+                                lastCollected.put(closestMinion.getPosition().toString(), System.currentTimeMillis());
+                                saveConfig();
+                            }
                         }
                     }
                 }
-            }
             } catch (Exception e) {
                 // TODO: handle exception
             }
-            
         }
     }
 

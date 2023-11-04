@@ -1,6 +1,7 @@
 package mrfast.sbf.features.overlays;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -13,6 +14,7 @@ import mrfast.sbf.events.SecondPassedEvent;
 import mrfast.sbf.features.overlays.maps.CrystalHollowsMap;
 import mrfast.sbf.gui.components.Point;
 import mrfast.sbf.gui.components.UIElement;
+import mrfast.sbf.utils.GuiUtils;
 import mrfast.sbf.utils.Utils;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
@@ -118,11 +120,8 @@ public class GemstoneMiningOverlay {
                 ChatFormatting.GRAY+" Coins Per hour: §6123,456",
                 ChatFormatting.GRAY+" Pristine Count: "+ChatFormatting.AQUA+"3"
             };
-            int lineCount = 0;
-            for(String line:lines) {
-                Utils.GetMC().fontRendererObj.drawStringWithShadow(line, 0, lineCount*(mc.fontRendererObj.FONT_HEIGHT),0xFFFFFF);
-                lineCount++;
-            }
+
+            GuiUtils.drawTextLines(Arrays.asList(lines),0,0, GuiUtils.TextStyle.DROP_SHADOW);
         }
 
         @Override

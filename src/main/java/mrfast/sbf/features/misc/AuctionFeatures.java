@@ -4,11 +4,9 @@ import java.awt.Color;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
+import mrfast.sbf.utils.GuiUtils;
 import net.minecraft.item.ItemBed;
 import org.lwjgl.input.Keyboard;
 
@@ -125,7 +123,7 @@ public class AuctionFeatures {
                 Double lowestBin = PricingData.lowestBINs.get(auctionIdentifier)*currentlySellingStack.stackSize;
                 Double avgBin = PricingData.averageLowestBINs.get(auctionIdentifier)*currentlySellingStack.stackSize;
                 int yHeight = (Utils.GetMC().currentScreen.height/8);
-                Utils.drawGraySquareWithBorder((Utils.GetMC().currentScreen.width/2)+60, yHeight, 6*("Suggested Listing Price: "+lowestBin.toString()).length(), 5*Utils.GetMC().fontRendererObj.FONT_HEIGHT,3);
+//                GuiUtils.drawGraySquareWithBorder((Utils.GetMC().currentScreen.width/2)+60, yHeight, 6*("Suggested Listing Price: "+lowestBin.toString()).length(), 5*Utils.GetMC().fontRendererObj.FONT_HEIGHT,3);
                 Float priceToSellAt = (float) Math.round(((lowestBin*0.6+avgBin*0.4))*0.99);
                 String avgBinString = avgBin != null?ChatFormatting.GOLD+Utils.nf.format(avgBin):ChatFormatting.RED+"Unknown";
                 String lowestBinString = lowestBin != null?ChatFormatting.GOLD+Utils.nf.format(lowestBin):ChatFormatting.RED+"Unknown";
@@ -134,11 +132,8 @@ public class AuctionFeatures {
                     ChatFormatting.WHITE+"Average BIN: "+avgBinString,
                     ChatFormatting.WHITE+"Suggested Listing Price: "+ChatFormatting.GOLD+Utils.nf.format(priceToSellAt),
                 };
-                int lineCount = 0;
-                for(String line:lines) {
-                    Utils.GetMC().fontRendererObj.drawStringWithShadow(line, (Utils.GetMC().currentScreen.width/2)+70, lineCount*(Utils.GetMC().fontRendererObj.FONT_HEIGHT+1)+10+yHeight, -1);
-                    lineCount++;
-                }
+
+                GuiUtils.drawSideMenu(Arrays.asList(lines), GuiUtils.TextStyle.DROP_SHADOW);
             }
         }
     }
@@ -325,13 +320,7 @@ public class AuctionFeatures {
                     lines.add(" Sold: "+ChatFormatting.YELLOW+Utils.nf.format(bestFlip.get("soldFor").getAsInt()));
                     lines.add(" Profit: "+ChatFormatting.GREEN+Utils.nf.format(bestFlip.get("profit").getAsInt()));
 
-                    Utils.drawGraySquareWithBorder(180, 5, 150, (int) (lines.size()*1.4*Utils.GetMC().fontRendererObj.FONT_HEIGHT),3);
-                    
-                    int lineCount = 0;
-                    for(String line:lines) {
-                        Utils.GetMC().fontRendererObj.drawStringWithShadow(line, 190, lineCount*(Utils.GetMC().fontRendererObj.FONT_HEIGHT+1)+10, -1);
-                        lineCount++;
-                    }
+                    GuiUtils.drawSideMenu(lines, GuiUtils.TextStyle.DROP_SHADOW);
                 }
             }
             // get price from when buying a auction
@@ -445,13 +434,7 @@ public class AuctionFeatures {
                         lines.add(ChatFormatting.RED+""+ChatFormatting.BOLD+"Warning! Minion skins are");
                         lines.add(ChatFormatting.RED+""+ChatFormatting.BOLD+"often manipulated!!");
                     }
-                    Utils.drawGraySquareWithBorder(180, 0, 150, (int) (lines.size()*1.29*Utils.GetMC().fontRendererObj.FONT_HEIGHT),3);
-
-                    int lineCount = 0;
-                    for(String line:lines) {
-                        Utils.GetMC().fontRendererObj.drawStringWithShadow(line, 190, lineCount*(Utils.GetMC().fontRendererObj.FONT_HEIGHT+1)+10, -1);
-                        lineCount++;
-                    }
+                    GuiUtils.drawSideMenu(lines, GuiUtils.TextStyle.DROP_SHADOW);
                 }
             }
 
@@ -465,8 +448,6 @@ public class AuctionFeatures {
                         if (auctionIdentifier != null) {
                             Double lowestBin = PricingData.lowestBINs.get(auctionIdentifier)*stack.stackSize;
                             Double avgBin = PricingData.averageLowestBINs.get(auctionIdentifier)*stack.stackSize;
-                            Utils.drawGraySquareWithBorder(180, 0, 6*("Suggested Listing Price: "+lowestBin.toString()).length(), 6*Utils.GetMC().fontRendererObj.FONT_HEIGHT,3);
-                        
                             String avgBinString = avgBin != null?ChatFormatting.GOLD+Utils.nf.format(avgBin):ChatFormatting.RED+"Unknown";
                             String lowestBinString = lowestBin != null?ChatFormatting.GOLD+Utils.nf.format(lowestBin):ChatFormatting.RED+"Unknown";
                             Float priceToSellAt = (float) Math.round(((lowestBin*0.6+avgBin*0.4))*0.99);
@@ -488,11 +469,7 @@ public class AuctionFeatures {
                                 ChatFormatting.WHITE+"Suggested Listing Price: "+ChatFormatting.GOLD+Utils.nf.format(priceToSellAt),
                                 ChatFormatting.WHITE+"Estimated Time To Sell: "+ChatFormatting.GREEN+Utils.secondsToTime((int) salesPerHour),
                             };
-                            int lineCount = 0;
-                            for(String line:lines) {
-                                Utils.GetMC().fontRendererObj.drawStringWithShadow(line, 190, lineCount*(Utils.GetMC().fontRendererObj.FONT_HEIGHT+1)+10, -1);
-                                lineCount++;
-                            }
+                            GuiUtils.drawSideMenu(Arrays.asList(lines), GuiUtils.TextStyle.DROP_SHADOW);
                             currentlySellingStack = stack;
                         }
                     }
@@ -533,8 +510,6 @@ public class AuctionFeatures {
                     }
                 }
 
-                Utils.drawGraySquareWithBorder(180, 0, 150, 8*Utils.GetMC().fontRendererObj.FONT_HEIGHT,3);
- 
                 String[] lines = {
                     ChatFormatting.GREEN+""+(unclaimed/2)+ChatFormatting.WHITE+" Unclaimed",
                     ChatFormatting.RED+""+expired+ChatFormatting.WHITE+" Expired",
@@ -542,11 +517,7 @@ public class AuctionFeatures {
                     ChatFormatting.WHITE+"Coins to collect: "+ChatFormatting.GOLD+Utils.nf.format(toCollect),
                     ChatFormatting.WHITE+"Total Ask Value: "+ChatFormatting.GOLD+Utils.nf.format(coins)
                 };
-                int lineCount = 0;
-                for(String line:lines) {
-                    Utils.GetMC().fontRendererObj.drawStringWithShadow(line, 190, lineCount*(Utils.GetMC().fontRendererObj.FONT_HEIGHT+1)+10, -1);
-                    lineCount++;
-                }
+                GuiUtils.drawSideMenu(Arrays.asList(lines), GuiUtils.TextStyle.DROP_SHADOW);
             }
             
             if(chestName.contains("Your Bids")) {
@@ -574,9 +545,6 @@ public class AuctionFeatures {
                         }
                     }
                 }
-
-                Utils.drawGraySquareWithBorder(180, 0, 150, 8*Utils.GetMC().fontRendererObj.FONT_HEIGHT,3);
-                
                 
                 String[] lines = {
                     ChatFormatting.GREEN+""+winning+ChatFormatting.WHITE+" Winning Auctions",
@@ -585,11 +553,7 @@ public class AuctionFeatures {
                     ChatFormatting.WHITE+"Ended Auctions: "+ChatFormatting.GOLD+Utils.nf.format(ended),
                     ChatFormatting.WHITE+"Total Profit: "+ChatFormatting.GOLD+Utils.nf.format(profit)
                 };
-                int lineCount = 0;
-                for(String line:lines) {
-                    Utils.GetMC().fontRendererObj.drawStringWithShadow(line, 190, lineCount*(Utils.GetMC().fontRendererObj.FONT_HEIGHT+1)+10, -1);
-                    lineCount++;
-                }
+                GuiUtils.drawSideMenu(Arrays.asList(lines), GuiUtils.TextStyle.DROP_SHADOW);
             }
         }
     }

@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
 
+import mrfast.sbf.utils.GuiUtils;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL14;
 
@@ -64,7 +65,7 @@ public class DungeonMap {
 			}
 		}
 
-		Utils.drawGraySquareWithBorder(0, 0, 128, 128, 3);
+		GuiUtils.drawGraySquareWithBorder(0, 0, 128, 128, 3);
 		GlStateManager.pushMatrix();
 		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 
@@ -436,7 +437,7 @@ public class DungeonMap {
                 GlStateManager.color(1, 1, 1, 1);
                 GlStateManager.pushMatrix();
                     Utils.GetMC().getTextureManager().bindTexture(map);
-                    Utils.drawTexturedRect(0, 0, 512/4,512/4, 0, 1, 0, 1, GL11.GL_NEAREST);
+					GuiUtils.drawTexturedRect(0, 0, 512/4,512/4, 0, 1, 0, 1, GL11.GL_NEAREST);
                 GlStateManager.popMatrix();
             GlStateManager.popMatrix();
         }

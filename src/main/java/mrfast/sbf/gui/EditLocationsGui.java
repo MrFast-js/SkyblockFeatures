@@ -93,10 +93,10 @@ public class EditLocationsGui extends GuiScreen {
             float y = floatMouseY-yOffset;
             float x2 = (floatMouseX - xOffset+dragging.getWidth());
             float y2 = (floatMouseY - yOffset+dragging.getHeight());
-            if(x<0) x = 0;
-            if(y<0) y = 0;
-            if(x2+6>sr.getScaledWidth()) x = sr.getScaledWidth()-dragging.getWidth()-6;
-            if(y2+6>sr.getScaledHeight()) y = sr.getScaledHeight()-dragging.getHeight()-6;
+            if(x<2) x = 2;
+            if(y<2) y = 2;
+            if(x2+2>sr.getScaledWidth()) x = sr.getScaledWidth()-dragging.getWidth()-2;
+            if(y2+2>sr.getScaledHeight()) y = sr.getScaledHeight()-dragging.getHeight()-2;
 
             dragging.setPos(x/screenWidth, y/screenHeight);
         }

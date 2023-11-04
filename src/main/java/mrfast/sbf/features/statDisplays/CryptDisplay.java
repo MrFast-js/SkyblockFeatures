@@ -7,6 +7,7 @@ import java.util.regex.Pattern;
 import mrfast.sbf.SkyblockFeatures;
 import mrfast.sbf.gui.components.Point;
 import mrfast.sbf.gui.components.UIElement;
+import mrfast.sbf.utils.GuiUtils;
 import mrfast.sbf.utils.TabListUtils;
 import mrfast.sbf.utils.Utils;
 import net.minecraft.client.Minecraft;
@@ -47,12 +48,12 @@ public class CryptDisplay {
                 } catch (NumberFormatException ignored) {}
             }
 
-            int color = crypts >= 5?0x55FF55:0xeb4034;
+            String color = crypts >= 5?"§a":"§c";
 
             float scale = 2f;
             if (this.getToggled() && Minecraft.getMinecraft().thePlayer != null && mc.theWorld != null) {
                 GlStateManager.scale(scale, scale, 0);
-                Utils.GetMC().fontRendererObj.drawStringWithShadow("Crypts: "+crypts, 0, 0, color);
+                GuiUtils.drawText(color+"Crypts: 3", 0, 0, GuiUtils.TextStyle.DROP_SHADOW);
                 GlStateManager.scale(1/scale, 1/scale, 0);
             }
         }
@@ -60,10 +61,9 @@ public class CryptDisplay {
         public void drawElementExample() {
             if(mc.thePlayer == null || !Utils.inSkyblock) return;
 
-            int color = 0xeb4034;
             float scale = 2f;
             GlStateManager.scale(scale, scale, 0);
-            Utils.GetMC().fontRendererObj.drawStringWithShadow("Crypts: 2", 0, 0, color);
+            GuiUtils.drawText("§cCrypts: 3", 0, 0, GuiUtils.TextStyle.DROP_SHADOW);
             GlStateManager.scale(1/scale, 1/scale, 0);
         }
 

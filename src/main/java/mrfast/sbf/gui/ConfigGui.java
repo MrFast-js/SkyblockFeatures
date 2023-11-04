@@ -46,6 +46,7 @@ import gg.essential.vigilance.utils.ResourceImageFactory;
 import kotlin.Unit;
 import mrfast.sbf.SkyblockFeatures;
 import mrfast.sbf.core.Config;
+import mrfast.sbf.utils.GuiUtils;
 import mrfast.sbf.utils.Utils;
 
 public class ConfigGui extends WindowScreen {
@@ -62,7 +63,7 @@ public class ConfigGui extends WindowScreen {
         if(quickSwapping) {
             quickSwapping = false;
         } else {
-            Utils.GetMC().gameSettings.guiScale = Utils.lastGuiScale;
+            Utils.GetMC().gameSettings.guiScale = GuiUtils.lastGuiScale;
         }
 	}
 
@@ -90,7 +91,7 @@ public class ConfigGui extends WindowScreen {
 
         // init && not quickswap
         if(doAnimation) {
-            Utils.saveGuiScale();
+            GuiUtils.saveGuiScale();
         }
 
         reloadAllCategories();
@@ -283,7 +284,7 @@ public class ConfigGui extends WindowScreen {
                 Utils.playSound("random.orb", 0.1);
                 return;
             }
-            Utils.openGui(new EditLocationsGui());
+            GuiUtils.openGui(new EditLocationsGui());
         });
         UIComponent discordButton = new ShadowIcon(new ResourceImageFactory("/assets/skyblockfeatures/gui/discord.png",true),true)
             .setX(new RelativeConstraint(0.025f))
@@ -352,7 +353,7 @@ public class ConfigGui extends WindowScreen {
                 SkyblockFeatures.config.titleColor = new Color(0x00FFFF);
                 SkyblockFeatures.config.versionColor = new Color(0xFFFFFF);
                 quickSwapping = true;
-                Utils.openGui(new ConfigGui(false));
+                GuiUtils.openGui(new ConfigGui(false));
             });
         }
     }
@@ -738,6 +739,6 @@ public class ConfigGui extends WindowScreen {
 
     public void LoadCategory(String categoryName) {
         quickSwapping = true;
-        Utils.openGui(new ConfigGui(false));
+        GuiUtils.openGui(new ConfigGui(false));
     }
 }

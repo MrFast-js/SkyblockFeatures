@@ -164,13 +164,6 @@ public class Utils {
         return dev;
     }
 
-    public static void drawTexturedRect(float x, float y, float width, float height, float uMin, float uMax, float vMin, float vMax, int filter) {
-        GlStateManager.enableBlend();
-        GL14.glBlendFuncSeparate(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, GL11.GL_ONE, GL11.GL_ONE_MINUS_SRC_ALPHA);
-        drawTexturedRectNoBlend(x, y, width, height, uMin, uMax, vMin, vMax, filter);
-        GlStateManager.disableBlend();
-    }
-
      public static String convertToTitleCase(String input) {
         String[] words = input.split("_");
         StringBuilder result = new StringBuilder();
@@ -213,63 +206,12 @@ public class Utils {
         return rand.nextInt((max - min) + 1) + min;
     }
     
-    public static void drawTextWithStyle(String text, float x, float y, int color) {
-        Minecraft.getMinecraft().fontRendererObj.drawString(text,1, 0, 0x000000, false);
-        Minecraft.getMinecraft().fontRendererObj.drawString(text, -1, 0, 0x000000, false);
-        Minecraft.getMinecraft().fontRendererObj.drawString(text, 0, 1, 0x000000, false);
-        Minecraft.getMinecraft().fontRendererObj.drawString(text, 0, -1, 0x000000, false);
-        Minecraft.getMinecraft().fontRendererObj.drawString(text, 0, 0, color, false);
-    }
-    // Dungeon Map Names
-    public static void drawTextWithStyle2(String text, float x, float y) {
-        String shadowText = Utils.cleanColor(text);
-        Minecraft.getMinecraft().fontRendererObj.drawString(shadowText,1, 0, 0x000000, false);
-        Minecraft.getMinecraft().fontRendererObj.drawString(shadowText, -1, 0, 0x000000, false);
-        Minecraft.getMinecraft().fontRendererObj.drawString(shadowText, 0, 1, 0x000000, false);
-        Minecraft.getMinecraft().fontRendererObj.drawString(shadowText, 0, -1, 0x000000, false);
-        Minecraft.getMinecraft().fontRendererObj.drawString(text, 0, 0, 0xFFFFFF, false);
-    }
-    // Draws at coordinates with Color being taken from
-    public static void drawTextWithStyle3(String text, float x, float y) {
-        String shadowText = Utils.cleanColor(text);
-        Minecraft.getMinecraft().fontRendererObj.drawString(shadowText,x+1, y, 0x000000, false);
-        Minecraft.getMinecraft().fontRendererObj.drawString(shadowText, x-1, y, 0x000000, false);
-        Minecraft.getMinecraft().fontRendererObj.drawString(shadowText, x, y+1, 0x000000, false);
-        Minecraft.getMinecraft().fontRendererObj.drawString(shadowText, x, y-1, 0x000000, false);
-        Minecraft.getMinecraft().fontRendererObj.drawString(text, x, y, 0xFFFFFF, false);
-    }
-
-    /**
-     * Original code was taken from Skytils under GNU Affero General Public License v3.0 and modified by MrFast
-     *
-     * @author Skytils Team
-     * @link https://github.com/Skytils/SkytilsMod/blob/1.x/LICENSE.md
-     */
-    public static String msToDuration(long value) {
-        long currentTime = System.currentTimeMillis();
-        long age = currentTime - value;
-        String ageString = DurationFormatUtils.formatDuration(age, "d") + "d";
-        if ("0d".equals(ageString)) {
-            ageString = DurationFormatUtils.formatDuration(age, "H") + "h";
-            if ("0h".equals(ageString)) {
-                ageString = DurationFormatUtils.formatDuration(age, "m") + "m";
-                if ("0m".equals(ageString)) {
-                    ageString = DurationFormatUtils.formatDuration(age, "s") + "s";
-                    if ("0s".equals(ageString)) {
-                        ageString = age + "ms";
-                    }
-                }
-            }
-        }
-        return ageString;
-    }
-    
-    public static String secondsToTime(int seconds) {
+    public static String secondsToTime(long seconds) {
         String time = "";
-        int sec = seconds % 60;
-        int min = (seconds / 60) % 60;
-        int hours = (seconds / 3600) % 24;
-        int days = seconds / (3600 * 24);
+        long sec = seconds % 60;
+        long min = (seconds / 60) % 60;
+        long hours = (seconds / 3600) % 24;
+        long days = seconds / (3600 * 24);
     
         if (days > 0) time += days + "d ";
         if (hours > 0) time += hours + "h ";
@@ -293,38 +235,6 @@ public class Utils {
             if(!info.getGameProfile().getName().contains("!")) list.add(info.getGameProfile().getName());
         }
         return list.toArray(new String[0]);
-    }
-
-    /**
-     * Taken from NotEnoughUpdates under GNU Lesser General Public License v3.0
-     * https://github.com/Moulberry/NotEnoughUpdates/blob/master/COPYING
-     * @author Moulberry
-     */
-    public static void drawTexturedRectNoBlend(float x, float y, float width, float height, float uMin, float uMax, float vMin, float vMax, int filter) {
-        GlStateManager.enableTexture2D();
-
-        GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, filter);
-        GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, filter);
-
-        Tessellator tessellator = Tessellator.getInstance();
-        WorldRenderer worldrenderer = tessellator.getWorldRenderer();
-        worldrenderer.begin(7, DefaultVertexFormats.POSITION_TEX);
-        worldrenderer
-                .pos(x, y+height, 0.0D)
-                .tex(uMin, vMax).endVertex();
-        worldrenderer
-                .pos(x+width, y+height, 0.0D)
-                .tex(uMax, vMax).endVertex();
-        worldrenderer
-                .pos(x+width, y, 0.0D)
-                .tex(uMax, vMin).endVertex();
-        worldrenderer
-                .pos(x, y, 0.0D)
-                .tex(uMin, vMin).endVertex();
-        tessellator.draw();
-
-        GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_NEAREST);
-        GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
     }
     
     /**
@@ -390,17 +300,6 @@ public class Utils {
             }
         }, ms);
     }
-    public static int lastGuiScale = 0;
-
-    public static void saveGuiScale() {
-        lastGuiScale = Utils.GetMC().gameSettings.guiScale;
-        Utils.GetMC().gameSettings.guiScale = 2;
-    }
-    public static void openGui(GuiScreen screen) {
-        Utils.setTimeout(()->{
-            Utils.GetMC().displayGuiScreen(screen);
-        },50);
-    }
 
     public static String convertIdToLocation(String id) {
         switch (id) {
@@ -425,74 +324,5 @@ public class Utils {
             default:
                 return Utils.convertToTitleCase(id);
         }
-    }
-
-    public static void drawLine(int x1, int y1, int x2, int y2,Color color,float width) {
-        GlStateManager.disableLighting();
-		RenderHelper.disableStandardItemLighting();
-		GlStateManager.disableTexture2D();
-		GlStateManager.enableBlend(); //disabled means no opacity
-		GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
-        
-		Vector2f vec = new Vector2f(x2 - x1, y2 - y1);
-		vec.normalise(vec);
-		Vector2f side = new Vector2f(vec.y, -vec.x);
-        
-		GL11.glLineWidth(width);
-		GL11.glEnable(GL11.GL_LINE_SMOOTH);
-        GlStateManager.color(color.getRed(), color.getGreen(), color.getBlue(),(float) 0.3);
-
-		Tessellator tessellator = Tessellator.getInstance();
-		WorldRenderer worldrenderer = tessellator.getWorldRenderer();
-
-        worldrenderer.begin(GL11.GL_LINES, DefaultVertexFormats.POSITION);
-        worldrenderer.pos(x1 - side.x + side.x, y1 - side.y + side.y, 0.0D).endVertex();
-        worldrenderer.pos(x2 - side.x + side.x, y2 - side.y + side.y, 0.0D).endVertex();
-        tessellator.draw();
-        GlStateManager.enableTexture2D();
-	}
-    
-    /**
-     * Taken from NotEnoughUpdates under GNU Lesser General Public License v3.0
-     * https://github.com/Moulberry/NotEnoughUpdates/blob/master/COPYING
-     * @author Moulberry
-     */
-    public static void drawLineInGui(int x1, int y1, int x2, int y2,Color color,float width,double d) {
-        GlStateManager.disableLighting();
-		RenderHelper.disableStandardItemLighting();
-		GlStateManager.disableTexture2D();
-		GlStateManager.enableBlend();
-		GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
-        GlStateManager.translate(0, 0, 700);
-
-		Vector2f vec = new Vector2f(x2 - x1, y2 - y1);
-		vec.normalise(vec);
-		Vector2f side = new Vector2f(vec.y, -vec.x);
-        
-		GL11.glLineWidth(width);
-		GL11.glEnable(GL11.GL_LINE_SMOOTH);
-        GlStateManager.color(color.getRed(), color.getGreen(), color.getBlue(),(float) d);
-
-		Tessellator tessellator = Tessellator.getInstance();
-		WorldRenderer worldrenderer = tessellator.getWorldRenderer();
-
-        worldrenderer.begin(GL11.GL_LINES, DefaultVertexFormats.POSITION);
-        worldrenderer.pos(x1 - side.x + side.x, y1 - side.y + side.y, 0.0D).endVertex();
-        worldrenderer.pos(x2 - side.x + side.x, y2 - side.y + side.y, 0.0D).endVertex();
-        tessellator.draw();
-        GlStateManager.translate(0, 0, -700);
-        GlStateManager.enableTexture2D();
-	}
-
-    public static void drawGraySquareWithBorder(int x,int y,int width,int height,int borderWidth) {
-        UIRoundedRectangle.Companion.drawRoundedRectangle(new UMatrixStack(),x, y, x+width, height+2, 5, new Color(0,0,0,125));
-        UIRoundedRectangle.Companion.drawRoundedRectangle(new UMatrixStack(),x-2, y-2, x+width+2, height+2+2, 5, new Color(55,55,55,125));
-    }
-    public static void drawGraySquare(int x,int y,int width,int height,int borderWidth, Color c) {
-        UIRoundedRectangle.Companion.drawRoundedRectangle(new UMatrixStack(),x, y, x+width, height, 5, c);
-    }
-
-    public static void drawText(String string, int x, int y) {
-        Utils.GetMC().fontRendererObj.drawString(string, x, y, 0xFFFFFF, true);
     }
 }

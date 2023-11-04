@@ -1,6 +1,7 @@
 package mrfast.sbf.features.dungeons;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -109,12 +110,10 @@ public class Reparty {
 
     private List<String> extractMemberNames(String message) {
         message = clearRanks(message);
-        message = message.substring(15, message.length());
+        message = message.substring(15);
 
         List<String> memberNames = new ArrayList<>();
-        for (String name : message.split(" ● ")) {
-            memberNames.add(name);
-        }
+        Collections.addAll(memberNames, message.split(" ● "));
 
         return memberNames;
     }

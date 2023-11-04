@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import mrfast.sbf.utils.GuiUtils;
 import org.apache.commons.codec.binary.Base64InputStream;
 
 import com.google.gson.JsonArray;
@@ -469,13 +470,13 @@ public class ExoticAuctions {
             if(mc.thePlayer == null || !Utils.inSkyblock) return;
             if (this.getToggled() && Minecraft.getMinecraft().thePlayer != null && mc.theWorld != null) {
                 int timeToReload = seconds<lowestSecondFound?lowestSecondFound-seconds:60-seconds+lowestSecondFound;
-                Utils.drawTextWithStyle("Auction API update in "+(Math.max(timeToReload,0))+"s", 0, 0, 0x55ffff);
+                GuiUtils.drawText(ChatFormatting.AQUA+""+(Math.max(timeToReload,0))+"s", 0, 0, GuiUtils.TextStyle.BLACK_OUTLINE);
             }
         }
         @Override
         public void drawElementExample() {
             if(mc.thePlayer == null || !Utils.inSkyblock) return;
-            Utils.drawTextWithStyle("Auction API update in 49s", 0, 0, 0x55ffff);
+            GuiUtils.drawText(ChatFormatting.AQUA+"Auction API update in 49s", 0, 0, GuiUtils.TextStyle.BLACK_OUTLINE);
         }
 
         @Override   

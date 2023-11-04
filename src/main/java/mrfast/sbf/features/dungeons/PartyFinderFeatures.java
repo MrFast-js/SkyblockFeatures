@@ -8,6 +8,7 @@ import mrfast.sbf.features.items.HideGlass;
 import mrfast.sbf.gui.components.Point;
 import mrfast.sbf.gui.components.UIElement;
 import mrfast.sbf.utils.APIUtils;
+import mrfast.sbf.utils.GuiUtils;
 import mrfast.sbf.utils.ItemUtils;
 import mrfast.sbf.utils.Utils;
 import net.minecraft.client.Minecraft;
@@ -40,6 +41,7 @@ import java.io.InputStream;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 public class PartyFinderFeatures {
     static List<String> neededClasses = new ArrayList<>(Arrays.asList("Mage","Archer","Tank","Healer","Berserk"));
@@ -344,12 +346,7 @@ public class PartyFinderFeatures {
                     lines.add(formatted);
                 } catch (Exception ignored){}
             }
-
-            int lineCount = 0;
-            for(String line:lines) {
-                Utils.GetMC().fontRendererObj.drawStringWithShadow(line, 0, lineCount*(Utils.GetMC().fontRendererObj.FONT_HEIGHT),0xFFFFFF);
-                lineCount++;
-            }
+            GuiUtils.drawTextLines(lines,0,0, GuiUtils.TextStyle.DROP_SHADOW);
         }
         @Override
         public void drawElementExample() {
@@ -363,11 +360,7 @@ public class PartyFinderFeatures {
                     " §a[§6H§a] §d"+playerName+" §7(50)",
                     " §a[§6B§a] §cNone",
             };
-            int lineCount = 0;
-            for(String line:lines) {
-                Utils.GetMC().fontRendererObj.drawStringWithShadow(line, 0, lineCount*(Utils.GetMC().fontRendererObj.FONT_HEIGHT),0xFFFFFF);
-                lineCount++;
-            }
+            GuiUtils.drawTextLines(Arrays.asList(lines),0,0, GuiUtils.TextStyle.DROP_SHADOW);
         }
 
         @Override
@@ -377,7 +370,7 @@ public class PartyFinderFeatures {
 
         @Override
         public int getHeight() {
-            return Utils.GetMC().fontRendererObj.FONT_HEIGHT*6;
+            return (Utils.GetMC().fontRendererObj.FONT_HEIGHT+1)*6;
         }
 
         @Override
@@ -451,16 +444,13 @@ public class PartyFinderFeatures {
                 .orElse(0);
 
         int lineCount = loreList.size() + 3;
-        Utils.drawGraySquareWithBorder(180, 0, maxLineLength * 6, (lineCount + 1) * mc.fontRendererObj.FONT_HEIGHT, 3);
+//        GuiUtils.drawGraySquareWithBorder(180, 0, maxLineLength * 6, (lineCount + 1) * mc.fontRendererObj.FONT_HEIGHT, 3);
 
-        Utils.drawTextWithStyle3(hoverItemStack.getDisplayName(), 190, 10);
-        int temp = 1;
-        for (String line : loreList) {
-            if (!line.contains("Click to join!")) {
-                Utils.drawTextWithStyle3(line, 190, temp * (mc.fontRendererObj.FONT_HEIGHT + 1) + 10);
-                temp++;
-            }
-        }
+        List<String> filtered = new ArrayList<>(loreList);
+        filtered.add(0,hoverItemStack.getDisplayName());
+        filtered.removeIf(a -> a.contains("Click to join!"));
+
+        GuiUtils.drawSideMenu(filtered, GuiUtils.TextStyle.BLACK_OUTLINE);
     }
 
     @SubscribeEvent

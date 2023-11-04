@@ -1,6 +1,7 @@
 package mrfast.sbf.gui.components;
 import java.awt.Color;
 
+import mrfast.sbf.utils.GuiUtils;
 import mrfast.sbf.utils.Utils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
@@ -21,11 +22,6 @@ public class MoveableFeature extends GuiButton {
         updateLocations();
     }
 
-    public MoveableFeature(int buttonId, UIElement element) {
-        super(-1, 0, 0, null);
-        this.element = element;
-    }
-
     private void updateLocations() {
         x = element.getX();
         y = element.getY();
@@ -40,19 +36,16 @@ public class MoveableFeature extends GuiButton {
 
         int screenWidth = sr.getScaledWidth();
         int screenHeight = sr.getScaledHeight();
-        Float actualX = screenWidth*x;
-        Float actualY = screenHeight*y;
-        Float xWidth = actualX+element.getWidth()+4;
-        Float yHeight = actualY+element.getHeight()+4;
+        float actualX = (screenWidth*x)-2;
+        float actualY = (screenHeight*y)-2;
+        float xWidth = actualX+element.getWidth()+4;
+        float yHeight = actualY+element.getHeight()+4;
 
         hovered = mouseX >= actualX && mouseY >= actualY && mouseX < xWidth && mouseY < yHeight;
-        Color c = new Color(255, 255, 255, hovered ? 100 : 40);
-        Utils.drawGraySquare(0, 0, element.getWidth() + 4, element.getHeight() + 4, 3, c);
+        GuiUtils.drawGraySquare(-2, -2, element.getWidth() + 4, element.getHeight() + 4, hovered);
 
         GlStateManager.pushMatrix();
-        GlStateManager.translate(2, 2, 0);
         element.drawElementExample();
-        GlStateManager.translate(-2, -2, 0);
         GlStateManager.popMatrix();
     }
 

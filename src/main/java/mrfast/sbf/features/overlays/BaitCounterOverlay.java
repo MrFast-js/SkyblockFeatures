@@ -1,5 +1,7 @@
 package mrfast.sbf.features.overlays;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -12,6 +14,7 @@ import mrfast.sbf.events.SecondPassedEvent;
 import mrfast.sbf.gui.components.Point;
 import mrfast.sbf.gui.components.UIElement;
 import mrfast.sbf.utils.APIUtils;
+import mrfast.sbf.utils.GuiUtils;
 import mrfast.sbf.utils.ItemUtils;
 import mrfast.sbf.utils.ItemUtils.Inventory;
 import mrfast.sbf.utils.Utils;
@@ -84,25 +87,30 @@ public class BaitCounterOverlay {
         @Override
         public void drawElement() {
             if(mc.thePlayer == null || !Utils.inSkyblock || Utils.GetMC().theWorld==null || !SkyblockFeatures.config.baitCounter) return;
-            Utils.drawTextWithStyle3(ChatFormatting.AQUA+"Bait: "+ChatFormatting.GRAY+"("+(61-seconds)+")", 0, 0);
-            int index = 0;
+            List<String> lines = new ArrayList<>();
+
+            lines.add(ChatFormatting.AQUA+"Bait: "+ChatFormatting.GRAY+"("+(61-seconds)+")");
+
             if(typesOfBait.isEmpty()) {
-                Utils.drawTextWithStyle3(" "+ChatFormatting.RED+"Loading..", 0, 10);
+                lines.add(" "+ChatFormatting.RED+"Loading..");
             }
             for(String baitName:typesOfBait.keySet()) {
-                Utils.drawTextWithStyle3(" "+baitName+ChatFormatting.DARK_GRAY+" x"+Utils.nf.format(typesOfBait.get(baitName)), 0, index*(Utils.GetMC().fontRendererObj.FONT_HEIGHT+1)+10);
-                index++;
+                lines.add(" "+baitName+ChatFormatting.DARK_GRAY+" x"+Utils.nf.format(typesOfBait.get(baitName)));
             }
+            GuiUtils.drawTextLines(lines,0,0, GuiUtils.TextStyle.DROP_SHADOW);
         }
 
         @Override
         public void drawElementExample() {
             if(mc.thePlayer == null || !Utils.inSkyblock) return;
-            Utils.drawTextWithStyle3(ChatFormatting.AQUA+"Bait:", 0, 0);
-            Utils.drawTextWithStyle3(ChatFormatting.WHITE+" Corrupted Bait "+ChatFormatting.DARK_GRAY+"x218", 0, 1*(10)+10);
-            Utils.drawTextWithStyle3(ChatFormatting.GREEN+" Blessed Bait "+ChatFormatting.DARK_GRAY+"x381", 0, 2*(10)+10);
-            Utils.drawTextWithStyle3(ChatFormatting.GREEN+" Shark Bait "+ChatFormatting.DARK_GRAY+"x313", 0, 3*(10)+10);
-            Utils.drawTextWithStyle3(ChatFormatting.WHITE+" Corrupted Bait "+ChatFormatting.DARK_GRAY+"x831", 0, 4*(10)+10);
+            String[] lines = {
+                    ChatFormatting.AQUA+"Bait:",
+                    ChatFormatting.WHITE+" Corrupted Bait "+ChatFormatting.DARK_GRAY+"x218",
+                    ChatFormatting.GREEN+" Blessed Bait "+ChatFormatting.DARK_GRAY+"x381",
+                    ChatFormatting.GREEN+" Shark Bait "+ChatFormatting.DARK_GRAY+"x313",
+                    ChatFormatting.WHITE+" Corrupted Bait "+ChatFormatting.DARK_GRAY+"x831",
+            };
+            GuiUtils.drawTextLines(Arrays.asList(lines),0,0, GuiUtils.TextStyle.DROP_SHADOW);
         }
 
         @Override

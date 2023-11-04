@@ -3,6 +3,7 @@ package mrfast.sbf.features.statDisplays;
 import mrfast.sbf.SkyblockFeatures;
 import mrfast.sbf.gui.components.Point;
 import mrfast.sbf.gui.components.UIElement;
+import mrfast.sbf.utils.GuiUtils;
 import mrfast.sbf.utils.Utils;
 import net.minecraft.client.Minecraft;
 
@@ -17,7 +18,7 @@ public class EffectiveHealthDisplay {
 
     static String display = "1234";
 
-    public static int getSpeed() {
+    public static int getEffectiveHealth() {
         return Math.round(Utils.Health * (1f+ (Utils.Defence / 100f) ));
     }
     public static class EffectiveHealthDisplayGUI extends UIElement {
@@ -30,13 +31,13 @@ public class EffectiveHealthDisplay {
         public void drawElement() {
             if(mc.thePlayer == null || !Utils.inSkyblock) return;
             if (this.getToggled() && Minecraft.getMinecraft().thePlayer != null && mc.theWorld != null) {
-                Utils.drawTextWithStyle(getSpeed()+"", 0, 0, 0x00AA00);
+                GuiUtils.drawText("§2"+getEffectiveHealth(), 0, 0, GuiUtils.TextStyle.BLACK_OUTLINE);
             }
         }
         @Override
         public void drawElementExample() {
             if(mc.thePlayer == null || !Utils.inSkyblock) return;
-            Utils.drawTextWithStyle("1234", 0, 0, 0x00AA00);
+            GuiUtils.drawText("§2"+getEffectiveHealth(), 0, 0, GuiUtils.TextStyle.BLACK_OUTLINE);
         }
 
         @Override
@@ -51,7 +52,7 @@ public class EffectiveHealthDisplay {
 
         @Override
         public int getWidth() {
-            return Utils.GetMC().fontRendererObj.getStringWidth(display);
+            return Utils.GetMC().fontRendererObj.getStringWidth(getEffectiveHealth()+"");
         }
     }
 }

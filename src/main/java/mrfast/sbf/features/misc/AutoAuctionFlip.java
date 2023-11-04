@@ -14,6 +14,7 @@ import mrfast.sbf.features.items.HideGlass;
 import mrfast.sbf.gui.components.Point;
 import mrfast.sbf.gui.components.UIElement;
 import mrfast.sbf.utils.APIUtils;
+import mrfast.sbf.utils.GuiUtils;
 import mrfast.sbf.utils.ItemUtils;
 import mrfast.sbf.utils.Utils;
 import net.minecraft.client.Minecraft;
@@ -642,8 +643,8 @@ public class AutoAuctionFlip {
     
                     // Calculate the center X coordinate for each line
                     int centerX = (this.getWidth() - Utils.GetMC().fontRendererObj.getStringWidth(text)) / 2;
-    
-                    Utils.drawTextWithStyle3(text, centerX, centerY + i * (Utils.GetMC().fontRendererObj.FONT_HEIGHT + 2));
+
+                    GuiUtils.drawText(text, centerX, centerY + i * (Utils.GetMC().fontRendererObj.FONT_HEIGHT + 2), GuiUtils.TextStyle.BLACK_OUTLINE);
                 }
             }
         }
@@ -662,7 +663,7 @@ public class AutoAuctionFlip {
                 // Calculate the center X coordinate for each line
                 int centerX = (this.getWidth() - Utils.GetMC().fontRendererObj.getStringWidth(text)) / 2;
 
-                Utils.drawTextWithStyle3(text, centerX, centerY + i * (Utils.GetMC().fontRendererObj.FONT_HEIGHT + 2));
+                GuiUtils.drawText(text, centerX, centerY + i * (Utils.GetMC().fontRendererObj.FONT_HEIGHT + 2), GuiUtils.TextStyle.BLACK_OUTLINE);
             }
         }
 

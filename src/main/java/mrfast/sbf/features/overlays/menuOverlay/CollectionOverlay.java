@@ -6,6 +6,7 @@ import java.util.HashMap;
 import mrfast.sbf.SkyblockFeatures;
 import mrfast.sbf.events.GuiContainerEvent.TitleDrawnEvent;
 import mrfast.sbf.features.dungeons.Reparty;
+import mrfast.sbf.utils.GuiUtils;
 import mrfast.sbf.utils.ItemUtils;
 import mrfast.sbf.utils.Utils;
 import net.minecraft.client.renderer.GlStateManager;
@@ -41,7 +42,6 @@ public class CollectionOverlay {
         ArrayList<String> lines = new ArrayList<>();
         GlStateManager.color(1, 1, 1, 1);
         GlStateManager.disableLighting();
-        Utils.drawGraySquareWithBorder(180, 0, 150, (topCollectors.keySet().size()+4)*Utils.GetMC().fontRendererObj.FONT_HEIGHT,3);
 
         lines.add("§eTop Collectors");
         ArrayList<String> sorted = new ArrayList<>();
@@ -60,11 +60,7 @@ public class CollectionOverlay {
             String line = name+"§f: "+value;
             lines.add(line);
         }
-        
-        int lineCount = 0;
-        for(String line:lines) {
-            Utils.GetMC().fontRendererObj.drawStringWithShadow(line, 190, lineCount*(Utils.GetMC().fontRendererObj.FONT_HEIGHT+1)+10, -1);
-            lineCount++;
-        }
+
+        GuiUtils.drawSideMenu(lines, GuiUtils.TextStyle.DROP_SHADOW);
     }
 }

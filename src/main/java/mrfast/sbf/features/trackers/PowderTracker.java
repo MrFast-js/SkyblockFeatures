@@ -7,11 +7,14 @@ import mrfast.sbf.core.SkyblockInfo;
 import mrfast.sbf.events.SecondPassedEvent;
 import mrfast.sbf.gui.components.Point;
 import mrfast.sbf.gui.components.UIElement;
+import mrfast.sbf.utils.GuiUtils;
 import mrfast.sbf.utils.Utils;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+
+import java.util.Arrays;
 
 public class PowderTracker {
     private static final Minecraft mc = Minecraft.getMinecraft();
@@ -113,11 +116,7 @@ public class PowderTracker {
                     ChatFormatting.DARK_GREEN+"  • Mithril Powder: §r"+Utils.nf.format(65424),
                     ChatFormatting.DARK_GREEN+"  • MP / Hour: §r"+mithrilPowderPerHour,
             };
-            int lineCount = 0;
-            for(String line:lines) {
-                Utils.GetMC().fontRendererObj.drawStringWithShadow(line, 0, lineCount*(mc.fontRendererObj.FONT_HEIGHT),0xFFFFFF);
-                lineCount++;
-            }
+            GuiUtils.drawTextLines(Arrays.asList(lines),0,0, GuiUtils.TextStyle.DROP_SHADOW);
         }
 
         @Override

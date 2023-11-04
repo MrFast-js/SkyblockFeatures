@@ -6,6 +6,7 @@ import java.util.HashMap;
 import mrfast.sbf.SkyblockFeatures;
 import mrfast.sbf.core.PricingData;
 import mrfast.sbf.events.GuiContainerEvent.TitleDrawnEvent;
+import mrfast.sbf.utils.GuiUtils;
 import mrfast.sbf.utils.ItemUtils;
 import mrfast.sbf.utils.Utils;
 import net.minecraft.client.gui.inventory.GuiChest;
@@ -56,7 +57,6 @@ public class ChestProfit {
                     ArrayList<String> lines = new ArrayList<>();
                     GlStateManager.color(1, 1, 1, 1);
                     GlStateManager.disableLighting();
-                    Utils.drawGraySquareWithBorder(180, 0, 150, (items.keySet().size()+4)*Utils.GetMC().fontRendererObj.FONT_HEIGHT,3);
 
                     double profit = chestValue - price;
                     for (ItemStack item : items.keySet()) {
@@ -65,12 +65,8 @@ public class ChestProfit {
                     }
                     lines.add("");
                     lines.add("Profit: §" + (profit > 0 ? "a" : "c")+Utils.nf.format(profit));
-                    
-                    int lineCount = 0;
-                    for(String line:lines) {
-                        Utils.GetMC().fontRendererObj.drawStringWithShadow(line, 190, lineCount*(Utils.GetMC().fontRendererObj.FONT_HEIGHT+1)+10, -1);
-                        lineCount++;
-                    }
+
+                    GuiUtils.drawSideMenu(lines, GuiUtils.TextStyle.DROP_SHADOW);
                 }
             }
         }

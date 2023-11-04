@@ -1,6 +1,7 @@
 package mrfast.sbf.features.statDisplays;
 
 
+import mrfast.sbf.utils.GuiUtils;
 import net.minecraft.client.Minecraft;
 
 import java.util.ArrayList;
@@ -57,7 +58,7 @@ public class SecretDisplay {
 
 
                 for (int i = 0; i < text.size(); i++) {
-                    Utils.drawTextWithStyle3(text.get(i), ((float) getWidth() /3)*i, i * Utils.GetMC().fontRendererObj.FONT_HEIGHT);
+                    GuiUtils.drawText(text.get(i), ((float) getWidth() /3)*i, i * Utils.GetMC().fontRendererObj.FONT_HEIGHT, GuiUtils.TextStyle.BLACK_OUTLINE);
                 }
             }
         }
@@ -66,12 +67,11 @@ public class SecretDisplay {
             ArrayList<String> text = new ArrayList<>();
 
             String color = "§c";
-            
             text.add("§7Secrets");
-            text.add(color+"1"+"§7/"+color+"9");
+            text.add("§c1§7/§c9");
 
             for (int i = 0; i < text.size(); i++) {
-                Utils.drawText(text.get(i), (getWidth()/3)*i, i * Utils.GetMC().fontRendererObj.FONT_HEIGHT);
+                GuiUtils.drawText(text.get(i), (getWidth()/3)*i, i * Utils.GetMC().fontRendererObj.FONT_HEIGHT);
             }
         }
 

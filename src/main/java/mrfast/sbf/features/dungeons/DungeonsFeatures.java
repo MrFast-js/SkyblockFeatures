@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
 
+import mrfast.sbf.utils.GuiUtils;
 import org.lwjgl.input.Mouse;
 
 import com.mojang.realmsclient.gui.ChatFormatting;
@@ -234,11 +235,11 @@ public class DungeonsFeatures {
                 int i = 0;
                 GuiPlayerTabOverlay tabList = Minecraft.getMinecraft().ingameGUI.getTabList();
                 String footer = tabList.footer.getFormattedText();
-                Utils.drawText("§d§lBlessings",0,0);
+                GuiUtils.drawText("§d§lBlessings",0,0);
                 i++;
                 for (String line : new ArrayList<>(Arrays.asList(footer.split("\n")))) {
                     if(line.contains("Blessing")) {
-                        Utils.drawText("§d"+Utils.cleanColor(line), 0, i * Utils.GetMC().fontRendererObj.FONT_HEIGHT);
+                        GuiUtils.drawText("§d"+Utils.cleanColor(line), 0, i * Utils.GetMC().fontRendererObj.FONT_HEIGHT);
                         i++;
                     }
                 }
@@ -247,11 +248,11 @@ public class DungeonsFeatures {
   
         @Override
         public void drawElementExample() {
-            Utils.drawText("§d§lBlessings",0,0);
-            Utils.drawText("§dBlessing of Power XI", 0, 1 * Utils.GetMC().fontRendererObj.FONT_HEIGHT);
-            Utils.drawText("§dBlessing of Life XIII", 0, 2 * Utils.GetMC().fontRendererObj.FONT_HEIGHT);
-            Utils.drawText("§dBlessing of Wisdom V", 0, 3 * Utils.GetMC().fontRendererObj.FONT_HEIGHT);
-            Utils.drawText("§dBlessing of Stone VII", 0, 4 * Utils.GetMC().fontRendererObj.FONT_HEIGHT);
+            GuiUtils.drawText("§d§lBlessings",0,0);
+            GuiUtils.drawText("§dBlessing of Power XI", 0, 1 * Utils.GetMC().fontRendererObj.FONT_HEIGHT);
+            GuiUtils.drawText("§dBlessing of Life XIII", 0, 2 * Utils.GetMC().fontRendererObj.FONT_HEIGHT);
+            GuiUtils.drawText("§dBlessing of Wisdom V", 0, 3 * Utils.GetMC().fontRendererObj.FONT_HEIGHT);
+            GuiUtils.drawText("§dBlessing of Stone VII", 0, 4 * Utils.GetMC().fontRendererObj.FONT_HEIGHT);
         }
   
         @Override

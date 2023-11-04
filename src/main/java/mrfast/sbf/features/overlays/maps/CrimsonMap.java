@@ -2,6 +2,7 @@ package mrfast.sbf.features.overlays.maps;
 
 import java.util.HashMap;
 
+import mrfast.sbf.utils.GuiUtils;
 import org.lwjgl.opengl.GL11;
 
 import mrfast.sbf.SkyblockFeatures;
@@ -68,7 +69,7 @@ public class CrimsonMap {
                         GlStateManager.color(1, 1, 1, 1);
                         GlStateManager.pushMatrix();
                             Utils.GetMC().getTextureManager().bindTexture(map);
-                            Utils.drawTexturedRect(0, 0, 1653/8,1429/8, 0, 1, 0, 1, GL11.GL_NEAREST);
+                            GuiUtils.drawTexturedRect(0, 0, 1653/8,1429/8, 0, 1, 0, 1, GL11.GL_NEAREST);
                         GlStateManager.popMatrix();
                         GlStateManager.pushMatrix();
                         GlStateManager.popMatrix();
@@ -99,7 +100,7 @@ public class CrimsonMap {
                             GlStateManager.translate(x, z, 0);
                             GlStateManager.rotate(player.rotationYawHead-180, 0, 0, 1);
                             GlStateManager.translate(-x, -z, 0);
-                            Utils.drawTexturedRect((float)(x-2.5),(float) (z-3.5), 5, 7, 0, 1, 0, 1, GL11.GL_NEAREST);
+                            GuiUtils.drawTexturedRect((float)(x-2.5),(float) (z-3.5), 5, 7, 0, 1, 0, 1, GL11.GL_NEAREST);
                         GlStateManager.popMatrix();
                     GlStateManager.popMatrix();
                 }
@@ -115,7 +116,7 @@ public class CrimsonMap {
                 GlStateManager.color(1, 1, 1, 1);
                 GlStateManager.pushMatrix();
                     Utils.GetMC().getTextureManager().bindTexture(map);
-                    Utils.drawTexturedRect(0, 0, 1653/8,1429/8, 0, 1, 0, 1, GL11.GL_NEAREST);
+                    GuiUtils.drawTexturedRect(0, 0, 1653/8,1429/8, 0, 1, 0, 1, GL11.GL_NEAREST);
                 GlStateManager.popMatrix();
 
                 double x = Math.round((323-202)/4.9);
@@ -125,7 +126,7 @@ public class CrimsonMap {
                     GlStateManager.translate(x, z, 0);
                     GlStateManager.rotate(-128, 0, 0, 1);
                     GlStateManager.translate(-x, -z, 0);
-                    Utils.drawTexturedRect((float)(x-2.5),(float) (z-3.5), 5, 7, 0, 1, 0, 1, GL11.GL_NEAREST);
+                    GuiUtils.drawTexturedRect((float)(x-2.5),(float) (z-3.5), 5, 7, 0, 1, 0, 1, GL11.GL_NEAREST);
                 GlStateManager.popMatrix();
             GlStateManager.popMatrix();
         }

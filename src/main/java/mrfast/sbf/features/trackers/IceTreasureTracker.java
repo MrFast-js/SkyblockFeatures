@@ -78,9 +78,9 @@ public class IceTreasureTracker {
             }
         }
     }
-    List<String> items = new ArrayList<String>();
+
     @SubscribeEvent
-    public void onDrawSlot(SecondPassedEvent event) {
+    public void onSecond2(SecondPassedEvent event) {
         if(Utils.GetMC().thePlayer == null || !Utils.inSkyblock) return;
         try {
             double redGiftValue = Math.floor(PricingData.bazaarPrices.get("RED_GIFT"));

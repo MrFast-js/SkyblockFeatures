@@ -7,6 +7,7 @@ import mrfast.sbf.SkyblockFeatures;
 import mrfast.sbf.events.GuiContainerEvent;
 import mrfast.sbf.gui.components.Point;
 import mrfast.sbf.gui.components.UIElement;
+import mrfast.sbf.utils.GuiUtils;
 import mrfast.sbf.utils.ItemUtils;
 import mrfast.sbf.utils.Utils;
 import net.minecraft.client.Minecraft;
@@ -156,16 +157,17 @@ public class GrandmaWolfTimer {
             if(mc.thePlayer == null || !Utils.inSkyblock || Utils.GetMC().theWorld==null || !SkyblockFeatures.config.GrandmaWolfTimer) return;
             double remaining = Math.floor(SecondsRemaining*100)/100;
             String time = (remaining+"").length()==3?remaining+"0":remaining+"";
-            if(SecondsRemaining>0.05) Utils.drawTextWithStyle3(ChatFormatting.GREEN+""+time+"s", 0, 0);
-            else if(fiveComboSeconds==0) {
-                Utils.drawTextWithStyle3(ChatFormatting.RED+"Open Pets Menu", 0, 0);
+            if(SecondsRemaining>0.05) {
+                GuiUtils.drawText(ChatFormatting.GREEN+time+"s",0,0, GuiUtils.TextStyle.BLACK_OUTLINE);
+            }  else if(fiveComboSeconds==0) {
+                GuiUtils.drawText(ChatFormatting.RED+"Open Pets Menu",0,0, GuiUtils.TextStyle.BLACK_OUTLINE);
             }
         }
 
         @Override
         public void drawElementExample() {
             if(mc.thePlayer == null || !Utils.inSkyblock) return;
-            Utils.drawTextWithStyle3(ChatFormatting.GREEN+"5.231s", 0, 0);
+            GuiUtils.drawText(ChatFormatting.GREEN+"5.231s",0,0, GuiUtils.TextStyle.BLACK_OUTLINE);
         }
 
         @Override

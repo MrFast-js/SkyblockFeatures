@@ -15,10 +15,7 @@ import mrfast.sbf.events.CheckRenderEntityEvent;
 import mrfast.sbf.events.GuiContainerEvent;
 import mrfast.sbf.events.PacketEvent;
 import mrfast.sbf.events.GuiContainerEvent.TitleDrawnEvent;
-import mrfast.sbf.utils.APIUtils;
-import mrfast.sbf.utils.ItemUtils;
-import mrfast.sbf.utils.RenderUtil;
-import mrfast.sbf.utils.Utils;
+import mrfast.sbf.utils.*;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockAir;
 import net.minecraft.client.Minecraft;
@@ -239,11 +236,7 @@ public class MiscFeatures {
             } else {
                 lines.add(ChatFormatting.RED+"Player has API Disabled.");
             }
-            Utils.drawGraySquareWithBorder(180, 0, 150, ((3+lines.size())*Utils.GetMC().fontRendererObj.FONT_HEIGHT) -8,3);
-
-            for(int i=0;i<lines.size();i++) {
-                Utils.GetMC().fontRendererObj.drawStringWithShadow(lines.get(i), 190, i*(Utils.GetMC().fontRendererObj.FONT_HEIGHT+1)+10, -1);
-            }
+            GuiUtils.drawSideMenu(lines, GuiUtils.TextStyle.DROP_SHADOW);
         }
     }
 
