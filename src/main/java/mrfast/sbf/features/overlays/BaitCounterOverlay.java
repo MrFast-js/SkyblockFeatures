@@ -43,7 +43,7 @@ public class BaitCounterOverlay {
         typesOfBait.clear();
         new Thread(() -> {
                 // Get UUID for Hypixel API requests
-                String uuid = Utils.GetMC().thePlayer.getUniqueID().toString();
+                String uuid = Utils.GetMC().thePlayer.getUniqueID().toString().replace("-","");
                 String latestProfile = APIUtils.getLatestProfileID(uuid);
                 if (latestProfile == null) return;
 
@@ -54,8 +54,9 @@ public class BaitCounterOverlay {
                     Utils.SendMessage(EnumChatFormatting.RED + "Hypixel API is having problems!");
                     return;
                 }
+                JsonObject playerResponse = profileResponse.get("profile").getAsJsonObject().get("members").getAsJsonObject().get(uuid).getAsJsonObject();
 
-                if(profileResponse.get("profile").getAsJsonObject().get("members").getAsJsonObject().get(uuid).getAsJsonObject().has("fishing_bag")) {
+                if(playerResponse.has("fishing_bag")) {
                     String inventoryBase64 = profileResponse.get("profile").getAsJsonObject().get("members").getAsJsonObject().get(uuid).getAsJsonObject().get("fishing_bag").getAsJsonObject().get("data").getAsString();
                     Inventory items = new Inventory(inventoryBase64);
                     List<ItemStack> a = ItemUtils.decodeItem(items,true);
@@ -120,7 +121,7 @@ public class BaitCounterOverlay {
 
         @Override
         public int getHeight() {
-            return Utils.GetMC().fontRendererObj.FONT_HEIGHT*5;
+            return (Utils.GetMC().fontRendererObj.FONT_HEIGHT+1)*5;
         }
 
         @Override
