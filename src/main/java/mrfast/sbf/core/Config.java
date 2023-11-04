@@ -870,16 +870,6 @@ public class Config extends Vigilant {
             subcategory = "Dungeons"
     )
     public boolean autoReparty = false;
-
-    @Property(
-            type = PropertyType.SWITCH,
-            name = "1.7 Animations",
-            description = "",
-            category = "Quality of Life",
-            subcategory = "Visual"
-    )
-    public boolean oldAnimations = false;
-
     @Property(
             type = PropertyType.SWITCH,
             name = "Hide Far Entitys in hub",
