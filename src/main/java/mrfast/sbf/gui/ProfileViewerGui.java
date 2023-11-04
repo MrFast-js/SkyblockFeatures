@@ -218,11 +218,6 @@ public class ProfileViewerGui extends WindowScreen {
         // This sets the skin from the uuid
         Utils.GetMC().getSessionService().fillProfileProperties(profile, true);
 
-        generalHoverables = new HashMap<>();
-        HOTMHoverables = new HashMap<>();
-        petHoverables = new HashMap<>();
-        dungeonHoverables = new HashMap<>();
-
         playerUuid = uuidString.replaceAll("-","");
         {
             box = new UIRoundedRectangle(10f)
@@ -306,7 +301,7 @@ public class ProfileViewerGui extends WindowScreen {
             }
         }
 
-		new Thread(() -> {
+		Thread profileThread = new Thread(() -> {
 			System.out.println("Starting thread ");
 
             hypixelProfilesResponse = null;
@@ -363,7 +358,9 @@ public class ProfileViewerGui extends WindowScreen {
             } catch (Exception e) {
                 // TODO: handle exception
             }
-        }).start();
+        });
+        profileThread.setUncaughtExceptionHandler(new ExceptionHandler());
+        profileThread.start();
     }
 
     public void displayError(String error) {
@@ -409,6 +406,7 @@ public class ProfileViewerGui extends WindowScreen {
         generalHoverables.clear();
         petHoverables.clear();
         HOTMHoverables.clear();
+        dungeonHoverables.clear();
         selectedCategory = "General";
 
         if(generalButton!=null) {
@@ -447,16 +445,24 @@ public class ProfileViewerGui extends WindowScreen {
 
         String profileUUID = null;
         cute_name = Utils.cleanColor(cute_name);
+
         List<String> profileList = new ArrayList<>();
         List<String> coopMemberList = new ArrayList<>();
-        Thread loadUsernamesThread=null;
 
         for(JsonElement profile : hypixelProfilesResponse) {
             JsonObject profileObject = profile.getAsJsonObject();
+
+            String gamemode = "";
+            String gamemodeIcon = "";
+            if(profileObject.has("game_mode")){
+                gamemode=profileObject.get("game_mode").getAsString();
+                gamemodeIcon = gamemode.equals("ironman")? "♲":gamemode.equals("stranded")?"☀":gamemode.equals("bingo")?"Ⓑ":"";
+            }
+
             if(profileObject.get("selected").getAsBoolean()) {
-                profileList.add(0, ChatFormatting.GREEN+profileObject.get("cute_name").getAsString());
+                profileList.add(0, ChatFormatting.GREEN+profileObject.get("cute_name").getAsString()+" "+gamemodeIcon);
             } else {
-                profileList.add(ChatFormatting.GREEN+profileObject.get("cute_name").getAsString());
+                profileList.add(ChatFormatting.GREEN+profileObject.get("cute_name").getAsString()+" "+gamemodeIcon);
             }
             if(profileObject.get("cute_name").getAsString().equals(cute_name)) {
                 profileUUID = profileObject.get("profile_id").getAsString();
@@ -468,7 +474,6 @@ public class ProfileViewerGui extends WindowScreen {
                 }
             }
         }
-
 
         if(profileUUID==null) return;
         selectedProfileUUID = profileUUID;
@@ -484,12 +489,18 @@ public class ProfileViewerGui extends WindowScreen {
         setSkillsAndSlayers(ProfilePlayerResponse);
 
         int sbLevelXP = 0;
+        System.out.println("getting leveling");
         if(ProfilePlayerResponse.has("leveling")) {
            sbLevelXP = ProfilePlayerResponse.get("leveling").getAsJsonObject().get("experience").getAsInt();
         }
+        System.out.println("set leveling");
+
         profiles = new JsonObject();
+        System.out.println("getting profiles");
+
         new Thread(()->{
             profiles = APIUtils.getJSONResponse("https://sky.shiiyu.moe/api/v2/profile/"+playerUuid+"#skycryptForPV").get("profiles").getAsJsonObject();
+            System.out.println("got profiles");
         }).start();
 
         Integer sbLevelCurrXp = sbLevelXP%100;
@@ -560,10 +571,12 @@ public class ProfileViewerGui extends WindowScreen {
         drawProgressbar(vampireSlayer.currentXp,vampireSlayer.totalXp,statsAreaRight,"Vampire "+vampireSlayer.level,new ItemStack(Items.wooden_sword),vampireSlayer.hover, false);
 
         UIComponent generalInfoContainer = new UIBlock(clear).setY(new SiblingConstraint(20f)).setX(new PixelConstraint(0f)).setWidth(new RelativeConstraint(1f)).setHeight(new RelativeConstraint(0.175f)).setChildOf(statsAreaContainer);
-        long Purse = 0;
+
+        long Purse = Utils.safeGetLong(ProfilePlayerResponse,"coin_purse");
         long Bank = 0;
-        try {Purse = (long) ProfilePlayerResponse.get("coin_purse").getAsDouble();} catch (Exception ignored) {}
-        try {Bank = (long) ProfileResponse.get("banking").getAsJsonObject().get("balance").getAsDouble();} catch (Exception ignored) {}
+        if(ProfileResponse.has("banking")) {
+            Bank=Utils.safeGetLong(ProfileResponse.get("banking").getAsJsonObject(),"balance");
+        }
 
         String networth = ChatFormatting.RED+"Loading";
 
@@ -574,9 +587,9 @@ public class ProfileViewerGui extends WindowScreen {
 
         if(ProfileResponse.has("game_mode")) {
             String gamemode = ProfileResponse.get("game_mode").getAsString();
-
             if(gamemode.equals("ironman")) profileType = ChatFormatting.WHITE+bold+"♲ Ironman";
             if(gamemode.equals("stranded")) profileType = ChatFormatting.GREEN+bold+"☀ Stranded";
+            if(gamemode.equals("bingo")) profileType = ChatFormatting.YELLOW+bold+"Ⓑ Bingo";
         }
 
         String fairySouls = ProfilePlayerResponse.get("fairy_souls_collected").getAsInt()+" / 240";
@@ -615,34 +628,36 @@ public class ProfileViewerGui extends WindowScreen {
             .setHeight(new RelativeConstraint(0.75f))
             .setWidth(new RelativeConstraint(0.75f));
 
-        System.out.println(profile.getName());
-        int coopSelectorIndex = -1;
-        int currentCoopSelectorIndex = -1;
-        for (String member : coopMemberList) {
-            currentCoopSelectorIndex++;
-            if (member.equalsIgnoreCase(profile.getName())) {
-                coopSelectorIndex = currentCoopSelectorIndex;
+        int coopSelectorIndex = -1; // Initialize with a default value
+        for (int i = 0; i < coopMemberList.size(); i++) {
+            if (coopMemberList.get(i).equalsIgnoreCase(profile.getName())) {
+                coopSelectorIndex = i;
                 break;
             }
         }
+
 
         DropDownComponent coopSelector = (DropDownComponent) new DropDownComponent(coopSelectorIndex, coopMemberList,coopMemberList.size())
             .setChildOf(sidebarArea)
             .setWidth(new RelativeConstraint(0.60f))
             .setX(new CenterConstraint())
             .setY(new RelativeConstraint(0.88f));
-        System.out.println("Created Coop Selector");
 
-        DropDownComponent profileSelector = (DropDownComponent) new DropDownComponent(profileList.indexOf(ChatFormatting.GREEN+cute_name), profileList,profileList.size())
+        int selectedProfileIndex = 0;
+        for (int i = 0; i < profileList.size(); i++) {
+            if(profileList.get(i).contains(cute_name)) selectedProfileIndex = i;
+        }
+
+        DropDownComponent profileSelector = (DropDownComponent) new DropDownComponent(selectedProfileIndex, profileList,profileList.size())
             .setChildOf(sidebarArea)
             .setWidth(new RelativeConstraint(0.50f))
             .setX(new CenterConstraint())
             .setY(new RelativeConstraint(0.94f));
-        System.out.println("Created Profile Selector");
 
         profileSelector.getSelectedText().onSetValue((value)->{
             ProfileViewerUtils.animateX(lastSelectedButton, 8f);
-            loadProfile(value,false);
+            String clean = Utils.cleanColor(value).split(" ")[0];
+            loadProfile(clean,false);
             return Unit.INSTANCE;
         });
 
@@ -746,8 +761,8 @@ public class ProfileViewerGui extends WindowScreen {
     public void loadNetworth(String profileUUID,String playerUuid,long Purse,long Bank,UIComponent networthComponent) {
         System.out.println("doing networth");
 
-        new Thread(()->{
-            JsonObject profiles = APIUtils.getJSONResponse("https://sky.shiiyu.moe/api/v2/profile/"+playerUuid+"#skycryptForPV").get("profiles").getAsJsonObject();
+        Thread networthThread = new Thread(()->{
+            JsonObject profiles = APIUtils.getJSONResponse("https://sky.shiiyu.moe/api/v2/profile/"+playerUuid+"#skycryptForNw").get("profiles").getAsJsonObject();
 
             List<String> networthTooltip = new ArrayList<>(Arrays.asList(ChatFormatting.RED + "Player has API disabled"));
             String networth = ChatFormatting.RED+"Loading";
@@ -783,30 +798,19 @@ public class ProfileViewerGui extends WindowScreen {
                     networthCategories.addProperty("museum", value);
                 }
             }
-            long Armor = 0;
-            long equipment = 0;
-            long Wardrobe = 0;
-            long Inventory = 0;
-            long Museum = 0;
-            long accessories = 0;
-            long enderchest = 0;
-            long Sacks = 0;
-            long Storage = 0;
-            long pets = 0;
-            long total = 0;
             long irl = 0;
 
-            try {Armor = networthCategories.get("armor").getAsJsonObject().get("total").getAsLong();} catch (NullPointerException ignored) {}
-            try {equipment = networthCategories.get("equipment").getAsJsonObject().get("total").getAsLong();} catch (NullPointerException ignored) {}
-            try {Wardrobe = networthCategories.get("wardrobe").getAsJsonObject().get("total").getAsLong();} catch (NullPointerException ignored) {}
-            try {Inventory = networthCategories.get("inventory").getAsJsonObject().get("total").getAsLong();} catch (NullPointerException ignored) {}
-            try {accessories = networthCategories.get("accessories").getAsJsonObject().get("total").getAsLong();} catch (NullPointerException ignored) {}
-            try {Storage = networthCategories.get("storage").getAsJsonObject().get("total").getAsLong();} catch (NullPointerException ignored) {}
-            try {enderchest = networthCategories.get("enderchest").getAsJsonObject().get("total").getAsLong();} catch (NullPointerException ignored) {}
-            try {Sacks = networthCategories.get("sacks").getAsJsonObject().get("total").getAsLong();} catch (NullPointerException ignored) {}
-            try {pets = networthCategories.get("pets").getAsJsonObject().get("total").getAsLong();} catch (NullPointerException ignored) {}
-            try {Museum = networthCategories.get("museum").getAsLong();} catch (NullPointerException ignored) {}
-            try {total = networthResponse.get("networth").getAsLong()+Museum;} catch (NullPointerException ignored) {}
+            long pets = Utils.safeGetLong(networthCategories.get("storage").getAsJsonObject(),"total");
+            long total = Utils.safeGetLong(networthResponse,"networth");
+            long Armor = Utils.safeGetLong(networthCategories.get("armor").getAsJsonObject(),"total");
+            long Sacks = Utils.safeGetLong(networthCategories.get("sacks").getAsJsonObject(),"total");
+            long Museum = Utils.safeGetLong(networthCategories,"museum");
+            long Storage = Utils.safeGetLong(networthCategories.get("storage").getAsJsonObject(),"total");
+            long Wardrobe = Utils.safeGetLong(networthCategories.get("wardrobe").getAsJsonObject(),"total");
+            long equipment = Utils.safeGetLong(networthCategories.get("equipment").getAsJsonObject(),"total");
+            long Inventory = Utils.safeGetLong(networthCategories.get("inventory").getAsJsonObject(),"total");
+            long enderchest = Utils.safeGetLong(networthCategories.get("enderchest").getAsJsonObject(),"total");
+            long accessories = Utils.safeGetLong(networthCategories.get("accessories").getAsJsonObject(),"total");
 
             if(PricingData.bazaarPrices.get("BOOSTER_COOKIE")!=null) irl = (int) ((total/PricingData.bazaarPrices.get("BOOSTER_COOKIE"))*2.4);
 
@@ -833,7 +837,9 @@ public class ProfileViewerGui extends WindowScreen {
             networth = nf.format(networthResponse.get("networth").getAsLong()+Museum);
             ((UIText) networthComponent).setText(g+"Networth: "+bold+networth);
             generalHoverables.put(networthComponent, networthTooltip);
-        }).start();
+        });
+        networthThread.setUncaughtExceptionHandler(new ExceptionHandler());
+        networthThread.start();
     }
 
 
@@ -849,7 +855,6 @@ public class ProfileViewerGui extends WindowScreen {
         float value = v.floatValue();
         float max = m.floatValue();
 
-        // System.out.println("Value: "+value+" Max: "+max+" "+label);
         UIComponent container = new UIBlock(clear).setChildOf(statsArea)
             .setWidth(new RelativeConstraint(1f))
             .setHeight(new RelativeConstraint(0.12f))
@@ -1322,95 +1327,93 @@ public class ProfileViewerGui extends WindowScreen {
                     .setChildOf(statsAreaContainer)
                     .setX(new CenterConstraint())
                     .setY(new CenterConstraint());
-            try {
-                String id = ProfileResponse.get("profile_id").toString().replaceAll("\"", "");
-                JsonObject obj = profiles.get(id).getAsJsonObject();
-                UIComponent statsAreaLeft = new UIBlock(clear).setX(new PixelConstraint(0f)).setY(new RelativeConstraint(0f)).setChildOf(statsAreaContainer).setWidth(new RelativeConstraint(0.95f*0.50f)).setHeight(new RelativeConstraint(0.4f));
-                UIComponent statsAreaRight = new UIBlock(clear).setX(new RelativeConstraint(0.50f)).setY(new RelativeConstraint(0f)).setChildOf(statsAreaContainer).setWidth(new RelativeConstraint(0.95f*0.5f)).setHeight(new RelativeConstraint((0.4f)));
+             new Thread(()-> {
+                 try {
+                     String id = ProfileResponse.get("profile_id").toString().replaceAll("\"", "");
+                     JsonObject obj = profiles.get(id).getAsJsonObject();
+                     UIComponent statsAreaLeft = new UIBlock(clear).setX(new PixelConstraint(0f)).setY(new RelativeConstraint(0f)).setChildOf(statsAreaContainer).setWidth(new RelativeConstraint(0.95f * 0.50f)).setHeight(new RelativeConstraint(0.4f));
+                     UIComponent statsAreaRight = new UIBlock(clear).setX(new RelativeConstraint(0.50f)).setY(new RelativeConstraint(0f)).setChildOf(statsAreaContainer).setWidth(new RelativeConstraint(0.95f * 0.5f)).setHeight(new RelativeConstraint((0.4f)));
 
-                JsonObject dungeons = obj.get("data").getAsJsonObject().get("dungeons").getAsJsonObject();
-                JsonObject essences = obj.get("data").getAsJsonObject().get("essence").getAsJsonObject();
-                JsonObject catacombs = dungeons.get("catacombs").getAsJsonObject();
-                JsonObject mastermode = dungeons.get("master_catacombs").getAsJsonObject();
+                     JsonObject dungeons = obj.get("data").getAsJsonObject().get("dungeons").getAsJsonObject();
+                     JsonObject essences = obj.get("data").getAsJsonObject().get("essence").getAsJsonObject();
+                     JsonObject catacombs = dungeons.get("catacombs").getAsJsonObject();
+                     JsonObject mastermode = dungeons.get("master_catacombs").getAsJsonObject();
 
-                Integer secrets = dungeons.get("secrets_found").getAsInt();
-                String selectedClass = ProfileViewerUtils.formatTitle(dungeons.get("selected_class").getAsString());
-                double classAverage = Math.floor(dungeons.get("class_average").getAsJsonObject().get("avrg_level").getAsDouble()*10)/10;;
-                int itemBoost = catacombs.get("bonuses").getAsJsonObject().get("item_boost").getAsInt();
-                String highestFloorNormal = ProfileViewerUtils.formatTitle(catacombs.get("highest_floor").getAsString());
-                String highestFloorMaster = ProfileViewerUtils.formatTitle(mastermode.get("highest_floor").getAsString());
+                     Integer secrets = dungeons.get("secrets_found").getAsInt();
+                     String selectedClass = ProfileViewerUtils.formatTitle(dungeons.get("selected_class").getAsString());
+                     double classAverage = Math.floor(dungeons.get("class_average").getAsJsonObject().get("avrg_level").getAsDouble() * 10) / 10;
+                     ;
+                     int itemBoost = catacombs.get("bonuses").getAsJsonObject().get("item_boost").getAsInt();
+                     String highestFloorNormal = ProfileViewerUtils.formatTitle(catacombs.get("highest_floor").getAsString());
+                     String highestFloorMaster = ProfileViewerUtils.formatTitle(mastermode.get("highest_floor").getAsString());
 
-                JsonObject classes = dungeons.get("classes").getAsJsonObject();
-                JsonObject archerClass = classes.get("archer").getAsJsonObject().get("experience").getAsJsonObject();
-                JsonObject healerClass = classes.get("healer").getAsJsonObject().get("experience").getAsJsonObject();
-                JsonObject mageClass = classes.get("mage").getAsJsonObject().get("experience").getAsJsonObject();
-                JsonObject berserkClass = classes.get("berserk").getAsJsonObject().get("experience").getAsJsonObject();
-                JsonObject tankClass = classes.get("tank").getAsJsonObject().get("experience").getAsJsonObject();
-                JsonObject catacombsLevel = catacombs.get("level").getAsJsonObject();
+                     JsonObject classes = dungeons.get("classes").getAsJsonObject();
+                     JsonObject archerClass = classes.get("archer").getAsJsonObject().get("experience").getAsJsonObject();
+                     JsonObject healerClass = classes.get("healer").getAsJsonObject().get("experience").getAsJsonObject();
+                     JsonObject mageClass = classes.get("mage").getAsJsonObject().get("experience").getAsJsonObject();
+                     JsonObject berserkClass = classes.get("berserk").getAsJsonObject().get("experience").getAsJsonObject();
+                     JsonObject tankClass = classes.get("tank").getAsJsonObject().get("experience").getAsJsonObject();
+                     JsonObject catacombsLevel = catacombs.get("level").getAsJsonObject();
 
-                int nextCataXp = 0;
-                int nextBersXp = 0;
-                int nextArchXp = 0;
-                int nextHealXp = 0;
-                int nextMageXp = 0;
-                int nextTankXp = 0;
-                try {nextCataXp = catacombsLevel.get("xpForNext").getAsInt();} catch (Exception ignored) {}
-                try {nextBersXp = berserkClass.get("xpForNext").getAsInt();} catch (Exception ignored) {}
-                try {nextArchXp = archerClass.get("xpForNext").getAsInt();} catch (Exception ignored) {}
-                try {nextHealXp = healerClass.get("xpForNext").getAsInt();} catch (Exception ignored) {}
-                try {nextMageXp = mageClass.get("xpForNext").getAsInt();} catch (Exception ignored) {}
-                try {nextTankXp = tankClass.get("xpForNext").getAsInt();} catch (Exception ignored) {}
-                statsAreaContainer.removeChild(loadingText);
-                drawProgressbar(catacombsLevel.get("xpCurrent").getAsInt(),nextCataXp,statsAreaLeft,"Catacombs "+catacombsLevel.get("level").getAsInt(),new ItemStack(Items.skull),null,false);
-                drawProgressbar(archerClass.get("xpCurrent").getAsInt(),nextArchXp,statsAreaLeft,"Archer "+archerClass.get("level").getAsInt(),new ItemStack(Items.bow),null,false);
-                drawProgressbar(healerClass.get("xpCurrent").getAsInt(),nextHealXp,statsAreaLeft,"Healer "+healerClass.get("level").getAsInt(),new ItemStack(Items.potionitem),null,false);
-                drawProgressbar(mageClass.get("xpCurrent").getAsInt(),nextMageXp,statsAreaRight,"Mage "+mageClass.get("level").getAsInt(),new ItemStack(Items.blaze_rod),null,false);
-                drawProgressbar(berserkClass.get("xpCurrent").getAsInt(),nextBersXp,statsAreaRight,"Berserk "+berserkClass.get("level").getAsInt(),new ItemStack(Items.iron_sword),null,false);
-                drawProgressbar(tankClass.get("xpCurrent").getAsInt(),nextTankXp,statsAreaRight,"Tank "+tankClass.get("level").getAsInt(),new ItemStack(Items.leather_chestplate),null,false);
+                     int nextCataXp = Utils.safeGetInt(catacombsLevel,"xpForNext");
+                     int nextBersXp = Utils.safeGetInt(berserkClass,"xpForNext");
+                     int nextArchXp = Utils.safeGetInt(archerClass,"xpForNext");
+                     int nextHealXp = Utils.safeGetInt(healerClass,"xpForNext");
+                     int nextMageXp = Utils.safeGetInt(mageClass,"xpForNext");
+                     int nextTankXp = Utils.safeGetInt(tankClass,"xpForNext");
 
-                UIComponent container =  new UIBlock(clear)
-                    .setWidth(new RelativeConstraint(1f))
-                    .setY(new RelativeConstraint(0.26f))
-                    .setChildOf(statsAreaContainer)
-                    .setHeight(new RelativeConstraint(0.3f));
+                     statsAreaContainer.removeChild(loadingText);
+                     drawProgressbar(catacombsLevel.get("xpCurrent").getAsInt(), nextCataXp, statsAreaLeft, "Catacombs " + catacombsLevel.get("level").getAsInt(), new ItemStack(Items.skull), null, false);
+                     drawProgressbar(archerClass.get("xpCurrent").getAsInt(), nextArchXp, statsAreaLeft, "Archer " + archerClass.get("level").getAsInt(), new ItemStack(Items.bow), null, false);
+                     drawProgressbar(healerClass.get("xpCurrent").getAsInt(), nextHealXp, statsAreaLeft, "Healer " + healerClass.get("level").getAsInt(), new ItemStack(Items.potionitem), null, false);
+                     drawProgressbar(mageClass.get("xpCurrent").getAsInt(), nextMageXp, statsAreaRight, "Mage " + mageClass.get("level").getAsInt(), new ItemStack(Items.blaze_rod), null, false);
+                     drawProgressbar(berserkClass.get("xpCurrent").getAsInt(), nextBersXp, statsAreaRight, "Berserk " + berserkClass.get("level").getAsInt(), new ItemStack(Items.iron_sword), null, false);
+                     drawProgressbar(tankClass.get("xpCurrent").getAsInt(), nextTankXp, statsAreaRight, "Tank " + tankClass.get("level").getAsInt(), new ItemStack(Items.leather_chestplate), null, false);
 
-                UIComponent left = new UIBlock(clear)
-                    .setWidth(new RelativeConstraint(0.47f))
-                    .setChildOf(container)
-                    .setHeight(new RelativeConstraint(0.3f));
-                new UIText(g+"Selected Class: "+bold+selectedClass).setX(new SiblingConstraint(3f)).setChildOf(left);
-                new UIText(g+"Class Average: "+bold+classAverage).setY(new SiblingConstraint(3f)).setChildOf(left);
-                new UIText(g+"Dungeon Item Boost: "+bold+itemBoost+"%").setY(new SiblingConstraint(3f)).setChildOf(left);
-                new UIText(g+"Highest Floor Beated (Normal): "+bold+highestFloorNormal).setY(new SiblingConstraint(3f)).setChildOf(left);
-                new UIText(g+"Highest Floor Beated (Master): "+bold+highestFloorMaster).setY(new SiblingConstraint(3f)).setChildOf(left);
-                new UIText(g+"Secrets Found: "+bold+nf.format(secrets)).setY(new SiblingConstraint(3f)).setChildOf(left);
+                     UIComponent container = new UIBlock(clear)
+                             .setWidth(new RelativeConstraint(1f))
+                             .setY(new RelativeConstraint(0.26f))
+                             .setChildOf(statsAreaContainer)
+                             .setHeight(new RelativeConstraint(0.3f));
 
-                UIComponent right =  new UIBlock(clear)
-                    .setWidth(new RelativeConstraint(0.47f))
-                    .setX(new SiblingConstraint(10f))
-                    .setChildOf(container)
-                    .setHeight(new RelativeConstraint(0.3f));
+                     UIComponent left = new UIBlock(clear)
+                             .setWidth(new RelativeConstraint(0.47f))
+                             .setChildOf(container)
+                             .setHeight(new RelativeConstraint(0.3f));
+                     new UIText(g + "Selected Class: " + bold + selectedClass).setX(new SiblingConstraint(3f)).setChildOf(left);
+                     new UIText(g + "Class Average: " + bold + classAverage).setY(new SiblingConstraint(3f)).setChildOf(left);
+                     new UIText(g + "Dungeon Item Boost: " + bold + itemBoost + "%").setY(new SiblingConstraint(3f)).setChildOf(left);
+                     new UIText(g + "Highest Floor Beated (Normal): " + bold + highestFloorNormal).setY(new SiblingConstraint(3f)).setChildOf(left);
+                     new UIText(g + "Highest Floor Beated (Master): " + bold + highestFloorMaster).setY(new SiblingConstraint(3f)).setChildOf(left);
+                     new UIText(g + "Secrets Found: " + bold + nf.format(secrets)).setY(new SiblingConstraint(3f)).setChildOf(left);
 
-                new UIText(g+"Wither Essence: "+bold+nf.format(essences.get("wither").getAsInt())).setX(new SiblingConstraint(3f)).setChildOf(right);
-                new UIText(g+ChatFormatting.GREEN+"Spider Essence: "+bold+nf.format(essences.get("spider").getAsInt())).setY(new SiblingConstraint(3f)).setChildOf(right);
-                new UIText(g+ChatFormatting.AQUA+"Ice Essence: "+bold+nf.format(essences.get("ice").getAsInt())).setY(new SiblingConstraint(3f)).setChildOf(right);
-                new UIText(g+ChatFormatting.RED+"Dragon Essence: "+bold+nf.format(essences.get("dragon").getAsInt())).setY(new SiblingConstraint(3f)).setChildOf(right);
-                new UIText(g+ChatFormatting.YELLOW+"Undead Essence: "+bold+nf.format(essences.get("undead").getAsInt())).setY(new SiblingConstraint(3f)).setChildOf(right);
-                new UIText(g+ChatFormatting.DARK_AQUA+"Diamond Essence: "+bold+nf.format(essences.get("diamond").getAsInt())).setY(new SiblingConstraint(3f)).setChildOf(right);
-                new UIText(g+ChatFormatting.GOLD+"Gold Essence: "+bold+nf.format(essences.get("gold").getAsInt())).setY(new SiblingConstraint(3f)).setChildOf(right);
+                     UIComponent right = new UIBlock(clear)
+                             .setWidth(new RelativeConstraint(0.47f))
+                             .setX(new SiblingConstraint(10f))
+                             .setChildOf(container)
+                             .setHeight(new RelativeConstraint(0.3f));
 
-                totalDungeonRuns = 1;
+                     new UIText(g + "Wither Essence: " + bold + nf.format(essences.get("wither").getAsInt())).setX(new SiblingConstraint(3f)).setChildOf(right);
+                     new UIText(g + ChatFormatting.GREEN + "Spider Essence: " + bold + nf.format(essences.get("spider").getAsInt())).setY(new SiblingConstraint(3f)).setChildOf(right);
+                     new UIText(g + ChatFormatting.AQUA + "Ice Essence: " + bold + nf.format(essences.get("ice").getAsInt())).setY(new SiblingConstraint(3f)).setChildOf(right);
+                     new UIText(g + ChatFormatting.RED + "Dragon Essence: " + bold + nf.format(essences.get("dragon").getAsInt())).setY(new SiblingConstraint(3f)).setChildOf(right);
+                     new UIText(g + ChatFormatting.YELLOW + "Undead Essence: " + bold + nf.format(essences.get("undead").getAsInt())).setY(new SiblingConstraint(3f)).setChildOf(right);
+                     new UIText(g + ChatFormatting.DARK_AQUA + "Diamond Essence: " + bold + nf.format(essences.get("diamond").getAsInt())).setY(new SiblingConstraint(3f)).setChildOf(right);
+                     new UIText(g + ChatFormatting.GOLD + "Gold Essence: " + bold + nf.format(essences.get("gold").getAsInt())).setY(new SiblingConstraint(3f)).setChildOf(right);
 
-                addDungeonFloors(catacombs);
-                addDungeonFloors(mastermode);
+                     totalDungeonRuns = 1;
 
-                Double averageSecrets = Math.round((secrets.doubleValue()/totalDungeonRuns.doubleValue())*100.0)/100.0;
-                UIComponent avgSecretComponent = new UIText(g+"Average Secrets Per Run: "+bold+nf.format(averageSecrets)).setY(new SiblingConstraint(3f)).setChildOf(left);
+                     addDungeonFloors(catacombs);
+                     addDungeonFloors(mastermode);
 
-                dungeonHoverables.put(avgSecretComponent, new ArrayList<>(Arrays.asList(ChatFormatting.RED + "This is an estimate because",ChatFormatting.RED+"the secret count is combined",ChatFormatting.RED+"across profiles")));
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+                     Double averageSecrets = Math.round((secrets.doubleValue() / totalDungeonRuns.doubleValue()) * 100.0) / 100.0;
+                     UIComponent avgSecretComponent = new UIText(g + "Average Secrets Per Run: " + bold + nf.format(averageSecrets)).setY(new SiblingConstraint(3f)).setChildOf(left);
+
+                     dungeonHoverables.put(avgSecretComponent, new ArrayList<>(Arrays.asList(ChatFormatting.RED + "This is an estimate because", ChatFormatting.RED + "the secret count is combined", ChatFormatting.RED + "across profiles")));
+                 } catch (Exception e) {
+                     e.printStackTrace();
+                 }
+             }).start();
         }
 
         if(categoryName.equals("Skills")) {
@@ -1423,13 +1426,10 @@ public class ProfileViewerGui extends WindowScreen {
                 new UIText(ChatFormatting.YELLOW+""+ChatFormatting.BOLD+"Mining").setChildOf(miningContainer).setY(new SiblingConstraint(4f)).setX(new CenterConstraint()).setTextScale(new PixelConstraint(2f));
 
                 JsonObject miningCore = ProfilePlayerResponse.get("mining_core").getAsJsonObject();
-                int hotmExperience = 0;
-                int mithrilPowder = 0;
-                int gemstonePowder = 0;
 
-                if(miningCore.has("experience")) hotmExperience = miningCore.get("experience").getAsInt();
-                if(miningCore.has("powder_mithril")) mithrilPowder = miningCore.get("powder_mithril").getAsInt();
-                if(miningCore.has("powder_gemstone")) gemstonePowder = miningCore.get("powder_gemstone").getAsInt();
+                int hotmExperience = Utils.safeGetInt(miningCore,"experience");
+                int mithrilPowder = Utils.safeGetInt(miningCore,"powder_mithril");
+                int gemstonePowder = Utils.safeGetInt(miningCore,"powder_gemstone");
 
                 // JsonObject skyblockAchievements = achievmentsJson.get("skyblock").getAsJsonObject().get("tiered").getAsJsonObject()
                 JsonArray tutorial = ProfilePlayerResponse.get("tutorial").getAsJsonArray();
@@ -1445,7 +1445,12 @@ public class ProfileViewerGui extends WindowScreen {
                 if(miningCore.has("greater_mines_last_access")) {
                     passStatus = miningCore.get("greater_mines_last_access").getAsInt()>System.currentTimeMillis()-5*60*60*1000?ChatFormatting.GREEN+"Active":ChatFormatting.RED+"Expired";
                 }
-                int nucleusRuns = Optional.ofNullable(ProfilePlayerResponse.get("leveling")).map(JsonElement::getAsJsonObject).map(obj -> obj.get("completions")).map(JsonElement::getAsJsonObject).map(obj -> obj.get("NUCLEUS_RUNS")).map(JsonElement::getAsInt).orElse(0);
+                int nucleusRuns =0;
+                try {
+                    JsonObject leveling = ProfilePlayerResponse.get("leveling").getAsJsonObject();
+                    JsonObject completions = leveling.getAsJsonObject("completions");
+                    nucleusRuns = completions.getAsJsonPrimitive("NUCLEUS_RUNS").getAsInt();
+                } catch (Exception ignored) {}
 
                 UIComponent left = new UIBlock(clear)
                     .setWidth(new RelativeConstraint(0.45f))
@@ -1460,8 +1465,8 @@ public class ProfileViewerGui extends WindowScreen {
 
                 new UIText(ChatFormatting.YELLOW+""+ChatFormatting.BOLD+"Heart of the Mountain").setChildOf(left).setY(new SiblingConstraint(10f)).setX(new CenterConstraint());
                 int hotmTier = 0;
-                int tokensSpent = 0;
-                try {tokensSpent = miningCore.get("tokens_spent").getAsInt();} catch (Exception ignored) {}
+                int tokensSpent = Utils.safeGetInt(miningCore,"tokens_spent");
+
                 try {hotmTier = ProfileViewerUtils.hotmXpToLevel(hotmExperience);} catch (Exception ignored) {}
 
                 new UIText(g+"Tier: "+bold+hotmTier+"/7").setY(new SiblingConstraint(2f)).setChildOf(left);
@@ -1478,17 +1483,19 @@ public class ProfileViewerGui extends WindowScreen {
             {// Farming
                 new UIText(ChatFormatting.YELLOW+""+ChatFormatting.BOLD+"Farming").setChildOf(farmingContainer).setY(new SiblingConstraint(4f)).setX(new CenterConstraint()).setTextScale(new PixelConstraint(2f));
                 int pelts = 0;
-                if(ProfilePlayerResponse.has("trapper_quest")) if(ProfilePlayerResponse.get("trapper_quest").getAsJsonObject().has("pelt_count")) pelts = ProfilePlayerResponse.get("trapper_quest").getAsJsonObject().get("pelt_count").getAsInt();
+                if(ProfilePlayerResponse.has("trapper_quest")) {
+                    if(ProfilePlayerResponse.get("trapper_quest").getAsJsonObject().has("pelt_count")) {
+                        pelts = ProfilePlayerResponse.get("trapper_quest").getAsJsonObject().get("pelt_count").getAsInt();
+                    }
+                }
+
                 JsonObject contests = ProfilePlayerResponse.get("jacob2").getAsJsonObject().get("contests").getAsJsonObject();
                 JsonObject medals = ProfilePlayerResponse.get("jacob2").getAsJsonObject().get("medals_inv").getAsJsonObject();
                 int contestsAttended = contests.entrySet().size();
 
-                int gold = 0;
-                int silver = 0;
-                int bronze = 0;
-                if(medals.has("gold")) gold = medals.get("gold").getAsInt();
-                if(medals.has("silver")) silver = medals.get("silver").getAsInt();
-                if(medals.has("bronze")) bronze = medals.get("bronze").getAsInt();
+                int gold = Utils.safeGetInt(medals,"gold");
+                int silver = Utils.safeGetInt(medals,"silver");;
+                int bronze = Utils.safeGetInt(medals,"bronze");;
 
                 new UIText(g+"Pelts: "+bold+pelts).setY(new SiblingConstraint(2f)).setChildOf(farmingContainer);
                 new UIText(g+"Contests Attended: "+bold+contestsAttended).setY(new SiblingConstraint(2f)).setChildOf(farmingContainer);
@@ -1505,14 +1512,10 @@ public class ProfileViewerGui extends WindowScreen {
             }
             {// Fishing
                 new UIText(ChatFormatting.YELLOW+""+ChatFormatting.BOLD+"Fishing").setChildOf(fishingContainer).setY(new SiblingConstraint(4f)).setX(new CenterConstraint()).setTextScale(new PixelConstraint(2f));
-                int caught = 0;
-                int treasure = 0;
-                if(ProfilePlayerResponse.get("trophy_fish").getAsJsonObject().has("total_caught")) {
-                    caught = ProfilePlayerResponse.get("trophy_fish").getAsJsonObject().get("total_caught").getAsInt();
-                }
-                if(ProfilePlayerResponse.has("fishing_treasure_caught")) {
-                    treasure = ProfilePlayerResponse.get("fishing_treasure_caught").getAsInt();
-                }
+
+                int caught = Utils.safeGetInt(ProfilePlayerResponse.get("trophy_fish").getAsJsonObject(),"total_caught");
+                int treasure = Utils.safeGetInt(ProfilePlayerResponse,"fishing_treasure_caught");
+
                 new UIText(g+"Trophy Fish Caught: "+bold+Utils.nf.format(caught)).setY(new SiblingConstraint(2f)).setChildOf(fishingContainer);
                 new UIText(g+"Treasures Found: "+bold+Utils.nf.format(treasure)).setY(new SiblingConstraint(2f)).setChildOf(fishingContainer);
             }
@@ -2012,8 +2015,8 @@ public class ProfileViewerGui extends WindowScreen {
             try {
                 if(!masterMode) {
                     int timesPlayed = floorStats.get("times_played").getAsInt();
-                    totalDungeonRuns += timesPlayed; 
-                    new UIText(g + "  Times Played: " + bold + timesPlayed)
+                    totalDungeonRuns += timesPlayed;
+                    new UIText(g + "  Times Played: " + bold + Utils.formatNumber(timesPlayed))
                         .setY(new SiblingConstraint(6f))
                         .setChildOf(box);
                 }
@@ -2021,9 +2024,9 @@ public class ProfileViewerGui extends WindowScreen {
                 // TODO: handle exception
             }   
             try {
-                int timesPlayed = floorStats.get("tier_completions").getAsInt();
-                totalDungeonRuns += timesPlayed;
-                new UIText(g + "  Times Completed: " + bold + timesPlayed)
+                int timesCompleted = floorStats.get("tier_completions").getAsInt();
+                totalDungeonRuns += timesCompleted;
+                new UIText(g + "  Times Completed: " + bold + Utils.formatNumber(timesCompleted))
                     .setY(new SiblingConstraint(2f))
                     .setChildOf(box);
             } catch (Exception e) {
@@ -2052,39 +2055,9 @@ public class ProfileViewerGui extends WindowScreen {
     }
 
     public void drawHotmGrid(UIComponent miningContainer) {
-        miningSpeed = 0;
-        miningFortune = 0;
-        tittyInsane = 0;
-        luckofcave = 0;
-        dailyPowder = 0;
-        effMiner = 0;
-        effMinerStat = 0;
-        effMinerStat2 = 0;
-        potm = 0;
-        mole = 0;
-        finalOutput = 0;
-        moleStat = 0;
-        powderBuff = 0;
-        seasonMine = 0;
-        lonesomeMiner = 0;
-        professional = 0;
-        miningSpeed2 = 0;
-        quickForge = 0;
-        fortunate = 0;
-        greatExplorer = 0;
-        miningFortune2 = 0;
-        orbit = 0;
-        crystallized = 0;
-        skymall = 0;
-        miningMadness = 0;
-        veinSeeker = 0;
-        precision = 0;
-        pickoblus = 0;
-        maniacMiner = 0;
-        starPowder = 0;
-        goblinKiller = 0;
-        miningSpeedBoost = 0;
-        frontLoaded = 0;
+        miningSpeed = 0;miningFortune = 0;tittyInsane = 0;luckofcave = 0;dailyPowder = 0;effMiner = 0;effMinerStat = 0;effMinerStat2 = 0;potm = 0;mole = 0;finalOutput = 0;moleStat = 0;powderBuff = 0;seasonMine = 0;
+        lonesomeMiner = 0;professional = 0;miningSpeed2 = 0;quickForge = 0;fortunate = 0;greatExplorer = 0;miningFortune2 = 0;orbit = 0;crystallized = 0;skymall = 0;miningMadness = 0;veinSeeker = 0;precision = 0;
+        pickoblus = 0;maniacMiner = 0;starPowder = 0;goblinKiller = 0;miningSpeedBoost = 0;frontLoaded = 0;
 
         UIComponent container = new UIBlock(clear).setWidth(new PixelConstraint(140f)).setHeight(new PixelConstraint(140f)).setX(new RelativeConstraint(0.5f)).setY(new CenterConstraint()).enableEffect(new OutlineEffect(Color.white, 3f)).setChildOf(miningContainer);
         ProfileViewerUtils.createHotmTree(container);
@@ -2135,5 +2108,13 @@ public class ProfileViewerGui extends WindowScreen {
             this.pos = pos;
         }
     }
+    public static class ExceptionHandler implements Thread.UncaughtExceptionHandler {
+        @Override
+        public void uncaughtException(Thread t, Throwable e) {
+            e.printStackTrace();
+            // do something with the exception
+        }
+    }
+
 
 }

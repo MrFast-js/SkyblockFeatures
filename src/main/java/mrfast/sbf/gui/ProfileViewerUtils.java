@@ -189,8 +189,6 @@ public class ProfileViewerUtils {
         List<Integer> skillXpList = Arrays.stream(skillXPPerLevel).collect(Collectors.toList());
         List<String> skillList = Arrays.stream(lvl60Skills).collect(Collectors.toList());
 
-        System.out.println(skillXpList.size()+" "+type);
-
         boolean lvl60Skill = skillList.contains(type);
 
         if(!lvl60Skill) {
@@ -200,7 +198,6 @@ public class ProfileViewerUtils {
         if(type.equals("Social")) skillXpList = Arrays.stream(socialXpPerLevel).collect(Collectors.toList());;
         if(type.equals("Runecrafting")) skillXpList = Arrays.stream(runecraftingXpPerLevel).collect(Collectors.toList());;
 
-        System.out.println(skillXpList.size()+" "+skillXpList.toString());
         return skillXpList.toArray(new Integer[skillXpList.size()]);
     }
     public static String[] lvl60Skills = {"Farming","Mining","Combat","Enchanting"};
@@ -372,14 +369,6 @@ public class ProfileViewerUtils {
 
             newHotmUpgrade4(Lists.newArrayList("§cPeak of the Mountain",
                     "§7Level "+ProfileViewerGui.potm+"§8/7"),new Vector2f(3f, 2f),ProfileViewerGui.potm>0),
-
-            newHotmUpgrade4(Lists.newArrayList("S"),new Vector2f(3f, 2f),ProfileViewerGui.potm>0),
-
-            newHotmUpgrade4(Lists.newArrayList("S"),new Vector2f(3f, 2f),ProfileViewerGui.potm>0),
-            
-            newHotmUpgrade4(Lists.newArrayList("S"),new Vector2f(3f, 2f),ProfileViewerGui.potm>0),
-            
-            newHotmUpgrade4(Lists.newArrayList("S"),new Vector2f(3f, 2f),ProfileViewerGui.potm>0),
 
             newHotmUpgrade(Lists.newArrayList(EnumChatFormatting.RED+"Mole",
                     "§7Level " + ProfileViewerGui.mole + "§8/190",
@@ -626,12 +615,8 @@ public class ProfileViewerUtils {
         if(hotmNodes.has("daily_powder")) ProfileViewerGui.dailyPowder = hotmNodes.get("daily_powder").getAsInt();
         if(hotmNodes.has("efficient_miner")) {
             ProfileViewerGui.effMiner = hotmNodes.get("efficient_miner").getAsInt();
-            ProfileViewerGui.effMinerStat = (float) (
-                ProfileViewerGui.effMiner * 0.4 + 10.4
-            );
-            ProfileViewerGui.effMinerStat2 = (float) (
-                ProfileViewerGui.effMiner * .06 + 0.31
-            );
+            ProfileViewerGui.effMinerStat = (float) (ProfileViewerGui.effMiner * 0.4 + 10.4);
+            ProfileViewerGui.effMinerStat2 = (float) (ProfileViewerGui.effMiner * .06 + 0.31);
         }
         if(hotmNodes.has("special_0")) ProfileViewerGui.potm = hotmNodes.get("special_0").getAsInt();
         if(hotmNodes.has("fallen_star_bonus")) ProfileViewerGui.crystallized = hotmNodes.get("fallen_star_bonus").getAsInt();

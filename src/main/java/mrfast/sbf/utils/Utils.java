@@ -15,6 +15,7 @@ import java.util.TimerTask;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
+import com.google.gson.JsonObject;
 import mrfast.sbf.gui.ConfigGui;
 import mrfast.sbf.gui.ProfileViewerGui;
 import net.minecraft.client.gui.GuiOptions;
@@ -79,6 +80,25 @@ public class Utils {
         }
 
         return formattedNumber + steps[magnitudeIndex];
+    }
+
+    /*
+    Returns a int if it exists and 0 if it doesnt.
+    Useful for /pv when certain APIs are turned off
+     */
+    public static int safeGetInt(JsonObject jsonObject, String key) {
+        try {
+            return jsonObject.get(key).getAsInt();
+        } catch (Exception ignored) {
+            return 0; // Default value when an exception occurs
+        }
+    }
+    public static long safeGetLong(JsonObject jsonObject, String key) {
+        try {
+            return jsonObject.get(key).getAsLong();
+        } catch (Exception ignored) {
+            return 0L; // Default value when an exception occurs
+        }
     }
 
 	public static String percentOf(long num, long outOf) {
