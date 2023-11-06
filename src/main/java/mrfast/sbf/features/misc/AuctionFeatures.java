@@ -288,7 +288,7 @@ public class AuctionFeatures {
                 if(profitData==null && !gettingData) {
                     gettingData = true;
                     new Thread(()->{
-                        profitData = APIUtils.getJSONResponse("https://sky.coflnet.com/api/flip/stats/player/"+APIUtils.getUUID(Utils.GetMC().thePlayer.getName())+"?days=7");
+                        profitData = APIUtils.getJSONResponse("https://sky.coflnet.com/api/flip/stats/player/"+APIUtils.getUUID(Utils.GetMC().thePlayer.getName())+"?days=14");
                     }).start();
                 }
                 if(profitData!=null) {
