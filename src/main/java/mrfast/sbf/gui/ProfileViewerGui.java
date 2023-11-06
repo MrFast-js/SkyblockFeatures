@@ -1824,8 +1824,8 @@ public class ProfileViewerGui extends WindowScreen {
         return totalHeight;
     }
 
-    public String stringProgressBar(long total2,Integer total) {
-        double percent = (double) (total2/total);
+    public String stringProgressBar(long total2,long total) {
+        double percent = (double) total2/total;
         String progessed = "§2§l§m §2§l§m ";
         String unprogessed = "§f§l§m §f§l§m ";
         int times = (int) (percent*20);
