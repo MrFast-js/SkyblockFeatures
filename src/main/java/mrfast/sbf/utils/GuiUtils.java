@@ -211,6 +211,6 @@ public class GuiUtils {
     public static void openGui(GuiScreen screen) {
         Utils.setTimeout(()->{
             Utils.GetMC().displayGuiScreen(screen);
-        },50);
+        },50,true);
     }
 }

@@ -38,6 +38,7 @@ import org.lwjgl.input.Mouse;
 import java.io.ByteArrayInputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class AutoAuctionFlip {
     static Auction bestAuction = null;
@@ -59,17 +60,19 @@ public class AutoAuctionFlip {
     static long startMs;
     static int stage = 0;
     public static class Auction {
-        String auctionId;
-        Double profit;
+        String auctionId = "";
+        JsonObject item_Data = null;
+        Double profit = 0d;
 
-        public Auction(String aucId,Double profit) {
+        public Auction(String aucId,JsonObject itemData,Double profit) {
             this.profit=profit;
             this.auctionId=aucId;
+            this.item_Data=itemData;
         }
     }
-    
+
     @SubscribeEvent
-	public void onClick(SlotClickedEvent event) {
+    public void onClick(SlotClickedEvent event) {
         if (Utils.GetMC().currentScreen instanceof GuiChest) {
 
             GuiChest gui = (GuiChest) Utils.GetMC().currentScreen;
@@ -235,7 +238,7 @@ public class AutoAuctionFlip {
                         if(!currentUUID.equals(startingUUID) && !apiUpdated) {
                             System.out.println("Detected API Update");
                             apiUpdated = true;
-                            int pages = data.get("totalPages").getAsInt();
+                            int pages = 1;//data.get("totalPages").getAsInt();
 
                             // Auction flips dont appear past the first 5 pages due to it filtering out < 5 minutes
                             if(SkyblockFeatures.config.aucFlipperBins) {
@@ -244,21 +247,25 @@ public class AutoAuctionFlip {
                                 if(SkyblockFeatures.config.aucFlipperAucs) pages = 5;
                             }
 
+                            // Check pages for auctions
                             for(int b=0;b<pages;b++) {
                                 JsonObject data2 = APIUtils.getJSONResponse("https://api.hypixel.net/skyblock/auctions?page="+b);
+
                                 JsonArray products2 = data2.get("auctions").getAsJsonArray();
                                 filterAndNotifyProfitableAuctions(products2);
-                            }
-                            try {
-                                bestAuction = auctionFlips.get(0);
-                                if(SkyblockFeatures.config.autoAuctionFlipOpen) {
-                                    if(bestAuction != null) {
-                                        Utils.GetMC().thePlayer.sendChatMessage("/viewauction "+bestAuction.auctionId);
-                                        auctionFlips.remove(auctionFlips.get(0));
+                                if(b==pages-1) {
+                                    if(!auctionFlips.isEmpty()) {
+                                        bestAuction = auctionFlips.get(0);
+                                        if(SkyblockFeatures.config.autoAuctionFlipOpen) {
+                                            if(bestAuction != null) {
+                                                Utils.GetMC().thePlayer.sendChatMessage("/viewauction "+bestAuction.auctionId);
+                                                auctionFlips.remove(auctionFlips.get(0));
+                                            }
+                                        }
+                                    } else {
+                                        Utils.SendMessage(ChatFormatting.RED+"No flips that match your filter found!");
                                     }
                                 }
-                            } catch (Exception e) {
-                                Utils.SendMessage(ChatFormatting.RED+"No flips that match your filter found!");
                             }
                         }
                     }, i*1000);
@@ -315,9 +322,9 @@ public class AutoAuctionFlip {
     public void filterAndNotifyProfitableAuctions(JsonArray products) {
         for(JsonElement entry : products) {
             // Limit number of mesages added because it will crash game if it gets overloaded
-            float max = (float) (SkyblockFeatures.config.autoAuctionFlipMinPercent);
+            float max = (float) (SkyblockFeatures.config.autoAuctionFlipMaxAuc);
             if(messageSent>max) continue;
-            
+
             if(entry.isJsonObject()) {
                 JsonObject itemData = entry.getAsJsonObject();
                 // Bin Flip
@@ -373,9 +380,9 @@ public class AutoAuctionFlip {
                             continue;
                         }
                         auctionsPassedFilteredThrough++;
-                        
+
                         if(auctionData!=null) {
-                            Auction auction = new Auction(auctionId, profit);
+                            Auction auction = new Auction(auctionId, itemData, profit);
                             String currentProfit = Utils.formatNumber(profit.longValue());
                             String currentPrice = Utils.formatNumber(binPrice.longValue());
                             String itemValue = Utils.formatNumber(valueOfTheItem.longValue());
@@ -387,10 +394,10 @@ public class AutoAuctionFlip {
                             auctionFlips.add(auction);
 
                             IChatComponent message = new ChatComponentText("\n"+ChatFormatting.AQUA+"[SBF] "+ChatFormatting.GRAY+"BIN "+name+" "+ChatFormatting.GREEN+currentPrice+" -> "+itemValue+" (+"+currentProfit+" "+ChatFormatting.DARK_RED+percentage+"%"+ChatFormatting.GREEN+") "+
-                            
-                            ChatFormatting.GRAY+"Vol: "+ChatFormatting.AQUA+(auctionData.get("sales").getAsInt())+" sales/day"+
-                            (enchantValue>0?(ChatFormatting.GRAY+" Ench: "+ChatFormatting.AQUA+ePrice):"")+
-                            (starValue>0?(ChatFormatting.GRAY+" Stars: "+ChatFormatting.AQUA+sPrice):""));
+
+                                    ChatFormatting.GRAY+"Vol: "+ChatFormatting.AQUA+(auctionData.get("sales").getAsInt())+" sales/day"+
+                                    (enchantValue>0?(ChatFormatting.GRAY+" Ench: "+ChatFormatting.AQUA+ePrice):"")+
+                                    (starValue>0?(ChatFormatting.GRAY+" Stars: "+ChatFormatting.AQUA+sPrice):""));
                             message.getChatStyle().setChatClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND,"/viewauction "+auctionId));
                             message.getChatStyle().setChatHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ChatComponentText(ChatFormatting.GREEN+"/viewauction "+auctionId)));
                             Utils.playSound("note.pling", 0.5);
@@ -417,12 +424,12 @@ public class AutoAuctionFlip {
                         long msTillEnd = (long) Math.abs(itemData.get("end").getAsDouble()-currentTime);
                         Double bidPrice = itemData.get("highest_bid_amount").getAsDouble();
                         if(bidPrice==0) bidPrice = itemData.get("starting_bid").getAsDouble();
-                        
+
                         // Load lowest and average BIN prices
                         Double lowestBinPrice = PricingData.lowestBINs.get(id);
                         Double avgBinPrice = PricingData.averageLowestBINs.get(id);
                         if(lowestBinPrice==null||avgBinPrice==null) continue;
-                        
+
                         // Item values
                         Integer estimatedPrice = ItemUtils.getEstimatedItemValue(extraAttributes);
                         Integer valueOfTheItem = (int) (SkyblockFeatures.config.autoFlipAddEnchAndStar?estimatedPrice:lowestBinPrice);
@@ -459,9 +466,9 @@ public class AutoAuctionFlip {
                             continue;
                         }
                         auctionsPassedFilteredThrough++;
-                        
+
                         if(auctionData!=null) {
-                            Auction auction = new Auction(auctionId, profit);
+                            Auction auction = new Auction(auctionId, itemData, profit);
                             String currentProfit = Utils.formatNumber(profit.longValue());
                             String currentPrice = Utils.formatNumber(bidPrice.longValue());
                             String itemValue = Utils.formatNumber(valueOfTheItem.longValue());
@@ -478,7 +485,7 @@ public class AutoAuctionFlip {
 
                             String text = "\n"+ChatFormatting.AQUA+"[SBF] "+ChatFormatting.GRAY+"AUC "+name+" "+ChatFormatting.GREEN+currentPrice+" -> "+itemValue+" (+"+currentProfit+" "+ChatFormatting.DARK_RED+percentage+"%"+ChatFormatting.GREEN+") ";
                             text += ChatFormatting.GRAY+"Vol: "+ChatFormatting.AQUA+(auctionData.get("sales").getAsInt())+" sales/day";
-                            
+
                             // Additional text if needed
                             if(SkyblockFeatures.config.autoFlipAddEnchAndStar) {
                                 if (enchantValue > 0)
@@ -492,14 +499,13 @@ public class AutoAuctionFlip {
                             IChatComponent message = new ChatComponentText(text);
                             message.getChatStyle().setChatClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND,"/viewauction "+auctionId));
                             message.getChatStyle().setChatHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ChatComponentText(ChatFormatting.GREEN+"/viewauction "+auctionId)));
-                            
+
                             // Notify User
                             Utils.playSound("note.pling", 0.5);
                             Utils.GetMC().thePlayer.addChatComponentMessage(message);
 
                             // Track how many notifications have been sent so it doesnt send too many
                             messageSent++;
-                            if(messageSent>SkyblockFeatures.config.autoAuctionFlipMaxAuc) break;
                         }
                     } catch (java.io.IOException e) {
                         e.printStackTrace();
@@ -515,23 +521,23 @@ public class AutoAuctionFlip {
     public boolean stringFilter(String itemName,String id,String aucId,String stringLore) {
         boolean returnValue = false;
         if(SkyblockFeatures.config.autoAuctionFilterOutPets && itemName.toLowerCase().contains("[lvl")) {
-            if(debugLogging) System.out.println(itemName+" Auction Removed Because Pet Filter"+" "+aucId); 
+            if(debugLogging) System.out.println(itemName+" Auction Removed Because Pet Filter"+" "+aucId);
             returnValue = true;
         }
         if(SkyblockFeatures.config.autoAuctionFilterOutSkins && (id.contains("SKIN") || itemName.toLowerCase().contains("skin"))) {
-            if(debugLogging) System.out.println(itemName+" Auction Removed Because Skin Filter"+" "+aucId); 
+            if(debugLogging) System.out.println(itemName+" Auction Removed Because Skin Filter"+" "+aucId);
             returnValue = true;
         }
         if(SkyblockFeatures.config.autoAuctionFilterOutRunes && itemName.contains("Rune")) {
-            if(debugLogging) System.out.println(itemName+" Auction Removed Because Rune Filter"+" "+aucId); 
+            if(debugLogging) System.out.println(itemName+" Auction Removed Because Rune Filter"+" "+aucId);
             returnValue = true;
         }
         if(SkyblockFeatures.config.autoAuctionFilterOutDyes && itemName.contains("Dye")) {
-            if(debugLogging) System.out.println(itemName+" Auction Removed Because Dye Filter"+" "+aucId); 
+            if(debugLogging) System.out.println(itemName+" Auction Removed Because Dye Filter"+" "+aucId);
             returnValue = true;
         }
         if(SkyblockFeatures.config.autoAuctionFilterOutFurniture && stringLore.contains("furniture")) {
-            if(debugLogging) System.out.println(itemName+" Auction Removed Because Furniture Filter"+" "+aucId); 
+            if(debugLogging) System.out.println(itemName+" Auction Removed Because Furniture Filter"+" "+aucId);
             returnValue = true;
         }
 
@@ -539,7 +545,7 @@ public class AutoAuctionFlip {
             try {
                 for(String blacklistedName:SkyblockFeatures.config.autoAuctionBlacklist.split(";")) {
                     if(Utils.cleanColor(itemName).toLowerCase().contains(blacklistedName)) {
-                        if(debugLogging) System.out.println(itemName+" Auction Removed because blacklist"); 
+                        if(debugLogging) System.out.println(itemName+" Auction Removed because blacklist");
                         returnValue = true;
                         break;
                     }
@@ -558,15 +564,15 @@ public class AutoAuctionFlip {
         float minPercent = (float) (SkyblockFeatures.config.autoAuctionFlipMinPercent);
 
         if(volume<minVolume) {
-            if(debugLogging) System.out.println(itemName+" Auction Removed Because MinVol Filter "+"Vol: "+volume+" "+aucId); 
+            if(debugLogging) System.out.println(itemName+" Auction Removed Because MinVol Filter "+"Vol: "+volume+" "+aucId);
             returnValue = true;
         }
         else if(percentage<minPercent) {
-            if(debugLogging) System.out.println(itemName+" Auction Removed Because MinPerc Filter Perc:"+percentage+" "+Utils.nf.format(binPrice)+" "+Utils.nf.format(valueOfTheItem)+" "+aucId); 
+            if(debugLogging) System.out.println(itemName+" Auction Removed Because MinPerc Filter Perc:"+percentage+" "+Utils.nf.format(binPrice)+" "+Utils.nf.format(valueOfTheItem)+" "+aucId);
             returnValue = true;
         }
         else if(profit<margin) {
-            if(debugLogging) System.out.println(itemName+" Auction Removed Because less than profit margin :"+profit +" Item Value:"+valueOfTheItem+"   Price of item:"+binPrice+" "+aucId); 
+            if(debugLogging) System.out.println(itemName+" Auction Removed Because less than profit margin :"+profit +" Item Value:"+valueOfTheItem+"   Price of item:"+binPrice+" "+aucId);
             returnValue = true;
         }
         else if(SkyblockFeatures.config.autoAuctionFlipSetPurse && SkyblockInfo.getCoins()<binPrice) {
@@ -575,7 +581,7 @@ public class AutoAuctionFlip {
         }
         // Filter out auctions ending in more than 5 minutes
         else if(msTillEnd>60*5*1000) {
-            if(debugLogging) System.out.println(itemName+" Auction removed because ends in more than 5m "); 
+            if(debugLogging) System.out.println(itemName+" Auction removed because ends in more than 5m ");
             returnValue = true;
         }
         return returnValue;
@@ -608,7 +614,7 @@ public class AutoAuctionFlip {
     }
 
     static String display = "Auction API update in 60s";
-    
+
     public static class AutoAuctionGui extends UIElement {
         private ArrayList<String> lines = new ArrayList<>();
 
@@ -633,12 +639,12 @@ public class AutoAuctionFlip {
             if (this.getToggled() && Minecraft.getMinecraft().thePlayer != null && mc.theWorld != null) {
                 // Update the lines dynamically
                 updateLines();
-    
+
                 // Calculate the center Y coordinate
                 int centerY = (this.getHeight() - (Utils.GetMC().fontRendererObj.FONT_HEIGHT + 2) * lines.size()) / 2;
                 for (int i = 0; i < lines.size(); i++) {
                     String text = lines.get(i);
-    
+
                     // Calculate the center X coordinate for each line
                     int centerX = (this.getWidth() - Utils.GetMC().fontRendererObj.getStringWidth(text)) / 2;
 
@@ -665,7 +671,7 @@ public class AutoAuctionFlip {
             }
         }
 
-        @Override   
+        @Override
         public boolean getToggled() {
             return Utils.inSkyblock && SkyblockFeatures.config.autoAuctionFlipCounter && SkyblockFeatures.config.aucFlipperEnabled;
         }

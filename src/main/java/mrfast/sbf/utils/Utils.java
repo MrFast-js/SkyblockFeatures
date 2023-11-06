@@ -284,12 +284,15 @@ public class Utils {
         } else return false;
     }
 
-
     public static void setTimeout(Runnable code, int ms) {
+        setTimeout(code,ms,false);
+    }
+    public static void setTimeout(Runnable code, int ms,boolean addToMinecraft) {
         new Timer().schedule(new TimerTask() {
             @Override
             public void run() {
-                Utils.GetMC().addScheduledTask(code);
+                if(addToMinecraft) Utils.GetMC().addScheduledTask(code);
+                else code.run();
             }
         }, ms);
     }
