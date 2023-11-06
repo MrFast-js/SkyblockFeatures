@@ -117,7 +117,6 @@ public class GhostTracker {
         new GhostTrackerGUI();
     }
 
-    static String display = "";
     public static class GhostTrackerGUI extends UIElement {
         public GhostTrackerGUI() {
             super("Ghost Tracker", new Point(0.2f, 0.0f));
@@ -131,7 +130,7 @@ public class GhostTracker {
                         ChatFormatting.YELLOW+""+ChatFormatting.BOLD+"Ghost Loot Tracker",
                         ChatFormatting.GREEN+"  Time Elapsed: §r"+Utils.secondsToTime(totalSeconds),
                         ChatFormatting.GREEN+"  Ghosts Killed: §r"+Utils.nf.format(kills),
-                        ChatFormatting.GREEN+"  Ghosts/Sorrow: §r"+(Sorrow>0?Math.round(kills/Sorrow):"Undefined"),
+                        ChatFormatting.GREEN+"  Ghosts/Sorrow: §r"+(Sorrow>0?Math.round((float) kills /Sorrow):"Undefined"),
                         ChatFormatting.AQUA+""+ChatFormatting.BOLD+" Drops",
                         ChatFormatting.BLUE+"  • Volta: §r"+Volta,
                         ChatFormatting.BLUE+"  • Sorrow: §r"+Sorrow,

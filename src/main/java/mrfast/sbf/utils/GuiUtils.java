@@ -22,15 +22,10 @@ import java.util.List;
 public class GuiUtils {
 
     public enum TextStyle {
-        DROP_SHADOW(true,false),
-        BLACK_OUTLINE(false,true);
+        DROP_SHADOW(),
+        BLACK_OUTLINE();
 
-        boolean dropShadow = false;
-        boolean outline = false;
-        TextStyle(boolean dropShadow,boolean outline) {
-            this.dropShadow = dropShadow;
-            this.outline = outline;
-        }
+        TextStyle() {}
     }
 
     public static void drawText(String text, float x, float y,TextStyle style) {
@@ -45,7 +40,7 @@ public class GuiUtils {
             Minecraft.getMinecraft().fontRendererObj.drawString(shadowText, x, y - 1, 0x000000, false);
         }
         // Main Text
-        Minecraft.getMinecraft().fontRendererObj.drawString(text, x, y, 0xFFFFFF, style.dropShadow);
+        Minecraft.getMinecraft().fontRendererObj.drawString(text, x, y, 0xFFFFFF, style.equals(TextStyle.DROP_SHADOW));
     }
 
     public static void drawTextLines(List<String> lines, float x, float y, TextStyle style) {
@@ -60,19 +55,27 @@ public class GuiUtils {
         drawSideMenu(lines, style,false);
     }
 
+    public static void drawSideMenu(List<String> lines, TextStyle style,int x,int y) {
+        drawSideMenu(lines, style,false,x,y);
+    }
+
     public static void drawSideMenu(List<String> lines, TextStyle style,boolean leftSide) {
-        int x=180; // width of chest gui
+        drawSideMenu(lines, style,leftSide,0,0);
+    }
+
+    public static void drawSideMenu(List<String> lines, TextStyle style,boolean leftSide,int xPos,int y) {
+        int x=xPos==0?180:xPos; // width of chest gui
+
         int maxLineLength = 0;
 
         for (String line : lines) {
             if(line.length()>maxLineLength) maxLineLength=line.length();
         }
         int boxWidth = maxLineLength * 5;
-        if(leftSide) {
-            x = -boxWidth - 7;
-        }
-        drawGraySquareWithBorder((int) (x), 0, maxLineLength * 5, (lines.size()+1)*(Utils.GetMC().fontRendererObj.FONT_HEIGHT+1), 3);
-        drawTextLines(lines,x+7,7,style);
+        if(leftSide) x = -boxWidth - 7;
+
+        drawGraySquareWithBorder(x, y, maxLineLength * 5, (lines.size()+1)*(Utils.GetMC().fontRendererObj.FONT_HEIGHT+1));
+        drawTextLines(lines,x+7, y +7,style);
     }
 
     /**
@@ -176,7 +179,7 @@ public class GuiUtils {
         GlStateManager.enableTexture2D();
     }
 
-    public static void drawGraySquareWithBorder(int x,int y,int width,int height,int borderWidth) {
+    public static void drawGraySquareWithBorder(int x,int y,int width,int height) {
         UIRoundedRectangle.Companion.drawRoundedRectangle(new UMatrixStack(),x, y, x+width, height+2, 5, new Color(0,0,0,125));
         UIRoundedRectangle.Companion.drawRoundedRectangle(new UMatrixStack(),x-2, y-2, x+width+2, height+2+2, 5, new Color(55,55,55,125));
     }

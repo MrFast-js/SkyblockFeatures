@@ -13,8 +13,8 @@ import net.minecraftforge.common.MinecraftForge;
 
 @Mixin(GuiEditSign.class)
 public class MixinGuiEditSign extends GuiScreen {
-    @Inject(method = "drawScreen", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/GlStateManager;color(FFFF)V", ordinal = 0))
-    private void backgroundDrawn(int mouseX, int mouseY, float partialTicks, CallbackInfo ci) {
+    @Inject(method = "drawScreen", at = @At("RETURN"))
+    private void onDrawScreen(int mouseX, int mouseY, float partialTicks, CallbackInfo ci) {
         try {
             MinecraftForge.EVENT_BUS.post(new DrawSignEvent());
         } catch (Throwable e) {

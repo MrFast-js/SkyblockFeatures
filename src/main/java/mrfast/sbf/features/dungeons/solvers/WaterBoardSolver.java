@@ -5,10 +5,8 @@ import com.google.common.collect.ImmutableSet;
 import mrfast.sbf.SkyblockFeatures;
 import mrfast.sbf.utils.RenderUtil;
 import net.minecraft.block.BlockColored;
-import mrfast.sbf.utils.RenderUtil;
 import mrfast.sbf.utils.Utils;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockColored;
 import net.minecraft.block.BlockLever;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
@@ -19,7 +17,6 @@ import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.Vec3;
-import net.minecraft.world.World;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -56,7 +53,7 @@ public class WaterBoardSolver {
 
             if (puzzleVariant == -1 && (workerThread == null || !workerThread.isAlive() || workerThread.isInterrupted())) {
                 workerThread = new Thread(() -> {
-                    updateWaterRoomStatus(player);
+                    updateWaterRoomStatus();
 
                     if (foundStickyPiston()) {
                         if (chestLocation == null) {
@@ -107,7 +104,7 @@ public class WaterBoardSolver {
         return distance1 > distance2;
     }
 
-    private void updateWaterRoomStatus(EntityPlayerSP player) {
+    private void updateWaterRoomStatus() {
         prevInWaterRoom = inWaterRoom;
         inWaterRoom = foundStickyPiston() && chestLocation != null;
     }
@@ -320,7 +317,7 @@ public class WaterBoardSolver {
         EMERALD(Blocks.emerald_block),
         CLAY(Blocks.hardened_clay);
 
-        public Block block;
+        public final Block block;
 
         LeverBlock(Block block) {
             this.block = block;

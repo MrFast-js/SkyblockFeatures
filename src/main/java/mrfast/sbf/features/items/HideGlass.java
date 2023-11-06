@@ -33,7 +33,6 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class HideGlass {
     public static Minecraft mc = Minecraft.getMinecraft();
-    public static boolean on = true;
 
     @SubscribeEvent
     public void onChatMessage(ClientChatReceivedEvent event) {

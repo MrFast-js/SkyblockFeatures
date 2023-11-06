@@ -36,7 +36,7 @@ public class FlipsCommand extends CommandBase {
 	
 	@Override
 	public void processCommand(ICommandSender arg0, String[] arg1) throws CommandException {
-        String username = "";
+        String username;
         if (arg1.length == 0) {
             username = Utils.GetMC().thePlayer.getName();
         } else {

@@ -13,17 +13,6 @@ import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class DamageOverlays {
-    boolean loaded = false;
-    @SubscribeEvent
-    public void onWorldChange(WorldEvent.Load event) {
-        Utils.setTimeout(()->{
-            loaded = true;
-        }, 1000);
-    }
-    @SubscribeEvent
-    public void onWorldChange(WorldEvent.Unload event) {
-        loaded = false;
-    }
     @SubscribeEvent
     public void onRenderHealth(RenderGameOverlayEvent.Post event) {
         if (event.type == RenderGameOverlayEvent.ElementType.HEALTH && Utils.inSkyblock && SkyblockFeatures.config.damagetint && Utils.GetMC().thePlayer!=null) {

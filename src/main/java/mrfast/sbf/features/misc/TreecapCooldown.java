@@ -19,10 +19,8 @@ import net.minecraftforge.fml.common.gameevent.TickEvent.RenderTickEvent;
 
 public class TreecapCooldown {
     public static int seconds = 2;
-    public static  String display = EnumChatFormatting.BLUE + "Treecapitator: " + EnumChatFormatting.GREEN + "Ready!";
     private static final Minecraft mc = Minecraft.getMinecraft();
-    RenderManager renderManager = mc.getRenderManager();
-    
+
     @SubscribeEvent
     public void onPlayerInteractEvent(BlockChangeEvent event) {
         if(!Utils.inSkyblock || mc.thePlayer.getHeldItem() == null || !SkyblockFeatures.config.treecapitatorCooldown) return; 
@@ -51,7 +49,7 @@ public class TreecapCooldown {
     			int guiTop = (sr.getScaledHeight() - 222) / 2;
     			
                 float x = guiLeft + 82.5f;
-    			int y = guiTop + (int) 120; 
+    			int y = guiTop + 120;
 
                 if(seconds <= 10) x = guiLeft + 85;
     			
@@ -62,7 +60,7 @@ public class TreecapCooldown {
     			int guiTop = (sr.getScaledHeight() - 222) / 2;
     			
     			int x = guiLeft + 85;
-    			int y = guiTop + (int) 120;
+    			int y = guiTop + 120;
     			
     			Minecraft.getMinecraft().fontRendererObj.drawString("✔", x, y, new Color(85, 255, 85).getRGB(), true);
 			}
@@ -78,7 +76,6 @@ public class TreecapCooldown {
         }
         if (seconds == 0) {
             ready = true;
-            return;
         }
     }
 

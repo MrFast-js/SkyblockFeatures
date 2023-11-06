@@ -4,23 +4,19 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.inventory.GuiChest;
 import net.minecraft.client.gui.inventory.GuiContainer;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.ContainerChest;
 import net.minecraft.inventory.Slot;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ChatComponentText;
 import net.minecraftforge.common.MinecraftForge;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import mrfast.sbf.events.GuiContainerEvent;
 import mrfast.sbf.events.SlotClickedEvent;
-import mrfast.sbf.utils.Utils;
+
 /**
  * Original code was taken from Skytils under GNU Affero General Public License v3.0 and modified by MrFast
  *
@@ -44,17 +40,28 @@ public abstract class MixinGuiContainer extends GuiScreen {
     }
 
     @Inject(method = "drawScreen", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/inventory/GuiContainer;drawGuiContainerForegroundLayer(II)V", ordinal = 0, shift = At.Shift.AFTER))
-    private void titlePostDrawn(int mouseX, int mouseY, float partialTicks,CallbackInfo ci) {
+    private void onGuiContainerDrawn(int mouseX, int mouseY, float partialTicks, CallbackInfo ci) {
         try {
-            if (!(Minecraft.getMinecraft().currentScreen instanceof GuiChest)) return;
-            GuiChest chest = (GuiChest) Minecraft.getMinecraft().currentScreen;
-            ContainerChest cont = (ContainerChest) chest.inventorySlots;
-            String name = cont.getLowerChestInventory().getName();
-            if(name==null || chest.inventorySlots==null) return;
+            if (!(Minecraft.getMinecraft().currentScreen instanceof GuiChest)) {
+                return;
+            }
 
-            MinecraftForge.EVENT_BUS.post(new GuiContainerEvent.TitleDrawnEvent(that, chest.inventorySlots, mouseX, mouseY, partialTicks,name));
+            GuiChest chest = (GuiChest) Minecraft.getMinecraft().currentScreen;
+            ContainerChest container = (ContainerChest) chest.inventorySlots;
+
+            if (container == null || container.getLowerChestInventory() == null) {
+                return;
+            }
+
+            String name = container.getLowerChestInventory().getName();
+
+            if (name == null) {
+                return;
+            }
+
+            MinecraftForge.EVENT_BUS.post(new GuiContainerEvent.TitleDrawnEvent(that, chest.inventorySlots, name));
         } catch (Throwable e) {
-            // e.printStackTrace();
+            e.printStackTrace();
         }
     }
 
@@ -75,7 +82,7 @@ public abstract class MixinGuiContainer extends GuiScreen {
     private void onSlotClick(Slot slotIn, int slotId, int clickedButton, int clickType, CallbackInfo ci) {
         GuiContainer container = (GuiContainer) (Object) this;
         Slot slot = slotId < 0 ? null : container.inventorySlots.getSlot(slotId);
-        SlotClickedEvent event = new SlotClickedEvent(container, slot, slotId);
+        SlotClickedEvent event = new SlotClickedEvent(container, slot);
         MinecraftForge.EVENT_BUS.post(event);
         if (event.isCanceled()) {
             ci.cancel();

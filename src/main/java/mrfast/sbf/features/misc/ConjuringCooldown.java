@@ -17,10 +17,8 @@ import net.minecraftforge.fml.common.gameevent.TickEvent.RenderTickEvent;
 
 public class ConjuringCooldown {
     public static int seconds = 25;
-    public static  String display = EnumChatFormatting.BLUE + "Conjuring: " + EnumChatFormatting.GREEN + "Ready!";
     private static final Minecraft mc = Minecraft.getMinecraft();
-    RenderManager renderManager = mc.getRenderManager();
-    
+
     @SubscribeEvent
     public void onPlayerInteractEvent(PlayerInteractEvent event) {
         if(!Utils.inSkyblock|| !SkyblockFeatures.config.ConjuringCooldown ||mc.thePlayer.getHeldItem() == null) return;
@@ -48,7 +46,7 @@ public class ConjuringCooldown {
     			int guiTop = (sr.getScaledHeight() - 222) / 2;
     			
                 float x = guiLeft + 82.5f;
-    			int y = guiTop + (int) 120; 
+    			int y = guiTop + 120;
 
                 if(seconds <= 10) x = guiLeft + 85;
     			
@@ -59,7 +57,7 @@ public class ConjuringCooldown {
     			int guiTop = (sr.getScaledHeight() - 222) / 2;
     			
     			int x = guiLeft + 85;
-    			int y = guiTop + (int) 120;
+    			int y = guiTop + 120;
     			
     			Minecraft.getMinecraft().fontRendererObj.drawString("✔", x, y, new Color(85, 255, 85).getRGB(), true);
 			}
@@ -76,7 +74,6 @@ public class ConjuringCooldown {
         }
         if (seconds == 0) {
             ready = true;
-            return;
         }
     }
 

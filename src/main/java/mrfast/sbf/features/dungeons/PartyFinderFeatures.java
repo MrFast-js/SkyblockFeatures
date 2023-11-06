@@ -273,7 +273,7 @@ public class PartyFinderFeatures {
 
                     totalRuns = totalRuns + completionObj.get(String.valueOf(i)).getAsInt();
                 }
-                completionsHoverString.append("\n"+ChatFormatting.GOLD+"Total: "+ChatFormatting.RESET+totalRuns);
+                completionsHoverString.append("\n" + ChatFormatting.GOLD + "Total: " + ChatFormatting.RESET).append(totalRuns);
 
                 ChatComponentText completions = new ChatComponentText(ChatFormatting.AQUA + " Floor Completions: "+ChatFormatting.GRAY+"(Hover)");
 
@@ -321,7 +321,7 @@ public class PartyFinderFeatures {
         public void drawElement() {
             if(Utils.GetMC().thePlayer == null || !Utils.inSkyblock || partyFinderMonkeys.isEmpty()) return;
             List<String> stillNeededClasses = new ArrayList<>(neededClasses);
-            List<String> lines = new ArrayList<>(Arrays.asList(
+            List<String> lines = new ArrayList<>(Collections.singletonList(
                     "§9§lDungeon Party"
             ));
             // Sort by when monkey joined
@@ -437,16 +437,8 @@ public class PartyFinderFeatures {
         }
 
         List<String> loreList = ItemUtils.getItemLore(hoverItemStack);
-        int maxLineLength = loreList.stream()
-                .map(Utils::cleanColor)
-                .mapToInt(String::length)
-                .max()
-                .orElse(0);
-
-        int lineCount = loreList.size() + 3;
-//        GuiUtils.drawGraySquareWithBorder(180, 0, maxLineLength * 6, (lineCount + 1) * mc.fontRendererObj.FONT_HEIGHT, 3);
-
         List<String> filtered = new ArrayList<>(loreList);
+
         filtered.add(0,hoverItemStack.getDisplayName());
         filtered.removeIf(a -> a.contains("Click to join!"));
 

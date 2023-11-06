@@ -198,7 +198,7 @@ public class getNbtCommand extends CommandBase {
         }
         // This includes the tags: byte, short, int, long, float, double, and string
         else {
-            stringBuilder.append(nbt.toString());
+            stringBuilder.append(nbt);
         }
 
         return stringBuilder.toString();

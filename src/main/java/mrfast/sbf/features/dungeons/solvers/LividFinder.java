@@ -20,11 +20,7 @@ public class LividFinder {
     public static Entity livid = null;
     @SubscribeEvent
     public void onWorldChange(WorldEvent.Load event) {
-        try {
-            livid = null;
-        } catch(Exception e) {
-
-        }
+        livid = null;
     }
 
     @SubscribeEvent
@@ -46,11 +42,13 @@ public class LividFinder {
             String lividName = null;
             switch (color) {
                 case WHITE: lividName="Vendetta"; break;
-                case MAGENTA: lividName="Crossed"; break;
-                case PINK: lividName="Crossed"; break;
+                case MAGENTA:
+                case PINK:
+                    lividName="Crossed"; break;
                 case RED: lividName="Hockey"; break;
-                case SILVER: lividName="Doctor"; break;
-                case GRAY: lividName="Doctor"; break;
+                case SILVER:
+                case GRAY:
+                    lividName="Doctor"; break;
                 case GREEN: lividName="Frog"; break;
                 case LIME: lividName="Smile"; break;
                 case BLUE: lividName="Scream"; break;

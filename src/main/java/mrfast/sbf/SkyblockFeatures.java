@@ -123,7 +123,6 @@ public class SkyblockFeatures {
     public static GuiManager GUIMANAGER;
     public static int ticks = 0;
     public static boolean usingNEU = false;
-    public static File jarFile = null;
     public static File modDir = new File(new File(mc.mcDataDir, "config"), "skyblockfeatures");
 
 
@@ -131,7 +130,6 @@ public class SkyblockFeatures {
     public void preInit(FMLPreInitializationEvent event) {
         if (!modDir.exists()) modDir.mkdirs();
         GUIMANAGER = new GuiManager();
-        jarFile = event.getSourceFile();
     }
 
     @Mod.EventHandler
@@ -257,14 +255,6 @@ public class SkyblockFeatures {
                 }
             }
         } catch (Exception ignored) {}
-    }
-
-    // List files in a directory (Used only for the mods folder)
-    public Set<String> listFilesUsingJavaIO(String dir) {
-        return Stream.of(Objects.requireNonNull(new File(dir).listFiles()))
-          .filter(file -> !file.isDirectory())
-          .map(File::getName)
-          .collect(Collectors.toSet());
     }
 
     @Mod.EventHandler

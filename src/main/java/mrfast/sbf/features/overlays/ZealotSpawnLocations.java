@@ -95,16 +95,6 @@ public class ZealotSpawnLocations {
             }
         }
         // Track Spawn locations
-        // if(SkyblockInfo.localLocation.contains("Bruiser")) {
-        //     for(Entity e:bruisers.keySet()) {
-        //         BlockPos pos = bruisers.get(e);
-        //         MiscFeatures.drawParticleESP(
-        //             new Color(0x34c3eb), 
-        //                 Math.floor(pos.getX()) - Minecraft.getMinecraft().getRenderManager().viewerPosX,
-        //                 Math.floor(pos.getY()) - Minecraft.getMinecraft().getRenderManager().viewerPosY, 
-        //                 Math.floor(pos.getZ()) - Minecraft.getMinecraft().getRenderManager().viewerPosZ, event.partialTicks);
-        //     }
-        // }
     }
 
 

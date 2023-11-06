@@ -44,7 +44,7 @@ public class MayorJerry {
                 double y = interpolate(player.lastTickPosY, player.posY, event.partialTicks) - Utils.GetMC().getRenderManager().viewerPosY;
                 double z = interpolate(player.lastTickPosZ, player.posZ, event.partialTicks) - Utils.GetMC().getRenderManager().viewerPosZ;
                 // renderNameTag(player, ChatFormatting.GREEN+player.getName(), x , y, z, event.partialTicks);
-                renderNameTag(player, ChatFormatting.GREEN+"Jerry", x , y, z, event.partialTicks);
+                renderNameTag(ChatFormatting.GREEN+"Jerry", x , y, z);
             }
           }
         }
@@ -54,7 +54,7 @@ public class MayorJerry {
         return (previous + (current - previous) * delta);
     }
 
-    private void renderNameTag(Entity player, String a, double x, double y, double z, float delta) {
+    private void renderNameTag(String a, double x, double y, double z) {
         int width = Utils.GetMC().fontRendererObj.getStringWidth(a) / 2;
 
         float f = 1.6F;

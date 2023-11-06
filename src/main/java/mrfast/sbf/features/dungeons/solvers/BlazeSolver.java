@@ -32,7 +32,7 @@ public class BlazeSolver {
     static List<Blaze> blazes = new ArrayList<>();
 
     public static class Blaze {
-        int health = 0;
+        int health;
         Entity EntityBlaze;
 
         public Blaze(Entity entity,int hp) {
@@ -76,11 +76,11 @@ public class BlazeSolver {
                     for (BlockPos blockPos : blocks) {
                         Block block = world.getBlockState(blockPos).getBlock();
                         if (block == Blocks.chest && world.getBlockState(blockPos.add(0, 1, 0)).getBlock() == Blocks.iron_bars) {
-                            Block blockbelow = world.getBlockState(blockPos.add(0, -1, 0)).getBlock();
-                            if (blockbelow == Blocks.stone) {
+                            Block blockBelow = world.getBlockState(blockPos.add(0, -1, 0)).getBlock();
+                            if (blockBelow == Blocks.stone) {
                                 higherToLower = false;
                                 foundChest = true;
-                            } else if (blockbelow == Blocks.air) {
+                            } else if (blockBelow == Blocks.air) {
                                 higherToLower = true;
                                 foundChest = true;
                             } else {

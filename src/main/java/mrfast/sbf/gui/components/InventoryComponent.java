@@ -22,7 +22,7 @@ public class InventoryComponent extends UIComponent {
 
     public InventoryComponent(State<InventoryBasic> state, State<String> invName) {
         InventoryBasic inventory = state.get();
-        int verticalSlots = (int) Math.floor(inventory.getSizeInventory()/9);
+        int verticalSlots = (int) (double) (inventory.getSizeInventory() / 9);
         int horizontalSlots = 9;
 
         if(getWidth()==0) setWidth(new PixelConstraint(horizontalSlots*17f));
@@ -34,7 +34,7 @@ public class InventoryComponent extends UIComponent {
             if(stopped) break;
             for(int x=0;x<horizontalSlots;x++) {
                 ItemStack item = inventory.getStackInSlot((y*9)+x);
-                int topMargin = (int) Math.floor(y/5)*4;
+                int topMargin = (int) Math.floor((double) y /5)*4;
                 if(item!=null && item.getUnlocalizedName().equals("tile.barrier")) {
                     this.setHeight(new PixelConstraint(18f*y));
                     stopped = true;

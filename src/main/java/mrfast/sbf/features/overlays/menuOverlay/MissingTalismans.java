@@ -73,7 +73,7 @@ public class MissingTalismans {
         if (event.gui instanceof GuiChest) {
             if(inAccessoryBag) {
                 if(MissingTalismans==null) {
-                    GuiUtils.drawSideMenu(Arrays.asList(new String[]{ChatFormatting.RED+"Waiting for SkyCrypt.."}),GuiUtils.TextStyle.DROP_SHADOW);
+                    GuiUtils.drawSideMenu(Collections.singletonList(ChatFormatting.RED + "Waiting for SkyCrypt.."),GuiUtils.TextStyle.DROP_SHADOW);
                     return;
                 }
                 List<String> formatted = new ArrayList<>();

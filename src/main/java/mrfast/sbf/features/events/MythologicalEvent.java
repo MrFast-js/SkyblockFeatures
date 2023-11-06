@@ -162,9 +162,9 @@ public class MythologicalEvent {
         if (SkyblockFeatures.config.MythologicalHelper) {
             Vec3 prev = null;
             try {
-                double xDif = 0;
-                double zDif = 0;
-                double yDif = 0;
+                double xDif;
+                double zDif;
+                double yDif;
                 double index = 0;
                 for (Vec3 particle : particles) {
                     index++;
@@ -193,11 +193,9 @@ public class MythologicalEvent {
     }
 
     private void renderBurrowBoundingBox(float partialTicks) {
-        if (!Utils.inSkyblock || !SkyblockFeatures.config.MythologicalHelper) {
-            return;
-        }
+        if (!Utils.inSkyblock || !SkyblockFeatures.config.MythologicalHelper) return;
 
-        if (burrow != null && SkyblockFeatures.config.MythologicalHelper) {
+        if (burrow != null) {
             AxisAlignedBB aabb2 = new AxisAlignedBB(burrow, burrow.add(1, 1, 1));
             RenderUtil.drawOutlinedFilledBoundingBox(aabb2, Color.green, partialTicks);
 

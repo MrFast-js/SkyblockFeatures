@@ -38,7 +38,6 @@ import org.lwjgl.input.Mouse;
 import java.io.ByteArrayInputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 public class AutoAuctionFlip {
     static Auction bestAuction = null;
@@ -60,14 +59,12 @@ public class AutoAuctionFlip {
     static long startMs;
     static int stage = 0;
     public static class Auction {
-        String auctionId = "";
-        JsonObject item_Data = null;
-        Double profit = 0d;
+        String auctionId;
+        Double profit;
 
-        public Auction(String aucId,JsonObject itemData,Double profit) {
+        public Auction(String aucId,Double profit) {
             this.profit=profit;
             this.auctionId=aucId;
-            this.item_Data=itemData;
         }
     }
     
@@ -331,7 +328,7 @@ public class AutoAuctionFlip {
                         String item_bytes = itemData.get("item_bytes").getAsString();
                         Base64InputStream is = new Base64InputStream(new ByteArrayInputStream(item_bytes.getBytes(StandardCharsets.UTF_8)));
                         NBTTagCompound nbt = CompressedStreamTools.readCompressed(is);
-                        String id = AuctionUtil.getInternalnameFromNBT(nbt.getTagList("i", 10).getCompoundTagAt(0).getCompoundTag("tag"));
+                        String id = AuctionUtil.getInternalNameFromNBT(nbt.getTagList("i", 10).getCompoundTagAt(0).getCompoundTag("tag"));
                         NBTTagCompound extraAttributes = nbt.getTagList("i", 10).getCompoundTagAt(0).getCompoundTag("tag").getCompoundTag("ExtraAttributes");
                         String name = nbt.getTagList("i", 10).getCompoundTagAt(0).getCompoundTag("tag").getCompoundTag("display").getString("Name");
 
@@ -378,7 +375,7 @@ public class AutoAuctionFlip {
                         auctionsPassedFilteredThrough++;
                         
                         if(auctionData!=null) {
-                            Auction auction = new Auction(auctionId, itemData, profit);
+                            Auction auction = new Auction(auctionId, profit);
                             String currentProfit = Utils.formatNumber(profit.longValue());
                             String currentPrice = Utils.formatNumber(binPrice.longValue());
                             String itemValue = Utils.formatNumber(valueOfTheItem.longValue());
@@ -412,7 +409,7 @@ public class AutoAuctionFlip {
                         String item_bytes = itemData.get("item_bytes").getAsString();
                         Base64InputStream is = new Base64InputStream(new ByteArrayInputStream(item_bytes.getBytes(StandardCharsets.UTF_8)));
                         NBTTagCompound nbt = CompressedStreamTools.readCompressed(is);
-                        String id = AuctionUtil.getInternalnameFromNBT(nbt.getTagList("i", 10).getCompoundTagAt(0).getCompoundTag("tag"));
+                        String id = AuctionUtil.getInternalNameFromNBT(nbt.getTagList("i", 10).getCompoundTagAt(0).getCompoundTag("tag"));
                         NBTTagCompound extraAttributes = nbt.getTagList("i", 10).getCompoundTagAt(0).getCompoundTag("tag").getCompoundTag("ExtraAttributes");
                         String name = nbt.getTagList("i", 10).getCompoundTagAt(0).getCompoundTag("tag").getCompoundTag("display").getString("Name");
 
@@ -464,7 +461,7 @@ public class AutoAuctionFlip {
                         auctionsPassedFilteredThrough++;
                         
                         if(auctionData!=null) {
-                            Auction auction = new Auction(auctionId, itemData, profit);
+                            Auction auction = new Auction(auctionId, profit);
                             String currentProfit = Utils.formatNumber(profit.longValue());
                             String currentPrice = Utils.formatNumber(bidPrice.longValue());
                             String itemValue = Utils.formatNumber(valueOfTheItem.longValue());
@@ -502,6 +499,7 @@ public class AutoAuctionFlip {
 
                             // Track how many notifications have been sent so it doesnt send too many
                             messageSent++;
+                            if(messageSent>SkyblockFeatures.config.autoAuctionFlipMaxAuc) break;
                         }
                     } catch (java.io.IOException e) {
                         e.printStackTrace();

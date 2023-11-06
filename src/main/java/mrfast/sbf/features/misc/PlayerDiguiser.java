@@ -42,11 +42,8 @@ public class PlayerDiguiser {
         }
     }
     public static Entity getEntity() {
-        Entity end = null;
+        Entity end;
         switch (SkyblockFeatures.config.DisguisePlayersAs) {
-            case 0:
-                end = new EntityCow(Utils.GetMC().theWorld);
-                break;
             case 1:
                 end = new EntityPig(Utils.GetMC().theWorld);
                 break;
@@ -66,11 +63,7 @@ public class PlayerDiguiser {
                 end = new EntityGiantZombie(Utils.GetMC().theWorld);
                 break;
             case 7:
-                end = new EntityArrow(Utils.GetMC().theWorld);
-                break;
             case 8:
-                end = new EntityArrow(Utils.GetMC().theWorld);
-                break;
             case 9:
                 end = new EntityArrow(Utils.GetMC().theWorld);
                 break;
@@ -87,8 +80,9 @@ public class PlayerDiguiser {
     @SubscribeEvent
     public void onCheckRender(CheckRenderEntityEvent event) {
         if (!Utils.inSkyblock || !SkyblockFeatures.config.playerDiguiser) return;
+
         try {
-            if(storedSelection!=SkyblockFeatures.config.DisguisePlayersAs || storedToggle!=SkyblockFeatures.config.playerDiguiser) {
+            if(storedSelection != SkyblockFeatures.config.DisguisePlayersAs || !storedToggle) {
                 for(Entity entity:tracker.keySet()) Utils.GetMC().theWorld.removeEntityFromWorld(tracker.get(entity).getEntityId());
                 tracker.clear();
                 tabnameTracker.clear();
@@ -157,18 +151,18 @@ public class PlayerDiguiser {
                         continue;
                     }
                     if(SkyblockFeatures.config.DisguisePlayersAs==4) {
-                        RenderUtil.draw3DStringWithShadow(original.getPositionVector().add(new Vec3(0,2.6,0)), "Jerry", 0xFFFFFF, event.partialTicks);
-                        RenderUtil.draw3DStringWithShadow(original.getPositionVector().add(new Vec3(0,2.3,0)), ChatFormatting.YELLOW+""+ChatFormatting.BOLD+"CLICK", 0xFFFFFF, event.partialTicks);
+                        RenderUtil.draw3DStringWithShadow(original.getPositionVector().add(new Vec3(0,2.6,0)), "Jerry", event.partialTicks);
+                        RenderUtil.draw3DStringWithShadow(original.getPositionVector().add(new Vec3(0,2.3,0)), ChatFormatting.YELLOW+""+ChatFormatting.BOLD+"CLICK", event.partialTicks);
                     } else if(SkyblockFeatures.config.DisguisePlayersAs == 3) {
-                        RenderUtil.draw3DStringWithShadow(original.getPositionVector().add(new Vec3(0,2.3,0)), originalName, 0xFFFFFF, event.partialTicks);
+                        RenderUtil.draw3DStringWithShadow(original.getPositionVector().add(new Vec3(0,2.3,0)), originalName, event.partialTicks);
                     } else if(SkyblockFeatures.config.DisguisePlayersAs == 8) {
-                        RenderUtil.draw3DStringWithShadow(original.getPositionVector().add(new Vec3(0,1.8,0)), originalName, 0xFFFFFF, event.partialTicks);
+                        RenderUtil.draw3DStringWithShadow(original.getPositionVector().add(new Vec3(0,1.8,0)), originalName, event.partialTicks);
                     } else if(SkyblockFeatures.config.DisguisePlayersAs == 5) {
-                        RenderUtil.draw3DStringWithShadow(original.getPositionVector().add(new Vec3(0,3.3,0)), originalName, 0xFFFFFF, event.partialTicks);
+                        RenderUtil.draw3DStringWithShadow(original.getPositionVector().add(new Vec3(0,3.3,0)), originalName, event.partialTicks);
                     } else if(SkyblockFeatures.config.DisguisePlayersAs == 7) {
-                        RenderUtil.draw3DStringWithShadow(original.getPositionVector().add(new Vec3(0,1.3,0)), originalName, 0xFFFFFF, event.partialTicks);
+                        RenderUtil.draw3DStringWithShadow(original.getPositionVector().add(new Vec3(0,1.3,0)), originalName, event.partialTicks);
                     } else {
-                        RenderUtil.draw3DStringWithShadow(original.getPositionVector().add(new Vec3(0,1.7,0)), originalName, 0xFFFFFF, event.partialTicks);
+                        RenderUtil.draw3DStringWithShadow(original.getPositionVector().add(new Vec3(0,1.7,0)), originalName, event.partialTicks);
                     }
                 }
             }   

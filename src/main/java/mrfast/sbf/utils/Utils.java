@@ -64,6 +64,9 @@ public class Utils {
     private static final String[] steps = new String[] {"", "K", "M", "B","T"};
 
     public static String formatNumber(double number) {
+        if(number<1000) {
+            return ((int) number)+"";
+        }
         int magnitudeIndex = 0;
 
         while (number >= 1000) {
@@ -262,17 +265,7 @@ public class Utils {
             Utils.GetMC().ingameGUI.getChatGUI().printChatMessage(new ChatComponentText(ChatFormatting.AQUA+"[SBF] "+ChatFormatting.RESET+string));
         }
     }
-    public static void SendMessage(Integer string) {
-        if (Utils.GetMC().ingameGUI != null || Utils.GetMC().thePlayer == null) {
-            Utils.GetMC().ingameGUI.getChatGUI().printChatMessage(new ChatComponentText(ChatFormatting.AQUA+"[SBF] "+ChatFormatting.RESET+string));
-        }
-    }
-    public static void SendMessage(Double string) {
-        if (Utils.GetMC().ingameGUI != null || Utils.GetMC().thePlayer == null) {
-            assert Utils.GetMC().ingameGUI != null;
-            Utils.GetMC().ingameGUI.getChatGUI().printChatMessage(new ChatComponentText(ChatFormatting.AQUA+"[SBF] "+ChatFormatting.RESET+string));
-        }
-    }
+
     public static void SendMessage(IChatComponent msg) {
         if (Utils.GetMC().ingameGUI != null || Utils.GetMC().thePlayer == null) {
             ChatComponentText prefix = new ChatComponentText(EnumChatFormatting.AQUA+"[SBF] "+EnumChatFormatting.RESET);

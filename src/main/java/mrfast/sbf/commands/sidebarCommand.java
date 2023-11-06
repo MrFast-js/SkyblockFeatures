@@ -57,7 +57,4 @@ public class sidebarCommand extends CommandBase {
         Utils.SendMessage(ChatFormatting.GREEN+"Scoreboards copied to clipboard");
 	}
 
-    public static <T> T getRandomElement(T[] arr){
-        return arr[ThreadLocalRandom.current().nextInt(arr.length)];
-    }
 }

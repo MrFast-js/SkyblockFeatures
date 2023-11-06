@@ -29,10 +29,6 @@ public class RepartyCommand extends CommandBase {
 		return "/" + getCommandName() + " [name]";
 	}
 
-	public static String usage(ICommandSender arg0) {
-		return new RepartyCommand().getCommandUsage(arg0);
-	}
-
 	@Override
     public List<String> addTabCompletionOptions(ICommandSender sender, String[] args, BlockPos pos) {
         return (args.length >= 1) ? getListOfStringsMatchingLastWord(args, Utils.getListOfPlayerUsernames()) : null;

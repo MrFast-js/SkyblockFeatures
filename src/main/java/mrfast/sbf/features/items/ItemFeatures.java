@@ -57,7 +57,7 @@ public class ItemFeatures {
                 }
             }
             String auctionIdentifier = PricingData.getIdentifier(item);
-            if (auctionIdentifier != null && item!=null) {
+            if (auctionIdentifier != null) {
                 JsonObject auctionData = PricingData.getItemAuctionInfo(auctionIdentifier);
                 if (SkyblockFeatures.config.showSalesPerDay && auctionData!=null) {
                     event.toolTip.add("§bSales Per Day: §e" + Utils.nf.format(auctionData.get("sales").getAsInt()));
@@ -88,9 +88,9 @@ public class ItemFeatures {
                 }
             }
 
-            if (SkyblockFeatures.config.showNPCSellPrice && item!=null) {
+            if (SkyblockFeatures.config.showNPCSellPrice) {
                 Integer valuePer = PricingData.npcSellPrices.get(itemId);
-                if (valuePer != null) event.toolTip.add("§bNPC Sell Value: §3" + Utils.nf.format(valuePer * item.stackSize) + (item.stackSize > 1 ? " §7(" + Utils.nf.format(valuePer) + " each§7)" : ""));
+                if (valuePer != null) event.toolTip.add("§bNPC Sell Value: §3" + Utils.nf.format((long) valuePer * item.stackSize) + (item.stackSize > 1 ? " §7(" + Utils.nf.format(valuePer) + " each§7)" : ""));
             }
         }
     }

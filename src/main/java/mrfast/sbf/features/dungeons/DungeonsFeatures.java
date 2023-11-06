@@ -53,10 +53,6 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 public class DungeonsFeatures {
 
     private static final Minecraft mc = Minecraft.getMinecraft();
-    private static final Pattern playerPattern = Pattern.compile("(?:\\[.+?] )?(\\w+)");
-    public static String dungeonFloor = null;
-    public static boolean hasBossSpawned = false;
-    public static boolean foundLivid = false;
     public static Entity livid = null;
 
     @SubscribeEvent
@@ -105,17 +101,12 @@ public class DungeonsFeatures {
     @SubscribeEvent
     public void onWorldChanges(WorldEvent.Load event) {
         count = 0;
-        dungeonFloor = null;
-        hasBossSpawned = false;
         bloodguy = null;
         blessings.clear();
         livid = null;
-        foundLivid = false;
-        foundLivid = false;
-        livid = null;
     }
 
-    String delimiter = EnumChatFormatting.AQUA.toString() + EnumChatFormatting.STRIKETHROUGH.toString() + "" + EnumChatFormatting.BOLD + "--------------------------------------";
+    String delimiter = EnumChatFormatting.AQUA + EnumChatFormatting.STRIKETHROUGH.toString() + EnumChatFormatting.BOLD + "--------------------------------------";
     int count = 0;
     public static EntityPlayer bloodguy;
     static Map<String,Integer> blessings = new HashMap<String,Integer>();
@@ -208,7 +199,7 @@ public class DungeonsFeatures {
         String n = ItemUtils.getSkyBlockItemID(stack);
         String i = Utils.cleanColor(stack.getDisplayName());
 
-        if(SkyblockFeatures.config.highlightTrash && n!=null && i!=null) {
+        if(SkyblockFeatures.config.highlightTrash && n != null) {
             if(n.equals("CRYPT_DREADLORD_SWORD")||n.equals("MACHINE_GUN_BOW")||i.contains("Healing VIII")||n.equals("DUNGEON_LORE_PAPER")||n.equals("ENCHANTED_BONE")||n.equals("CRYPT_BOW")||n.contains("ZOMBIE_SOLDIER")||n.contains("SKELETON_SOLDIER")||n.contains("SKELETON_MASTER")||n.contains("SUPER_HEAVY")||n.contains("INFLATABLE_JERRY")||n.contains("DUNGEON_TRAP")||n.contains("SKELETOR")||n.contains("PREMIUM_FLESH")||n.contains("TRAINING")||n.contains("CONJURING_SWORD")||n.contains("FEL_PEARL")||n.contains("ZOMBIE_KNIGHT")||n.contains("ENCHANTED_ROTTEN_FLESH")) {
                 Gui.drawRect(x, y, x + 16, y + 1, new Color(255, 0, 0, 255).getRGB());
                 Gui.drawRect(x, y, x + 1, y + 16, new Color(255, 0, 0, 255).getRGB());

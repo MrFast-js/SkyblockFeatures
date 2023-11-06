@@ -42,15 +42,13 @@ public class GuiManager {
         readConfig();
     }
 
-    public boolean registerElement(UIElement e) {
+    public void registerElement(UIElement e) {
         try {
             counter++;
             elements.put(counter, e);
             names.put(e.getName(), e);
-            return true;
         } catch(Exception err) {
             err.printStackTrace();
-            return false;
         }
     }
 

@@ -108,8 +108,9 @@ public class TrevorHelper {
         for (NetworkPlayerInfo pi : TabListUtils.getTabEntries()) {
             String name = Utils.GetMC().ingameGUI.getTabList().getPlayerName(pi);
             for(String loc:biomeLocations.keySet()) {
-                if(name.contains(loc)) {
+                if (name.contains(loc)) {
                     location = Utils.cleanColor(name);
+                    break;
                 }
             }
         }

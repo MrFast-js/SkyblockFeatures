@@ -49,12 +49,7 @@ import net.minecraft.scoreboard.Team.EnumVisible;
  */
 @Mixin(RenderGlobal.class)
 public abstract class MixinRenderGlobal {
-
-    @Shadow private WorldClient theWorld;
     @Final @Shadow private RenderManager renderManager;
-    @Final @Shadow private Minecraft mc;
-    @Shadow private Framebuffer entityOutlineFramebuffer;
-    @Shadow private ShaderGroup entityOutlineShader;
 
     @Shadow protected abstract boolean isRenderEntityOutlines();
 
@@ -150,10 +145,9 @@ public abstract class MixinRenderGlobal {
                     boolean flag1 = (entity.isInRangeToRender3d(x, y, z) && (entity.ignoreFrustumCheck || camera.isBoundingBoxInFrustum(entity.getEntityBoundingBox())) && entity instanceof EntityPlayer && !Utils.isNPC(entity));
                     // Dungeon Player Glowing
                     if ((entity != mc.getRenderViewEntity() || mc.gameSettings.thirdPersonView != 0 || flag) && flag1 && Nametags.players.containsKey(entity) && SkyblockFeatures.config.glowingDungeonPlayers && Utils.inDungeons) {
-                        outlineColor(entity, (String)Nametags.players.get(entity));
-                        Entity copy = entity;
-                        copy.setInvisible(false);
-                        renderManager.renderEntitySimple(copy, partialTicks);
+                        outlineColor(entity, Nametags.players.get(entity));
+                        entity.setInvisible(false);
+                        renderManager.renderEntitySimple(entity, partialTicks);
                     }
                     // General Player Glowing
                     if ((entity != mc.getRenderViewEntity() || mc.gameSettings.thirdPersonView != 0 || flag) && flag1 && SkyblockFeatures.config.glowingPlayers && mc.thePlayer.canEntityBeSeen(entity)) {
@@ -162,7 +156,7 @@ public abstract class MixinRenderGlobal {
                     // Item Glowing
                     boolean flag2 = (mc.thePlayer.getDistanceToEntity(entity) < 15.0F && entity instanceof EntityItem);
                     if (flag2 && SkyblockFeatures.config.glowingItems) {
-                        ItemRarity itemRarity = ItemUtils.getRarity(((EntityItem)entity).getEntityItem(), "");
+                        ItemRarity itemRarity = ItemUtils.getRarity(((EntityItem)entity).getEntityItem());
                         outlineColor(itemRarity.getColor().getRGB());
                         renderManager.renderEntitySimple(entity, partialTicks);
                     } 

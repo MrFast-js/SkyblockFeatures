@@ -17,10 +17,6 @@ public abstract class UIElement {
 
     public abstract boolean getToggled();
 
-    public void setPos(Point newPos) {
-        this.pos = newPos;
-    }
-
     public Point getPos() {
         return this.pos;
     }

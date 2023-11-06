@@ -23,7 +23,7 @@ public class ChestProfit {
         if (event.gui == null || !SkyblockFeatures.config.dungeonChestProfit || !Utils.inSkyblock) return;
         if (event.gui instanceof GuiChest) {
             HashMap<ItemStack,Double> items = new HashMap<ItemStack,Double>();    
-            ContainerChest chest = (ContainerChest) ((GuiChest) event.gui).inventorySlots;
+            ContainerChest chest = (ContainerChest) event.gui.inventorySlots;
             IInventory inv = chest.getLowerChestInventory();
             if (inv.getDisplayName().getUnformattedText().endsWith(" Chest")) {
                 int chestValue = 0;

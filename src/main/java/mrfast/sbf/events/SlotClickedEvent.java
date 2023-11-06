@@ -19,14 +19,13 @@ import net.minecraftforge.fml.common.eventhandler.Event;
 public class SlotClickedEvent extends Event {
     public GuiChest chest;
     public Gui gui;
-    public GuiContainer container;
     public IInventory inventory;
     public String inventoryName;
     public Slot slot;
     public int slotId;
     public ItemStack item;
 
-    public SlotClickedEvent(GuiContainer container, Slot slot2, int slotId) {
+    public SlotClickedEvent(GuiContainer container, Slot slot2) {
         if (!(Minecraft.getMinecraft().currentScreen instanceof GuiChest)) {
             this.chest = null;
             this.gui=Minecraft.getMinecraft().currentScreen;
@@ -38,11 +37,10 @@ public class SlotClickedEvent extends Event {
             this.inventoryName = ((ContainerChest) chest.inventorySlots).getLowerChestInventory().getName();
             this.inventory = ((ContainerChest) container.inventorySlots).getLowerChestInventory();
         }
-        this.container = container;
         if(slot2!=null) {
             this.slot = slot2;
             this.slotId = slot2.getSlotIndex();
-            this.item = slot2 != null ? slot2.getStack() : null;
+            this.item = slot2.getStack();
         }
     }
 

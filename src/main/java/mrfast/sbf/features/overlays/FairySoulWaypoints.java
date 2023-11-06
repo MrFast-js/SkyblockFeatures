@@ -26,9 +26,6 @@ import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class FairySoulWaypoints {
-
-   public Minecraft mc = Minecraft.getMinecraft();
-
    @SubscribeEvent
    public void onAttack(AttackEntityEvent event) {
       if(!SkyblockFeatures.config.fairySoulHelper) return;
@@ -102,7 +99,7 @@ public class FairySoulWaypoints {
             
             GlStateManager.disableDepth();
             while(var3.hasNext()) {
-               Entity entity = (Entity)var3.next();
+               Entity entity = var3.next();
                if (entity instanceof EntityArmorStand ) {
                   if(((EntityArmorStand)entity).getCurrentArmor(3) != null && SkyblockFeatures.config.fairySoulHelper) {
                      String id = ((EntityArmorStand)entity).getCurrentArmor(3).serializeNBT().getCompoundTag("tag").getCompoundTag("SkullOwner").getCompoundTag("Properties").toString();

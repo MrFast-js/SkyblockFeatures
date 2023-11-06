@@ -33,8 +33,6 @@ public abstract class MixinRenderPlayer extends MixinRendererLivingEntity {
         }
     }
 
-    @Shadow protected abstract ResourceLocation getEntityTexture(AbstractClientPlayer entity);
-
     @Inject(method = "getEntityTexture", at = @At("HEAD"), cancellable = true)
     private void onGetEntityTexture(AbstractClientPlayer entity, CallbackInfoReturnable<ResourceLocation> info) {
         if (SkyblockFeatures.config.DisguisePlayersAs == 8 && SkyblockFeatures.config.playerDiguiser && !Utils.isNPC(entity) && Utils.inSkyblock) {

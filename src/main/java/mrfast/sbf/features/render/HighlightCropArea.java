@@ -52,9 +52,8 @@ public class HighlightCropArea {
     
     @SubscribeEvent
     public void onRender(RenderWorldLastEvent event) {
-        if(!SkyblockFeatures.config.GardenBlocksToRemove || Utils.GetMC().theWorld==null) return;
-        try {if(!SkyblockInfo.map.equals("Garden")) return;} catch (Exception e) {}
-        
+        if(!SkyblockFeatures.config.GardenBlocksToRemove || Utils.GetMC().theWorld==null || !SkyblockInfo.map.equals("Garden")) return;
+
         if(cropAreas.isEmpty()) {
             for(int x=-192;x<192;x+=96) {
                 for(int z=-192;z<192;z+=96) {
@@ -96,8 +95,6 @@ public class HighlightCropArea {
         if(!SkyblockFeatures.config.GardenBlocksToRemove || Utils.GetMC().theWorld==null) return;
         try {if(!SkyblockInfo.map.equals("Garden")) return;} catch (Exception ignored) {}
 
-        if(blocksToDestroy.contains(event.pos)) {
-            blocksToDestroy.remove(blocksToDestroy.indexOf(event.pos));
-        }
+        blocksToDestroy.remove(event.pos);
     }
 }

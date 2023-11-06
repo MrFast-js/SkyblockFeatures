@@ -104,9 +104,9 @@ public class SkyblockInfo {
             if (entry.contains("Purse:") || entry.contains("Piggy:")) {
                 coins = parseCoins(entry.replaceAll("[^0-9]", ""));
             } else if (entry.contains("⏣")) {
-                location = entry.substring(2, entry.length());
+                location = entry.substring(2);
             } else if (entry.contains("ф")) {
-                location = entry.substring(2, entry.length());
+                location = entry.substring(2);
             }
             localLocation=location.replaceAll("[^a-zA-Z0-9\\s]", "").replaceAll("[^\\x00-\\x7F]", "");
         }

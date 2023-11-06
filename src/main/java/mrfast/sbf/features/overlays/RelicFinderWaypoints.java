@@ -18,9 +18,6 @@ import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class RelicFinderWaypoints {
-
-   public Minecraft mc = Minecraft.getMinecraft();
-   
    public static HashSet<BlockPos> foundRelicLocations = new HashSet<>();
 
    @SubscribeEvent
@@ -33,7 +30,7 @@ public class RelicFinderWaypoints {
          Iterator<TileEntity> var3 = mc.theWorld.loadedTileEntityList.iterator();
          BlockPos closestOne = null;
          while(var3.hasNext()) {
-            TileEntity entity = (TileEntity)var3.next();
+            TileEntity entity = var3.next();
             if (entity instanceof TileEntitySkull) {
                TileEntitySkull skull = (TileEntitySkull) entity;
                BlockPos pos = entity.getPos();
@@ -62,7 +59,6 @@ public class RelicFinderWaypoints {
          if(closestOne!=null) {
             if(mc.thePlayer.getDistanceSqToCenter(closestOne)<7) {
                foundRelicLocations.add(closestOne);
-               closestOne = null;
             }
          }
       }

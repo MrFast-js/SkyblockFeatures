@@ -52,7 +52,7 @@ public class ActionBarListener {
 
 			parseSecrets(actionBar);
 
-			if(SkyblockFeatures.config.hidethings) {
+			if(SkyblockFeatures.config.hideHealthAndMana) {
 				String[] arr = actionBar.split(" ");
                 for (String s : arr) {
                     if (s.contains("❤")) {

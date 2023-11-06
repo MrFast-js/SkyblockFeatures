@@ -19,7 +19,6 @@ import java.util.stream.Collectors;
  * @author bowser0000
  */
 public class ScoreboardUtil {
-
     public static String cleanSB(String scoreboard) {
         char[] nvString = Utils.cleanColor(scoreboard).toCharArray();
         StringBuilder cleaned = new StringBuilder();

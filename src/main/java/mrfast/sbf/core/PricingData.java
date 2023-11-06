@@ -110,10 +110,6 @@ public class PricingData {
                 new Thread(() -> {
                     AuctionUtil.getMyApiGZIPAsync("https://moulberry.codes/auction_averages/3day.json.gz", (jsonObject) -> {
                         auctionPricesJson = jsonObject;
-//                        for (Map.Entry<String, JsonElement> items : auctionPricesJson.entrySet()) {
-//                            Double value = auctionPricesJson.get(items.getKey()).getAsJsonObject().get("price").getAsDouble();
-//                            averageLowestBINs.put(items.getKey(), Math.floor(value));
-//                        }
                     }, ()->{});
                 }).start();
             }

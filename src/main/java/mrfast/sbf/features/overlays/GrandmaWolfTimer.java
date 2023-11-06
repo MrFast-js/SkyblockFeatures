@@ -57,7 +57,7 @@ public class GrandmaWolfTimer {
                             String raw = Utils.cleanColor(line);
                             if(!raw.contains("last")) continue;
                             String delayString = raw.split("last")[1];
-                            Double secondsDelay = Double.parseDouble(delayString.replaceAll("[^0-9]", ""))/10;
+                            double secondsDelay = Double.parseDouble(delayString.replaceAll("[^0-9]", ""))/10;
                             if(raw.contains("15 Combo")) {
                                 FifteenComboSeconds=secondsDelay;
                             }

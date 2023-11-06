@@ -37,7 +37,6 @@ public class IceTreasureTracker {
     static boolean hidden = true;
     static int seconds = 0;
     static int totalSeconds = 0;
-    static double coinsPerHour = 0;
     @SubscribeEvent
     public void onload(WorldEvent.Load event) {
         seconds = 0;
@@ -96,8 +95,6 @@ public class IceTreasureTracker {
             if(talismanValue != 0) talismanTotal = talisman*talismanValue;
 
             totalMoney = (redGiftTotal+greenGiftTotal+whiteGiftTotal+fragmentTotal+talismanTotal);
-
-            coinsPerHour = Math.floor(Math.max(3600/totalSeconds,1)*totalMoney);
         } catch (Exception e) {
             //TODO: handle exception
         }

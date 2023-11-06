@@ -101,7 +101,7 @@ public class RenderUtil {
     
         String distanceText = "(" + (int) Math.sqrt(distance) + "m)";
         int distanceWidth = fontRenderer.getStringWidth(distanceText);
-        fontRenderer.drawString(distanceText, -(distanceWidth / 2), (int) (padding + rectHeight - 1), 0xFFFFFF);
+        fontRenderer.drawString(distanceText, -(distanceWidth / 2), padding + rectHeight - 1, 0xFFFFFF);
     
         GlStateManager.enableDepth();
         GlStateManager.disableBlend();
@@ -135,7 +135,7 @@ public class RenderUtil {
         GlStateManager.popMatrix();
     }
 
-    public static void draw3DStringWithShadow(Vec3 pos, String str, int color, float partialTicks) {
+    public static void draw3DStringWithShadow(Vec3 pos, String str, float partialTicks) {
         EntityPlayer player = Utils.GetMC().thePlayer;
         double x = (pos.xCoord - player.lastTickPosX) + ((pos.xCoord - player.posX) - (pos.xCoord - player.lastTickPosX)) * partialTicks;
         double y = (pos.yCoord - player.lastTickPosY) + ((pos.yCoord - player.posY) - (pos.yCoord - player.lastTickPosY)) * partialTicks;
@@ -162,10 +162,10 @@ public class RenderUtil {
         int j = fontrenderer.getStringWidth(str) / 2;
         GlStateManager.disableTexture2D();
         worldrenderer.begin(7, DefaultVertexFormats.POSITION_COLOR);
-        worldrenderer.pos((double)(-j - 1), (double)(-1 + i), 0.0D).color(0.0F, 0.0F, 0.0F, 0.25F).endVertex();
-        worldrenderer.pos((double)(-j - 1), (double)(8 + i), 0.0D).color(0.0F, 0.0F, 0.0F, 0.25F).endVertex();
-        worldrenderer.pos((double)(j + 1), (double)(8 + i), 0.0D).color(0.0F, 0.0F, 0.0F, 0.25F).endVertex();
-        worldrenderer.pos((double)(j + 1), (double)(-1 + i), 0.0D).color(0.0F, 0.0F, 0.0F, 0.25F).endVertex();
+        worldrenderer.pos(-j - 1, -1 + i, 0.0D).color(0.0F, 0.0F, 0.0F, 0.25F).endVertex();
+        worldrenderer.pos(-j - 1, 8 + i, 0.0D).color(0.0F, 0.0F, 0.0F, 0.25F).endVertex();
+        worldrenderer.pos(j + 1, 8 + i, 0.0D).color(0.0F, 0.0F, 0.0F, 0.25F).endVertex();
+        worldrenderer.pos(j + 1, -1 + i, 0.0D).color(0.0F, 0.0F, 0.0F, 0.25F).endVertex();
         tessellator.draw();
         GlStateManager.enableTexture2D();
         // fontrenderer.drawStringWithShadow(str, -fontrenderer.getStringWidth(str) / 2, i, 553648127);
@@ -373,7 +373,6 @@ public class RenderUtil {
         float red = color.getRed() / 255.0f;
         float green = color.getGreen() / 255.0f;
         float blue = color.getBlue() / 255.0f;
-        float alpha = color.getAlpha() / 255.0f;
 
         GL11.glColor4f(red, green, blue, 0.8f);
 

@@ -35,8 +35,4 @@ public class PureColors {
     public static boolean isPureColor(String hex) {
         return pureColorsToName.containsKey(hex.toUpperCase());
     }
-
-    public static String getPureColor(String hex) {
-        return pureColorsToName.get(hex.toUpperCase());
-    }
 }

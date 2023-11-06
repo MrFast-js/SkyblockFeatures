@@ -16,8 +16,6 @@ public class EffectiveHealthDisplay {
         new EffectiveHealthDisplayGUI();
     }
 
-    static String display = "1234";
-
     public static int getEffectiveHealth() {
         return Math.round(Utils.Health * (1f+ (Utils.Defence / 100f) ));
     }

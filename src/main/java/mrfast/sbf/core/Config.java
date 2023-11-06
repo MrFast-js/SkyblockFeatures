@@ -68,7 +68,7 @@ public class Config extends Vigilant {
     @Property(
             type = PropertyType.SWITCH,
             name = "Shadow Assassin Notify",
-            description = "Notify when there is a nearby shadow assasin thats invisible based off their sword.",
+            description = "Notify when there is a nearby shadow assassin that's invisible based off their sword.",
             category = "§1§rDungeons",
             subcategory = "Miscellaneous"
     )
@@ -246,7 +246,7 @@ public class Config extends Vigilant {
     @Property(
             type = PropertyType.SWITCH,
             name = "Highlight Through Walls",
-            description = "Highlights the beacon thats thrown by the enderman slayer through walls. §cWarning Use At Own Risk",
+            description = "Highlights the beacon that's thrown by the enderman slayer through walls. §cWarning Use At Own Risk",
             category = "Slayers",
 	    subcategory = "Voidgloom",
             searchTags = {"Highlight Thrown Beacon"}
@@ -337,12 +337,12 @@ public class Config extends Vigilant {
             category = "General",
             subcategory = "Health & Mana Bars"
     )
-    public boolean hidethings = false;
+    public boolean hideHealthAndMana = false;
 
      @Property(
             type = PropertyType.SWITCH,
             name = "Health Display",
-            description = "Moveable health display",
+            description = "Movable health display",
             category = "General",
             subcategory = "Health & Mana Bars"
     )
@@ -351,7 +351,7 @@ public class Config extends Vigilant {
     @Property(
             type = PropertyType.SWITCH,
             name = "Speed Display",
-            description = "Moveable Speed display",
+            description = "Movable Speed display",
             category = "General",
             subcategory = "Health & Mana Bars"
     )
@@ -360,7 +360,7 @@ public class Config extends Vigilant {
     @Property(
             type = PropertyType.SWITCH,
             name = "Effective Health Display",
-            description = "Moveable Effective Health display",
+            description = "Movable Effective Health display",
             category = "General",
             subcategory = "Health & Mana Bars"
     )
@@ -369,7 +369,7 @@ public class Config extends Vigilant {
     @Property(
             type = PropertyType.SWITCH,
             name = "Mana Display",
-            description = "Moveable mana",
+            description = "Movable mana",
             category = "General",
             subcategory = "Health & Mana Bars"
     )
@@ -378,7 +378,7 @@ public class Config extends Vigilant {
     @Property(
             type = PropertyType.SWITCH,
             name = "Defence Display",
-            description = "Moveable defence display",
+            description = "Movable defence display",
             category = "General",
             subcategory = "Health & Mana Bars"
     )
@@ -387,7 +387,7 @@ public class Config extends Vigilant {
     @Property(
             type = PropertyType.SWITCH,
             name = "Secrets Display",
-            description = "Moveable Secrets display",
+            description = "Movable Secrets display",
             category = "§1§rDungeons",
             subcategory = "Miscellaneous"
     )
@@ -552,15 +552,6 @@ public class Config extends Vigilant {
             searchTags = {"Rift Mirrorverse Helper"}
     )
     public Color riftMirrorverseHelperColor = new Color(0x00FFFF);
-
-    @Property(
-        type = PropertyType.SWITCH,
-        name = "Rift Spell Helper",
-        description = "Highlights the best line to trace spells in the rift",
-        category = "The Rift",
-        subcategory = "General"
-    )
-    public boolean riftSpellLines = false;
 
     @Property(
         type = PropertyType.SWITCH,

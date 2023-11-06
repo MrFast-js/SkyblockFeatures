@@ -113,7 +113,7 @@ public class ItemUtils {
         if (extraAttributes != null) {
             String itemId = extraAttributes.getString("id");
 
-            if (!itemId.equals("")) {
+            if (!itemId.isEmpty()) {
                 return itemId;
             }
         }
@@ -268,44 +268,13 @@ public class ItemUtils {
         }
 
         // If the item doesn't have a valid rarity, return null
-        return null;
-    }
-
-    public static ItemRarity getRarity(ItemStack item, String a) {
-        if (item == null || !item.hasTagCompound())  {
-            return ItemRarity.COMMON;
-        }
-
-        NBTTagCompound display = item.getSubCompound("display", false);
-
-        if (display == null || !display.hasKey("Lore")) {
-            return ItemRarity.COMMON;
-        }
-
-        NBTTagList lore = display.getTagList("Lore", Constants.NBT.TAG_STRING);
-
-        // Determine the item's rarity
-        for (int i = 0; i < lore.tagCount(); i++) {
-            String currentLine = lore.getStringTagAt(i);
-
-            Matcher rarityMatcher = RARITY_PATTERN.matcher(currentLine);
-            if (rarityMatcher.find()) {
-                String rarity = rarityMatcher.group("rarity");
-
-                for (ItemRarity itemRarity : ItemRarity.values()) {
-                    if (rarity.startsWith(itemRarity.getName())) {
-                        return itemRarity;
-                    }
-                }
-            }
-        }
-
         return ItemRarity.COMMON;
     }
+
     public static HashMap<String,JsonObject> skyhelperItemMap = new HashMap<>();
     
     public static long getEstimatedItemValue(ItemStack stack) {
-        if(skyhelperItemMap.size()==0) {
+        if(skyhelperItemMap.isEmpty()) {
             JsonArray items = APIUtils.getArrayResponse("https://raw.githubusercontent.com/Altpapier/SkyHelper-Networth/abb278d6be1e13b3204ccb05f47c5e8aaf614733/constants/items.json");
             for(int i=0;i<items.size();i++) {
                 JsonObject a = items.get(i).getAsJsonObject();
@@ -337,7 +306,7 @@ public class ItemUtils {
     }
 
     public static Integer getEstimatedItemValue(NBTTagCompound ExtraAttributes) {
-        if(skyhelperItemMap.size()==0) {
+        if(skyhelperItemMap.isEmpty()) {
             new Thread(()->{
                 JsonArray items = APIUtils.getArrayResponse("https://raw.githubusercontent.com/Altpapier/SkyHelper-Networth/abb278d6be1e13b3204ccb05f47c5e8aaf614733/constants/items.json");
                 for(int i=0;i<items.size();i++) {
@@ -391,7 +360,7 @@ public class ItemUtils {
 
     public static Long getStarCost(NBTTagCompound extraAttributes) {
         String id = extraAttributes.getString("id");
-        int stars = 0;
+        int stars;
         int masterStars = 0;
         int totalEssence = 0;
         String essenceType = "WITHER";
@@ -495,8 +464,8 @@ public class ItemUtils {
     }
 
     public static List<ItemStack> decodeItem(Inventory inventory,Boolean offset) {
+        List<ItemStack> itemStack = new ArrayList<>();
         if (inventory != null) {
-            List<ItemStack> itemStack = new ArrayList<>();
             byte[] decode = Base64.getDecoder().decode(inventory.getData());
 
             try {
@@ -511,16 +480,14 @@ public class ItemUtils {
             }
             if(offset) Collections.rotate(itemStack, -9);
 
-            return itemStack;
         } else {
-            List<ItemStack> itemStack = new ArrayList<>();
             ItemStack barrier = new ItemStack(Blocks.barrier);
             barrier.setStackDisplayName(EnumChatFormatting.RESET + "" + EnumChatFormatting.RED + "Item is not available!");
 
             for (int i = 0; i < 36; ++i) {
                 itemStack.add(barrier);
             }
-            return itemStack;
         }
+        return itemStack;
     }
 }

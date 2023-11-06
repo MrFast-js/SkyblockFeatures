@@ -23,10 +23,6 @@ public class ItemStackComponent extends UIComponent {
         this(new BasicState<>(stack));
     }
 
-    public ItemStackComponent(Item item, int metadata) {
-        this(new ItemStack(item, 1, metadata));
-    }
-
     public ItemStackComponent(State<ItemStack> state) {
         this.state = state;
     }

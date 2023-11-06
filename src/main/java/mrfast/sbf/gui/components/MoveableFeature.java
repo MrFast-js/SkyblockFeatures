@@ -13,8 +13,6 @@ public class MoveableFeature extends GuiButton {
     public UIElement element;
     public float x;
     public float y;
-    public float Width;
-    public float Height;
 
     public MoveableFeature(UIElement element) {
         super(-1, 0, 0, null);
@@ -25,8 +23,6 @@ public class MoveableFeature extends GuiButton {
     private void updateLocations() {
         x = element.getX();
         y = element.getY();
-        Width = element.getWidth();
-        Height = element.getHeight();
     }
 
     @Override

@@ -26,16 +26,11 @@ public abstract class GuiContainerEvent extends Event {
     }
 
     public static class TitleDrawnEvent extends GuiContainerEvent {
-        public int mouseX, mouseY;
-        public float partialTicks;
         public String displayName;
 
-        public TitleDrawnEvent(GuiContainer gui, Container container, int mouseX, int mouseY, float partialTicks,String displayName) {
+        public TitleDrawnEvent(GuiContainer gui, Container container,String displayName) {
             super(gui, container);
-            this.mouseX = mouseX;
-            this.mouseY = mouseY;
             this.displayName = displayName;
-            this.partialTicks = partialTicks;
         }
     }
 

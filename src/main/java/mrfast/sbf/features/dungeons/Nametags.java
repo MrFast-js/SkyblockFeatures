@@ -1,8 +1,6 @@
 package mrfast.sbf.features.dungeons;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import com.mojang.realmsclient.gui.ChatFormatting;
@@ -15,10 +13,8 @@ import org.lwjgl.opengl.GL11;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.RenderGlobal;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.Vec3;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -26,16 +22,11 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 public class Nametags {
 
     public Minecraft mc = Minecraft.getMinecraft();
-    public RenderGlobal renderGlobal = mc.renderGlobal;
     public static Map<EntityPlayer, String> players = new HashMap<EntityPlayer, String>();
 
     @SubscribeEvent
     public void onWorldChange(WorldEvent.Load event) {
-        try {
-            players.clear();
-        } catch(Exception e) {
-
-        }
+        players.clear();
     }
 
     @SubscribeEvent
@@ -55,19 +46,19 @@ public class Nametags {
                     }
                     
                     if(cleanedLine.contains("[M] "+cutShort)) {// MAGE CLASS "[M] Skyblock_Lobby"
-                        renderNameTag(player, ChatFormatting.YELLOW+"[M] "+ChatFormatting.GREEN+player.getName(), x , y, z, event.partialTicks, "§b");
+                        renderNameTag(player, ChatFormatting.YELLOW+"[M] "+ChatFormatting.GREEN+player.getName(), x , y, z, "§b");
                     }
                     if(cleanedLine.contains("[T] "+cutShort)) {// TANK CLASS "[T] Skyblock_Lobby"
-                        renderNameTag(player, ChatFormatting.YELLOW+"[T] "+ChatFormatting.GREEN+player.getName(), x , y, z, event.partialTicks, "§7");
+                        renderNameTag(player, ChatFormatting.YELLOW+"[T] "+ChatFormatting.GREEN+player.getName(), x , y, z, "§7");
                     }
                     if(cleanedLine.contains("[A] "+cutShort)) {// ARCHER CLASS "[A] Skyblock_Lobby"
-                        renderNameTag(player, ChatFormatting.YELLOW+"[A] "+ChatFormatting.GREEN+player.getName(), x , y, z, event.partialTicks, "§a");
+                        renderNameTag(player, ChatFormatting.YELLOW+"[A] "+ChatFormatting.GREEN+player.getName(), x , y, z, "§a");
                     }
                     if(cleanedLine.contains("[B] "+cutShort)) {// BESERKER CLASS "[B] Skyblock_Lobby"
-                        renderNameTag(player, ChatFormatting.YELLOW+"[B] "+ChatFormatting.GREEN+player.getName(), x , y, z, event.partialTicks, "§c");
+                        renderNameTag(player, ChatFormatting.YELLOW+"[B] "+ChatFormatting.GREEN+player.getName(), x , y, z, "§c");
                     }
                     if(cleanedLine.contains("[H] "+cutShort)) {// HEALER CLASS "[H] Skyblock_Lobby"
-                        renderNameTag(player, ChatFormatting.YELLOW+"[H] "+ChatFormatting.GREEN+player.getName(), x , y, z, event.partialTicks, "§d");
+                        renderNameTag(player, ChatFormatting.YELLOW+"[H] "+ChatFormatting.GREEN+player.getName(), x , y, z, "§d");
                     }
                 }
             }
@@ -80,7 +71,7 @@ public class Nametags {
         return (previous + (current - previous) * delta);
     }
 
-    private void renderNameTag(EntityPlayer player, String displayName, double x, double y, double z, float delta, String color) {
+    private void renderNameTag(EntityPlayer player, String displayName, double x, double y, double z, String color) {
         if(player.equals(Utils.GetMC().thePlayer)) return;
         
         players.put(player, color);
@@ -128,12 +119,4 @@ public class Nametags {
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
         GlStateManager.popMatrix();
     }
-
-    public static double getDistanceSquared(Vec3 npcLocation, Entity entityToCheck) {
-        double d0 = npcLocation.xCoord - entityToCheck.posX;
-        double d1 = npcLocation.yCoord - entityToCheck.posY;
-        double d2 = npcLocation.zCoord - entityToCheck.posZ;
-        return d0 * d0 + d1 * d1 + d2 * d2;
-    }
-
 }

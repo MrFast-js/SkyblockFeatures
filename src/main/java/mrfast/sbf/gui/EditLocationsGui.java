@@ -42,7 +42,7 @@ public class EditLocationsGui extends GuiScreen {
 
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
-        onMouseMove(mouseX, mouseY);
+        onMouseMove();
         this.drawGradientRect(0, 0, this.width, this.height, new Color(0, 0, 0, 50).getRGB(), new Color(0, 0, 0, 200).getRGB());
         for (GuiButton button : this.buttonList) {
             if (button instanceof MoveableFeature) {
@@ -78,7 +78,7 @@ public class EditLocationsGui extends GuiScreen {
         }
     }
 
-    protected void onMouseMove(int mouseX, int mouseY) {
+    protected void onMouseMove() {
         ScaledResolution sr = new ScaledResolution(mc);
         float minecraftScale = sr.getScaleFactor();
         float floatMouseX = Mouse.getX() / minecraftScale;

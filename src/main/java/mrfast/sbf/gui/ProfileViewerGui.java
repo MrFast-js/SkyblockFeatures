@@ -188,13 +188,12 @@ public class ProfileViewerGui extends WindowScreen {
     String g = ChatFormatting.GRAY+"";
     // Background colors
     Color mainBackground = SkyblockFeatures.config.mainBackground;
-    JsonObject achievementsJson = null;
 
     public static UIComponent box = null;
     UIComponent statsAreaContainer = null;
     static int screenHeight = Utils.GetMC().currentScreen.height;
     static double fontScale = screenHeight/540d;
-    String playerUuid = "";
+    String playerUuid;
     public static Color clear = new Color(0,0,0,0);
     public ProfileViewerGui(Boolean doAnimation,String username,String profileString) {
         super(ElementaVersion.V2);
@@ -304,14 +303,12 @@ public class ProfileViewerGui extends WindowScreen {
             if (profileString.equals("auto") && latestProfile == null) return;
             String locationURL = "https://api.hypixel.net/status?uuid="+playerUuid+"#GetLocationPV";
             String profileURL = "https://api.hypixel.net/skyblock/profiles?uuid=" + playerUuid+"#GetProfilePV";
-            String achievmentsURL = "https://api.hypixel.net/resources/achievements?uuid=" + playerUuid+"#getAchievmentsPV";
 
             System.out.println("Fetching Hypixel profile...");
             JsonObject profiles = APIUtils.getJSONResponse(profileURL);
 
             JsonObject locationJson = APIUtils.getJSONResponse(locationURL);
-            achievementsJson = APIUtils.getJSONResponse(achievmentsURL).get("achievements").getAsJsonObject();
-            Boolean playerOnline = locationJson.get("session").getAsJsonObject().get("online").getAsBoolean();
+            boolean playerOnline = locationJson.get("session").getAsJsonObject().get("online").getAsBoolean();
             if(playerOnline) {
                 String location = locationJson.get("session").getAsJsonObject().get("mode").getAsString();
                 String formattedLocation = Utils.convertIdToLocation(location);
@@ -447,7 +444,7 @@ public class ProfileViewerGui extends WindowScreen {
         for(JsonElement profile : hypixelProfilesResponse) {
             JsonObject profileObject = profile.getAsJsonObject();
 
-            String gamemode = "";
+            String gamemode;
             String gamemodeIcon = "";
             if(profileObject.has("game_mode")){
                 gamemode=profileObject.get("game_mode").getAsString();
@@ -499,7 +496,7 @@ public class ProfileViewerGui extends WindowScreen {
         }).start();
 
         Integer sbLevelCurrXp = sbLevelXP%100;
-        int sbLevel = (int) Math.floor(sbLevelXP / 100);
+        int sbLevel = (int) Math.floor((double) sbLevelXP / 100);
 
         cleanBox();
         float guiWidth = box.getWidth();
@@ -759,7 +756,7 @@ public class ProfileViewerGui extends WindowScreen {
         Thread networthThread = new Thread(()->{
             JsonObject profiles = APIUtils.getJSONResponse("https://sky.shiiyu.moe/api/v2/profile/"+playerUuid+"#skycryptForNw").get("profiles").getAsJsonObject();
 
-            List<String> networthTooltip = new ArrayList<>(Arrays.asList(ChatFormatting.RED + "Player has API disabled"));
+            List<String> networthTooltip;
             String networth = ChatFormatting.RED+"Loading";
 
             while (profiles.entrySet().isEmpty()) {
@@ -1471,7 +1468,7 @@ public class ProfileViewerGui extends WindowScreen {
                 new UIText(g+"Gemstone Powder: "+ChatFormatting.LIGHT_PURPLE+ChatFormatting.BOLD+nf.format(gemstonePowder)).setY(new SiblingConstraint(2f)).setChildOf(left);
 
                 String pickaxeAbility = "None";
-                try {pickaxeAbility = Utils.convertToTitleCase(miningCore.get("selected_pickaxe_ability").getAsString());} catch (Exception e) {}
+                try {pickaxeAbility = Utils.convertToTitleCase(miningCore.get("selected_pickaxe_ability").getAsString());} catch (Exception ignored) {}
                 new UIText(g+"Pickaxe Ability: "+bold+pickaxeAbility).setY(new SiblingConstraint(2f)).setChildOf(left);
                 drawHotmGrid(miningContainer);
             }
@@ -1569,12 +1566,12 @@ public class ProfileViewerGui extends WindowScreen {
                     int lvl = pet.get("level").getAsJsonObject().get("level").getAsInt();
                     String coloredName = "AA";
                     String tier = pet.get("tier").getAsString();
-                    try {coloredName = ChatFormatting.GRAY+"[Lvl "+lvl+"] "+ItemRarity.getRarityFromName(tier).getBaseColor()+name;} catch (Exception e) {}
+                    try {coloredName = ChatFormatting.GRAY+"[Lvl "+lvl+"] "+ItemRarity.getRarityFromName(tier).getBaseColor()+name;} catch (Exception ignored) {}
                     tooltip.add(0, coloredName);
 
                     if(index==-1) {
                         index++;
-                        UIComponent petComponent = ProfileViewerUtils.createPet(imageFuture,lvl,coloredName,tooltip,ProfileViewerUtils.getPetColor(tier))
+                        UIComponent petComponent = ProfileViewerUtils.createPet(imageFuture,lvl, ProfileViewerUtils.getPetColor(tier))
                                                         .setChildOf(otherPetsContainer)
                                                         .setX(new PixelConstraint(0f))
                                                         .setY(new SiblingConstraint(3f));
@@ -1585,13 +1582,13 @@ public class ProfileViewerGui extends WindowScreen {
                     };
                     float x = (float) ((index-(Math.floor(index/16f)*16))*30f);
                     float y = (float) (Math.floor(index/16f)*35f)+63;
-                    UIComponent petComponent = ProfileViewerUtils.createPet(imageFuture,lvl,coloredName,tooltip,ProfileViewerUtils.getPetColor(tier)).setChildOf(otherPetsContainer).setX(new PixelConstraint(x)).setY(new PixelConstraint(y));
+                    UIComponent petComponent = ProfileViewerUtils.createPet(imageFuture,lvl, ProfileViewerUtils.getPetColor(tier)).setChildOf(otherPetsContainer).setX(new PixelConstraint(x)).setY(new PixelConstraint(y));
 
                     petHoverables.put(petComponent, tooltip);
-                    otherPetsContainer.setHeight(new PixelConstraint(45f*(Math.round(petHoverables.size()/16)+1)));
+                    otherPetsContainer.setHeight(new PixelConstraint(45f*(Math.round((float) petHoverables.size() /16)+1)));
                     index++;
                 }
-            }).start();;
+            }).start();
         }
 
         if(categoryName.equals("Collections")) {
@@ -1828,21 +1825,21 @@ public class ProfileViewerGui extends WindowScreen {
     }
 
     public String stringProgressBar(long total2,Integer total) {
-        Double percent = (double) (total2/total);
+        double percent = (double) (total2/total);
         String progessed = "§2§l§m §2§l§m ";
         String unprogessed = "§f§l§m §f§l§m ";
         int times = (int) (percent*20);
-        String out = "";
+        StringBuilder out = new StringBuilder();
         for(int i=0;i<20;i++) {
-            if(i<times) out+=progessed;
+            if(i<times) out.append(progessed);
             else {
-                out+=unprogessed;
+                out.append(unprogessed);
             }
         }
         return out+"§r §e"+Utils.nf.format(total2)+"§6/§e"+Utils.formatNumber(total);
     }
 
-    public class CollectionTier {
+    public static class CollectionTier {
         boolean maxed;
         int tier;
         int untilNext;

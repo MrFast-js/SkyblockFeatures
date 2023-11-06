@@ -41,7 +41,7 @@ import net.minecraft.nbt.NBTTagCompound;
  */
 
 public class AuctionUtil {
-    private static Gson gson = new Gson();
+    private static final Gson gson = new Gson();
 
     public static JsonObject getApiGZIPSync(String urlS) throws IOException {
         URL url = new URL(urlS);
@@ -51,8 +51,7 @@ public class AuctionUtil {
 
         String response = IOUtils.toString(new GZIPInputStream(connection.getInputStream()), StandardCharsets.UTF_8);
 
-        JsonObject json = gson.fromJson(response, JsonObject.class);
-        return json;
+        return gson.fromJson(response, JsonObject.class);
     }
 
     private final static ExecutorService es = Executors.newFixedThreadPool(3);
@@ -66,50 +65,50 @@ public class AuctionUtil {
 		});
 	}
 
-    public static String getInternalnameFromNBT(NBTTagCompound tag) {
-        String internalname = null;
+    public static String getInternalNameFromNBT(NBTTagCompound tag) {
+        String internalName = null;
         if(tag != null && tag.hasKey("ExtraAttributes", 10)) {
             NBTTagCompound ea = tag.getCompoundTag("ExtraAttributes");
 
             if(ea.hasKey("id", 8)) {
-                internalname = ea.getString("id").replaceAll(":", "-");
+                internalName = ea.getString("id").replaceAll(":", "-");
             } else {
                 return null;
             }
 
-            if("PET".equals(internalname)) {
+            if("PET".equals(internalName)) {
                 String petInfo = ea.getString("petInfo");
-                if(petInfo.length() > 0) {
+                if(!petInfo.isEmpty()) {
                     JsonObject petInfoObject = gson.fromJson(petInfo, JsonObject.class);
-                    internalname = petInfoObject.get("type").getAsString();
+                    internalName = petInfoObject.get("type").getAsString();
                     String tier = petInfoObject.get("tier").getAsString();
                     switch(tier) {
                         case "COMMON":
-                            internalname += ";0"; break;
+                            internalName += ";0"; break;
                         case "UNCOMMON":
-                            internalname += ";1"; break;
+                            internalName += ";1"; break;
                         case "RARE":
-                            internalname += ";2"; break;
+                            internalName += ";2"; break;
                         case "EPIC":
-                            internalname += ";3"; break;
+                            internalName += ";3"; break;
                         case "LEGENDARY":
-                            internalname += ";4"; break;
+                            internalName += ";4"; break;
                         case "MYTHIC":
-                            internalname += ";5"; break;
+                            internalName += ";5"; break;
                     }
                 }
             }
-            if("ENCHANTED_BOOK".equals(internalname)) {
+            if("ENCHANTED_BOOK".equals(internalName)) {
                 NBTTagCompound enchants = ea.getCompoundTag("enchantments");
 
-                for(String enchname : enchants.getKeySet()) {
-                    internalname = enchname.toUpperCase() + ";" + enchants.getInteger(enchname);
+                for(String enchant : enchants.getKeySet()) {
+                    internalName = enchant.toUpperCase() + ";" + enchants.getInteger(enchant);
                     break;
                 }
             }
         }
 
-        return internalname;
+        return internalName;
     }
 
 }

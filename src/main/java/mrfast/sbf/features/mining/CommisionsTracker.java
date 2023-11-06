@@ -105,41 +105,40 @@ public class CommisionsTracker {
 
 
   public static int getTotal(String str) {
-    if(str.contains("Ice Walker")) return 50;
-    if(str.contains("Golden Goblin Slayer")) return 1;
-    if(str.contains("Goblin Slayer")) return 100;
-    if(str.contains("Powder Ghast Puncher")) return 5;
-    if(str.contains("Star Sentry Puncher")) return 10;
-    if(str.contains("2x Mithril Powder Collector")) return 500;
+      if(CrystalHollowsMap.inCrystalHollows) {
+          if(str.contains("Hard Stone Miner") || str.contains("Gemstone Collector")) return 1000;
+          if(str.contains("Chest Looter")) return 3;
+          if(str.contains("Treasurite")) return 13;
+          if(str.contains("Sludge")) return 25;
+          if(str.contains("Yog") || str.contains("Automaton") || str.contains("Goblin Slayer")) return 13;
+          if(str.contains("Thyst")) return 5;
+          if(str.contains("Crystal Hunter")) return 1;
+          if(str.contains("Corleone")) return 1;
+      }
+      if(str.contains("Ice Walker")) return 50;
+      if(str.contains("Golden Goblin Slayer")) return 1;
+      if(str.contains("Goblin Slayer")) return 100;
+      if(str.contains("Powder Ghast Puncher")) return 5;
+      if(str.contains("Star Sentry Puncher")) return 10;
+      if(str.contains("2x Mithril Powder Collector")) return 500;
 
-    if(str.contains("Raffle")) {
-      if(str.contains("Lucky")) return 20;
-      return 1;
-    }
-    if(str.contains("Goblin Raid")) {
-      if(str.contains("Slayer")) return 20;
-      return 1;
-    }
-    if(str.contains("Mithril")) {
-      if(str.contains("Miner")) return 500;
-      return 350;
-    }
-    if(str.contains("Titanium")) {
-      if(str.contains("Miner")) return 15;
-      return 10;
-    }
-
-    // Crystal Hollows
-    if(str.contains("Hard Stone Miner") || str.contains("Gemstone Collector")) return 1000;
-    if(str.contains("Chest Looter")) return 3;
-    if(str.contains("Treasurite")) return 13;
-    if(str.contains("Sludge")) return 25;
-    if(str.contains("Yog") || str.contains("Automaton") || str.contains("Goblin Slayer")) return 13;
-    if(str.contains("Thyst")) return 5;
-    if(str.contains("Crystal Hunter")) return 1;
-    if(str.contains("Corleone")) return 1;
-
-    return -1;
+      if(str.contains("Raffle")) {
+        if(str.contains("Lucky")) return 20;
+        return 1;
+      }
+      if(str.contains("Goblin Raid")) {
+        if(str.contains("Slayer")) return 20;
+        return 1;
+      }
+      if(str.contains("Mithril")) {
+        if(str.contains("Miner")) return 500;
+        return 350;
+      }
+      if(str.contains("Titanium")) {
+        if(str.contains("Miner")) return 15;
+        return 10;
+      }
+      return -1;
   }
 
 }

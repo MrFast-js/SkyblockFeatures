@@ -108,19 +108,4 @@ public class configCommand extends CommandBase {
                 player.addChatMessage(new ChatComponentText("§bSBF ➜ §cThis command doesn't exist!\n  §cUse §b/sbf help§c for a full list of commands"));
         }
     }
-    @MXBean
-    public interface DiagnosticCommandMXBean {
-        String gcClassHistogram(String[] array);
-    }
-
-    private String generateDataUsage() throws Exception {
-        MBeanServer server = ManagementFactory.getPlatformMBeanServer();
-        ObjectName objectName = ObjectName.getInstance("com.sun.management:type=DiagnosticCommand");
-        DiagnosticCommandMXBean proxy = JMX.newMXBeanProxy(
-                server,
-                objectName,
-                DiagnosticCommandMXBean.class
-        );
-        return proxy.gcClassHistogram(new String[0]).replace("[", "[]");
-    }
 }

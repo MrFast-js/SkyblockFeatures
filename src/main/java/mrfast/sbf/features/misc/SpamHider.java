@@ -11,7 +11,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class SpamHider {
 
-    private static void cancelChatPacket(PacketEvent.ReceiveEvent ReceivePacketEvent, boolean addToSpam) {
+    private static void cancelChatPacket(PacketEvent.ReceiveEvent ReceivePacketEvent) {
         if (!(ReceivePacketEvent.packet instanceof S02PacketChat)) return;
         ReceivePacketEvent.setCanceled(true);
         S02PacketChat packet = ((S02PacketChat) ReceivePacketEvent.packet);
@@ -31,7 +31,7 @@ public class SpamHider {
                 // Dont remove messages from the auction house
                 if (unformatted.contains("[Auction]") || unformatted.contains("claimed") || unformatted.contains("Bid of") || unformatted.contains("created a") || unformatted.contains("Auction started")) return;
             
-                cancelChatPacket(event, false);
+                cancelChatPacket(event);
             }
         } catch (Exception e) {
             e.printStackTrace();

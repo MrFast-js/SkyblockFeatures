@@ -234,8 +234,7 @@ public class ConfigGui extends WindowScreen {
                 if(!categoryName.equals(selectedCategory)) ExampleCategory.setColor(defaultCategory);
             });
             ExampleCategory.onMouseClickConsumer((event)->{
-                if(selectedCategory==categoryName) return;
-                selectedCategory = categoryName;
+                if(selectedCategory.equals(categoryName)) return;
                 LoadCategory(categoryName);
             });
         }
@@ -389,19 +388,14 @@ public class ConfigGui extends WindowScreen {
             }
         }
     }
-    public class ExpandableComponent {
+    public static class ExpandableComponent {
         Boolean enabled = false;
-        UIComponent parent = null;
-        String parentName = "";
         List<UIComponent> children = new ArrayList<>();
 
-        public ExpandableComponent() {
-
-        }
+        public ExpandableComponent() {}
     }
     HashMap<String,ExpandableComponent> parentStuff = new HashMap<>();
     public void reloadFeatures(UIComponent loadedFeaturesList, float guiHeight, float guiWidth, double fontScale) {
-        int yOffset = 0;
         float Margin = 6f;
         // Default category
         for(String categoryName:categories.keySet()) {
@@ -638,21 +632,21 @@ public class ConfigGui extends WindowScreen {
                         newcomp.setText(valueMap.get(feature)+"");
                         
                         newcomp.onKeyType((component, character, integer) -> {
-                            String cleanNumber = ((String) newcomp.getText()).replaceAll("[^0-9]", "");
-                            if(cleanNumber.length()==0) {
+                            String cleanNumber = newcomp.getText().replaceAll("[^0-9]", "");
+                            if(cleanNumber.isEmpty()) {
                                 comp.setColor(new Color(0x401613));
                                 newcomp.setText("0");
                             } else {
                                 comp.setColor(new Color(0x232323));
                             }
-                            Integer value = 0;
+                            int value = 0;
                             try {
                                 value = Integer.parseInt(cleanNumber);
                             } catch (Exception e) {
                                 // TODO: handle exception
                             }
                             setVariable(feature.name(),value);
-                            newcomp.setText(cleanNumber+"");
+                            newcomp.setText(cleanNumber);
                             return Unit.INSTANCE;
                         });
                     }
@@ -680,7 +674,6 @@ public class ConfigGui extends WindowScreen {
                             Boolean enabled = (Boolean) getVariable(feature.name());
                             ExpandableComponent comp = new ExpandableComponent();
                             comp.enabled = enabled;
-                            comp.parent = border;
                             parentStuff.put(feature.name(),comp);
                         } else {
                             if(parentStuff.get(tag)!=null) {
@@ -739,6 +732,7 @@ public class ConfigGui extends WindowScreen {
 
     public void LoadCategory(String categoryName) {
         quickSwapping = true;
+        selectedCategory = categoryName;
         GuiUtils.openGui(new ConfigGui(false));
     }
 }

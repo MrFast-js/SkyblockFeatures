@@ -23,9 +23,6 @@ import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class GiftTracker {
-
-    public Minecraft mc = Minecraft.getMinecraft();
-
     public static ArrayList<Entity> gifts = new ArrayList<Entity>();
 
     @SubscribeEvent

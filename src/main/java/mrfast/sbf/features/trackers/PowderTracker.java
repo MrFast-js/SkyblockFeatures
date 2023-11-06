@@ -71,7 +71,6 @@ public class PowderTracker {
         new EnderNodeGui();
     }
 
-    static String display = "";
     public static class EnderNodeGui extends UIElement {
         public EnderNodeGui() {
             super("Powder Tracker", new Point(0.2f, 0.0f));

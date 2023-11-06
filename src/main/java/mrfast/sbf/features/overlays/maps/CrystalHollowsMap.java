@@ -185,10 +185,9 @@ public class CrystalHollowsMap {
                         lastPlayerX = x;
                         lastPlayerZ = z;
                         if(SkyblockFeatures.config.CrystalHollowsMapHeads) {
-                            AbstractClientPlayer aplayer = (AbstractClientPlayer) player;
-                            ResourceLocation skin = aplayer.getLocationSkin();
+                            ResourceLocation skin = player.getLocationSkin();
                             GlStateManager.pushMatrix();
-                            DrawHead(x, z, skin, (float) player.rotationYawHead);
+                            DrawHead(x, z, skin, player.rotationYawHead);
                             GlStateManager.popMatrix();
                         } else {
                             GlStateManager.color(1, 1, 1, 1);

@@ -74,7 +74,7 @@ public class APIUtils {
                         return gson.fromJson(in, JsonObject.class);
                     }
                 } else {
-                    System.out.println(EnumChatFormatting.RED+"Unexpected Server Response: " + statusCode+" "+response.toString()+"  "+response.getStatusLine().getReasonPhrase());
+                    System.out.println(EnumChatFormatting.RED+"Unexpected Server Response: " + statusCode+" "+response+"  "+response.getStatusLine().getReasonPhrase());
                 }
             }
         } catch (Exception ex) {
@@ -127,8 +127,6 @@ public class APIUtils {
 
     // Only used for UUID => Username
     public static JsonArray getArrayResponse(String urlString) {
-        EntityPlayer player = Minecraft.getMinecraft().thePlayer;
-
         try {
             HttpGet request = new HttpGet(new URL(urlString).toURI());
 
@@ -174,7 +172,7 @@ public class APIUtils {
         return input.replaceAll("(.{8})(.{4})(.{4})(.{4})(.{12})", "$1-$2-$3-$4-$5");
     }
 
-    private static HashMap<String,String> nameCache = new HashMap<>();
+    private static final HashMap<String,String> nameCache = new HashMap<>();
     public static String getName(String uuid) {
         if(nameCache.containsKey(uuid)) return nameCache.get(uuid);
         try {
@@ -222,9 +220,9 @@ public class APIUtils {
                 break;
             }
         }
-        // This happens if the person hasnt logged on in a while
-        if(latestProfile.equals("")) {
-            System.out.println("No currentt profile found, selecting first");
+        // This happens if the person hasn't logged on in a while
+        if(latestProfile.isEmpty()) {
+            System.out.println("No current profile found, selecting first");
             JsonObject profileJSON = profilesArray.get(0).getAsJsonObject();
             latestProfile = profileJSON.get("profile_id").getAsString();
             cuteName = profileJSON.get("cute_name").getAsString();

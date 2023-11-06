@@ -3,12 +3,10 @@ package mrfast.sbf.features.exoticAuctions;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import mrfast.sbf.utils.GuiUtils;
@@ -51,15 +49,14 @@ public class ExoticAuctions {
     HashMap<String,HashMap<String,Integer>> armorColors = new HashMap<>();
     HashMap<String,String> DefaultArmorColors = new HashMap<>();
 
-    public class ExoticAuction {
-        String auctionId = "";
-        String hexcode = "";
-        String itemName = "";
-        String seller = "";
+    public static class ExoticAuction {
+        String auctionId;
+        String hexcode;
+        String itemName;
         ExoticType type;
-        int price = 0;
-        Boolean bin = false;
-        long msTillEnd = 0;
+        int price;
+        Boolean bin;
+        long msTillEnd;
 
         public ExoticAuction(String aucId,String hex,String itemName,String seller,ExoticType type,Boolean bin,Integer price,Long msTillEnd) {
             this.auctionId=aucId;
@@ -68,13 +65,12 @@ public class ExoticAuctions {
             this.type=type;
             this.bin=bin;
             this.price=price;
-            this.seller=seller;
             this.msTillEnd=msTillEnd;
         }
     }
 
 
-    enum ExoticType {
+    public enum ExoticType {
         FAIRY(ChatFormatting.LIGHT_PURPLE+"FAIRY"),
         EXOTIC(ChatFormatting.RED+"EXOTIC"),
         PURE(ChatFormatting.YELLOW+"PURE"),
@@ -109,7 +105,6 @@ public class ExoticAuctions {
                     checkForNewReloadTime = true;
                     checkingForNewReloadTime = false;
                     foundReloadTime = false;
-                    apiUpdated = true;
                     lastSecond = -1;
                     lowestSecondFound = 60;
                     highestSecondFound = 0;
@@ -279,7 +274,7 @@ public class ExoticAuctions {
                 }
                 if(nbt==null) continue;
 
-                String skyblockItemID = AuctionUtil.getInternalnameFromNBT(nbt.getTagList("i", 10).getCompoundTagAt(0).getCompoundTag("tag"));
+                String skyblockItemID = AuctionUtil.getInternalNameFromNBT(nbt.getTagList("i", 10).getCompoundTagAt(0).getCompoundTag("tag"));
 
                 try {
                     String hex = getHexFromDisplayColor(nbt.getTagList("i", 10).getCompoundTagAt(0).getCompoundTag("tag"));
@@ -303,8 +298,6 @@ public class ExoticAuctions {
         }
     }
     
-    HashMap<String,Double> totalAuctions = new HashMap<>();
-    boolean debugLogging = false;
     public void doExoticStuff(JsonArray products) {
         int c = 0;
         for(JsonElement entry : products) {
@@ -325,8 +318,8 @@ public class ExoticAuctions {
                 }
                 if(nbt==null) continue;
 
-                String skyblockItemID = AuctionUtil.getInternalnameFromNBT(nbt.getTagList("i", 10).getCompoundTagAt(0).getCompoundTag("tag"));
-                Double a = (double) System.currentTimeMillis();
+                String skyblockItemID = AuctionUtil.getInternalNameFromNBT(nbt.getTagList("i", 10).getCompoundTagAt(0).getCompoundTag("tag"));
+                double a = (double) System.currentTimeMillis();
                 long msTillEnd = (long) Math.abs(itemData.get("end").getAsDouble()-a);
 
                 if(skyblockItemID.equals("VELVET_TOP_HAT") ||
@@ -338,7 +331,7 @@ public class ExoticAuctions {
                 }
                 // Bin Flip
                 if(itemData.get("bin").getAsBoolean()) {
-                    Double binPrice = (double) itemData.get("starting_bid").getAsInt();
+                    double binPrice = itemData.get("starting_bid").getAsInt();
                     NBTTagCompound extraAttributes = nbt.getTagList("i", 10).getCompoundTagAt(0).getCompoundTag("tag").getCompoundTag("ExtraAttributes");
                     String name = nbt.getTagList("i", 10).getCompoundTagAt(0).getCompoundTag("tag").getCompoundTag("display").getString("Name");
                     if(getHex(extraAttributes)==-1 || name.contains("✿")) continue;
@@ -346,19 +339,19 @@ public class ExoticAuctions {
                     String hex = getHexFromDisplayColor(nbt.getTagList("i", 10).getCompoundTagAt(0).getCompoundTag("tag"));
 
                     if(isExotic(hex,skyblockItemID)!=null) {
-                        ExoticAuction exotic = new ExoticAuction(auctionId, hex, name,APIUtils.getName(sellerId), isExotic(hex,skyblockItemID), true,binPrice.intValue(),msTillEnd);
+                        ExoticAuction exotic = new ExoticAuction(auctionId, hex, name, APIUtils.getName(sellerId), isExotic(hex, skyblockItemID), true, (int) binPrice, msTillEnd);
                         c++;
                         sendAuctionToChat(exotic);
                     }
                 } else {
-                    Double binPrice = itemData.get("highest_bid_amount").getAsDouble();
+                    double binPrice = itemData.get("highest_bid_amount").getAsDouble();
                     if(binPrice==0) binPrice = itemData.get("starting_bid").getAsDouble();
                     NBTTagCompound extraAttributes = nbt.getTagList("i", 10).getCompoundTagAt(0).getCompoundTag("tag").getCompoundTag("ExtraAttributes");
                     String name = nbt.getTagList("i", 10).getCompoundTagAt(0).getCompoundTag("tag").getCompoundTag("display").getString("Name");
                     if(getHex(extraAttributes)==-1 || name.contains("✿")) continue;
                     String hex = getHexFromDisplayColor(nbt.getTagList("i", 10).getCompoundTagAt(0).getCompoundTag("tag"));
                     if(isExotic(hex,skyblockItemID)!=null) {
-                        ExoticAuction exotic = new ExoticAuction(auctionId, hex, name,APIUtils.getName(sellerId), isExotic(hex,skyblockItemID), false,binPrice.intValue(),msTillEnd);
+                        ExoticAuction exotic = new ExoticAuction(auctionId, hex, name, APIUtils.getName(sellerId), isExotic(hex, skyblockItemID), false, (int) binPrice, msTillEnd);
                         c++;
                         sendAuctionToChat(exotic);
                     }
@@ -444,17 +437,6 @@ public class ExoticAuctions {
 
     static {
         new AutoAuctionGui();
-    }
-
-    public String msToTime(long ms) {
-        String output = "";
-        int seconds = (int) Math.floor((ms / 1000) % 60);
-        int minutes = (int) Math.floor((ms / 1000 / 60) % 60);
-
-        if(minutes>0) output+=minutes+"m ";
-        if(seconds>0 )output+=seconds+"s";
-        
-        return output;
     }
 
     static String display = "Auction API update in 60s";

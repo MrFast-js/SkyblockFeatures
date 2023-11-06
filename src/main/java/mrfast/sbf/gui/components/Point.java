@@ -5,8 +5,8 @@ import net.minecraft.client.gui.ScaledResolution;
 
 public class Point {
 
-    public float x = 0;
-    public float y = 0;
+    public float x;
+    public float y;
 
     public Point(float x, float y) {
         this.x = x;

@@ -46,7 +46,7 @@ public class ThreeWeirdosSolver {
             if(!message.contains(riddleAnswer)) continue;
             
             String npcName = message.substring(6, message.indexOf(":"));
-            Utils.SendMessage(ChatFormatting.RED+""+ChatFormatting.BOLD+npcName+ChatFormatting.YELLOW+""+ChatFormatting.BOLD+" has the reward!");
+            Utils.SendMessage(ChatFormatting.RED+""+ChatFormatting.BOLD+npcName+ChatFormatting.YELLOW+ChatFormatting.BOLD+" has the reward!");
             for(Entity entity:Utils.GetMC().theWorld.loadedEntityList) {
                 if(!(entity instanceof EntityArmorStand)) continue;
                 if(!entity.getCustomNameTag().contains(npcName)) continue;

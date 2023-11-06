@@ -31,16 +31,7 @@ import mrfast.sbf.utils.ItemUtils;
 import mrfast.sbf.utils.Utils;
 
 public class ChatEventListener {
-    public static Minecraft mc = Minecraft.getMinecraft();
 
-    public static boolean alreadySent = false;
-    int barCount = 0;
-
-    @SubscribeEvent
-    public void onWorldChange(WorldEvent.Load event) {
-        barCount = 0;
-    }
-    
     @SubscribeEvent(receiveCanceled = true, priority = EventPriority.HIGHEST)
     public void onChat(ClientChatReceivedEvent event) {
         if (!Utils.isOnHypixel()) return;
@@ -50,10 +41,10 @@ public class ChatEventListener {
             if (SkyblockFeatures.config.DisguisePlayersAs == 8 && SkyblockFeatures.config.playerDiguiser && Utils.inSkyblock) {
                 String name = event.message.getFormattedText().split(": ")[0];
                 String message = event.message.getFormattedText().split(": ")[1];
-                String monkiMessage = "";
+                StringBuilder monkiMessage = new StringBuilder();
                 for(String word:message.split(" ")) {
                     List<String> words = Arrays.asList("Ooh","ooh","ah","Ee","Hoo","Grrr","uuh");
-                    monkiMessage+=words.get((int) Utils.randomNumber(0, 6))+" ";
+                    monkiMessage.append(words.get((int) Utils.randomNumber(0, 6))).append(" ");
                 }
                 event.setCanceled(true);
                 Utils.GetMC().thePlayer.addChatMessage(new ChatComponentText(name+": "+monkiMessage));

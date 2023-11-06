@@ -49,7 +49,7 @@ public class MiningFeatures {
     }
     @SubscribeEvent
     public void onPlayerInteractEvent(BlockChangeEvent event) {
-        if(Utils.inSkyblock && SkyblockFeatures.config.highlightEnderNodes) {
+        if(Utils.inSkyblock && SkyblockFeatures.config.highlightEnderNodes && SkyblockInfo.localLocation.contains("The End")) {
             BlockPos p1 = Utils.GetMC().thePlayer.getPosition();
             BlockPos p2 = event.pos;
             if(p1.distanceSq(p2.getX(), p2.getY(), p2.getZ())<100) enderParticles.clear();
@@ -59,13 +59,13 @@ public class MiningFeatures {
     @SubscribeEvent
     public void onRenderWorld(RenderWorldLastEvent event) {
         if (!Utils.inSkyblock) return;
-        if(SkyblockFeatures.config.highlightEnderNodes && SkyblockInfo.getMap().contains("The End")) {
+        if(SkyblockFeatures.config.highlightEnderNodes && SkyblockInfo.localLocation.contains("The End")) {
             try {
                 if(SkyblockFeatures.config.highlightEnderNodesWalls) GlStateManager.disableDepth();
                 Color endColor = SkyblockFeatures.config.highlightEnderNodesEndstoneColor;
                 Color obiColor = SkyblockFeatures.config.highlightEnderNodesObiColor;
 
-                List<Vec3> drawnPositions = new ArrayList<Vec3>();
+                List<Vec3> drawnPositions = new ArrayList<>();
 
                 for(Vec3 packet:enderParticles) {
                     boolean dupe =false;
@@ -154,13 +154,14 @@ public class MiningFeatures {
         progress = 0;
     }
     BlockPos treasureChest = null;
-    List<Vec3> particles = new ArrayList<Vec3>();
-    List<Vec3> enderParticles = new ArrayList<Vec3>();
+    List<Vec3> particles = new ArrayList<>();
+    List<Vec3> enderParticles = new ArrayList<>();
     int progress = 0;
 
     @SubscribeEvent
-    public void onRecievePacket(PacketEvent.ReceiveEvent event) {
-        if(event.packet instanceof S2APacketParticles && SkyblockFeatures.config.highlightEnderNodes) {
+    public void onReceivePacket(PacketEvent.ReceiveEvent event) {
+        boolean inEnd = SkyblockInfo.localLocation.contains("The End");
+        if(event.packet instanceof S2APacketParticles && SkyblockFeatures.config.highlightEnderNodes && inEnd) {
             S2APacketParticles packet = (S2APacketParticles) event.packet;
             EnumParticleTypes type = packet.getParticleType();
             Vec3 pos = new Vec3(packet.getXCoordinate(),packet.getYCoordinate(),packet.getZCoordinate());

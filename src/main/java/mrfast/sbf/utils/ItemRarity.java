@@ -13,16 +13,16 @@ import java.util.Comparator;
  * @author SteveKunG
  */
 public enum ItemRarity {
-    COMMON("COMMON", EnumChatFormatting.WHITE, new Color(255,255,255),0xFFFFFF),
-    UNCOMMON("UNCOMMON", EnumChatFormatting.GREEN, new Color(85,255,85),0x55FF55),
-    RARE("RARE", EnumChatFormatting.BLUE, new Color(85,85,255),0x5555FF),
-    EPIC("EPIC", EnumChatFormatting.DARK_PURPLE, new Color(190,0,190),0xAA00AA),
-    LEGENDARY("LEGENDARY", EnumChatFormatting.GOLD, new Color(255,170,0),0xFFAA00),
-    MYTHIC("MYTHIC", EnumChatFormatting.LIGHT_PURPLE, new Color(255,85,255),0xFF55FF),
-    SUPREME("SUPREME", EnumChatFormatting.DARK_RED, new Color(170,0,0),0xAA0000),
+    COMMON("COMMON", EnumChatFormatting.WHITE, new Color(255,255,255)),
+    UNCOMMON("UNCOMMON", EnumChatFormatting.GREEN, new Color(85,255,85)),
+    RARE("RARE", EnumChatFormatting.BLUE, new Color(85,85,255)),
+    EPIC("EPIC", EnumChatFormatting.DARK_PURPLE, new Color(190,0,190)),
+    LEGENDARY("LEGENDARY", EnumChatFormatting.GOLD, new Color(255,170,0)),
+    MYTHIC("MYTHIC", EnumChatFormatting.LIGHT_PURPLE, new Color(255,85,255)),
+    SUPREME("SUPREME", EnumChatFormatting.DARK_RED, new Color(170,0,0)),
 
-    SPECIAL("SPECIAL", EnumChatFormatting.RED, new Color(255,85,85), 0xFF5555),
-    VERY_SPECIAL("VERY SPECIAL", EnumChatFormatting.RED, new Color(170,0,0), 0xFF5555);
+    SPECIAL("SPECIAL", EnumChatFormatting.RED, new Color(255,85,85)),
+    VERY_SPECIAL("VERY SPECIAL", EnumChatFormatting.RED, new Color(170,0,0));
 
     private static final ItemRarity[] VALUES = Arrays.stream(values()).sorted(Comparator.comparingInt(ItemRarity::ordinal)).toArray(size -> new ItemRarity[size]);
     private final String name;
@@ -36,7 +36,7 @@ public enum ItemRarity {
         }
     }
 
-    ItemRarity(String name, EnumChatFormatting baseColor, Color color, int code) {
+    ItemRarity(String name, EnumChatFormatting baseColor, Color color) {
         this.name = name;
         this.baseColor = baseColor;
         this.color = color;
@@ -54,28 +54,14 @@ public enum ItemRarity {
         return this.color;
     }
 
-    public static ItemRarity byBaseColor(String color) {
-        for (ItemRarity rarity : values())
-        {
-            if (rarity.baseColor.toString().equals(color))
-            {
-                return rarity;
-            }
-        }
-        return null;
-    }
     public static ItemRarity getRarityFromName(String name) {
         for (ItemRarity rarity : values())
         {
-            if (rarity.name.toString().equals(name))
+            if (rarity.name.equals(name))
             {
                 return rarity;
             }
         }
-        return null;
-    }
-
-    public ItemRarity getNextRarity() {
-        return VALUES[(this.ordinal() + 1) % VALUES.length];
+        return ItemRarity.COMMON;
     }
 }

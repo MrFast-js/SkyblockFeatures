@@ -65,7 +65,7 @@ public class DungeonMap {
 			}
 		}
 
-		GuiUtils.drawGraySquareWithBorder(0, 0, 128, 128, 3);
+		GuiUtils.drawGraySquareWithBorder(0, 0, 128, 128);
 		GlStateManager.pushMatrix();
 		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 
@@ -105,9 +105,9 @@ public class DungeonMap {
     }
 
 	public static class MapPosition {
-	    double rotation = 0;
-		double x = 0;
-		double y = 0;
+	    double rotation ;
+		double x;
+		double y;
 		public MapPosition(double x,double y, double rotation) {
 			this.x = x;
 			this.y = y;
@@ -167,10 +167,10 @@ public class DungeonMap {
 			double f3 = (b0 % 4 + 1) / 4.0;
 			double f4 = (Math.floor(b0 / 4) + 1) / 4.0;
 			worldrenderer.begin(7, DefaultVertexFormats.POSITION_TEX);
-			worldrenderer.pos(-1.0D, 1.0D, (double) ((float) k * -0.001F)).tex((double) f1, (double) f2).endVertex();
-			worldrenderer.pos(1.0D, 1.0D, (double) ((float) k * -0.001F)).tex((double) f3, (double) f2).endVertex();
-			worldrenderer.pos(1.0D, -1.0D, (double) ((float) k * -0.001F)).tex((double) f3, (double) f4).endVertex();
-			worldrenderer.pos(-1.0D, -1.0D, (double) ((float) k * -0.001F)).tex((double) f1, (double) f4).endVertex();
+			worldrenderer.pos(-1.0D, 1.0D, (float) k * -0.001F).tex(f1, f2).endVertex();
+			worldrenderer.pos(1.0D, 1.0D, (float) k * -0.001F).tex(f3, f2).endVertex();
+			worldrenderer.pos(1.0D, -1.0D, (float) k * -0.001F).tex(f3, f4).endVertex();
+			worldrenderer.pos(-1.0D, -1.0D, (float) k * -0.001F).tex(f1, f4).endVertex();
 			tessellator.draw();
 			GlStateManager.popMatrix();
 			k++;
@@ -235,8 +235,7 @@ public class DungeonMap {
 				NetworkPlayerInfo player = tablist.get(intArray[i]);
 				// Find out whos dead
 				if(player.getDisplayName().getUnformattedText().split(" ").length > 1 && player.getDisplayName().getUnformattedText().contains("(DEAD)")) {
-					String name = Utils.cleanColor(player.getDisplayName().getUnformattedText().split(" ")[1]);
-					if(name != null && dungeonTeammates.containsKey("icon-"+i)) {	
+					if(dungeonTeammates.containsKey("icon-"+i)) {
 						playerSkins.clear();
 						playerNames.clear();
 						dungeonTeammates.clear();
@@ -247,8 +246,7 @@ public class DungeonMap {
 		for(int i=0;i<intArray.length;i++) {
 			NetworkPlayerInfo player = tablist.get(intArray[i]);
 			if(player.getDisplayName().getUnformattedText().split(" ").length > 1) {
-				String name = Utils.cleanColor(player.getDisplayName().getUnformattedText().split(" ")[1]);
-				if(name != null && !dungeonTeammates.containsKey("icon-"+i) && !player.getDisplayName().getUnformattedText().contains("(DEAD)")) {	
+				if(!dungeonTeammates.containsKey("icon-" + i) && !player.getDisplayName().getUnformattedText().contains("(DEAD)")) {
 					dungeonTeammates.put("icon-"+i,player);
 				}
 			}
@@ -264,17 +262,16 @@ public class DungeonMap {
 				Integer playerId = Integer.parseInt(mapEntry.getKey().replaceAll("[^0-9]", ""));
 				// Draw self head
 				if(self != "" && playerId == Integer.parseInt(self.replaceAll("[^0-9]", ""))) {
-					EntityPlayer player = Utils.GetMC().thePlayer;
+					AbstractClientPlayer player = Utils.GetMC().thePlayer;
 					if(player != null) {
 						double x = (player.posX)/(mapData.scale*0.8);
 						double z = (player.posZ)/(mapData.scale*0.8);
 						double rotation = player.rotationYawHead;
 						
 						String shortName = player.getName().length()>5?player.getName().substring(0, 5):player.getName();
-						AbstractClientPlayer aplayer = (AbstractClientPlayer) player;
-						ResourceLocation skin = aplayer.getLocationSkin();
-						if(playerHeadOffsetX == null || updateOffset) playerHeadOffsetX = Math.abs(x-Math.round((mapEntry.getValue().func_176112_b()/2)+64));
-						if(playerHeadOffsetY == null || updateOffset) playerHeadOffsetY = Math.abs(z-Math.round((mapEntry.getValue().func_176113_c()/2)+64));
+                        ResourceLocation skin = player.getLocationSkin();
+						if(playerHeadOffsetX == null || updateOffset) playerHeadOffsetX = Math.abs(x-Math.round(((float) mapEntry.getValue().func_176112_b() /2)+64));
+						if(playerHeadOffsetY == null || updateOffset) playerHeadOffsetY = Math.abs(z-Math.round(((float) mapEntry.getValue().func_176113_c() /2)+64));
 						if(updateOffset) updateOffset = false;
 
 						if(closePlayerPosition.containsKey(shortName)) {
@@ -299,7 +296,7 @@ public class DungeonMap {
 						selfHeadPositionX = x;
 						selfHeadPositionY = z;
 						
-						if(skin != DefaultPlayerSkin.getDefaultSkin(aplayer.getUniqueID())) {
+						if(skin != DefaultPlayerSkin.getDefaultSkin(player.getUniqueID())) {
 							closePlayerPosition.put(shortName,new MapPosition(x, z,rotation));
 							float r = player.rotationYawHead;
 							if(SkyblockFeatures.config.dungeonMapCenter) {

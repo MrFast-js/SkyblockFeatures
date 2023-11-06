@@ -21,7 +21,7 @@ public class SecretDisplay {
     static {
         new SecretDisplayGUI();
     }
-    static String display = "Secrets";
+
     public static class SecretDisplayGUI extends UIElement {
 
         public SecretDisplayGUI() {
@@ -66,7 +66,6 @@ public class SecretDisplay {
         public void drawElementExample() {
             ArrayList<String> text = new ArrayList<>();
 
-            String color = "§c";
             text.add("§7Secrets");
             text.add("§c1§7/§c9");
 
