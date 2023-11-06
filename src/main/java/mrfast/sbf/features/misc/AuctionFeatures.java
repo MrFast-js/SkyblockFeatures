@@ -443,11 +443,15 @@ public class AuctionFeatures {
                         if (auctionIdentifier != null) {
                             Double lowestBin = PricingData.lowestBINs.get(auctionIdentifier);
                             Double avgBin = PricingData.averageLowestBINs.get(auctionIdentifier);
-                            if(lowestBin==null||avgBin==null) continue;
+                            String avgBinString = ChatFormatting.RED+"Unknown";
+                            if(avgBin!=null) avgBinString = ChatFormatting.GOLD+Utils.nf.format(avgBin*stack.stackSize);
 
-                            String avgBinString = ChatFormatting.GOLD+Utils.nf.format(avgBin*stack.stackSize);
-                            String lowestBinString = ChatFormatting.GOLD+Utils.nf.format(lowestBin*stack.stackSize);
-                            Float priceToSellAt = (float) Math.round(((lowestBin*0.6+avgBin*0.4))*0.99);
+                            String lowestBinString = ChatFormatting.RED+"Unknown";
+                            if(lowestBin!=null) lowestBinString = ChatFormatting.GOLD+Utils.nf.format(lowestBin*stack.stackSize);
+
+                            Float priceToSellAt = 0f;
+                            if(lowestBin!=null&&avgBin!=null) priceToSellAt = (float) Math.round(((lowestBin*0.6+avgBin*0.4))*0.99);
+
                             JsonObject auctionData = PricingData.getItemAuctionInfo(auctionIdentifier);
                             if(auctionData==null) continue;
                             int volume = auctionData.get("sales").getAsInt();

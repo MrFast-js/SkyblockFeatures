@@ -803,14 +803,15 @@ public class ProfileViewerGui extends WindowScreen {
             long Inventory = Utils.safeGetLong(networthCategories.get("inventory").getAsJsonObject(),"total");
             long enderchest = Utils.safeGetLong(networthCategories.get("enderchest").getAsJsonObject(),"total");
             long accessories = Utils.safeGetLong(networthCategories.get("accessories").getAsJsonObject(),"total");
-
+            total += Museum;
             if(PricingData.bazaarPrices.get("BOOSTER_COOKIE")!=null) irl = (int) ((total/PricingData.bazaarPrices.get("BOOSTER_COOKIE"))*2.4);
+            networth = nf.format(total);
 
             networthTooltip = new ArrayList<>(Arrays.asList(
                 ChatFormatting.AQUA + "Networth",
                 ChatFormatting.ITALIC +""+ ChatFormatting.DARK_GRAY + "Networth calculations by SkyHelper",
                 "",
-                ChatFormatting.GREEN + "Total Networth: " + ChatFormatting.GOLD + nf.format(total),
+                ChatFormatting.GREEN + "Total Networth: " + ChatFormatting.GOLD + networth,
                 ChatFormatting.GREEN + "IRL Worth: " + ChatFormatting.DARK_GREEN+"$" + nf.format(irl),
                 "",
                 ChatFormatting.GREEN + "Purse: " + ChatFormatting.GOLD + Utils.formatNumber(Purse) + Utils.percentOf(Purse,total),
@@ -826,7 +827,6 @@ public class ProfileViewerGui extends WindowScreen {
                 ChatFormatting.GREEN + "Accessories: " + ChatFormatting.GOLD + Utils.formatNumber(accessories) + Utils.percentOf(accessories,total),
                 ChatFormatting.GREEN + "Pets: " + ChatFormatting.GOLD + Utils.formatNumber(pets)+Utils.percentOf(pets,total)
             ));
-            networth = nf.format(networthResponse.get("networth").getAsLong()+Museum);
             ((UIText) networthComponent).setText(g+"Networth: "+bold+networth);
             generalHoverables.put(networthComponent, networthTooltip);
         });
