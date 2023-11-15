@@ -828,6 +828,34 @@ public class Config extends Vigilant {
 
     @Property(
             type = PropertyType.SWITCH,
+            name = "Highlight Pests",
+            description = "Shows where pests are in your garden",
+            category = "§1§rFarming",
+            subcategory = "Garden",
+            searchTags = {"parent"}
+    )
+    public boolean highlightPests = false;
+    @Property(
+            type = PropertyType.COLOR,
+            name = "Pest Highlight Color",
+            description = "",
+            category = "§1§rFarming",
+            subcategory = "Garden",
+            searchTags = {"Highlight Pests"}
+    )
+    public Color highlightPestColor = Color.red;
+    @Property(
+            type = PropertyType.SWITCH,
+            name = "Show Pests Through Walls",
+            description = "§cWarning Use At Own Risk",
+            category = "§1§rFarming",
+            subcategory = "Garden",
+            searchTags = {"Highlight Pests"}
+    )
+    public boolean highlightPestThroughWalls = false;
+
+    @Property(
+            type = PropertyType.SWITCH,
             name = "Composter Overlay",
             description = "Shows extra info inside of the composter menu",
             category = "§1§rFarming",

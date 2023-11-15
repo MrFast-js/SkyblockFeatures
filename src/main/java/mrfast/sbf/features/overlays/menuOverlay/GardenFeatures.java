@@ -1,23 +1,31 @@
 package mrfast.sbf.features.overlays.menuOverlay;
 
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.awt.*;
+import java.util.*;
 import java.util.List;
 
 import com.mojang.realmsclient.gui.ChatFormatting;
 
 import mrfast.sbf.SkyblockFeatures;
 import mrfast.sbf.core.PricingData;
+import mrfast.sbf.core.SkyblockInfo;
 import mrfast.sbf.events.GuiContainerEvent.TitleDrawnEvent;
 import mrfast.sbf.events.SecondPassedEvent;
 import mrfast.sbf.gui.GuiManager;
 import mrfast.sbf.utils.GuiUtils;
 import mrfast.sbf.utils.ItemUtils;
+import mrfast.sbf.utils.RenderUtil;
 import mrfast.sbf.utils.Utils;
 import net.minecraft.client.gui.inventory.GuiChest;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.item.EntityArmorStand;
 import net.minecraft.inventory.ContainerChest;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.item.ItemSkull;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.AxisAlignedBB;
+import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class GardenFeatures {
@@ -180,5 +188,40 @@ public class GardenFeatures {
         if(name.contains("Organic")) return ((double) (nextTier - 40000) /20000)-1;
         if(name.contains("Cost")) return ((double) nextTier)-1;
         return 0;
+    }
+
+    private List<EntityArmorStand> pests = new ArrayList<>();
+    private static final int MAX_BUFFER_TICKS = 20*5;
+
+    @SubscribeEvent
+    public void onRender(RenderWorldLastEvent event) {
+        if (!SkyblockInfo.map.equals("Garden") || !SkyblockFeatures.config.highlightPests) return;
+
+        pests.removeIf((e)-> !e.isEntityAlive());
+        pests.forEach((pest)->{
+            highlightPest(pest,event.partialTicks);
+        });
+
+        for (Entity entity : Utils.GetMC().theWorld.loadedEntityList) {
+            if (entity instanceof EntityArmorStand) {
+                EntityArmorStand armorStand = (EntityArmorStand) entity;
+                ItemStack skull = armorStand.getEquipmentInSlot(4);
+
+                // Simplest way to detect for a pest is to check for moving armor stands
+                boolean isMoving = entity.prevPosX != entity.posX || entity.prevPosY != entity.posY || entity.prevPosZ != entity.posZ || entity.prevRotationPitch != entity.rotationPitch || entity.prevRotationYaw != entity.rotationYaw;
+
+                if (skull != null && skull.getItem() instanceof ItemSkull && entity.isInvisible() && entity.getAir() == 300 && isMoving && !pests.contains(armorStand)) {
+                    pests.add(armorStand);
+                }
+            }
+        }
+    }
+
+    private void highlightPest(EntityArmorStand armorStand, float partialTicks) {
+        AxisAlignedBB aabb = new AxisAlignedBB(armorStand.posX - 0.5, armorStand.posY + 1.25, armorStand.posZ - 0.5, armorStand.posX + 1 - 0.5, armorStand.posY + 2.25, armorStand.posZ + 1 - 0.5);
+
+        if(SkyblockFeatures.config.highlightPestThroughWalls) GlStateManager.disableDepth();
+        RenderUtil.drawOutlinedFilledBoundingBox(aabb, SkyblockFeatures.config.highlightPestColor, partialTicks);
+        if(SkyblockFeatures.config.highlightPestThroughWalls)  GlStateManager.enableDepth();
     }
 }
