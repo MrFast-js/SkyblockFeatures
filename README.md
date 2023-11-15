@@ -174,7 +174,7 @@
 - **/terminal** (*Allows you to practice a f7 dungeon terminal*)
 - **/sky** \<name\> (*gives the link for someone's skyleamoe*)
 - **/inventory** \<name\> (*Displays another players inventory and armor*)
-- **/pv** \<name\> (*Opens a player in the [Profile Viewer](https://github.com/MrFast-js/SkyblockFeatures#profile-viewer)*) (/sfpv will also work incase NEU is overriding /pv)
+- **/pv** \<name\> || **/sfpv** \<name\> (*Opens a player in the [Profile Viewer](https://github.com/MrFast-js/SkyblockFeatures#profile-viewer)*)
 - **/shrug** \<msg\> (*Sends a message followed by a "¯\\_(ツ)_/¯"*)
 - **/flips** \<name\> (*Shows a players auction flipping info*) *Provided by [Cofl](https://sky.coflnet.com/)*
 - **/networth** \<name\> (*Shows you a players networth*) *Provided by [Skycrypt](https://sky.shiiyu.moe/) API*
