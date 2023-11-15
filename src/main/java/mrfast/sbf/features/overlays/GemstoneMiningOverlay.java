@@ -126,7 +126,7 @@ public class GemstoneMiningOverlay {
 
         @Override
         public boolean getToggled() {
-            return Utils.inSkyblock && SkyblockFeatures.config.gemstoneTracker && SkyblockInfo.map.equals("Dwarven Mines");
+            return Utils.inSkyblock && SkyblockFeatures.config.gemstoneTracker && CrystalHollowsMap.inCrystalHollows;
         }
 
         @Override

@@ -99,7 +99,7 @@ public class ExoticAuctions {
 
         if(timeToReload == 10) {
             if((lowestSecondFound!=60 && highestSecondFound!=0)) {
-                Utils.SendMessage(ChatFormatting.GRAY+"Scanning for exotic auctions in 10s ");
+                Utils.SendMessage(ChatFormatting.GRAY+"Scanning for exotic auctions in 10s");
                 if(!apiUpdated) {
                     Utils.SendMessage(ChatFormatting.RED+"The API Didnt update when expected! Restarting tingy..");
                     checkForNewReloadTime = true;

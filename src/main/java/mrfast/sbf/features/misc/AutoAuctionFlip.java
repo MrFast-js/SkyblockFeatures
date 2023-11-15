@@ -188,7 +188,7 @@ public class AutoAuctionFlip {
         }
         if(timeUntilReload == 10) {
             if(earliestApiUpdateTime!=60 && latestApiUpdateTime!=0 && stage==3) {
-                Utils.SendMessage(ChatFormatting.GRAY+"Scanning for auctions in 10s ");
+                Utils.SendMessage(ChatFormatting.GRAY+"Scanning for auctions in 10s");
 
             }
             auctionsFilteredThrough = 0;
