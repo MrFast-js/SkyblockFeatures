@@ -60,6 +60,7 @@
     <ul>
         <li>Crypt Display</li>
         <li>Highlight Dungeon Bats</li>
+        <li>Dungeon Party Display</li>
         <li>Better Dungeon Nametags</li>
         <li>Dungeon Teammate Glowing</li>
         <li>Dungeon Map with Player Heads And Names</li>
@@ -97,7 +98,6 @@
     <h3>Visual</h3>
     <ul>
         <li>Small Items</li>
-        <li>1.7 Animations</li>
         <li>Glowing Players!</li>
         <li>Glowing Items based on rarity</li>
         <li>Glowing Zealots</li>
@@ -124,7 +124,7 @@
     <ul>
         <li>Show Gift Compass Waypoints</li>
         <li>Fairy Soul Helper</li>
-        <li>Fishing Helper</li>
+        <li>Pest Highlighter</li>
         <li>Diana Mythological Helper</li>
         <li>Endernode Highlighter</li>
         <li>Highlight Zealots Spawn Locations</li></li>
@@ -171,11 +171,10 @@
 <div align="center"><img src='https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png'/></div>
 
 ## Cool Commands:
-- **/vm** (*Change the item view model*)
 - **/terminal** (*Allows you to practice a f7 dungeon terminal*)
 - **/sky** \<name\> (*gives the link for someone's skyleamoe*)
 - **/inventory** \<name\> (*Displays another players inventory and armor*)
-- **/pv** \<name\> (*Opens a player in the [Profile Viewer](https://github.com/MrFast-js/SkyblockFeatures#profile-viewer)*) 
+- **/pv** \<name\> (*Opens a player in the [Profile Viewer](https://github.com/MrFast-js/SkyblockFeatures#profile-viewer)*) (/sfpv will also work incase NEU is overriding /pv)
 - **/shrug** \<msg\> (*Sends a message followed by a "¯\\_(ツ)_/¯"*)
 - **/flips** \<name\> (*Shows a players auction flipping info*) *Provided by [Cofl](https://sky.coflnet.com/)*
 - **/networth** \<name\> (*Shows you a players networth*) *Provided by [Skycrypt](https://sky.shiiyu.moe/) API*
