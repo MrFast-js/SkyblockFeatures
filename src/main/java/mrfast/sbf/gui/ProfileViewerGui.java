@@ -614,11 +614,11 @@ public class ProfileViewerGui extends WindowScreen {
         playerBuilder.setProfile(profile);
 
         EssentialAPI.getEssentialComponentFactory().build(playerBuilder)
-            .setChildOf(sidebarArea)
-            .setX(new CenterConstraint())
-            .setY(new CenterConstraint())
-            .setHeight(new RelativeConstraint(0.75f))
-            .setWidth(new RelativeConstraint(0.75f));
+                .setChildOf(sidebarArea)
+                .setX(new CenterConstraint())
+                .setY(new CenterConstraint())
+                .setHeight(new RelativeConstraint(0.75f))
+                .setWidth(new RelativeConstraint(0.75f));
 
         int coopSelectorIndex = -1; // Initialize with a default value
         for (int i = 0; i < coopMemberList.size(); i++) {
@@ -627,7 +627,6 @@ public class ProfileViewerGui extends WindowScreen {
                 break;
             }
         }
-
 
         DropDownComponent coopSelector = (DropDownComponent) new DropDownComponent(coopSelectorIndex, coopMemberList,coopMemberList.size())
             .setChildOf(sidebarArea)

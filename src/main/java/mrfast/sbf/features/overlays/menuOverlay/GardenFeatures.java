@@ -1,6 +1,5 @@
 package mrfast.sbf.features.overlays.menuOverlay;
 
-import java.awt.*;
 import java.util.*;
 import java.util.List;
 
@@ -26,7 +25,9 @@ import net.minecraft.item.ItemSkull;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
+import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
 
 public class GardenFeatures {
     @SubscribeEvent
@@ -190,15 +191,27 @@ public class GardenFeatures {
         return 0;
     }
 
-    private List<EntityArmorStand> pests = new ArrayList<>();
-    private static final int MAX_BUFFER_TICKS = 20*5;
+    private final List<EntityArmorStand> realPests = new ArrayList<>();
+    private final HashMap<EntityArmorStand,Integer> timesMoved = new HashMap<>();
+    private static boolean checkForPests = false;
+    @SubscribeEvent
+    public void onTick(TickEvent.ClientTickEvent event) {
+        timesMoved.forEach((pest, timesMoved)->{
+            if(realPests.contains(pest)) return;
 
+            boolean isMoving = pest.prevPosX != pest.posX || pest.prevPosY != pest.posY || pest.prevPosZ != pest.posZ || pest.prevRotationPitch != pest.rotationPitch || pest.prevRotationYaw != pest.rotationYaw;
+            if(isMoving) {
+                this.timesMoved.put(pest,timesMoved+1);
+                if(timesMoved>5) realPests.add(pest);
+            }
+        });
+    }
     @SubscribeEvent
     public void onRender(RenderWorldLastEvent event) {
-        if (!SkyblockInfo.map.equals("Garden") || !SkyblockFeatures.config.highlightPests) return;
+        if (!SkyblockInfo.map.equals("Garden") || !SkyblockFeatures.config.highlightPests || !checkForPests) return;
 
-        pests.removeIf((e)-> !e.isEntityAlive());
-        pests.forEach((pest)->{
+        realPests.removeIf((e)-> !e.isEntityAlive());
+        realPests.forEach((pest)->{
             highlightPest(pest,event.partialTicks);
         });
 
@@ -210,11 +223,21 @@ public class GardenFeatures {
                 // Simplest way to detect for a pest is to check for moving armor stands
                 boolean isMoving = entity.prevPosX != entity.posX || entity.prevPosY != entity.posY || entity.prevPosZ != entity.posZ || entity.prevRotationPitch != entity.rotationPitch || entity.prevRotationYaw != entity.rotationYaw;
 
-                if (skull != null && skull.getItem() instanceof ItemSkull && entity.isInvisible() && entity.getAir() == 300 && isMoving && !pests.contains(armorStand)) {
-                    pests.add(armorStand);
+                if (skull != null && skull.getItem() instanceof ItemSkull && entity.isInvisible() && entity.getAir() == 300 && isMoving && !realPests.contains(armorStand)) {
+                    timesMoved.putIfAbsent(armorStand,0);
                 }
             }
         }
+    }
+
+    @SubscribeEvent
+    public void onWorldChange(WorldEvent.Load event) {
+        timesMoved.clear();
+        realPests.clear();
+        checkForPests = false;
+        Utils.setTimeout(()->{
+            checkForPests = true;
+        },5000);
     }
 
     private void highlightPest(EntityArmorStand armorStand, float partialTicks) {
