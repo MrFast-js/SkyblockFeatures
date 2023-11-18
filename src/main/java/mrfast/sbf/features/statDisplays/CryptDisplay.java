@@ -53,7 +53,7 @@ public class CryptDisplay {
             float scale = 2f;
             if (this.getToggled() && Minecraft.getMinecraft().thePlayer != null && mc.theWorld != null) {
                 GlStateManager.scale(scale, scale, 0);
-                GuiUtils.drawText(color+"Crypts: 3", 0, 0, GuiUtils.TextStyle.DROP_SHADOW);
+                GuiUtils.drawText(color+"Crypts: "+crypts, 0, 0, GuiUtils.TextStyle.DROP_SHADOW);
                 GlStateManager.scale(1/scale, 1/scale, 0);
             }
         }

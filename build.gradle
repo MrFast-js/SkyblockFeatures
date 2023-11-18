@@ -46,11 +46,14 @@ configurations {
 
 dependencies {
     implementation "gg.essential:essential-1.8.9-forge:12132+g6e2bf4dc5"
+    implementation "gg.essential:elementa-1.8.9-forge:614"
+    implementation "gg.essential:vigilance-1.8.9-forge:295"
 
     // Kotlin Standard Library
     implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.6.10'
 
     implementation "org.spongepowered:mixin:0.7.11-SNAPSHOT"
+    implementation 'org.jetbrains:annotations:24.0.0'
     packageLib("org.spongepowered:mixin:0.7.11-SNAPSHOT")
     annotationProcessor("org.spongepowered:mixin:0.7.11-SNAPSHOT")
 }
