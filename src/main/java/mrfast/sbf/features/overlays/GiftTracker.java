@@ -59,47 +59,47 @@ public class GiftTracker {
                // White gift
                if (texture.contains("White Gift")) {
                   highlightBlock(Color.white, entity.posX-0.5, entity.posY+1.5, entity.posZ-0.5, 1.0D,event.partialTicks);
-                  RenderUtil.draw3DString(StringPos, ChatFormatting.WHITE+"White Gift", 0, event.partialTicks);
+                  RenderUtil.draw3DString(StringPos, ChatFormatting.WHITE+"White Gift", event.partialTicks);
                }
                // Green Gift
                else if (texture.contains("Green Gift")) {
                   highlightBlock(Color.green, entity.posX-0.5, entity.posY+1.5, entity.posZ-0.5, 1.0D,event.partialTicks);
-                  RenderUtil.draw3DString(StringPos, ChatFormatting.GREEN+"Green Gift", 0, event.partialTicks);
+                  RenderUtil.draw3DString(StringPos, ChatFormatting.GREEN+"Green Gift", event.partialTicks);
                }
                // Red Gift
                else if (texture.contains("Red Gift")) {
                   highlightBlock(Color.red, entity.posX-0.5, entity.posY+1.5, entity.posZ-0.5, 1.0D,event.partialTicks);
-                  RenderUtil.draw3DString(StringPos, ChatFormatting.RED+"Red Gift", 0, event.partialTicks);
+                  RenderUtil.draw3DString(StringPos, ChatFormatting.RED+"Red Gift", event.partialTicks);
                }
                // Glacial Talisman
                else if (texture.contains("Talisman")) {
                   highlightBlock(Color.orange, entity.posX-0.5, entity.posY+1.5, entity.posZ-0.5, 1.0D,event.partialTicks);
-                  RenderUtil.draw3DString(StringPos, ChatFormatting.GOLD+"Talisman", 0, event.partialTicks);
+                  RenderUtil.draw3DString(StringPos, ChatFormatting.GOLD+"Talisman", event.partialTicks);
                }
                // Glacial Frag
                else if (texture.contains("Fragment")) {
                   highlightBlock(Color.magenta, entity.posX-0.5, entity.posY+1.5, entity.posZ-0.5, 1.0D,event.partialTicks);
-                  RenderUtil.draw3DString(StringPos, ChatFormatting.LIGHT_PURPLE+"Frag", 0, event.partialTicks);
+                  RenderUtil.draw3DString(StringPos, ChatFormatting.LIGHT_PURPLE+"Frag", event.partialTicks);
                }
                // Packed Ice
                else if (texture.contains("Enchanted Ice")) {
                   highlightBlock(new Color(0x0a0d61), entity.posX-0.5, entity.posY+1.5, entity.posZ-0.5, 1.0D,event.partialTicks);
-                  RenderUtil.draw3DString(StringPos, ChatFormatting.DARK_BLUE+"E. Ice", 0, event.partialTicks);
+                  RenderUtil.draw3DString(StringPos, ChatFormatting.DARK_BLUE+"E. Ice", event.partialTicks);
                }
                // Enchanted Packed Ice
                else if (texture.contains("Enchanted Packed Ice")) {
                   highlightBlock(new Color(0x5317eb), entity.posX-0.5, entity.posY+1.5, entity.posZ-0.5, 1.0D,event.partialTicks);
-                  RenderUtil.draw3DString(StringPos, ChatFormatting.DARK_BLUE+"E. Packed Ice", 0, event.partialTicks);
+                  RenderUtil.draw3DString(StringPos, ChatFormatting.DARK_BLUE+"E. Packed Ice", event.partialTicks);
                }
                // Enchanted Packed Ice
                else if (texture.contains("Glowy Chum Bait")) {
                   highlightBlock(new Color(0x44ad86), entity.posX-0.5, entity.posY+1.5, entity.posZ-0.5, 1.0D,event.partialTicks);
-                  RenderUtil.draw3DString(StringPos, ChatFormatting.DARK_AQUA+"Glowy Chum Bait", 0, event.partialTicks);
+                  RenderUtil.draw3DString(StringPos, ChatFormatting.DARK_AQUA+"Glowy Chum Bait", event.partialTicks);
                }
                // Highlight everything else gray
                else {
                   highlightBlock(Color.lightGray, entity.posX-0.5, entity.posY+1.5, entity.posZ-0.5, 1.0D,event.partialTicks);
-                  RenderUtil.draw3DString(StringPos, ChatFormatting.GRAY+"Trash", 0, event.partialTicks);
+                  RenderUtil.draw3DString(StringPos, ChatFormatting.GRAY+"Trash", event.partialTicks);
                }
             }
          }

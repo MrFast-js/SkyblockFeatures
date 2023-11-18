@@ -128,7 +128,7 @@ public class MiningFeatures {
             if(treasureChest != null) {
                 Vec3 stringPos = new Vec3(treasureChest.getX()+0.5, treasureChest.getY()+1.1, treasureChest.getZ()+0.5);
                 GlStateManager.disableDepth();
-                RenderUtil.draw3DString(stringPos, ChatFormatting.AQUA+""+progress+" / 5", 0xFFFFFF, event.partialTicks);
+                RenderUtil.draw3DString(stringPos, ChatFormatting.AQUA+""+progress+" / 5", event.partialTicks);
                 GlStateManager.enableDepth();
             }
             for(Vec3 packet:particles) {
