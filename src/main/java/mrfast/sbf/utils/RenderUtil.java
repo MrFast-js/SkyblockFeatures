@@ -112,7 +112,7 @@ public class RenderUtil {
     
     }
     
-    public static void draw3DString(Vec3 pos, String text, int color, float partialTicks) {
+    public static void draw3DString(Vec3 pos, String text, float partialTicks) {
         Minecraft mc = Minecraft.getMinecraft();
         EntityPlayer player = mc.thePlayer;
         double x = (pos.xCoord - player.lastTickPosX) + ((pos.xCoord - player.posX) - (pos.xCoord - player.lastTickPosX)) * partialTicks;
@@ -131,7 +131,7 @@ public class RenderUtil {
         GlStateManager.scale(-f1, -f1, -f1);
         GlStateManager.disableBlend();
         GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
-        mc.fontRendererObj.drawString(text, -width, 0, color);
+        mc.fontRendererObj.drawString(text, -width, 0, 0xFFFFFF);
         GlStateManager.popMatrix();
     }
 

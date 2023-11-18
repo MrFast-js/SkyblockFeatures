@@ -10,7 +10,7 @@ import com.mojang.realmsclient.gui.ChatFormatting;
 
 import mrfast.sbf.SkyblockFeatures;
 import mrfast.sbf.commands.TerminalCommand;
-import mrfast.sbf.commands.getNbtCommand;
+import mrfast.sbf.commands.debugCommand;
 import mrfast.sbf.events.GuiContainerEvent;
 import mrfast.sbf.events.SlotClickedEvent;
 import mrfast.sbf.events.GuiContainerEvent.TitleDrawnEvent;
@@ -26,7 +26,6 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.IChatComponent;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -54,12 +53,12 @@ public class HideGlass {
                         if(Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)&&Keyboard.isKeyDown(Keyboard.KEY_LCONTROL)) {
                             NBTTagCompound tag = event.itemStack.getTagCompound();
                             if(tag!=null) {
-                                event.toolTip.add(i+1,ChatFormatting.DARK_GRAY+"DATA: "+getNbtCommand.prettyPrintNBT(tag));
+                                event.toolTip.add(i+1,ChatFormatting.DARK_GRAY+"DATA: "+ debugCommand.prettyPrintNBT(tag));
                             }
                         } else if(Keyboard.isKeyDown(Keyboard.KEY_LCONTROL)) {
                             NBTTagCompound tag = ItemUtils.getExtraAttributes(event.itemStack);
                             if(tag!=null) {
-                                event.toolTip.add(i+1,ChatFormatting.DARK_GRAY+"DATA: "+getNbtCommand.prettyPrintNBT(tag));
+                                event.toolTip.add(i+1,ChatFormatting.DARK_GRAY+"DATA: "+ debugCommand.prettyPrintNBT(tag));
                             }
                         }
                     }
