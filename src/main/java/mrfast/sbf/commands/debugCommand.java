@@ -1,43 +1,54 @@
 package mrfast.sbf.commands;
 
-import java.awt.Toolkit;
-import java.awt.datatransfer.Clipboard;
-import java.awt.datatransfer.StringSelection;
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.ListIterator;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URI;
+import java.net.URL;
+import java.util.*;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import com.mojang.realmsclient.gui.ChatFormatting;
 
+import mrfast.sbf.utils.ScoreboardUtil;
+import mrfast.sbf.utils.TabListUtils;
 import mrfast.sbf.utils.Utils;
 import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraft.client.network.NetworkPlayerInfo;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.nbt.CompressedStreamTools;
+import net.minecraft.event.ClickEvent;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagByteArray;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagIntArray;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.IChatComponent;
 import net.minecraftforge.common.util.Constants;
 
-public class getNbtCommand extends CommandBase {
+public class debugCommand extends CommandBase {
 
 	@Override
     public String getCommandName() {
-        return "getnbt";
+        return "debug";
     }
 
     @Override
     public String getCommandUsage(ICommandSender sender) {
-        return "/getnbt";
+        return "/debug";
+    }
+    static List<String> arguments = Arrays.asList("mobs","tiles","entities","item","sidebar","tab");
+    @Override
+    public List<String> addTabCompletionOptions(ICommandSender sender, String[] args, BlockPos pos) {
+        return arguments;
     }
 
 	@Override
@@ -47,27 +58,122 @@ public class getNbtCommand extends CommandBase {
 
 	@Override
 	public void processCommand(ICommandSender arg0, String[] args) throws CommandException {
-		copyMobData(Utils.GetMC().thePlayer, Utils.GetMC().theWorld.loadedEntityList);
+        if(args.length==0) {
+            invalidUsage();
+            return;
+        }
+
+        int dist = 5;
+        try {
+            if(args.length>1) {
+                dist = Integer.parseInt(args[1].replaceAll("[^0-9]",""));
+            }
+        } catch (Exception ignored) {
+
+        }
+
+        switch (args[0]) {
+            case "mobs":
+                getMobData(false,true,dist);
+                break;
+            case "tiles":
+                getMobData(true,false,dist);
+                break;
+            case "entities":
+                getMobData(true,true,dist);
+                break;
+            case "item":
+                ItemStack heldItem = Utils.GetMC().thePlayer.getHeldItem();
+                if(heldItem != null) {
+                    getItemData(heldItem);
+                } else {
+                    Utils.SendMessage(ChatFormatting.RED + "You must be holding an item!");
+                }
+                break;
+            case "sidebar":
+                getSidebarData();
+                break;
+            case "tablist":
+            case "tab":
+                getTablistData();
+                break;
+            default:
+                invalidUsage();
+                break;
+        }
 	}
 
-    public static final int ENTITY_COPY_RADIUS = 3;
+    public static void invalidUsage() {
+        StringBuilder usage = new StringBuilder(ChatFormatting.RED + "Invalid Usage! " + ChatFormatting.YELLOW + "/debug ");
+        for(String arg:arguments) {
+            usage.append(arg).append(" ");
+        }
+        Utils.SendMessage(usage.toString());
+    }
 
-    public static void copyMobData(EntityPlayerSP player, List<Entity> loadedEntities) {
-        List<Entity> loadedEntitiesCopy = new LinkedList<>(loadedEntities);
-        ListIterator<Entity> loadedEntitiesCopyIterator;
+    public static void getSidebarData() {
+        StringBuilder output = new StringBuilder();
+        int count = 0;
+        List<String> lines = ScoreboardUtil.getSidebarLines();
+
+        Collections.reverse(lines);
+
+        lines.add("\n\n");
+        for(String line:new ArrayList<>(lines)) {
+            lines.add(Utils.cleanColor(line).replaceAll("[^\\x00-\\x7F]", ""));
+        }
+
+        for (String line : lines) {
+            count++;
+            output.append(count).append(": ").append(line).append("\n");
+        }
+
+        uploadData(output.toString());
+    }
+    public static void getTablistData() {
+        StringBuilder output = new StringBuilder();
+        int count = 0;
+        for (NetworkPlayerInfo pi : TabListUtils.getTabEntries()) {
+            count++;
+            output.append(count).append(": ").append(Utils.GetMC().ingameGUI.getTabList().getPlayerName(pi)).append("\n");
+        }
+        uploadData(output.toString());
+    }
+
+    public static void getItemData(ItemStack item) {
+        uploadData(prettyPrintNBT(item.serializeNBT()));
+    }
+
+    public static void getMobData(boolean tileEntities, boolean mobs, int distance) {
+        EntityPlayerSP player = Utils.GetMC().thePlayer;
         StringBuilder stringBuilder = new StringBuilder();
 
-        // We only care about mobs.
-        loadedEntitiesCopy.removeIf(entity -> entity.getDistanceToEntity(player) > ENTITY_COPY_RADIUS);
+        if(mobs) {
+            stringBuilder.append(copyMobEntities(player,distance));
+        }
+        if(tileEntities) {
+            stringBuilder.append(copyTileEntities(player,distance));
+        }
 
+        uploadData(stringBuilder.toString());
+    }
+
+    public static String copyMobEntities(EntityPlayerSP player,int distance) {
+        StringBuilder stringBuilder = new StringBuilder();
+        List<Entity> loadedEntitiesCopy = new LinkedList<>(Utils.GetMC().theWorld.loadedEntityList);
+        ListIterator<Entity> loadedEntitiesCopyIterator;
+
+        loadedEntitiesCopy.removeIf(entity -> entity.getDistanceToEntity(player) > distance);
         loadedEntitiesCopyIterator = loadedEntitiesCopy.listIterator();
 
         // Copy the NBT data from the loaded entities.
         while (loadedEntitiesCopyIterator.hasNext()) {
             Entity entity = loadedEntitiesCopyIterator.next();
             NBTTagCompound entityData = new NBTTagCompound();
+            if(entity.equals(player)) continue;
 
             stringBuilder.append("Class: ").append(entity.getClass().getSimpleName()).append(System.lineSeparator());
+            stringBuilder.append("ID: ").append(entity.getEntityId()).append(System.lineSeparator());
             if (entity.hasCustomName() || EntityPlayer.class.isAssignableFrom(entity.getClass())) {
                 stringBuilder.append("Name: ").append(entity.getName()).append(System.lineSeparator());
             }
@@ -81,14 +187,18 @@ public class getNbtCommand extends CommandBase {
                 stringBuilder.append(System.lineSeparator()).append(System.lineSeparator());
             }
         }
+        return stringBuilder.toString();
+    }
+
+    public static String copyTileEntities(EntityPlayerSP player,int distance) {
+        StringBuilder stringBuilder = new StringBuilder();
+
         List<TileEntity> loadedTileEntitiesCopy = new LinkedList<>(Utils.GetMC().theWorld.loadedTileEntityList);
         ListIterator<TileEntity> loadedTileEntitiesCopyIterator;
 
-        // We only care about mobs.
-        loadedTileEntitiesCopy.removeIf(entity -> player.getPosition().distanceSq(entity.getPos()) > ENTITY_COPY_RADIUS*2);
-
+        loadedTileEntitiesCopy.removeIf(entity -> player.getPosition().distanceSq(entity.getPos()) > Math.pow(distance,2));
         loadedTileEntitiesCopyIterator = loadedTileEntitiesCopy.listIterator();
-        stringBuilder.append("------------------------------ Tile Entitys ------------------------------\n");
+
         // Copy the NBT data from the loaded entities.
         while (loadedTileEntitiesCopyIterator.hasNext()) {
             TileEntity entity = loadedTileEntitiesCopyIterator.next();
@@ -105,12 +215,7 @@ public class getNbtCommand extends CommandBase {
                 stringBuilder.append(System.lineSeparator()).append(System.lineSeparator());
             }
         }
-
-        copyStringToClipboard(stringBuilder.toString(), ChatFormatting.GREEN + "Entity data was copied to clipboard!");
-    }
-
-    public static void copyStringToClipboard(String string, String successMessage) {
-        writeToClipboard(string, successMessage);
+        return stringBuilder.toString();
     }
     
     public static String prettyPrintNBT(NBTBase nbt) {
@@ -204,16 +309,42 @@ public class getNbtCommand extends CommandBase {
         return stringBuilder.toString();
     }
 
-    // Internal methods
-    private static void writeToClipboard(String text, String successMessage) {
-        Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-        StringSelection output = new StringSelection(text);
+    private static void uploadData(String text) {
+        new Thread(()-> {
+            try {
+                URL url = new URL("https://hst.sh/documents");
+                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 
-        try {
-            clipboard.setContents(output, output);
-            Utils.SendMessage(successMessage);
-        } catch (IllegalStateException exception) {
-            Utils.SendMessage(ChatFormatting.RED+"Clipboard not available.");
-        }
+                connection.setRequestMethod("POST");
+                connection.setRequestProperty("Content-Type", "text/plain");
+                connection.setRequestProperty("User-Agent", "Insomnia/2023.5.7");
+                connection.setDoOutput(true);
+
+                try (OutputStream os = connection.getOutputStream()) {
+                    os.write(text.getBytes());
+                }
+
+                int responseCode = connection.getResponseCode();
+                String hostUrl = "";
+                if (responseCode == 200) {
+                    InputStream is = connection.getInputStream();
+                    byte[] responseBody = new byte[is.available()];
+                    is.read(responseBody);
+                    String out = new String(responseBody);
+                    JsonObject json = new Gson().fromJson(out, JsonObject.class);
+                    hostUrl = "https://hst.sh/raw/" + json.get("key").getAsString();
+                } else {
+                    System.out.println("Request failed with code " + responseCode);
+                }
+
+                IChatComponent message = new ChatComponentText(ChatFormatting.GREEN + "Succesfully uploaded debug data!" + ChatFormatting.GOLD + ChatFormatting.BOLD + " Click here to open");
+                message.getChatStyle().setChatClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, hostUrl));
+                Utils.SendMessage(message);
+
+                connection.disconnect();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }).start();
     }
 }
