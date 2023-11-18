@@ -35,6 +35,7 @@ public class ThreeWeirdosSolver {
     @SubscribeEvent
     public void onWorldChange(WorldEvent.Load event) {
         checking.clear();
+        answerChest = null;
     }
     
     @SubscribeEvent(priority = EventPriority.HIGHEST, receiveCanceled = true)
