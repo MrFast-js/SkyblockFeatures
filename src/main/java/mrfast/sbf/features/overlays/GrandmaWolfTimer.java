@@ -5,6 +5,7 @@ import com.mojang.realmsclient.gui.ChatFormatting;
 
 import mrfast.sbf.SkyblockFeatures;
 import mrfast.sbf.events.GuiContainerEvent;
+import mrfast.sbf.events.SkyblockMobEvent;
 import mrfast.sbf.gui.components.Point;
 import mrfast.sbf.gui.components.UIElement;
 import mrfast.sbf.utils.GuiUtils;
@@ -16,7 +17,6 @@ import net.minecraft.inventory.ContainerChest;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
-import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
 
@@ -31,10 +31,10 @@ public class GrandmaWolfTimer {
     public double ThirtyComboSeconds = 0;
     public double currentCombo = 0;
     @SubscribeEvent
-    public void onEntityDeath(LivingDeathEvent event) {
+    public void onEntityDeath(SkyblockMobEvent.Death event) {
         if(!SkyblockFeatures.config.GrandmaWolfTimer) return;
 
-        if(Utils.GetMC().thePlayer.getDistanceToEntity(event.entity)<10 && Utils.GetMC().thePlayer.canEntityBeSeen(event.entity)) {
+        if(Utils.GetMC().thePlayer.getDistanceToEntity(event.getSbMob().skyblockMob)<10 && Utils.GetMC().thePlayer.canEntityBeSeen(event.getSbMob().skyblockMob)) {
             SecondsRemaining = currentCombo;
         }
     }

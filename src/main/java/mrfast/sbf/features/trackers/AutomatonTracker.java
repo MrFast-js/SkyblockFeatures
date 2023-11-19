@@ -1,26 +1,21 @@
 package mrfast.sbf.features.trackers;
 
 import com.mojang.realmsclient.gui.ChatFormatting;
-
 import mrfast.sbf.SkyblockFeatures;
 import mrfast.sbf.core.PricingData;
 import mrfast.sbf.events.SecondPassedEvent;
+import mrfast.sbf.events.SkyblockMobEvent;
 import mrfast.sbf.features.overlays.maps.CrystalHollowsMap;
 import mrfast.sbf.gui.components.Point;
 import mrfast.sbf.gui.components.UIElement;
 import mrfast.sbf.utils.Utils;
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.item.EntityArmorStand;
-import net.minecraft.entity.monster.EntityIronGolem;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class AutomatonTracker {
     private static final Minecraft mc = Minecraft.getMinecraft();
-
     static int Control = 0;
     static int FTX = 0;
     static int Electron = 0;
@@ -33,6 +28,15 @@ public class AutomatonTracker {
     static int oldKills = 0;
     static int seconds = 0;
     static int totalSeconds = 0;
+
+    public void resetParts() {
+        Control = 0;
+        FTX = 0;
+        Electron = 0;
+        Robotron = 0;
+        Superlite = 0;
+        Synthetic = 0;
+    }
     @SubscribeEvent
     public void onload(WorldEvent.Load event) {
         try {
@@ -54,8 +58,10 @@ public class AutomatonTracker {
             }
             if(!hidden) {
                 totalSeconds++;
+                seconds++;
             }
             if(seconds >= 60) {
+                Utils.SendMessage(oldKills +" "+ kills);
                 if(oldKills == kills) {
                     hidden = true;
                     totalSeconds=0;
@@ -65,58 +71,42 @@ public class AutomatonTracker {
             }
         }
     }
-
     @SubscribeEvent
-    public void onEntityDeath(LivingDeathEvent event) {
-        Entity entity = event.entity;
-        if(entity instanceof EntityIronGolem && SkyblockFeatures.config.AutomatonTracker) {
-            for(Entity thing:Utils.GetMC().theWorld.loadedEntityList) {
-                if(thing instanceof EntityArmorStand) {
-                    boolean automaton = entity.getDistance(thing.posX,entity.posY,thing.posZ)<1 && thing.getCustomNameTag().contains("Automaton");
-                    if(automaton && Utils.GetMC().thePlayer.getDistanceToEntity(entity) < 10) {
-                        hidden = false;
-                        kills++;
-                    }
-                }
-            }
+    public void onSbMobSpawn(SkyblockMobEvent.Death event) {
+        if(SkyblockFeatures.config.AutomatonTracker && Utils.GetMC().thePlayer.canEntityBeSeen(event.getSbMob().skyblockMob) && event.getSbMob().skyblockMobId.equals("Automaton")) {
+            hidden = false;
+            kills++;
         }
     }
 
     @SubscribeEvent
     public void onSecond2(SecondPassedEvent event) {
         if(Utils.GetMC().thePlayer == null || !Utils.inSkyblock || !SkyblockFeatures.config.AutomatonTracker) return;
+        resetParts();
         for(int i=0;i<Utils.GetMC().thePlayer.inventory.mainInventory.length;i++) {
             if(Utils.GetMC().thePlayer.inventory.mainInventory[i] != null) {
-                if(i == 0) {
-                    Control = 0;
-                    FTX = 0;
-                    Electron = 0;
-                    Robotron = 0;
-                    Superlite = 0;
-                    Synthetic = 0;
-                }
                 ItemStack stack = Utils.GetMC().thePlayer.inventory.mainInventory[i];
                 String name = Utils.cleanColor(stack.getDisplayName());
                 String item_id = PricingData.getIdentifier(stack);
                 if(item_id != null && PricingData.bazaarPrices.containsKey(item_id)) {
-                        if(name.contains("Control")) {
-                            Control+=stack.stackSize;
-                        }
-                        if(name.contains("FTX")) {
-                            FTX+=stack.stackSize;
-                        }
-                        if(name.contains("Electron")) {
-                            Electron+=stack.stackSize;
-                        }
-                        if(name.contains("Robotron")) {
-                            Robotron+=stack.stackSize;
-                        }
-                        if(name.contains("Superlite")) {
-                            Superlite+=stack.stackSize;
-                        }
-                        if(name.contains("Synthetic")) {
-                            Synthetic += stack.stackSize;
-                        }
+                    if(name.contains("Control")) {
+                        Control+=stack.stackSize;
+                    }
+                    if(name.contains("FTX")) {
+                        FTX+=stack.stackSize;
+                    }
+                    if(name.contains("Electron")) {
+                        Electron+=stack.stackSize;
+                    }
+                    if(name.contains("Robotron")) {
+                        Robotron+=stack.stackSize;
+                    }
+                    if(name.contains("Superlite")) {
+                        Superlite+=stack.stackSize;
+                    }
+                    if(name.contains("Synthetic")) {
+                        Synthetic += stack.stackSize;
+                    }
                 }
             }
         }
