@@ -1232,7 +1232,7 @@ public class Config extends Vigilant {
             category = "§1§rThe End",
             subcategory = "Zealots"
     )
-    public boolean showZealotSpawns = false;
+    public boolean showZealotSpawnAreas = false;
 
     @Property(
             type = PropertyType.SWITCH,

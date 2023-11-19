@@ -5,10 +5,9 @@ import java.io.File;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import com.mojang.realmsclient.gui.ChatFormatting;
+import mrfast.sbf.core.SkyblockMobDetector;
 import mrfast.sbf.features.dungeons.*;
 import net.minecraftforge.fml.common.ModContainer;
 import org.lwjgl.input.Keyboard;
@@ -21,10 +20,9 @@ import mrfast.sbf.commands.ShrugCommand;
 import mrfast.sbf.commands.SkyCommand;
 import mrfast.sbf.commands.TerminalCommand;
 import mrfast.sbf.commands.configCommand;
-import mrfast.sbf.commands.getNbtCommand;
+import mrfast.sbf.commands.debugCommand;
 import mrfast.sbf.commands.pingCommand;
 import mrfast.sbf.commands.pvCommand;
-import mrfast.sbf.commands.sidebarCommand;
 import mrfast.sbf.core.Config;
 import mrfast.sbf.core.PricingData;
 import mrfast.sbf.core.SkyblockInfo;
@@ -164,6 +162,7 @@ public class SkyblockFeatures {
             new MiscFeatures(),
             new DamageOverlays(),
             new Nametags(),
+            new SkyblockMobDetector(),
             new ConjuringCooldown(),
             new SpeedDisplay(),
             new EffectiveHealthDisplay(),
@@ -263,7 +262,7 @@ public class SkyblockFeatures {
         ClientCommandHandler commandHandler = ClientCommandHandler.instance;
 
         List<ICommand> commands = new ArrayList<>();
-        commands.add(new getNbtCommand());
+        commands.add(new debugCommand());
         commands.add(new SkyCommand());
         commands.add(new configCommand());
         commands.add(new TerminalCommand());
@@ -272,7 +271,6 @@ public class SkyblockFeatures {
         commands.add(new DungeonsCommand());
         commands.add(new RepartyCommand());
         commands.add(new pingCommand());
-        commands.add(new sidebarCommand());
         commands.add(new FakePlayerCommand());
         commands.add(new pvCommand());
 
