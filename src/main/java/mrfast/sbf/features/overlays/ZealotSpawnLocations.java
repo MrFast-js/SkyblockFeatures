@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 import com.mojang.realmsclient.gui.ChatFormatting;
 
@@ -17,7 +18,9 @@ import mrfast.sbf.utils.GuiUtils;
 import mrfast.sbf.utils.RenderUtil;
 import mrfast.sbf.utils.Utils;
 import net.minecraft.client.Minecraft;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityArmorStand;
+import net.minecraft.entity.monster.EntityEnderman;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumChatFormatting;
@@ -82,7 +85,7 @@ public class ZealotSpawnLocations {
         if(inNest) {
             for(BlockPos pos:zealotSpawns) {
                 if(pos != null) {
-                    Color color = canSpawnZealots? new Color(0x55FF55):new Color(0xFF5555);
+                    Color color = secondsUntilSpawn==0? new Color(0x55FF55):new Color(0xFF5555);
                     highlightBlock(color, pos.getX(),pos.getY(), pos.getZ(), 5.0D,event.partialTicks);
                 }
             }
@@ -90,15 +93,12 @@ public class ZealotSpawnLocations {
         if(loc.contains("Zealot Bruiser Hideout")) {
             for(BlockPos pos:bruiserSpawns) {
                 if(pos != null) {
-                    Color color = canSpawnBruisers? new Color(0x55FF55):new Color(0xFF5555);
+                    Color color = secondsUntilSpawn==0? new Color(0x55FF55):new Color(0xFF5555);
                     highlightBlock(color, pos.getX(),pos.getY()+1, pos.getZ(), 5.0D,event.partialTicks);
                 }
             }
         }
     }
-
-    static boolean canSpawnZealots = false;
-    static boolean canSpawnBruisers = false;
 
     @SubscribeEvent
     public void onEntityJoinWorld(EntityJoinWorldEvent event) {
@@ -106,15 +106,16 @@ public class ZealotSpawnLocations {
 
         if(SkyblockFeatures.config.showZealotSpawnAreas && Utils.inSkyblock && SkyblockInfo.map.equals("The End")) {
             // Need to do this because skyblock doesnt spawn armor stand with zealot name
+
             Utils.setTimeout(()-> {
-                if (event.entity instanceof EntityArmorStand && inNest) {
-                    if (event.entity.getCustomNameTag().contains("Zealot")) {
+                if (event.entity instanceof EntityEnderman && inNest) {
+                    if(Objects.equals(SkyblockMobDetector.getEntityId(event.entity), "Zealot")) {
                         startTimer = true;
                         secondsUntilSpawn = 10;
                     }
                 }
-                if (event.entity instanceof EntityArmorStand && loc.contains("Zealot Bruiser Hideout")) {
-                    if (event.entity.getCustomNameTag().contains("Bruiser")) {
+                if (event.entity instanceof EntityEnderman && loc.contains("Zealot Bruiser Hideout")) {
+                    if(Objects.equals(SkyblockMobDetector.getEntityId(event.entity), "Zealot Bruiser")) {
                         startTimer = true;
                         secondsUntilSpawn = 10;
                     }
