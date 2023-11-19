@@ -13,6 +13,7 @@ import mrfast.sbf.core.SkyblockMobDetector;
 import mrfast.sbf.events.SecondPassedEvent;
 import mrfast.sbf.gui.components.Point;
 import mrfast.sbf.gui.components.UIElement;
+import mrfast.sbf.utils.GuiUtils;
 import mrfast.sbf.utils.RenderUtil;
 import mrfast.sbf.utils.Utils;
 import net.minecraft.client.Minecraft;
@@ -134,7 +135,11 @@ public class ZealotSpawnLocations {
     public void onSeconds(SecondPassedEvent event) {
         if (!Utils.inSkyblock || !SkyblockFeatures.config.showZealotSpawnAreas) return;
 
-        if(startTimer && secondsUntilSpawn>0) {
+        if(!startTimer) {
+            activeDisplay="";
+            return;
+        }
+        if(secondsUntilSpawn>0) {
             secondsUntilSpawn--;
         }
         
@@ -161,13 +166,13 @@ public class ZealotSpawnLocations {
         public void drawElement() {
             if(mc.thePlayer == null || !Utils.inSkyblock) return;
             if (this.getToggled() && Minecraft.getMinecraft().thePlayer != null && mc.theWorld != null) {
-                mc.fontRendererObj.drawStringWithShadow(activeDisplay, 0, 0, 0xFFFFFF);
+                GuiUtils.drawText(activeDisplay,0,0, GuiUtils.TextStyle.BLACK_OUTLINE);
             }
         }
         @Override
         public void drawElementExample() {
             if(mc.thePlayer == null || !Utils.inSkyblock) return;
-            Utils.GetMC().fontRendererObj.drawStringWithShadow(activeDisplay, 0, 0, 0xFFFFFF);
+            GuiUtils.drawText(EnumChatFormatting.LIGHT_PURPLE + "Zealot Spawn: "+ChatFormatting.DARK_PURPLE+ "10s",0,0, GuiUtils.TextStyle.BLACK_OUTLINE);
         }
 
         @Override
@@ -177,12 +182,12 @@ public class ZealotSpawnLocations {
 
         @Override
         public int getHeight() {
-            return (int) (Utils.GetMC().fontRendererObj.FONT_HEIGHT);
+            return Utils.GetMC().fontRendererObj.FONT_HEIGHT;
         }
 
         @Override
         public int getWidth() {
-            return Utils.GetMC().fontRendererObj.getStringWidth("Bruiser Spawn: Ready ");
+            return Utils.GetMC().fontRendererObj.getStringWidth("Zealot Spawn: Ready ");
         }
     }
 }
