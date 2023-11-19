@@ -14,12 +14,10 @@ import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 public class SkyblockMobDetector {
     static HashMap<Entity,SkyblockMob> skyblockMobHashMap = new HashMap<>();
@@ -32,6 +30,13 @@ public class SkyblockMobDetector {
             this.mobNameEntity = armorStandEntity;
             this.skyblockMob = skyblockMob;
         }
+        public String getSkyblockMobId() {
+            return this.skyblockMobId;
+        }
+        public Entity getSkyblockMob() {
+            return this.skyblockMob;
+        }
+
     }
     @SubscribeEvent
     public void onWorldChange(WorldEvent.Load event) {
@@ -133,6 +138,35 @@ public class SkyblockMobDetector {
     }
 
     public static List<SkyblockMob> getLoadedSkyblockMobs() {
-        return (List<SkyblockMob>) skyblockMobHashMap.values();
+        return new ArrayList<>(skyblockMobHashMap.values());
     }
+
+    public static Entity getEntityByName(String id) {
+        SkyblockMob sbMob = getLoadedSkyblockMobs()
+                .stream()
+                .filter(mob -> mob.getSkyblockMobId().equals(id))
+                .findFirst()
+                .orElse(null);
+        if(sbMob!=null) return sbMob.skyblockMob;
+        else return null;
+    }
+
+    public static List<Entity> getEntitiesByName(String id) {
+        return getLoadedSkyblockMobs()
+                .stream()
+                .filter(mob -> mob.getSkyblockMobId().equals(id))
+                .map(SkyblockMob::getSkyblockMob)
+                .collect(Collectors.toList());
+    }
+
+    public static String getEntityId(Entity entity) {
+        SkyblockMob sbMob = getLoadedSkyblockMobs()
+                .stream()
+                .filter(mob -> mob.getSkyblockMob().equals(entity))
+                .findFirst()
+                .orElse(null);
+        if(sbMob!=null) return sbMob.skyblockMobId;
+        else return null;
+    }
+
 }
