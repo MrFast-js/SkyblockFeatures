@@ -67,7 +67,11 @@ public abstract class MixinRenderGlobal {
     // Instead of key down, check if they are in the lobby
     @Redirect(method = "isRenderEntityOutlines", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/settings/KeyBinding;isKeyDown()Z", ordinal = 0))
     private boolean isKeyDownDisableCheck(KeyBinding keyBinding) {
-        return true;
+        boolean items = SkyblockFeatures.config.glowingItems && Utils.inSkyblock;
+        boolean players = SkyblockFeatures.config.glowingDungeonPlayers && Utils.inDungeons;
+        boolean allPlayers = SkyblockFeatures.config.glowingPlayers && Utils.inSkyblock;
+        boolean zealots = SkyblockFeatures.config.glowingZealots && SkyblockInfo.map.equals("The End");
+        return items || players || allPlayers | zealots;
     }
 
     @Inject(method = "renderEntities", at = @At(value = "INVOKE_STRING", target = "Lnet/minecraft/profiler/Profiler;endStartSection(Ljava/lang/String;)V", shift = At.Shift.BEFORE, ordinal = 2, args = {"ldc=entities"}), locals = LocalCapture.CAPTURE_FAILSOFT) // Optifine version
@@ -113,6 +117,7 @@ public abstract class MixinRenderGlobal {
 
     
     private void displayOutlines(List<Entity> entities, double x, double y, double z, ICamera camera, float partialTicks) {
+
         if (isRenderEntityOutlines()) {
             Minecraft mc = Minecraft.getMinecraft();
             RenderGlobal renderGlobal = mc.renderGlobal;
