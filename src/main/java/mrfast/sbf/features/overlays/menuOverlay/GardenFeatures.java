@@ -10,6 +10,7 @@ import mrfast.sbf.core.PricingData;
 import mrfast.sbf.core.SkyblockInfo;
 import mrfast.sbf.events.GuiContainerEvent.TitleDrawnEvent;
 import mrfast.sbf.events.SecondPassedEvent;
+import mrfast.sbf.events.SkyblockMobEvent;
 import mrfast.sbf.gui.GuiManager;
 import mrfast.sbf.utils.GuiUtils;
 import mrfast.sbf.utils.ItemUtils;
@@ -191,57 +192,17 @@ public class GardenFeatures {
         return 0;
     }
 
-    private final List<EntityArmorStand> realPests = new ArrayList<>();
-    private final HashMap<EntityArmorStand,Integer> timesMoved = new HashMap<>();
-    private static boolean checkForPests = false;
     @SubscribeEvent
-    public void onTick(TickEvent.ClientTickEvent event) {
-        timesMoved.forEach((pest, timesMoved)->{
-            if(realPests.contains(pest)) return;
+    public void onRender(SkyblockMobEvent.Render event) {
+        if (!SkyblockInfo.map.equals("Garden") || !SkyblockFeatures.config.highlightPests || event.getSbMob().getSkyblockMobId()==null) return;
 
-            boolean isMoving = pest.prevPosX != pest.posX || pest.prevPosY != pest.posY || pest.prevPosZ != pest.posZ || pest.prevRotationPitch != pest.rotationPitch || pest.prevRotationYaw != pest.rotationYaw;
-            if(isMoving) {
-                this.timesMoved.put(pest,timesMoved+1);
-                if(timesMoved>5) realPests.add(pest);
-            }
-        });
-    }
-    @SubscribeEvent
-    public void onRender(RenderWorldLastEvent event) {
-        if (!SkyblockInfo.map.equals("Garden") || !SkyblockFeatures.config.highlightPests || !checkForPests) return;
-
-        realPests.removeIf((e)-> !e.isEntityAlive());
-        realPests.forEach((pest)->{
-            highlightPest(pest,event.partialTicks);
-        });
-
-        for (Entity entity : Utils.GetMC().theWorld.loadedEntityList) {
-            if (entity instanceof EntityArmorStand) {
-                EntityArmorStand armorStand = (EntityArmorStand) entity;
-                ItemStack skull = armorStand.getEquipmentInSlot(4);
-
-                // Simplest way to detect for a pest is to check for moving armor stands
-                boolean isMoving = entity.prevPosX != entity.posX || entity.prevPosY != entity.posY || entity.prevPosZ != entity.posZ || entity.prevRotationPitch != entity.rotationPitch || entity.prevRotationYaw != entity.rotationYaw;
-
-                if (skull != null && skull.getItem() instanceof ItemSkull && entity.isInvisible() && entity.getAir() == 300 && isMoving && !realPests.contains(armorStand)) {
-                    timesMoved.putIfAbsent(armorStand,0);
-                }
-            }
+        if(event.getSbMob().getSkyblockMobId().endsWith("Pest")) {
+            highlightPest(event.getSbMob().skyblockMob,event.partialTicks);
         }
     }
 
-    @SubscribeEvent
-    public void onWorldChange(WorldEvent.Load event) {
-        timesMoved.clear();
-        realPests.clear();
-        checkForPests = false;
-        Utils.setTimeout(()->{
-            checkForPests = true;
-        },5000);
-    }
-
-    private void highlightPest(EntityArmorStand armorStand, float partialTicks) {
-        AxisAlignedBB aabb = new AxisAlignedBB(armorStand.posX - 0.5, armorStand.posY + 1.25, armorStand.posZ - 0.5, armorStand.posX + 1 - 0.5, armorStand.posY + 2.25, armorStand.posZ + 1 - 0.5);
+    private void highlightPest(Entity armorStand, float partialTicks) {
+        AxisAlignedBB aabb = new AxisAlignedBB(armorStand.posX - 0.5, armorStand.posY, armorStand.posZ - 0.5, armorStand.posX + 0.5, armorStand.posY + 1, armorStand.posZ + 0.5);
 
         if(SkyblockFeatures.config.highlightPestThroughWalls) GlStateManager.disableDepth();
         RenderUtil.drawOutlinedFilledBoundingBox(aabb, SkyblockFeatures.config.highlightPestColor, partialTicks);

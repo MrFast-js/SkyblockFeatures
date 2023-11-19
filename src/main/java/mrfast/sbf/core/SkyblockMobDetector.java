@@ -45,10 +45,11 @@ public class SkyblockMobDetector {
 
     @SubscribeEvent
     public void onTick(TickEvent.ClientTickEvent event) {
-        if(Utils.GetMC().theWorld==null) return;
+        if(Utils.GetMC().theWorld==null || !Utils.inSkyblock) return;
+
         for(Entity entity:Utils.GetMC().theWorld.loadedEntityList) {
             if(entity instanceof EntityArmorStand && !skyblockMobHashMap.containsKey(entity) && entity.hasCustomName() && entity.getDisplayName().getUnformattedText().contains("❤")) {
-                if(Utils.GetMC().thePlayer.getDistanceToEntity(entity)>20) continue;
+                if(Utils.GetMC().thePlayer.getDistanceToEntity(entity)>30) continue;
                 Entity potentialMob = Utils.GetMC().theWorld.getEntityByID(entity.getEntityId()-1);
                 if(potentialMob==null || !potentialMob.isEntityAlive()) continue;
 
@@ -57,10 +58,9 @@ public class SkyblockMobDetector {
             }
         }
         for (SkyblockMob sbMob : skyblockMobHashMap.values()) {
-            if(Utils.GetMC().thePlayer.getDistanceToEntity(sbMob.skyblockMob)>20) continue;
+            if(Utils.GetMC().thePlayer.getDistanceToEntity(sbMob.skyblockMob)>30) continue;
 
-            boolean nullBefore = sbMob.skyblockMobId==null;
-            if(nullBefore) {
+            if(sbMob.skyblockMobId==null) {
                 updateMobData(sbMob);
                 if(sbMob.skyblockMobId!=null) {
                     MinecraftForge.EVENT_BUS.post(new SkyblockMobEvent.Spawn(sbMob));
@@ -76,9 +76,7 @@ public class SkyblockMobDetector {
             Map.Entry<Entity, SkyblockMob> entry = iterator.next();
             SkyblockMob sbMob = entry.getValue();
 
-            if (sbMob.skyblockMob == null) {
-                iterator.remove();
-            } else if (!sbMob.skyblockMob.isEntityAlive()) {
+            if (!sbMob.skyblockMob.isEntityAlive()) {
                 iterator.remove();
                 if(sbMob.skyblockMobId!=null) {
                     if(Utils.GetMC().thePlayer.getDistanceToEntity(sbMob.mobNameEntity)>30) continue;
@@ -133,6 +131,10 @@ public class SkyblockMobDetector {
             }
             if(regexBeingUsed.equals(dungeonMobRegex)) {
                 sbMob.skyblockMobId = matcher.group(1);
+                // To Help With Better Pest Detection
+                if(rawMobName.startsWith("ൠ")) {
+                    sbMob.skyblockMobId = matcher.group(1)+" Pest";
+                }
             }
         }
     }
@@ -168,5 +170,4 @@ public class SkyblockMobDetector {
         if(sbMob!=null) return sbMob.skyblockMobId;
         else return null;
     }
-
 }
