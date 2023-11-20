@@ -113,7 +113,7 @@ public class IceTreasureTracker {
         public void drawElement() {
             if (this.getToggled() && Minecraft.getMinecraft().thePlayer != null && mc.theWorld != null && !hidden) {
                 String[] lines = {
-                    ChatFormatting.YELLOW+""+ChatFormatting.BOLD+"Ghost Loot Tracker",
+                    ChatFormatting.YELLOW+""+ChatFormatting.BOLD+"Ice Treasure Tracker",
                     ChatFormatting.GREEN+"  Time Elapsed: §r"+Utils.secondsToTime(totalSeconds),
                     ChatFormatting.GREEN+"  Treasures Mined: §r"+Utils.nf.format(iceTreasuresMined),
                     ChatFormatting.GREEN+"  Total Value: §6"+Utils.nf.format(totalMoney),
