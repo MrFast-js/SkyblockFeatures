@@ -247,6 +247,7 @@ public class MythologicalEvent {
         burrow = null;
         startPos = null;
         endPos = null;
+        geyser = null;
         particles.clear();
     }
 }
