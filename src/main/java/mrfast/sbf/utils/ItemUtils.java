@@ -240,13 +240,13 @@ public class ItemUtils {
      */
     public static ItemRarity getRarity(ItemStack item) {
         if (item == null || !item.hasTagCompound())  {
-            return null;
+            return ItemRarity.COMMON;
         }
 
         NBTTagCompound display = item.getSubCompound("display", false);
 
         if (display == null || !display.hasKey("Lore")) {
-            return null;
+            return ItemRarity.COMMON;
         }
 
         NBTTagList lore = display.getTagList("Lore", Constants.NBT.TAG_STRING);
