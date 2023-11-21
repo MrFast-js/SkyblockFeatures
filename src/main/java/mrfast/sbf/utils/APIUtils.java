@@ -191,10 +191,10 @@ public class APIUtils {
         String cuteName = "";
         JsonObject profilesResponse = getJSONResponse("https://api.hypixel.net/skyblock/profiles?uuid=" + uuid);
         if(profilesResponse.toString().length()>2) {
-            System.out.println("GOT https://api.hypixel.net/skyblock/profiles?uuid=" + uuid);
+            if(Utils.isDeveloper()) System.out.println("GOT https://api.hypixel.net/skyblock/profiles?uuid=" + uuid);
         } else {
             Utils.SendMessage(ChatFormatting.RED+"There was a problem with the "+ChatFormatting.YELLOW+"Hypixel API"+ChatFormatting.RED+". Is it down?");
-            System.out.println("FAILED https://api.hypixel.net/skyblock/profiles?uuid=" + uuid);
+            if(Utils.isDeveloper()) System.out.println("FAILED https://api.hypixel.net/skyblock/profiles?uuid=" + uuid);
             GuiUtils.openGui(null);
         }
 
@@ -222,12 +222,12 @@ public class APIUtils {
         }
         // This happens if the person hasn't logged on in a while
         if(latestProfile.isEmpty()) {
-            System.out.println("No current profile found, selecting first");
+            if(Utils.isDeveloper()) System.out.println("No current profile found, selecting first");
             JsonObject profileJSON = profilesArray.get(0).getAsJsonObject();
             latestProfile = profileJSON.get("profile_id").getAsString();
             cuteName = profileJSON.get("cute_name").getAsString();
         }
-        System.out.println("LATEST PROFILE: " + latestProfile + " " + cuteName);
+        if(Utils.isDeveloper()) System.out.println("Found Latest Profile: " + latestProfile + " " + cuteName);
         return latestProfile;
     }
 }

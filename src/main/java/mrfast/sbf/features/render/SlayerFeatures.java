@@ -43,7 +43,7 @@ public class SlayerFeatures {
         if(msg.trim().startsWith("SLAYER QUEST STARTED!")) {
             slayerStarted = System.currentTimeMillis();
         }
-        if(msg.trim().startsWith("SLAYER QUEST COMPLETE!")||msg.trim().startsWith("NICE! SLAYER BOSS SLAIN!")) {
+        if(msg.trim().startsWith("NICE! SLAYER BOSS SLAIN!")) {
             slayerSpawned = System.currentTimeMillis()-slayerSpawned;
             double spawnTime = Math.ceil((double) slayerStarted / 1000);
             double killTime = Math.ceil((double) slayerSpawned / 1000);

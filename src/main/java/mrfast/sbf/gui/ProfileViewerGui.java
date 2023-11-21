@@ -296,7 +296,7 @@ public class ProfileViewerGui extends WindowScreen {
         }
 
 		Thread profileThread = new Thread(() -> {
-			System.out.println("Starting thread ");
+            if(Utils.isDeveloper()) System.out.println("Starting thread ");
 
             hypixelProfilesResponse = null;
             String latestProfile = APIUtils.getLatestProfileID(playerUuid);
@@ -304,7 +304,7 @@ public class ProfileViewerGui extends WindowScreen {
             String locationURL = "https://api.hypixel.net/status?uuid="+playerUuid+"#GetLocationPV";
             String profileURL = "https://api.hypixel.net/skyblock/profiles?uuid=" + playerUuid+"#GetProfilePV";
 
-            System.out.println("Fetching Hypixel profile...");
+            if(Utils.isDeveloper()) System.out.println("Fetching Hypixel profile...");
             JsonObject profiles = APIUtils.getJSONResponse(profileURL);
 
             JsonObject locationJson = APIUtils.getJSONResponse(locationURL);
@@ -318,27 +318,27 @@ public class ProfileViewerGui extends WindowScreen {
             }
 
             if(profiles.has("cause")) {
-                System.out.println(profiles.get("cause").getAsString());
+                if(Utils.isDeveloper()) System.out.println(profiles.get("cause").getAsString());
                 return;
             }
             hypixelProfilesResponse = profiles.get("profiles").getAsJsonArray();
 
             try {
-                System.out.println("Finding Current/specified Profile");
+                if(Utils.isDeveloper()) System.out.println("Finding Current/specified Profile");
                 AtomicBoolean found = new AtomicBoolean(false);
                 hypixelProfilesResponse.forEach((profile)-> {
                     String cuteName = profile.getAsJsonObject().get("cute_name").getAsString();
                     if(profileString.equals("auto")) {
-                        System.out.println(profile.getAsJsonObject().get("profile_id").getAsString()+" vs "+latestProfile);
+                        if(Utils.isDeveloper()) System.out.println(profile.getAsJsonObject().get("profile_id").getAsString()+" vs "+latestProfile);
                         if(profile.getAsJsonObject().get("profile_id").getAsString().equals(latestProfile)) {
-                            System.out.println("Loading Current Profile");
+                            if(Utils.isDeveloper()) System.out.println("Loading Current Profile");
                             loadProfile(cuteName,true);
                             found.set(true);
                         }
                     } else {
-                        System.out.println(profile.getAsJsonObject().get("profile_id").getAsString()+" vs "+profileString);
+                        if(Utils.isDeveloper()) System.out.println(profile.getAsJsonObject().get("profile_id").getAsString()+" vs "+profileString);
                         if(profile.getAsJsonObject().get("profile_id").getAsString().equals(profileString)) {
-                            System.out.println("Loading specified Profile");
+                            if(Utils.isDeveloper()) System.out.println("Loading specified Profile");
                             loadProfile(cuteName,true);
                             found.set(true);
                         }
@@ -394,7 +394,7 @@ public class ProfileViewerGui extends WindowScreen {
     static JsonObject networthResponse = null;
 
     public void loadProfile(String cute_name,Boolean initial) {
-        System.out.println("Loading Profile "+cute_name+ " initial: "+initial);
+        if(Utils.isDeveloper()) System.out.println("Loading Profile "+cute_name+ " initial: "+initial);
         generalHoverables.clear();
         petHoverables.clear();
         HOTMHoverables.clear();
@@ -458,10 +458,10 @@ public class ProfileViewerGui extends WindowScreen {
             }
             if(profileObject.get("cute_name").getAsString().equals(cute_name)) {
                 profileUUID = profileObject.get("profile_id").getAsString();
-                System.out.println("Adding members..");
+                if(Utils.isDeveloper()) System.out.println("Adding members..");
                 for(Entry<String, JsonElement> entry:profileObject.get("members").getAsJsonObject().entrySet()) {
                     String username = APIUtils.getName(entry.getKey());
-                    System.out.println("Adding username: "+username);
+                    if(Utils.isDeveloper()) System.out.println("Adding username: "+username);
                     coopMemberList.add(username);
                 }
             }
@@ -481,18 +481,18 @@ public class ProfileViewerGui extends WindowScreen {
         setSkillsAndSlayers(ProfilePlayerResponse);
 
         int sbLevelXP = 0;
-        System.out.println("getting leveling");
+        if(Utils.isDeveloper()) System.out.println("getting leveling");
         if(ProfilePlayerResponse.has("leveling")) {
            sbLevelXP = ProfilePlayerResponse.get("leveling").getAsJsonObject().get("experience").getAsInt();
+            if(Utils.isDeveloper()) System.out.println("set leveling");
         }
-        System.out.println("set leveling");
 
         profiles = new JsonObject();
-        System.out.println("getting profiles");
+        if(Utils.isDeveloper()) System.out.println("getting profiles");
 
         new Thread(()->{
             profiles = APIUtils.getJSONResponse("https://sky.shiiyu.moe/api/v2/profile/"+playerUuid+"#skycryptForPV").get("profiles").getAsJsonObject();
-            System.out.println("got profiles");
+            if(Utils.isDeveloper()) System.out.println("got profiles");
         }).start();
 
         Integer sbLevelCurrXp = sbLevelXP%100;
@@ -654,7 +654,7 @@ public class ProfileViewerGui extends WindowScreen {
 
         coopSelector.getSelectedText().onSetValue((value)->{
             ProfileViewerUtils.animateX(lastSelectedButton, 8f);
-            System.out.println("Loading PROFILEEE: "+value+" "+selectedProfileUUID);
+            if(Utils.isDeveloper()) System.out.println("Loading Coop Profile: "+value+" "+selectedProfileUUID);
             quickSwapping = true;
             mrfast.sbf.utils.GuiUtils.openGui(new ProfileViewerGui(false,value,selectedProfileUUID));
             return Unit.INSTANCE;
@@ -750,7 +750,7 @@ public class ProfileViewerGui extends WindowScreen {
     }
 
     public void loadNetworth(String profileUUID,String playerUuid,long Purse,long Bank,UIComponent networthComponent) {
-        System.out.println("doing networth");
+        if(Utils.isDeveloper()) System.out.println("Getting networth");
 
         Thread networthThread = new Thread(()->{
             JsonObject profiles = APIUtils.getJSONResponse("https://sky.shiiyu.moe/api/v2/profile/"+playerUuid+"#skycryptForNw").get("profiles").getAsJsonObject();
@@ -927,7 +927,7 @@ public class ProfileViewerGui extends WindowScreen {
     }
 
     public void resetSkillsAndSlayers() {
-        System.out.println("Resetting Skills & Slayers");
+        if(Utils.isDeveloper()) System.out.println("Resetting Skills & Slayers");
         skillApiDisabled = false;
 
         // Reset Skills
@@ -955,7 +955,7 @@ public class ProfileViewerGui extends WindowScreen {
     public void setSkillsAndSlayers(JsonObject userObject) {
         if(userObject==null) return;
 
-        System.out.println("Updating Skills");
+        if(Utils.isDeveloper()) System.out.println("Updating Skills");
         try {
             if (userObject.has("experience_skill_taming")) {
                 double tamingXp = userObject.get("experience_skill_taming").getAsDouble();
@@ -1009,7 +1009,7 @@ public class ProfileViewerGui extends WindowScreen {
         if(tamingLevel.currentXp==0 && farmingLevel.currentXp==0 && miningLevel.currentXp==0 && combatLevel.currentXp==0 && foragingLevel.currentXp==0 && fishingLevel.currentXp==0) {
             skillApiDisabled = true;
         }
-        System.out.println("set skill experience");
+        if(Utils.isDeveloper()) System.out.println("set skill experience");
 
         ProfileViewerUtils.setSlayerSkills(userObject);
     }
@@ -1408,6 +1408,7 @@ public class ProfileViewerGui extends WindowScreen {
         }
 
         if(categoryName.equals("Skills")) {
+
             UIComponent miningContainer = new UIBlock(clear).setWidth(new RelativeConstraint(1f)).setChildOf(statsAreaContainer).setHeight(new RelativeConstraint(0.6f));
             UIComponent farmingFishingContainer = new UIBlock(clear).setWidth(new RelativeConstraint(1f)).setY(new SiblingConstraint(10f)).setChildOf(statsAreaContainer).setHeight(new RelativeConstraint(0.3f));
             UIComponent farmingContainer = new UIBlock(clear).setWidth(new RelativeConstraint(0.45f)).setY(new PixelConstraint(0f)).setChildOf(farmingFishingContainer).setHeight(new RelativeConstraint(1f));
@@ -1471,6 +1472,7 @@ public class ProfileViewerGui extends WindowScreen {
                 new UIText(g+"Pickaxe Ability: "+bold+pickaxeAbility).setY(new SiblingConstraint(2f)).setChildOf(left);
                 drawHotmGrid(miningContainer);
             }
+            if(ProfilePlayerResponse==null) return;;
             {// Farming
                 new UIText(ChatFormatting.YELLOW+""+ChatFormatting.BOLD+"Farming").setChildOf(farmingContainer).setY(new SiblingConstraint(4f)).setX(new CenterConstraint()).setTextScale(new PixelConstraint(2f));
                 int pelts = 0;
@@ -1630,11 +1632,11 @@ public class ProfileViewerGui extends WindowScreen {
     private static UIComponent statsAreaContainerNew;
 
     public void loadCollectionsCategories() {
-        System.out.println("Loading collections");
+        if(Utils.isDeveloper()) System.out.println("Loading collections");
 
         if (collectionsData == null) {
             // Fetch the collections data only if it's not already cached
-            collectionsData = APIUtils.getJSONResponse("https://api.hypixel.net/resources/skyblock/collections#CollectionsForPV").getAsJsonObject();
+            collectionsData = APIUtils.getJSONResponse("https://api.hypixel.net/v2/resources/skyblock/collections#CollectionsForPV").getAsJsonObject();
         }
 
         statsAreaContainerNew = new UIBlock(Color.red)
@@ -1647,7 +1649,7 @@ public class ProfileViewerGui extends WindowScreen {
 
             for (String category : categories) {
                 if (!collectionsData.get("success").getAsBoolean()) {
-                    System.out.println("Error: ");
+                    if(Utils.isDeveloper()) System.out.println("Error: ");
                     return;
                 }
 
@@ -1680,7 +1682,7 @@ public class ProfileViewerGui extends WindowScreen {
             
             statsAreaContainerNew.setHeight(new PixelConstraint(totalHeight)); // Set the parent component's height
 
-            System.out.println("LOADED COLLECTIONS");
+            if(Utils.isDeveloper()) System.out.println("LOADED COLLECTIONS");
         }).start();
     }
 
