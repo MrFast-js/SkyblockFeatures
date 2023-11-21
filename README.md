@@ -21,7 +21,7 @@
 </div>
 <br><br>
 
-*A unSimple 1.8.9 Forge Hypixel Skyblock mod that adds features that are not commonly found in other mods but are very useful*
+*A 1.8.9 Forge Hypixel Skyblock mod that adds features that are not commonly found or are paid in other mods but are very useful. SBF is free and will always be free.*
 
 **For Beta Releases, Suggestions, and Support join the discord! https://discord.gg/MDTEAjbNw8**
 
