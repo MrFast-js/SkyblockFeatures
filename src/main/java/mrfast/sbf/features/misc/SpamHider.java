@@ -27,7 +27,7 @@ public class SpamHider {
         
         try {
             String u = unformatted.toLowerCase();
-            if (u.contains("cheap")||u.contains("/visit")||u.contains("lowballing")||u.contains("selling")||u.contains("buying")||u.contains("visit")||u.contains("ah")||u.contains("auction")||u.contains("/p me")||u.contains("guild")) {
+            if (u.contains("/visit")||u.contains("lowballing")||u.contains("selling")||u.contains("buying")||u.contains("visit")||u.contains("ah")||u.contains("auction")||u.contains("guild")) {
                 // Dont remove messages from the auction house
                 if (unformatted.contains("[Auction]") || unformatted.contains("claimed") || unformatted.contains("Bid of") || unformatted.contains("created a") || unformatted.contains("Auction started")) return;
             
