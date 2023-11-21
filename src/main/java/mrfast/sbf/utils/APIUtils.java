@@ -26,6 +26,8 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
 
+import javax.net.ssl.SSLHandshakeException;
+
 
 public class APIUtils {
 
@@ -77,6 +79,9 @@ public class APIUtils {
                     System.out.println(EnumChatFormatting.RED+"Unexpected Server Response: " + statusCode+" "+response+"  "+response.getStatusLine().getReasonPhrase());
                 }
             }
+        } catch (SSLHandshakeException ex) {
+            // sometimes enrolled, work or school computers will have DNS blocking on all websites except allowed ones
+            player.addChatMessage(new ChatComponentText(EnumChatFormatting.RED + "Your API request has been blocked by your administrator! "));
         } catch (Exception ex) {
             player.addChatMessage(new ChatComponentText(EnumChatFormatting.RED + "An error has occurred."));
             ex.printStackTrace();
