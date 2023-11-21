@@ -10,6 +10,7 @@ import net.minecraft.scoreboard.Scoreboard;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -58,7 +59,11 @@ public class ScoreboardUtil {
             ScorePlayerTeam team = scoreboard.getPlayersTeam(score.getPlayerName());
             lines.add(ScorePlayerTeam.formatPlayerName(team, score.getPlayerName()));
         }
-
-        return lines;
+        List<String> out = new ArrayList<>();
+        for(String line:lines) {
+            out.add(cleanSB(line));
+        }
+        Collections.reverse(out);
+        return out;
     }
 }

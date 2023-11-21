@@ -249,8 +249,7 @@ public class Utils {
         if (inSkyblock) {
             List<String> scoreboard = ScoreboardUtil.getSidebarLines();
             for (String s : scoreboard) {
-                String sCleaned = ScoreboardUtil.cleanSB(s);
-                if ((sCleaned.contains("The Catacombs") && !sCleaned.contains("Queue")) || sCleaned.contains("Cleared:")) {
+                if ((s.contains("The Catacombs") && !s.contains("Queue")) || s.contains("Cleared:")) {
                     inDungeons = true;
                     return;
                 }

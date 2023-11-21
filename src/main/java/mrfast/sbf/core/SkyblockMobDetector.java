@@ -127,7 +127,7 @@ public class SkyblockMobDetector {
                 sbMob.skyblockMobId = matcher.group(1);
             }
             if(regexBeingUsed.equals(slayerMobRegex)) {
-                sbMob.skyblockMobId = matcher.group();
+                sbMob.skyblockMobId = matcher.group()+" Slayer";
             }
             if(regexBeingUsed.equals(dungeonMobRegex)) {
                 sbMob.skyblockMobId = matcher.group(1);

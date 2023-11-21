@@ -235,6 +235,16 @@ public class Config extends Vigilant {
 
     @Property(
             type = PropertyType.SWITCH,
+            name = "Slayer Timer",
+            description = "Shows different timers for slayers including time to spawn and kill.",
+            category = "Slayers",
+            subcategory = "Slayer Timer",
+            searchTags = {"parent"}
+    )
+    public boolean slayerTimer = false;
+
+    @Property(
+            type = PropertyType.SWITCH,
             name = "Highlight Thrown Beacon",
             description = "Highlights the beacon thats thrown by the enderman slayer.",
             category = "Slayers",

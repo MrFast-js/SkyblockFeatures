@@ -116,13 +116,6 @@ public class debugCommand extends CommandBase {
         int count = 0;
         List<String> lines = ScoreboardUtil.getSidebarLines();
 
-        Collections.reverse(lines);
-
-        lines.add("\n\n");
-        for(String line:new ArrayList<>(lines)) {
-            lines.add(Utils.cleanColor(line).replaceAll("[^\\x00-\\x7F]", ""));
-        }
-
         for (String line : lines) {
             count++;
             output.append(count).append(": ").append(line).append("\n");
