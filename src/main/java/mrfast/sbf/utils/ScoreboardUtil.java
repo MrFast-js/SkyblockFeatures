@@ -32,8 +32,10 @@ public class ScoreboardUtil {
 
         return cleaned.toString();
     }
-
     public static List<String> getSidebarLines() {
+        return getSidebarLines(false);
+    }
+    public static List<String> getSidebarLines(boolean clean) {
         List<String> lines = new ArrayList<>();
         if (Minecraft.getMinecraft().theWorld == null) return lines;
         Scoreboard scoreboard = Minecraft.getMinecraft().theWorld.getScoreboard();
@@ -59,11 +61,15 @@ public class ScoreboardUtil {
             ScorePlayerTeam team = scoreboard.getPlayersTeam(score.getPlayerName());
             lines.add(ScorePlayerTeam.formatPlayerName(team, score.getPlayerName()));
         }
-        List<String> out = new ArrayList<>();
-        for(String line:lines) {
-            out.add(cleanSB(line));
+        if(clean) {
+            List<String> out = new ArrayList<>();
+            for (String line : lines) {
+                out.add(cleanSB(line));
+            }
+            Collections.reverse(out);
+            return out;
+        } else {
+            return lines;
         }
-        Collections.reverse(out);
-        return out;
     }
 }
