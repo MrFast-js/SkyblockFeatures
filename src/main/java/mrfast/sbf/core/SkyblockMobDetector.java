@@ -105,7 +105,7 @@ public class SkyblockMobDetector {
 
         String normalMobRegex = "\\[Lv(?:\\d+k?)] (.+?) [\\d.,]+[MkB]?/[\\d.,]+[MkB]?❤";
         String slayerMobRegex = "(?<=☠\\s)\\w+\\s\\w+\\s\\w+";
-        String dungeonMobRegex = "✯?\\s*(?:Flaming|Speedy|Fortified|Stormy|Healthy)?\\s*([\\w\\s]+?)\\s*([\\d.,]+[mkM?]*|[?]+)❤";
+        String dungeonMobRegex = "✯?\\s*(?:Flaming|Super|Healing|Boomer|Golden|Speedy|Fortified|Stormy|Healthy)?\\s*([\\w\\s]+?)\\s*([\\d.,]+[mkM?]*|[?]+)❤";
 
         String regexBeingUsed = null;
         Pattern pattern;
