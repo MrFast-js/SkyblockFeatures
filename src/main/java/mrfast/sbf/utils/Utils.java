@@ -160,6 +160,7 @@ public class Utils {
     public static boolean overrideDevModeValue = false;
     public static boolean isDeveloper() {
         String[] developers = {"Skyblock_Lobby"};
+        if(Utils.GetMC().thePlayer==null) return false;
         boolean dev = Arrays.asList(developers).contains(Utils.GetMC().thePlayer.getName());
         if(overrideDevMode) {
             dev = overrideDevModeValue;
