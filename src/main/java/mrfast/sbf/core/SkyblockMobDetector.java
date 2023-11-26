@@ -1,6 +1,7 @@
 package mrfast.sbf.core;
 
 import com.mojang.realmsclient.gui.ChatFormatting;
+import mrfast.sbf.SkyblockFeatures;
 import mrfast.sbf.events.SkyblockMobEvent;
 import mrfast.sbf.utils.RenderUtil;
 import mrfast.sbf.utils.Utils;
@@ -92,7 +93,7 @@ public class SkyblockMobDetector {
     @SubscribeEvent
     public void onRenderMob(SkyblockMobEvent.Render event) {
         SkyblockMob sbMob = event.getSbMob();
-        if(sbMob.skyblockMobId!=null && Utils.isDeveloper() && Utils.GetMC().thePlayer.canEntityBeSeen(sbMob.skyblockMob)) {
+        if(sbMob.skyblockMobId!=null && Utils.isDeveloper() && Utils.GetMC().thePlayer.canEntityBeSeen(sbMob.skyblockMob) && SkyblockFeatures.config.showMobIds) {
             Vec3 pos = new Vec3(sbMob.skyblockMob.posX,sbMob.skyblockMob.posY+1,sbMob.skyblockMob.posZ);
             GlStateManager.disableDepth();
             RenderUtil.draw3DString(pos, ChatFormatting.YELLOW+sbMob.skyblockMobId,event.partialTicks);

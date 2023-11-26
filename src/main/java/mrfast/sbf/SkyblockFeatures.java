@@ -45,7 +45,6 @@ import mrfast.sbf.features.dungeons.solvers.WaterBoardSolver;
 import mrfast.sbf.features.events.JerryTimer;
 import mrfast.sbf.features.events.MayorJerry;
 import mrfast.sbf.features.events.MythologicalEvent;
-import mrfast.sbf.features.exoticAuctions.ExoticAuctions;
 import mrfast.sbf.features.items.HideGlass;
 import mrfast.sbf.features.items.ItemFeatures;
 import mrfast.sbf.features.mining.CommisionsTracker;
@@ -219,7 +218,6 @@ public class SkyblockFeatures {
             new SkyblockInfo(),
             new Reparty(),
             new ProfileViewerUtils(),
-            new ExoticAuctions(),
             new PartyFinderFeatures(),
             new CollectionOverlay()
         );
