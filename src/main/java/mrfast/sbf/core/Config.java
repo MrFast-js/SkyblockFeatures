@@ -1849,10 +1849,36 @@ public class Config extends Vigilant {
             name = "composterCostLvl",
             description = "",
             category = "General",
-            subcategory = "Item Fov",
+            subcategory = "Hidden",
             hidden = true
     )
     public int costLvl = 0;
+    @Property(
+            type = PropertyType.PARAGRAPH,
+            name = "temporaryAuthKey",
+            category = "Hidden",
+            description = "",
+            subcategory = "Hidden"
+    )
+    public String temporaryAuthKey = "";
+
+    @Property(
+            type = PropertyType.PARAGRAPH,
+            name = "Mod API Url",
+            category = "§eDeveloper",
+            description = "§cDo not change this if you do not know what your doing!",
+            subcategory = "Settings"
+    )
+    public String modAPIURL = "https://app.mrfast-developer.com/";
+
+    @Property(
+            type = PropertyType.SWITCH,
+            name = "Show Mob Ids using SMD",
+            category = "§eDeveloper",
+            description = "",
+            subcategory = "Settings"
+    )
+    public boolean showMobIds = false;
 
     public static File file = new File("./config/skyblockfeatures/config.toml");
     public Config() {

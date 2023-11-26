@@ -213,6 +213,8 @@ public class ConfigGui extends WindowScreen {
 
         // Draw categorys on sidebar
         for(String categoryName:categories.keySet()) {
+            if(categoryName.contains("Developer") && !Utils.isDeveloper()) continue;
+
             UIComponent ExampleCategory = new UIText(categoryName)
                 .setChildOf(sidebarAreaScroll)
                 .setColor(defaultCategory)
