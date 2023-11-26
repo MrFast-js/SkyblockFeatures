@@ -1552,14 +1552,14 @@ public class Config extends Vigilant {
     )
     public boolean autoAuctionFlipSetPurse = false;
 
-    @Property(
-        type = PropertyType.SWITCH,
-        name = "Change Item Estimation",
-        description = "Include stars and enchants into item value estimation. §cNot 100% accurate",
-        category = "§1§rAuction Flipper",
-        subcategory = "Flipper Settings"
-    )
-    public boolean autoFlipAddEnchAndStar = false;
+//    @Property(
+//        type = PropertyType.SWITCH,
+//        name = "Change Item Estimation",
+//        description = "Include stars and enchants into item value estimation. §cNot 100% accurate",
+//        category = "§1§rAuction Flipper",
+//        subcategory = "Flipper Settings"
+//    )
+//    public boolean autoFlipAddEnchAndStar = false;
 
     @Property(
             type = PropertyType.SWITCH,
@@ -1643,60 +1643,6 @@ public class Config extends Vigilant {
             subcategory = "§1§rAuction Flipper Filter"
     )
     public String autoAuctionBlacklist = "bonemerang;soldier;jungle pick;";
-
-    @Property(
-            type = PropertyType.SWITCH,
-            name = "Exotic Auctions Finder",
-            description = "Shows you auctions of exotic, fairy, crystal, spooky dyed armor status.",
-            category = "§1§rExotic Finder",
-            subcategory = "§1§rExotic Finder Settings"
-    )
-    public boolean exoticAuctionFinder = false;
-
-    @Property(
-            type = PropertyType.CHECKBOX,
-            name = "Include Fairy Dyed",
-            description = "Shows you auctions of fairy dyed armor status.",
-            category = "§1§rExotic Finder",
-            subcategory = "§1§rExotic Finder Settings"
-    )
-    public boolean fairyExotics = true;
-
-    @Property(
-            type = PropertyType.CHECKBOX,
-            name = "Include Bleached",
-            description = "Shows you auctions of bleached (default brown) armor status.",
-            category = "§1§rExotic Finder",
-            subcategory = "§1§rExotic Finder Settings"
-    )
-    public boolean bleachedExotics = true;
-
-    @Property(
-            type = PropertyType.CHECKBOX,
-            name = "Include Crystal Dyed",
-            description = "Shows you auctions of crystal dyed armor status.",
-            category = "§1§rExotic Finder",
-            subcategory = "§1§rExotic Finder Settings"
-    )
-    public boolean crystalExotics = true;
-
-    @Property(
-            type = PropertyType.CHECKBOX,
-            name = "Include Spooky Dyed",
-            description = "Shows you auctions of spooky armor status.",
-            category = "§1§rExotic Finder",
-            subcategory = "§1§rExotic Finder Settings"
-    )
-    public boolean spookyExotics = true;
-
-    @Property(
-            type = PropertyType.CHECKBOX,
-            name = "Include Exotics",
-            description = "Shows you auctions of non orignal dyed armor status.",
-            category = "§1§rExotic Finder",
-            subcategory = "§1§rExotic Finder Settings"
-    )
-    public boolean exoticsExotics = true;
 
     @Property(
             type = PropertyType.SWITCH,
@@ -1856,9 +1802,10 @@ public class Config extends Vigilant {
     @Property(
             type = PropertyType.PARAGRAPH,
             name = "temporaryAuthKey",
-            category = "Hidden",
+            category = "General",
             description = "",
-            subcategory = "Hidden"
+            subcategory = "Hidden",
+            hidden = true
     )
     public String temporaryAuthKey = "";
 
@@ -1873,9 +1820,9 @@ public class Config extends Vigilant {
 
     @Property(
             type = PropertyType.SWITCH,
-            name = "Show Mob Ids using SMD",
+            name = "Show mob ids",
             category = "§eDeveloper",
-            description = "",
+            description = "Shows skyblock mob ids on mobs in the world using Skyblock Mob Detector",
             subcategory = "Settings"
     )
     public boolean showMobIds = false;
