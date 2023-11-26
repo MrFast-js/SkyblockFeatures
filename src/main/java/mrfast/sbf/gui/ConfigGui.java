@@ -252,13 +252,12 @@ public class ConfigGui extends WindowScreen {
                     .setHeight(new PixelConstraint(32f))
                     .setY(new RelativeConstraint(0.88f));
         } else {
-            editGuiButton = new UIRoundedRectangle(10f)
-                    .setColor(editGuiUnhovered)
-                    .setX(new PixelConstraint(0.15f * 0.25f * guiWidth))
-                    .setY(new PixelConstraint(0.90f * guiHeight))
-                    .setHeight(new PixelConstraint(0.85f * 0.10f * guiHeight))
-                    .setWidth(new PixelConstraint(0.70f * 0.25f * guiWidth))
-                    .setChildOf(sidebarArea);
+            editGuiButton = new ShadowIcon(new ResourceImageFactory("/assets/skyblockfeatures/gui/default_button.png", true), false)
+                    .setChildOf(sidebarArea)
+                    .setX(new RelativeConstraint(0.04f))
+                    .setWidth(new PixelConstraint(118f))
+                    .setHeight(new PixelConstraint(32f))
+                    .setY(new RelativeConstraint(0.88f));
         }
         
         new UIText("Edit Gui Locations").setColor(editGuiText).setChildOf(editGuiButton)
