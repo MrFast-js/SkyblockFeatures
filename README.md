@@ -154,7 +154,6 @@
     <ul>
         <li>Bin Flipper</li>
         <li>Auction Flipper</li>
-        <li>Exotic Armor Finder</li>
     </ul>
 </details>
 
@@ -173,11 +172,9 @@
 ## Cool Commands:
 - **/terminal** (*Allows you to practice a f7 dungeon terminal*)
 - **/sky** \<name\> (*gives the link for someone's skyleamoe*)
-- **/inventory** \<name\> (*Displays another players inventory and armor*)
 - **/pv** \<name\> || **/sfpv** \<name\> (*Opens a player in the [Profile Viewer](https://github.com/MrFast-js/SkyblockFeatures#profile-viewer)*)
 - **/shrug** \<msg\> (*Sends a message followed by a "¯\\_(ツ)_/¯"*)
 - **/flips** \<name\> (*Shows a players auction flipping info*) *Provided by [Cofl](https://sky.coflnet.com/)*
-- **/networth** \<name\> (*Shows you a players networth*) *Provided by [Skycrypt](https://sky.shiiyu.moe/) API*
 
 <div align="center"><img src='https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png'/></div>
 
