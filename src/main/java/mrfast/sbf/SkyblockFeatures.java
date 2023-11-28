@@ -304,7 +304,7 @@ public class SkyblockFeatures {
     public void initKeybinds(FMLInitializationEvent event) {
         MinecraftForge.EVENT_BUS.register(this);
         ClientRegistry.registerKeyBinding(openBestFlipKeybind);
-
+        ClientRegistry.registerKeyBinding(reloadPartyFinder);
         toggleSprint = new KeyBinding("Toggle Sprint", 0, "Skyblock Features");
         ClientRegistry.registerKeyBinding(toggleSprint);
     }
