@@ -132,16 +132,18 @@ public class PricingData {
             }
             // Get NPC sell prices
             if (npcSellPrices.isEmpty()) {
-                new Thread(() -> {
-                    JsonObject data = APIUtils.getJSONResponse("https://api.hypixel.net/resources/skyblock/items#NpcSellPrices");
-                    JsonArray items = data.get("items").getAsJsonArray();
-                    for (JsonElement item : items) {
-                        JsonObject json = item.getAsJsonObject();
-                        if(json.has("npc_sell_price") && json.has("id")) {
-                            npcSellPrices.put(json.get("id").getAsString(), json.get("npc_sell_price").getAsInt());
+                Utils.setTimeout(()->{
+                    new Thread(() -> {
+                        JsonObject data = APIUtils.getJSONResponse("https://api.hypixel.net/resources/skyblock/items#NpcSellPrices");
+                        JsonArray items = data.get("items").getAsJsonArray();
+                        for (JsonElement item : items) {
+                            JsonObject json = item.getAsJsonObject();
+                            if(json.has("npc_sell_price") && json.has("id")) {
+                                npcSellPrices.put(json.get("id").getAsString(), json.get("npc_sell_price").getAsInt());
+                            }
                         }
-                    }
-                }).start();
+                    }).start();
+                },1000);
             }
         }
     }

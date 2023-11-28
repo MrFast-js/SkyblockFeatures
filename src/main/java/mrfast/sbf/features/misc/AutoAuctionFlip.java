@@ -207,7 +207,7 @@ public class AutoAuctionFlip {
                     it checks the first auction again to see if it changed, if it has then it knows the API updated.
                 */
                 if(Utils.inDungeons || !SkyblockFeatures.config.aucFlipperEnabled || foundReloadTime) return;
-                JsonObject data = APIUtils.getJSONResponse("https://auction-update.mrfastkrunker.workers.dev/");
+                JsonObject data = APIUtils.getJSONResponse(SkyblockFeatures.config.modAPIURL+"update-times");
 
                 setupComplete(data);
             }).start();
@@ -241,11 +241,9 @@ public class AutoAuctionFlip {
                             int pages = 1;//data.get("totalPages").getAsInt();
 
                             // Auction flips dont appear past the first 5 pages due to it filtering out < 5 minutes
-                            if(SkyblockFeatures.config.aucFlipperBins) {
-                                if(!SkyblockFeatures.config.autoFlipAddEnchAndStar) pages = 10;
-                            } else {
-                                if(SkyblockFeatures.config.aucFlipperAucs) pages = 5;
-                            }
+//                            if (SkyblockFeatures.config.aucFlipperBins && SkyblockFeatures.config.autoFlipAddEnchAndStar) {
+//                                pages = 7;
+//                            }
 
                             // Check pages for auctions
                             for(int b=0;b<pages;b++) {
@@ -268,38 +266,40 @@ public class AutoAuctionFlip {
                                 }
                             }
                         }
-                    }, i*1000);
+                    }, i*2000);
                 }
                 Utils.setTimeout(()->{
                     if(!apiUpdated) {
-                        // The flipper needs to set its self up blah blah
-                        new Thread(()->{
-                            JsonObject startingData2 = APIUtils.getJSONResponse("https://api.hypixel.net/skyblock/auctions?page=0");
-                            JsonArray startingProducts2 = startingData2.get("auctions").getAsJsonArray();
-                            String startingUUID2 = startingProducts2.get(0).getAsJsonObject().get("uuid").getAsString();
-                            stopUpdatingTimes = false;
+//                        old code used to find when api updated (not sure if going to use)
 
-                            for(int i=0;i<60;i++) {
-                                Utils.setTimeout(()->{
-                                    if(stopUpdatingTimes) return;
-                                    JsonObject comparingData = APIUtils.getJSONResponse("https://api.hypixel.net/skyblock/auctions?page=0");
-                                    JsonArray comparingProducts = comparingData.get("auctions").getAsJsonArray();
-                                    String comparingUUID = comparingProducts.get(0).getAsJsonObject().get("uuid").getAsString();
-
-                                    if(!Objects.equals(comparingUUID, startingUUID2)) {
-                                        String[] headers = new String[]{"updateTimes="+seconds};
-                                        JsonObject newData = APIUtils.getJSONResponse("https://auction-update.mrfastkrunker.workers.dev#updateTimes=",headers);
-                                        if(newData.get("success").getAsBoolean()) {
-                                            Utils.SendMessage(ChatFormatting.YELLOW+"Updated Searching Times!");
-                                            setupComplete(newData);
-                                            stopUpdatingTimes = true;
-                                        }
-                                    }
-                                },1000*i);
-                            }
-                        }).start();
-                        stage = 1;
-                        Utils.SendMessage(ChatFormatting.RED+"The API Didnt update when expected! Updating Times..");
+//                        new Thread(()->{
+//                            JsonObject startingData2 = APIUtils.getJSONResponse("https://api.hypixel.net/skyblock/auctions?page=0");
+//                            JsonArray startingProducts2 = startingData2.get("auctions").getAsJsonArray();
+//                            String startingUUID2 = startingProducts2.get(0).getAsJsonObject().get("uuid").getAsString();
+//                            stopUpdatingTimes = false;
+//
+//                            for(int i=0;i<60;i++) {
+//                                Utils.setTimeout(()->{
+//                                    if(stopUpdatingTimes) return;
+//                                    JsonObject comparingData = APIUtils.getJSONResponse("https://api.hypixel.net/skyblock/auctions?page=0");
+//                                    JsonArray comparingProducts = comparingData.get("auctions").getAsJsonArray();
+//                                    String comparingUUID = comparingProducts.get(0).getAsJsonObject().get("uuid").getAsString();
+//
+//                                    if(!Objects.equals(comparingUUID, startingUUID2)) {
+//                                        String[] headers = new String[]{"updateTimes="+seconds};
+//                                        Utils.SendMessage("NEW SECONDS "+seconds);
+//                                        JsonObject newData = APIUtils.getJSONResponse("https://auction-update.mrfastkrunker.workers.dev#updateTimes=",headers);
+//                                        if(newData.get("success").getAsBoolean()) {
+//                                            Utils.SendMessage(ChatFormatting.YELLOW+"Updated Searching Times!");
+//                                            setupComplete(newData);
+//                                            stopUpdatingTimes = true;
+//                                        }
+//                                    }
+//                                },1000*i);
+//                            }
+//                        }).start();
+//                        stage = 1;
+                        Utils.SendMessage(ChatFormatting.RED+"The API Didnt update when expected! Current Check Time: "+seconds+"s");
                     }
                 },lengthOfSearch*1000+1500);
             }).start();
@@ -349,9 +349,9 @@ public class AutoAuctionFlip {
                         if(lowestBinPrice==null||avgBinPrice==null) continue;
 
                         // Item Values
-                        Integer estimatedPrice = ItemUtils.getEstimatedItemValue(extraAttributes);
+//                        Integer estimatedPrice = ItemUtils.getEstimatedItemValue(extraAttributes);
                         String auctionId = itemData.get("uuid").toString().replaceAll("\"","");
-                        Integer valueOfTheItem = (int) (SkyblockFeatures.config.autoFlipAddEnchAndStar?estimatedPrice:lowestBinPrice);
+                        Integer valueOfTheItem = lowestBinPrice.intValue();
                         int percentage = (int) Math.floor(((valueOfTheItem/binPrice)-1)*100);
                         JsonObject auctionData = PricingData.getItemAuctionInfo(id);
                         Long enchantValue = ItemUtils.getEnchantsWorth(extraAttributes);
@@ -365,11 +365,11 @@ public class AutoAuctionFlip {
                         if(auctionData!=null) volume = auctionData.get("sales").getAsInt();
 
                         // if the lowest bin is over 1.10x the average then its most likely being manipulated so use the average instead
-                        if(!SkyblockFeatures.config.autoFlipAddEnchAndStar) {
-                            if(lowestBinPrice>1.10*avgBinPrice) {
-                                valueOfTheItem=avgBinPrice.intValue();
-                            }
+//                        if(!SkyblockFeatures.config.autoFlipAddEnchAndStar) {
+                        if(lowestBinPrice>1.10*avgBinPrice) {
+                            valueOfTheItem = avgBinPrice.intValue();
                         }
+//                        }
 
                         auctionsFilteredThrough++;
                         // Filters
@@ -431,8 +431,8 @@ public class AutoAuctionFlip {
                         if(lowestBinPrice==null||avgBinPrice==null) continue;
 
                         // Item values
-                        Integer estimatedPrice = ItemUtils.getEstimatedItemValue(extraAttributes);
-                        Integer valueOfTheItem = (int) (SkyblockFeatures.config.autoFlipAddEnchAndStar?estimatedPrice:lowestBinPrice);
+//                        Integer estimatedPrice = ItemUtils.getEstimatedItemValue(extraAttributes);
+                        Integer valueOfTheItem = lowestBinPrice.intValue();
                         JsonObject auctionData = PricingData.getItemAuctionInfo(id);
                         String auctionId = itemData.get("uuid").toString().replaceAll("\"","");
                         Long enchantValue = ItemUtils.getEnchantsWorth(extraAttributes);;
@@ -442,9 +442,9 @@ public class AutoAuctionFlip {
                         if(auctionData!=null) volume = auctionData.get("sales").getAsInt();
 
                         // if the lowest bin is over 1.10x the average then its most likely being manipulated so use the average instead
-                        if(!SkyblockFeatures.config.autoFlipAddEnchAndStar) {
+//                        if(!SkyblockFeatures.config.autoFlipAddEnchAndStar) {
                             if(lowestBinPrice>1.10*avgBinPrice) valueOfTheItem=avgBinPrice.intValue();
-                        }
+//                        }
 
                         Double profit = valueOfTheItem-bidPrice;
                         double percentage = Math.floor(((valueOfTheItem/bidPrice)-1)*100);
@@ -487,14 +487,14 @@ public class AutoAuctionFlip {
                             text += ChatFormatting.GRAY+"Vol: "+ChatFormatting.AQUA+(auctionData.get("sales").getAsInt())+" sales/day";
 
                             // Additional text if needed
-                            if(SkyblockFeatures.config.autoFlipAddEnchAndStar) {
-                                if (enchantValue > 0)
-                                    text += ChatFormatting.GRAY + " Ench: " + ChatFormatting.AQUA + ePrice;
-                                if (starValue > 0)
-                                    text += ChatFormatting.GRAY + " Stars: " + ChatFormatting.AQUA + sPrice;
-                                if (msTillEnd > 0)
-                                    text += ChatFormatting.YELLOW + " " + Utils.secondsToTime((int) (msTillEnd / 1000));
-                            }
+//                            if(SkyblockFeatures.config.autoFlipAddEnchAndStar) {
+//                                if (enchantValue > 0)
+//                                    text += ChatFormatting.GRAY + " Ench: " + ChatFormatting.AQUA + ePrice;
+//                                if (starValue > 0)
+//                                    text += ChatFormatting.GRAY + " Stars: " + ChatFormatting.AQUA + sPrice;
+//                                if (msTillEnd > 0)
+//                                    text += ChatFormatting.YELLOW + " " + Utils.secondsToTime((int) (msTillEnd / 1000));
+//                            }
 
                             IChatComponent message = new ChatComponentText(text);
                             message.getChatStyle().setChatClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND,"/viewauction "+auctionId));

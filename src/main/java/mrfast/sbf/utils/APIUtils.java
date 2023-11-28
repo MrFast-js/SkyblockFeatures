@@ -4,9 +4,16 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
+import java.time.Duration;
+import java.util.*;
+import java.util.concurrent.CountDownLatch;
+import java.util.stream.Collectors;
 
-import mrfast.sbf.commands.FakePlayerCommand;
+import mrfast.sbf.SkyblockFeatures;
+import net.minecraft.entity.Entity;
+import net.minecraft.util.*;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpVersion;
@@ -23,8 +30,7 @@ import com.mojang.realmsclient.gui.ChatFormatting;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.EnumChatFormatting;
+import org.lwjgl.input.Mouse;
 
 import javax.net.ssl.SSLHandshakeException;
 
@@ -32,6 +38,9 @@ import javax.net.ssl.SSLHandshakeException;
 public class APIUtils {
 
     public static CloseableHttpClient client = HttpClients.custom().setUserAgent("Mozilla/5.0").build();
+    static {
+        SkyblockFeatures.config.temporaryAuthKey="";
+    }
     public static JsonObject getJSONResponse(String urlString) {
         return getJSONResponse(urlString, new String[]{});
     }
@@ -46,11 +55,9 @@ public class APIUtils {
                 System.out.println("Sending request to " + urlString);
             }
         }
-        // Split between 4 proxies to reduce lag
-        int proxyNumber = (int) Utils.randomNumber(1,4);
-        String proxy = "proxy"+proxyNumber;
+
         if(urlString.contains("api.hypixel.net")) {
-            urlString = urlString.replace("api.hypixel.net", proxy+".mrfastkrunker.workers.dev");
+            urlString = urlString.replace("https://api.hypixel.net", SkyblockFeatures.config.modAPIURL+"аpi");
         }
 
         EntityPlayer player = Minecraft.getMinecraft().thePlayer;
@@ -64,26 +71,42 @@ public class APIUtils {
                 request.setHeader(name, value);
             }
 
-            request.setHeader("Authentication", "Skyblock-Features-Mod");
+            if(!SkyblockFeatures.config.temporaryAuthKey.isEmpty()) {
+                request.setHeader("temp-auth-key",SkyblockFeatures.config.temporaryAuthKey);
+            }
+
+            List<String> nearby = Utils.GetMC().theWorld.playerEntities.stream().filter((e)-> !Utils.isNPC(e)).map(EntityPlayer::getUniqueID).map(UUID::toString).limit(20).collect(Collectors.toList());
+            // Server checks 2 random non-duplicate nearby player's uuids and checks if they are online to verify ingame auth
+            request.setHeader("x-players",nearby.toString());
+            // Send player author for logging past requests
+            request.setHeader("x-request-author",Utils.GetMC().thePlayer.toString());
 
             try (CloseableHttpResponse response = client.execute(request)) {
                 HttpEntity entity = response.getEntity();
                 int statusCode = response.getStatusLine().getStatusCode();
 
-                if (statusCode == 200) {
-                    try (BufferedReader in = new BufferedReader(new InputStreamReader(entity.getContent(),StandardCharsets.UTF_8))) {
-                        Gson gson = new Gson();
-                        return gson.fromJson(in, JsonObject.class);
+                try (BufferedReader in = new BufferedReader(new InputStreamReader(entity.getContent(),StandardCharsets.UTF_8))) {
+                    Gson gson = new Gson();
+                    JsonObject out = gson.fromJson(in, JsonObject.class);
+                    if(urlString.contains(SkyblockFeatures.config.modAPIURL)) {
+                        if(out.has("auth-key")) {
+                            SkyblockFeatures.config.temporaryAuthKey = out.get("auth-key").getAsString();
+                            System.out.println("GOT AUTH KEY " + SkyblockFeatures.config.temporaryAuthKey);
+                            return getJSONResponse(urlString, headers);
+                        }
+                        if(statusCode!=200) {
+                            Utils.SendMessage(ChatFormatting.RED+"Server Error: "+out.get("cause").getAsString()+" "+ChatFormatting.YELLOW+ChatFormatting.ITALIC+out.get("err_code")+" "+urlString);
+                            return null;
+                        }
                     }
-                } else {
-                    System.out.println(EnumChatFormatting.RED+"Unexpected Server Response: " + statusCode+" "+response+"  "+response.getStatusLine().getReasonPhrase());
+                    return out;
                 }
             }
         } catch (SSLHandshakeException ex) {
             // sometimes enrolled, work or school computers will have DNS blocking on all websites except allowed ones
-            player.addChatMessage(new ChatComponentText(EnumChatFormatting.RED + "Your API request has been blocked by your administrator! "));
+            player.addChatMessage(new ChatComponentText(EnumChatFormatting.RED + "Your API request has been blocked by your administrator!"));
         } catch (Exception ex) {
-            player.addChatMessage(new ChatComponentText(EnumChatFormatting.RED + "An error has occurred."));
+            System.out.println(urlString);
             ex.printStackTrace();
         }
         return new JsonObject();
@@ -95,6 +118,7 @@ public class APIUtils {
 
         JsonObject json = APIUtils.getJSONResponse("https://api.hypixel.net/player?uuid="+uuid+"#getHypixelRank").get("player").getAsJsonObject();
         String rank = "§7";
+
         if(json.has("mostRecentMonthlyPackageRank")) rank = json.get("mostRecentMonthlyPackageRank").getAsString();
         else if(json.has("newPackageRank")) rank = json.get("newPackageRank").getAsString();
 

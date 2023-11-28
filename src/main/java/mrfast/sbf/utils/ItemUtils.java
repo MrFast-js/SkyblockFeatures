@@ -15,6 +15,7 @@ import mrfast.sbf.core.PricingData;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemSkull;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.*;
 import net.minecraft.util.EnumChatFormatting;
@@ -157,18 +158,16 @@ public class ItemUtils {
         ItemStack itemStack = new ItemStack(item,1,meta);
         NBTTagCompound nbtTagCompound = new NBTTagCompound();
 
-        try {
-            NBTTagCompound nbtTag = JsonToNBT.getTagFromJson(itemData.nbttag);
-            nbtTagCompound.merge(nbtTag);
-        } catch (NBTException e) {
-            e.printStackTrace();
-        }
+        NBTTagCompound extraAttributes = new NBTTagCompound();
+        NBTTagCompound id = new NBTTagCompound();
+        id.setString("id",itemData.internalname);
+        extraAttributes.setTag("ExtraAttributes",id);
 
-        // Apply other NBT data to the item stack
-        nbtTagCompound.setString("display", "{\"Lore\":" + gson.toJson(itemData.lore) + ",\"Name\":\"" + itemData.displayname + "\"}");
-        nbtTagCompound.setString("ExtraAttributes", "{\"id\":\"" + itemData.internalname + "\"}");
-        nbtTagCompound.setByte("HideFlags", (byte) 254);
+        nbtTagCompound.merge(extraAttributes);
+
         itemStack.setTagCompound(nbtTagCompound);
+        System.out.println(itemStack.getTagCompound().toString());
+
         itemStack.setStackDisplayName(itemData.displayname);
         return itemStack;
     }
