@@ -44,9 +44,10 @@ public class SlayerFeatures {
             slayerStarted = System.currentTimeMillis();
         }
         if(msg.trim().startsWith("NICE! SLAYER BOSS SLAIN!")) {
-            slayerSpawned = System.currentTimeMillis()-slayerSpawned;
-            double spawnTime = Math.ceil((double) slayerStarted / 1000);
-            double killTime = Math.ceil((double) slayerSpawned / 1000);
+            double spawn = System.currentTimeMillis()-slayerStarted;
+            double spawnTime = Math.ceil(spawn / 1000);
+            double kill = System.currentTimeMillis()-slayerSpawned;
+            double killTime = Math.ceil(kill / 1000);
             String totalTime = Utils.secondsToTime((long) Math.ceil(spawnTime + killTime));
 
             Utils.setTimeout(()-> {
@@ -67,7 +68,7 @@ public class SlayerFeatures {
             String slayerName = "";
             boolean hasSlayerSpawned = false;
 
-            for(String line: ScoreboardUtil.getSidebarLines()) {
+            for(String line: ScoreboardUtil.getSidebarLines(true)) {
                 if(nextLine) {
                     nextLine = false;
                     slayerName = line;
@@ -81,7 +82,6 @@ public class SlayerFeatures {
             }
             if(event.getSbMob().getSkyblockMobId().startsWith(slayerName) && hasSlayerSpawned) {
                 slayerSpawned = System.currentTimeMillis();
-                slayerStarted = System.currentTimeMillis()-slayerStarted;
             }
         }
     }
