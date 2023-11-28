@@ -1,24 +1,30 @@
 package mrfast.sbf.utils;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.InputStreamReader;
+import java.net.Socket;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.time.Duration;
+import java.nio.file.Files;
+import java.security.KeyManagementException;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
 import java.util.*;
-import java.util.concurrent.CountDownLatch;
 import java.util.stream.Collectors;
 
 import mrfast.sbf.SkyblockFeatures;
-import net.minecraft.entity.Entity;
 import net.minecraft.util.*;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpVersion;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
+import org.apache.http.conn.ssl.SSLContextBuilder;
+import org.apache.http.conn.ssl.TrustStrategy;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 
@@ -30,16 +36,38 @@ import com.mojang.realmsclient.gui.ChatFormatting;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
-import org.lwjgl.input.Mouse;
 
-import javax.net.ssl.SSLHandshakeException;
+import javax.net.ssl.*;
 
 
 public class APIUtils {
 
-    public static CloseableHttpClient client = HttpClients.custom().setUserAgent("Mozilla/5.0").build();
+    public static CloseableHttpClient client;
     static {
         SkyblockFeatures.config.temporaryAuthKey="";
+        SSLContextBuilder builder = new SSLContextBuilder();
+        try {
+            builder.loadTrustMaterial(null, new TrustStrategy() {
+                public boolean isTrusted(final X509Certificate[] chain, String authType) throws CertificateException {
+                    return true;
+                }
+            });
+        } catch (NoSuchAlgorithmException ex) {
+            throw new RuntimeException(ex);
+        } catch (KeyStoreException ex) {
+            throw new RuntimeException(ex);
+        }
+        SSLConnectionSocketFactory sslsf = null;
+        try {
+            sslsf = new SSLConnectionSocketFactory(builder.build());
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
+        } catch (KeyManagementException e) {
+            throw new RuntimeException(e);
+        }
+
+        client = HttpClients.custom().setSSLSocketFactory(sslsf).setUserAgent("Mozilla/5.0").build();
+        System.out.println("CREATED CUSTOM CLIENT");
     }
     public static JsonObject getJSONResponse(String urlString) {
         return getJSONResponse(urlString, new String[]{});
@@ -104,13 +132,15 @@ public class APIUtils {
             }
         } catch (SSLHandshakeException ex) {
             // sometimes enrolled, work or school computers will have DNS blocking on all websites except allowed ones
+            System.out.println(urlString);
+            ex.printStackTrace();
             player.addChatMessage(new ChatComponentText(EnumChatFormatting.RED + "Your API request has been blocked by your administrator!"));
         } catch (Exception ex) {
-            System.out.println(urlString);
             ex.printStackTrace();
         }
         return new JsonObject();
     }
+
     public static HashMap<String,String> rankCache = new HashMap<>();
 
     public static String getHypixelRank(String uuid) {

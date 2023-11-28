@@ -1,11 +1,15 @@
 package mrfast.sbf.commands;
 
+import java.io.File;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
@@ -93,6 +97,9 @@ public class debugCommand extends CommandBase {
             case "sidebar":
                 getSidebarData();
                 break;
+            case "log":
+                uploadLog();
+                break;
             case "tablist":
             case "tab":
                 getTablistData();
@@ -132,6 +139,16 @@ public class debugCommand extends CommandBase {
             output.append(count).append(": ").append(Utils.GetMC().ingameGUI.getTabList().getPlayerName(pi)).append("\n");
         }
         uploadData(output.toString());
+    }
+
+    public static void uploadLog() {
+        File log = new File(new File(Utils.GetMC().mcDataDir,"logs"), "latest.log");
+        try {
+            List<String> lines = Files.readAllLines(log.toPath(), StandardCharsets.UTF_8);
+            uploadData(lines.stream().collect(Collectors.joining(System.lineSeparator())));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public static void getItemData(ItemStack item) {
@@ -303,7 +320,8 @@ public class debugCommand extends CommandBase {
         return stringBuilder.toString();
     }
 
-    private static void uploadData(String text) {
+    public static void uploadData(String text) {
+        Utils.SendMessage(ChatFormatting.GRAY+"Uploading data...");
         new Thread(()-> {
             try {
                 URL url = new URL("https://hst.sh/documents");
@@ -328,6 +346,7 @@ public class debugCommand extends CommandBase {
                     JsonObject json = new Gson().fromJson(out, JsonObject.class);
                     hostUrl = "https://hst.sh/raw/" + json.get("key").getAsString();
                 } else {
+                    Utils.SendMessage("That failed too :(");
                     System.out.println("Request failed with code " + responseCode);
                 }
 
