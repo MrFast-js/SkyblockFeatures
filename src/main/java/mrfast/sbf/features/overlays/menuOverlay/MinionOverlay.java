@@ -93,12 +93,22 @@ public class MinionOverlay {
                                 long timeElapsed = (System.currentTimeMillis()-lastCollected.get(closestMinion.getPosition().toString()))/1000L;
                                 duration = Utils.secondsToTime(timeElapsed);
                             }
+                            String fuelRunsOut = "Unlimited";
+                            for(String line:ItemUtils.getItemLore(inv.getStackInSlot(19))) {
+                                line = Utils.cleanColor(line);
+                                if(line.startsWith("Time Remaining")) {
+                                    fuelRunsOut=line.split(": ")[1];
+                                    String shortTime = fuelRunsOut.split(" ")[1].substring(0,1);
+                                    fuelRunsOut = fuelRunsOut.split(" ")[0]+shortTime;
+                                }
+                            }
                             lines = new String[]{
                                     ChatFormatting.LIGHT_PURPLE + chestName,
-                                    ChatFormatting.WHITE + "Time Between Actions: " + ChatFormatting.GREEN + secondsPerAction + "s",
-                                    ChatFormatting.WHITE + "Coins Per Hour: " + ChatFormatting.GOLD + Utils.nf.format(perHour),
-                                    ChatFormatting.WHITE + "Total Value: " + ChatFormatting.GOLD + Utils.formatNumber(totalValue),
-                                    ChatFormatting.WHITE + "Last Collected: " + ChatFormatting.AQUA + duration
+                                    ChatFormatting.WHITE + " • Time Between Actions: " + ChatFormatting.GREEN + secondsPerAction + "s",
+                                    ChatFormatting.WHITE + " • Fuel Duration: " + ChatFormatting.YELLOW + fuelRunsOut,
+                                    ChatFormatting.WHITE + " • Coins Per Hour: " + ChatFormatting.GOLD + Utils.nf.format(perHour),
+                                    ChatFormatting.WHITE + " • Total Value: " + ChatFormatting.GOLD + Utils.formatNumber(totalValue),
+                                    ChatFormatting.WHITE + " • Last Collected: " + ChatFormatting.AQUA + duration
                             };
                         } else {
                             lines = new String[]{
