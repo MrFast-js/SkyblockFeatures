@@ -18,127 +18,128 @@ import mrfast.sbf.utils.Utils;
 import net.minecraft.client.Minecraft;
 
 public class CommisionsTracker {
-  private static final Minecraft mc = Minecraft.getMinecraft();
+    private static final Minecraft mc = Minecraft.getMinecraft();
 
-  static {
-      new CommisionsTrackerGUI();
-  }
-  
-  public static class CommisionsTrackerGUI extends UIElement {
+    static {
+        new CommisionsTrackerGUI();
+    }
 
-      public CommisionsTrackerGUI() {
-          super("Commissions Tracker", new Point(0.2f, 0.0f));
-          SkyblockFeatures.GUIMANAGER.registerElement(this);
-      }
+    public static class CommisionsTrackerGUI extends UIElement {
 
-      @Override
-      public void drawElement() {
-          ArrayList<String> text = new ArrayList<>();
-          try {
+        public CommisionsTrackerGUI() {
+            super("Commissions Tracker", new Point(0.2f, 0.0f));
+            SkyblockFeatures.GUIMANAGER.registerElement(this);
+        }
 
-              if(mc.thePlayer == null || !Utils.inSkyblock || !SkyblockFeatures.config.CommisionsTracker) return;
+        @Override
+        public void drawElement() {
+            ArrayList<String> text = new ArrayList<>();
+            try {
 
-              text.add(ChatFormatting.BLUE+"Commissions");
-              List<String> commissions = new ArrayList<String>();
-              commissions.add(mc.ingameGUI.getTabList().getPlayerName(TabListUtils.getTabEntries().get(50)));
-              commissions.add(mc.ingameGUI.getTabList().getPlayerName(TabListUtils.getTabEntries().get(51)));
+                if (mc.thePlayer == null || !Utils.inSkyblock || !SkyblockFeatures.config.CommisionsTracker) return;
 
-              if(!Utils.cleanColor(mc.ingameGUI.getTabList().getPlayerName(TabListUtils.getTabEntries().get(52))).isEmpty()) {
-                commissions.add(mc.ingameGUI.getTabList().getPlayerName(TabListUtils.getTabEntries().get(52)));
-              }
-              if(!Utils.cleanColor(mc.ingameGUI.getTabList().getPlayerName(TabListUtils.getTabEntries().get(53))).isEmpty()) {
-                commissions.add(mc.ingameGUI.getTabList().getPlayerName(TabListUtils.getTabEntries().get(53)));
-              }
-              for(String commission : commissions) {
-                commission = Utils.cleanColor(commission);
-                if(commission.contains("Forges")) continue;
-                Pattern regex = Pattern.compile("(\\d+(?:\\.\\d+)?)");
-                Matcher matcher = regex.matcher(commission);
-                if(commission.contains("2x")) {
-                  matcher = regex.matcher(commission.replace("2x", ""));
+                text.add(ChatFormatting.BLUE + "Commissions");
+                List<String> commissions = new ArrayList<String>();
+                commissions.add(mc.ingameGUI.getTabList().getPlayerName(TabListUtils.getTabEntries().get(50)));
+                commissions.add(mc.ingameGUI.getTabList().getPlayerName(TabListUtils.getTabEntries().get(51)));
+
+                if (!Utils.cleanColor(mc.ingameGUI.getTabList().getPlayerName(TabListUtils.getTabEntries().get(52))).isEmpty()) {
+                    commissions.add(mc.ingameGUI.getTabList().getPlayerName(TabListUtils.getTabEntries().get(52)));
                 }
-                
-                if(matcher.find()) {
-                  String[] a = commission.split(" ");
-                  String amount = Math.round(getTotal(commission) * (Double.valueOf(matcher.group(1)) / 100))+"";
-                  String mid = ChatFormatting.LIGHT_PURPLE+"["+
-                  ChatFormatting.GREEN+amount+
-                  ChatFormatting.GOLD+"/"+
-                  ChatFormatting.GREEN+getTotal(commission)+
-                  ChatFormatting.LIGHT_PURPLE+"]";
-                  commission = commission.replace(a[a.length-1], mid);
-                } else if(commission.contains("DONE")) {
-                  commission = commission.replace("DONE", ChatFormatting.GREEN+"DONE");
+                if (!Utils.cleanColor(mc.ingameGUI.getTabList().getPlayerName(TabListUtils.getTabEntries().get(53))).isEmpty()) {
+                    commissions.add(mc.ingameGUI.getTabList().getPlayerName(TabListUtils.getTabEntries().get(53)));
                 }
-                text.add(ChatFormatting.AQUA+commission);
-              }
-          } catch (Exception ignored) {}
+                for (String commission : commissions) {
+                    commission = Utils.cleanColor(commission);
+                    if (commission.contains("Forges")) continue;
+                    Pattern regex = Pattern.compile("(\\d+(?:\\.\\d+)?)");
+                    Matcher matcher = regex.matcher(commission);
+                    if (commission.contains("2x")) {
+                        matcher = regex.matcher(commission.replace("2x", ""));
+                    }
 
-          GuiUtils.drawTextLines(text,0,0, GuiUtils.TextStyle.BLACK_OUTLINE);
-      }
+                    if (matcher.find()) {
+                        String[] a = commission.split(" ");
+                        String amount = Math.round(getTotal(commission) * (Double.valueOf(matcher.group(1)) / 100)) + "";
+                        String mid = ChatFormatting.LIGHT_PURPLE + "[" +
+                                ChatFormatting.GREEN + amount +
+                                ChatFormatting.GOLD + "/" +
+                                ChatFormatting.GREEN + getTotal(commission) +
+                                ChatFormatting.LIGHT_PURPLE + "]";
+                        commission = commission.replace(a[a.length - 1], mid);
+                    } else if (commission.contains("DONE")) {
+                        commission = commission.replace("DONE", ChatFormatting.GREEN + "DONE");
+                    }
+                    text.add(ChatFormatting.AQUA + commission);
+                }
+            } catch (Exception ignored) {
+            }
 
-      @Override
-      public void drawElementExample() {
-          ArrayList<String> text = new ArrayList<>();
-          text.add(ChatFormatting.BLUE+"Commissions");
-          text.add(" Upper Mines Titanium: "+ChatFormatting.LIGHT_PURPLE+"["+ChatFormatting.GREEN+"7"+ChatFormatting.GOLD+"/"+ChatFormatting.GREEN+"10"+ChatFormatting.LIGHT_PURPLE+"]");
-          text.add(" Goblin Raid: "+ChatFormatting.LIGHT_PURPLE+"["+ChatFormatting.GREEN+"0"+ChatFormatting.GOLD+"/"+ChatFormatting.GREEN+"1"+ChatFormatting.LIGHT_PURPLE+"]");
+            GuiUtils.drawTextLines(text, 0, 0, GuiUtils.TextStyle.BLACK_OUTLINE);
+        }
 
-          GuiUtils.drawTextLines(text,0,0, GuiUtils.TextStyle.BLACK_OUTLINE);
-      }
+        @Override
+        public void drawElementExample() {
+            ArrayList<String> text = new ArrayList<>();
+            text.add(ChatFormatting.BLUE + "Commissions");
+            text.add(" Upper Mines Titanium: " + ChatFormatting.LIGHT_PURPLE + "[" + ChatFormatting.GREEN + "7" + ChatFormatting.GOLD + "/" + ChatFormatting.GREEN + "10" + ChatFormatting.LIGHT_PURPLE + "]");
+            text.add(" Goblin Raid: " + ChatFormatting.LIGHT_PURPLE + "[" + ChatFormatting.GREEN + "0" + ChatFormatting.GOLD + "/" + ChatFormatting.GREEN + "1" + ChatFormatting.LIGHT_PURPLE + "]");
 
-      @Override
-      public boolean getToggled() {
-          return Utils.inSkyblock && SkyblockFeatures.config.CommisionsTracker && (SkyblockInfo.map.equals("Dwarven Mines") || CrystalHollowsMap.inCrystalHollows);
-      }
+            GuiUtils.drawTextLines(text, 0, 0, GuiUtils.TextStyle.BLACK_OUTLINE);
+        }
 
-      @Override
-      public int getHeight() {
-          return Utils.GetMC().fontRendererObj.FONT_HEIGHT*3;
-      }
+        @Override
+        public boolean getToggled() {
+            return Utils.inSkyblock && SkyblockFeatures.config.CommisionsTracker && (SkyblockInfo.map.equals("Dwarven Mines") || CrystalHollowsMap.inCrystalHollows);
+        }
 
-      @Override
-      public int getWidth() {
-          return Utils.GetMC().fontRendererObj.getStringWidth("2x Mithril Powder Collector [350/500] ");
-      }
-  }
+        @Override
+        public int getHeight() {
+            return Utils.GetMC().fontRendererObj.FONT_HEIGHT * 3;
+        }
+
+        @Override
+        public int getWidth() {
+            return Utils.GetMC().fontRendererObj.getStringWidth("2x Mithril Powder Collector [350/500] ");
+        }
+    }
 
 
-  public static int getTotal(String str) {
-      if(CrystalHollowsMap.inCrystalHollows) {
-          if(str.contains("Hard Stone Miner") || str.contains("Gemstone Collector")) return 1000;
-          if(str.contains("Chest Looter")) return 3;
-          if(str.contains("Treasurite")) return 13;
-          if(str.contains("Sludge")) return 25;
-          if(str.contains("Yog") || str.contains("Automaton") || str.contains("Goblin Slayer")) return 13;
-          if(str.contains("Thyst")) return 5;
-          if(str.contains("Crystal Hunter")) return 1;
-          if(str.contains("Corleone")) return 1;
-      }
-      if(str.contains("Ice Walker")) return 50;
-      if(str.contains("Golden Goblin Slayer")) return 1;
-      if(str.contains("Goblin Slayer")) return 100;
-      if(str.contains("Powder Ghast Puncher")) return 5;
-      if(str.contains("Star Sentry Puncher")) return 10;
-      if(str.contains("2x Mithril Powder Collector")) return 500;
+    public static int getTotal(String str) {
+        if (CrystalHollowsMap.inCrystalHollows) {
+            if (str.contains("Hard Stone Miner") || str.contains("Gemstone Collector")) return 1000;
+            if (str.contains("Chest Looter")) return 3;
+            if (str.contains("Treasurite")) return 13;
+            if (str.contains("Sludge")) return 25;
+            if (str.contains("Yog") || str.contains("Automaton") || str.contains("Goblin Slayer")) return 13;
+            if (str.contains("Thyst")) return 5;
+            if (str.contains("Crystal Hunter")) return 1;
+            if (str.contains("Corleone")) return 1;
+        }
+        if (str.contains("Ice Walker")) return 50;
+        if (str.contains("Golden Goblin Slayer")) return 1;
+        if (str.contains("Goblin Slayer")) return 100;
+        if (str.contains("Powder Ghast Puncher")) return 5;
+        if (str.contains("Star Sentry Puncher")) return 10;
+        if (str.contains("2x Mithril Powder Collector")) return 500;
 
-      if(str.contains("Raffle")) {
-        if(str.contains("Lucky")) return 20;
-        return 1;
-      }
-      if(str.contains("Goblin Raid")) {
-        if(str.contains("Slayer")) return 20;
-        return 1;
-      }
-      if(str.contains("Mithril")) {
-        if(str.contains("Miner")) return 500;
-        return 350;
-      }
-      if(str.contains("Titanium")) {
-        if(str.contains("Miner")) return 15;
-        return 10;
-      }
-      return -1;
-  }
+        if (str.contains("Raffle")) {
+            if (str.contains("Lucky")) return 20;
+            return 1;
+        }
+        if (str.contains("Goblin Raid")) {
+            if (str.contains("Slayer")) return 20;
+            return 1;
+        }
+        if (str.contains("Mithril")) {
+            if (str.contains("Miner")) return 500;
+            return 350;
+        }
+        if (str.contains("Titanium")) {
+            if (str.contains("Miner")) return 15;
+            return 10;
+        }
+        return -1;
+    }
 
 }

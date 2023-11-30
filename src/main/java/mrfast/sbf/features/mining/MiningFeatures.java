@@ -41,44 +41,45 @@ public class MiningFeatures {
         if (!Utils.inSkyblock || event.type == 2) return;
 
         String unformatted = Utils.cleanColor(event.message.getUnformattedText());
-        if(SkyblockFeatures.config.treasureChestSolver && unformatted.contains("uncovered a treasure chest!")) {
+        if (SkyblockFeatures.config.treasureChestSolver && unformatted.contains("uncovered a treasure chest!")) {
             treasureChest = null;
             particles.clear();
             progress = 0;
         }
     }
+
     @SubscribeEvent
     public void onPlayerInteractEvent(BlockChangeEvent event) {
-        if(Utils.inSkyblock && SkyblockFeatures.config.highlightEnderNodes && SkyblockInfo.localLocation.contains("The End")) {
+        if (Utils.inSkyblock && SkyblockFeatures.config.highlightEnderNodes && SkyblockInfo.localLocation.contains("The End")) {
             BlockPos p1 = Utils.GetMC().thePlayer.getPosition();
             BlockPos p2 = event.pos;
-            if(p1.distanceSq(p2.getX(), p2.getY(), p2.getZ())<100) enderParticles.clear();
+            if (p1.distanceSq(p2.getX(), p2.getY(), p2.getZ()) < 100) enderParticles.clear();
         }
     }
 
     @SubscribeEvent
     public void onRenderWorld(RenderWorldLastEvent event) {
         if (!Utils.inSkyblock) return;
-        if(SkyblockFeatures.config.highlightEnderNodes && SkyblockInfo.localLocation.contains("The End")) {
+        if (SkyblockFeatures.config.highlightEnderNodes && SkyblockInfo.localLocation.contains("The End")) {
             try {
-                if(SkyblockFeatures.config.highlightEnderNodesWalls) GlStateManager.disableDepth();
+                if (SkyblockFeatures.config.highlightEnderNodesWalls) GlStateManager.disableDepth();
                 Color endColor = SkyblockFeatures.config.highlightEnderNodesEndstoneColor;
                 Color obiColor = SkyblockFeatures.config.highlightEnderNodesObiColor;
 
                 List<Vec3> drawnPositions = new ArrayList<>();
 
-                for(Vec3 packet:enderParticles) {
-                    boolean dupe =false;
+                for (Vec3 packet : enderParticles) {
+                    boolean dupe = false;
                     double x = packet.xCoord;
                     double y = packet.yCoord;
                     double z = packet.zCoord;
-                    if(!drawnPositions.contains(packet)) {
-                        for(Vec3 packet2:drawnPositions) {
-                            if(packet.distanceTo(packet2)<1.5) {
-                                dupe=true;
+                    if (!drawnPositions.contains(packet)) {
+                        for (Vec3 packet2 : drawnPositions) {
+                            if (packet.distanceTo(packet2) < 1.5) {
+                                dupe = true;
                             }
                         }
-                        if(dupe) continue;
+                        if (dupe) continue;
                     }
                     if ((x - Math.floor(x)) == 0.25) {
                         BlockPos blockPos = new BlockPos(Math.round(x - 1.25), Math.round(y - 0.5), Math.round(z - 0.5));
@@ -88,7 +89,7 @@ public class MiningFeatures {
                         drawnPositions.add(packet);
                     }
                     if ((y - Math.floor(y)) == 0.25) {
-                        BlockPos blockPos = new BlockPos(Math.round(x-1), Math.round(y - 1.25), Math.round(z - 0.5));
+                        BlockPos blockPos = new BlockPos(Math.round(x - 1), Math.round(y - 1.25), Math.round(z - 0.5));
                         Block block = Utils.GetMC().theWorld.getBlockState(blockPos).getBlock();
                         Color color = block instanceof BlockObsidian ? obiColor : endColor;
                         RenderUtil.drawOutlinedFilledBoundingBox(blockPos, color, event.partialTicks);
@@ -121,23 +122,23 @@ public class MiningFeatures {
                 // e.printStackTrace();
             }
         }
-        
+
         try {
-            if(!SkyblockFeatures.config.treasureChestSolver || !CrystalHollowsMap.inCrystalHollows) return;
+            if (!SkyblockFeatures.config.treasureChestSolver || !CrystalHollowsMap.inCrystalHollows) return;
             Block block = Minecraft.getMinecraft().theWorld.getBlockState(new BlockPos(treasureChest)).getBlock();
-            if(treasureChest != null) {
-                Vec3 stringPos = new Vec3(treasureChest.getX()+0.5, treasureChest.getY()+1.1, treasureChest.getZ()+0.5);
+            if (treasureChest != null) {
+                Vec3 stringPos = new Vec3(treasureChest.getX() + 0.5, treasureChest.getY() + 1.1, treasureChest.getZ() + 0.5);
                 GlStateManager.disableDepth();
-                RenderUtil.draw3DString(stringPos, ChatFormatting.AQUA+""+progress+" / 5", event.partialTicks);
+                RenderUtil.draw3DString(stringPos, ChatFormatting.AQUA + "" + progress + " / 5", event.partialTicks);
                 GlStateManager.enableDepth();
             }
-            for(Vec3 packet:particles) {
-                RenderUtil.drawOutlinedFilledBoundingBox(new AxisAlignedBB(packet.xCoord-0.05, packet.yCoord-0.05, packet.zCoord-0.05, packet.xCoord+0.1, packet.yCoord+0.1, packet.zCoord+0.1), Color.red, event.partialTicks);
-                if(block != null && block == Blocks.air) {
+            for (Vec3 packet : particles) {
+                RenderUtil.drawOutlinedFilledBoundingBox(new AxisAlignedBB(packet.xCoord - 0.05, packet.yCoord - 0.05, packet.zCoord - 0.05, packet.xCoord + 0.1, packet.yCoord + 0.1, packet.zCoord + 0.1), Color.red, event.partialTicks);
+                if (block != null && block == Blocks.air) {
                     particles.remove(packet);
                 }
             }
-            if(block != null && block == Blocks.air) {
+            if (block != null && block == Blocks.air) {
                 treasureChest = null;
                 progress = 0;
             }
@@ -153,6 +154,7 @@ public class MiningFeatures {
         enderParticles.clear();
         progress = 0;
     }
+
     BlockPos treasureChest = null;
     List<Vec3> particles = new ArrayList<>();
     List<Vec3> enderParticles = new ArrayList<>();
@@ -161,51 +163,54 @@ public class MiningFeatures {
     @SubscribeEvent
     public void onReceivePacket(PacketEvent.ReceiveEvent event) {
         boolean inEnd = SkyblockInfo.localLocation.contains("The End");
-        if(event.packet instanceof S2APacketParticles && SkyblockFeatures.config.highlightEnderNodes && inEnd) {
+        if (event.packet instanceof S2APacketParticles && SkyblockFeatures.config.highlightEnderNodes && inEnd) {
             S2APacketParticles packet = (S2APacketParticles) event.packet;
             EnumParticleTypes type = packet.getParticleType();
-            Vec3 pos = new Vec3(packet.getXCoordinate(),packet.getYCoordinate(),packet.getZCoordinate());
-            if(type == EnumParticleTypes.PORTAL && !enderParticles.contains(pos)) {
+            Vec3 pos = new Vec3(packet.getXCoordinate(), packet.getYCoordinate(), packet.getZCoordinate());
+            if (type == EnumParticleTypes.PORTAL && !enderParticles.contains(pos)) {
                 enderParticles.add(pos);
             }
         }
-        if(event.packet instanceof S2APacketParticles && SkyblockFeatures.config.treasureChestSolver) {
+        if (event.packet instanceof S2APacketParticles && SkyblockFeatures.config.treasureChestSolver) {
             S2APacketParticles packet = (S2APacketParticles) event.packet;
             EnumParticleTypes type = packet.getParticleType();
-            Vec3 pos = new Vec3(packet.getXCoordinate(),packet.getYCoordinate(),packet.getZCoordinate());
+            Vec3 pos = new Vec3(packet.getXCoordinate(), packet.getYCoordinate(), packet.getZCoordinate());
             boolean dupe = false;
-            for(Vec3 part:particles) {
-                if(pos.distanceTo(part)<0.05) {
+            for (Vec3 part : particles) {
+                if (pos.distanceTo(part) < 0.05) {
                     dupe = true;
                 }
-                if(part.distanceTo(pos) > 0.05) {
+                if (part.distanceTo(pos) > 0.05) {
                     particles.clear();
                     break;
                 }
             }
-            
-            if(!dupe && type == EnumParticleTypes.CRIT && !particles.contains(pos) && mc.thePlayer.getDistance(pos.xCoord, pos.yCoord, pos.zCoord)<5) {
-                if(treasureChest == null) {
+
+            if (!dupe &&
+                    type == EnumParticleTypes.CRIT &&
+                    !particles.contains(pos) &&
+                    mc.thePlayer.getDistance(pos.xCoord, pos.yCoord, pos.zCoord) < 5) {
+                if (treasureChest == null) {
                     particles.add(pos);
-                    for(TileEntity entity: mc.theWorld.loadedTileEntityList) {
-                        if(entity.getPos().distanceSq(pos.xCoord, pos.yCoord, pos.zCoord) < 2 && entity instanceof TileEntityChest) {
+                    for (TileEntity entity : mc.theWorld.loadedTileEntityList) {
+                        if (entity.getPos().distanceSq(pos.xCoord, pos.yCoord, pos.zCoord) < 2 && entity instanceof TileEntityChest) {
                             treasureChest = entity.getPos();
                         }
                     }
                 } else {
-                    if(treasureChest.distanceSq(pos.xCoord, pos.yCoord, pos.zCoord) < 2) particles.add(pos);
+                    if (treasureChest.distanceSq(pos.xCoord, pos.yCoord, pos.zCoord) < 2) particles.add(pos);
                 }
             }
         }
-        if(event.packet instanceof S29PacketSoundEffect && SkyblockFeatures.config.treasureChestSolver) {
+        if (event.packet instanceof S29PacketSoundEffect && SkyblockFeatures.config.treasureChestSolver) {
             S29PacketSoundEffect packet = (S29PacketSoundEffect) event.packet;
-            if(packet.getSoundName().contains("orb")) {
-                if(packet.getVolume() == 1 && packet.getPitch() == 1) {
+            if (packet.getSoundName().contains("orb")) {
+                if (packet.getVolume() == 1 && packet.getPitch() == 1) {
                     progress++;
                 }
             }
-            if(packet.getSoundName().contains("villager") && packet.getSoundName().contains("no")) {
-                progress=0;
+            if (packet.getSoundName().contains("villager") && packet.getSoundName().contains("no")) {
+                progress = 0;
             }
         }
     }

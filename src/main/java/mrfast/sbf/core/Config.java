@@ -188,28 +188,48 @@ public class Config extends Vigilant {
             type = PropertyType.SWITCH,
             name = "Highlight Gifts",
             description = "Highlights with a box of where gifts are at the Jerry's workshop.",
-            category = "Render",
-	    subcategory = "Highlights",
+            category = "§1§rEvents",
+	        subcategory = "Jerrys Workshop",
             searchTags = {"parent"}
     )
     public boolean presentWaypoints = false;
-    
+
     @Property(
             type = PropertyType.COLOR,
             name = "Gift Highlight Color",
             description = "",
-            category = "Render",
-	    subcategory = "Highlights",
+            category = "§1§rEvents",
+            subcategory = "Jerrys Workshop",
             searchTags = {"Highlight Gifts"}
     )
     public Color presentWaypointsColor = Color.yellow;
 
     @Property(
             type = PropertyType.SWITCH,
+            name = "Highlight Gifts To You",
+            description = "Highlights gifts that are given to you",
+            category = "§1§rEvents",
+            subcategory = "Jerrys Workshop",
+            searchTags = {"parent"}
+    )
+    public boolean highlightSelfGifts = false;
+
+    @Property(
+            type = PropertyType.COLOR,
+            name = "Gift Color§1§r",
+            description = "",
+            category = "§1§rEvents",
+            subcategory = "Jerrys Workshop",
+            searchTags = {"Highlight Gifts To You"}
+    )
+    public Color selfGiftHighlightColor = Color.red;
+
+    @Property(
+            type = PropertyType.SWITCH,
             name = "Glacial Cave Treasure Finder",
             description = "Highlights ice treasures in the wall when inside the Glacial Cave",
-            category = "Mining",
-	    subcategory = "Glacial Cave",
+            category = "§1§rEvents",
+            subcategory = "Glacial Cave",
             searchTags = {"parent"}
     )
     public boolean icecaveHighlight = false;
@@ -218,8 +238,8 @@ public class Config extends Vigilant {
             type = PropertyType.SWITCH,
             name = "Show Ice Treasure Through Walls",
             description = "§cWarning Use At Own Risk",
-            category = "Mining",
-	    subcategory = "Glacial Cave",
+            category = "§1§rEvents",
+            subcategory = "Glacial Cave",
             searchTags = {"Glacial Cave Treasure Finder"}
     )
     public boolean icecaveHighlightWalls = false;
@@ -228,10 +248,28 @@ public class Config extends Vigilant {
             type = PropertyType.SWITCH,
             name = "Glacial Cave Treasure Tracker",
             description = "Tracks the items you get from ice treasures",
-            category = "Mining",
-	    subcategory = "Trackers"
+            category = "§1§rEvents",
+            subcategory = "Jerrys Workshop"
     )
     public boolean IceTreasureTracker = false;
+
+    @Property(
+            type = PropertyType.SWITCH,
+            name = "Hide Other Player Gifts",
+            description = "Stops other players gifts from rendering if not given to you",
+            category = "§1§rEvents",
+            subcategory = "Jerrys Workshop"
+    )
+    public boolean hideOtherGifts = false;
+
+    @Property(
+            type = PropertyType.SWITCH,
+            name = "Hide Gift Particles",
+            description = "Stops particles from gifts from rendering.",
+            category = "§1§rEvents",
+            subcategory = "Jerrys Workshop"
+    )
+    public boolean hideGiftParticles = false;
 
     @Property(
             type = PropertyType.SWITCH,
@@ -718,7 +756,7 @@ public class Config extends Vigilant {
             type = PropertyType.SWITCH,
             name = "Jerry Timer",
             description = "Shows the cooldown for spawning jerry's",
-            category = "Miscellaneous",
+            category = "§1§rEvents",
             subcategory = "Mayor Jerry"
     )
     public boolean jerryTimer = false;
@@ -813,7 +851,7 @@ public class Config extends Vigilant {
             type = PropertyType.SWITCH,
             name = "Diana Mythological Helper",
             description = "Draw an extended line of where the Mythological burrow could be",
-            category = "Miscellaneous",
+            category = "§1§rEvents",
             subcategory = "Diana"
     )
     public boolean MythologicalHelper = false;
@@ -1028,7 +1066,7 @@ public class Config extends Vigilant {
             type = PropertyType.SWITCH,
             name = "Hidden Jerry Alert",
             description = "Displays an alert when you find a hidden Jerry.",
-            category = "Miscellaneous",
+            category = "§1§rEvents",
             subcategory = "Mayor Jerry"
     )
     public boolean hiddenJerryAlert = false;

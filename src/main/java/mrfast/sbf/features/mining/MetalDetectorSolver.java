@@ -77,41 +77,44 @@ public class MetalDetectorSolver {
     List<Vec3> PossibletreasureLocations = new ArrayList<>();
     Vec3 center = null;
     double distanceToTreasure = 0;
+
     @SubscribeEvent
     public void onWorldChange(WorldEvent.Load event) {
         center = null;
         bestPos = null;
     }
+
     double sameDistance = 0;
     double lastDistance = 0;
 
     @SubscribeEvent
     public void onEvent(ClientChatReceivedEvent event) {
-        if(Utils.GetMC().thePlayer==null || !SkyblockFeatures.config.MetalDetectorSolver) return;
+        if (Utils.GetMC().thePlayer == null || !SkyblockFeatures.config.MetalDetectorSolver) return;
         if (event.type == 2) {
             String actionBar = event.message.getFormattedText();
             String[] actionBarSplit = actionBar.split(" ");
             boolean nextSegmentIsDistance = false;
-            if(lastDistance==distanceToTreasure) {
+            if (lastDistance == distanceToTreasure) {
                 sameDistance++;
             } else {
                 sameDistance = 0;
             }
-            lastDistance=distanceToTreasure;
-            for(String segment:actionBarSplit) {
-                if(nextSegmentIsDistance) {
-                    if(segment.contains(".")) distanceToTreasure = Double.parseDouble(Utils.cleanColor(segment).replaceAll("[^0-9]", ""))/10;
+            lastDistance = distanceToTreasure;
+            for (String segment : actionBarSplit) {
+                if (nextSegmentIsDistance) {
+                    if (segment.contains("."))
+                        distanceToTreasure = Double.parseDouble(Utils.cleanColor(segment).replaceAll("[^0-9]", "")) / 10;
                     else distanceToTreasure = Double.parseDouble(Utils.cleanColor(segment).replaceAll("[^0-9]", ""));
                     nextSegmentIsDistance = false;
                 }
-                if(segment.contains("TREASURE")) {
+                if (segment.contains("TREASURE")) {
                     nextSegmentIsDistance = true;
                 }
             }
         } else {
-            if(event.message.getUnformattedText().contains("with your Metal Detector")) {
+            if (event.message.getUnformattedText().contains("with your Metal Detector")) {
                 distanceToTreasure = 0;
-                Utils.setTimeout(()->{
+                Utils.setTimeout(() -> {
                     bestPos = null;
                     announcedFoundIt = false;
                     announcedRecalculating = false;
@@ -119,25 +122,28 @@ public class MetalDetectorSolver {
             }
         }
     }
+
     Vec3 bestPos = null;
     int ticks = 0;
     boolean announcedFoundIt = false;
     boolean announcedRecalculating = false;
+
     @SubscribeEvent
     public void onRenderWorld(ClientTickEvent event) {
-        if(Utils.GetMC().thePlayer==null || !SkyblockFeatures.config.MetalDetectorSolver || !CrystalHollowsMap.inCrystalHollows) return;
+        if (Utils.GetMC().thePlayer == null || !SkyblockFeatures.config.MetalDetectorSolver || !CrystalHollowsMap.inCrystalHollows)
+            return;
 
         ticks++;
-        if(ticks >= 4 && Utils.GetMC().thePlayer.getHeldItem() != null && Utils.GetMC().thePlayer.getHeldItem().getDisplayName().contains("Detector") && distanceToTreasure!=0 && center!=null) {
-            if(bestPos != null) {
-                if(!announcedFoundIt) {
+        if (ticks >= 4 && Utils.GetMC().thePlayer.getHeldItem() != null && Utils.GetMC().thePlayer.getHeldItem().getDisplayName().contains("Detector") && distanceToTreasure != 0 && center != null) {
+            if (bestPos != null) {
+                if (!announcedFoundIt) {
                     announcedFoundIt = true;
-                    GuiManager.createTitle(ChatFormatting.AQUA+"Treasure Found!", 10);
+                    GuiManager.createTitle(ChatFormatting.AQUA + "Treasure Found!", 10);
                 }
                 Vec3 actualBestPos = center.add(bestPos);
 
-                if(actualBestPos.distanceTo(Utils.GetMC().thePlayer.getPositionVector())<5) {
-                    if(!(Utils.GetMC().theWorld.getBlockState(new BlockPos(actualBestPos)).getBlock() instanceof BlockChest)) {
+                if (actualBestPos.distanceTo(Utils.GetMC().thePlayer.getPositionVector()) < 5) {
+                    if (!(Utils.GetMC().theWorld.getBlockState(new BlockPos(actualBestPos)).getBlock() instanceof BlockChest)) {
                         distanceToTreasure = 0;
                         bestPos = null;
                         announcedFoundIt = false;
@@ -145,24 +151,24 @@ public class MetalDetectorSolver {
                     }
                 }
             }
-            if(bestPos == null && !announcedRecalculating) {
+            if (bestPos == null && !announcedRecalculating) {
                 announcedRecalculating = true;
-                GuiManager.createTitle(ChatFormatting.RED+"Stand Still. Recalculating..", 40);
+                GuiManager.createTitle(ChatFormatting.RED + "Stand Still. Recalculating..", 40);
             }
-            if(sameDistance>=2 && bestPos == null) {
+            if (sameDistance >= 2 && bestPos == null) {
                 ticks = 0;
                 PossibletreasureLocations = treasureLocations;
                 bestPos = null;
-                for(Vec3 pos:PossibletreasureLocations) {
-                    if(bestPos == null) {
+                for (Vec3 pos : PossibletreasureLocations) {
+                    if (bestPos == null) {
                         bestPos = pos;
                     } else {
                         Vec3 actualPos = center.add(pos);
                         Vec3 actualBestPos = center.add(bestPos);
 
-                        double distToBest = Math.abs(actualBestPos.distanceTo(Utils.GetMC().thePlayer.getPositionVector())-distanceToTreasure);
-                        double distToThis = Math.abs(actualPos.distanceTo(Utils.GetMC().thePlayer.getPositionVector())-distanceToTreasure);
-                        if(distToThis<distToBest) {
+                        double distToBest = Math.abs(actualBestPos.distanceTo(Utils.GetMC().thePlayer.getPositionVector()) - distanceToTreasure);
+                        double distToThis = Math.abs(actualPos.distanceTo(Utils.GetMC().thePlayer.getPositionVector()) - distanceToTreasure);
+                        if (distToThis < distToBest) {
                             bestPos = pos;
                         }
                     }
@@ -170,19 +176,19 @@ public class MetalDetectorSolver {
             }
         }
 
-        if(center == null) {
-            for(Entity entity:Utils.GetMC().theWorld.loadedEntityList) {
-                if(entity instanceof EntityArmorStand) {
-                    if(entity.getCustomNameTag().contains("Keeper of Lapis")) {
+        if (center == null) {
+            for (Entity entity : Utils.GetMC().theWorld.loadedEntityList) {
+                if (entity instanceof EntityArmorStand) {
+                    if (entity.getCustomNameTag().contains("Keeper of Lapis")) {
                         center = entity.getPositionVector().addVector(-33, 0, -3);
                     }
-                    if(entity.getCustomNameTag().contains("Keeper of Gold")) {
+                    if (entity.getCustomNameTag().contains("Keeper of Gold")) {
                         center = entity.getPositionVector().addVector(3, 0, -33);
                     }
-                    if(entity.getCustomNameTag().contains("Keeper of Emerald")) {
+                    if (entity.getCustomNameTag().contains("Keeper of Emerald")) {
                         center = entity.getPositionVector().addVector(-3, 0, 33);
                     }
-                    if(entity.getCustomNameTag().contains("Keeper of Diamond")) {
+                    if (entity.getCustomNameTag().contains("Keeper of Diamond")) {
                         center = entity.getPositionVector().addVector(33, 0, 3);
                     }
                 }
@@ -192,11 +198,11 @@ public class MetalDetectorSolver {
 
     @SubscribeEvent
     public void onRenderWorld(RenderWorldLastEvent event) {
-        if(Utils.GetMC().thePlayer==null || !SkyblockFeatures.config.MetalDetectorSolver) return;
-        if(center == null) return;
-        if(bestPos != null) {
-            BlockPos pos = new BlockPos(bestPos.xCoord+center.xCoord, bestPos.yCoord+center.yCoord, bestPos.zCoord+center.zCoord);
-            RenderUtil.drawWaypoint(pos, new Color(0x00FFFF),ChatFormatting.GOLD+"Treasure", event.partialTicks,true);
+        if (Utils.GetMC().thePlayer == null || !SkyblockFeatures.config.MetalDetectorSolver) return;
+        if (center == null) return;
+        if (bestPos != null) {
+            BlockPos pos = new BlockPos(bestPos.xCoord + center.xCoord, bestPos.yCoord + center.yCoord, bestPos.zCoord + center.zCoord);
+            RenderUtil.drawWaypoint(pos, new Color(0x00FFFF), ChatFormatting.GOLD + "Treasure", event.partialTicks, true);
         }
     }
 

@@ -56,7 +56,7 @@ import net.minecraftforge.fml.common.gameevent.TickEvent;
 public class SkyblockFeatures {
     public static final String MODID = "skyblockfeatures";
     public static final String MOD_NAME = "skyblockfeatures";
-    public static String VERSION = ChatFormatting.RED+"Unknown";
+    public static String VERSION = ChatFormatting.RED + "Unknown";
     public static Minecraft mc = Minecraft.getMinecraft();
 
     public static Config config = new Config();
@@ -86,89 +86,88 @@ public class SkyblockFeatures {
 
         // Features to load
         List<Object> features = Arrays.asList(
-            this,
-            new ChatEventListener(),
-            GUIMANAGER,
-            new SkyblockInfo(),
-            new SpamHider(),
-            new PricingData(),
-            new APIUtils(),
-            new ZealotSpawnLocations(),
-            new ChestProfit(),
-            new DungeonMap(),
-            new DungeonsFeatures(),
-            new ItemFeatures(),
-            new CrystalHollowsMap(),
-            new MayorJerry(),
-            new MiningFeatures(),
-            new MiscFeatures(),
-            new DamageOverlays(),
-            new Nametags(),
-            new SkyblockMobDetector(),
-            new ConjuringCooldown(),
-            new CooldownTracker(),
-            new SpeedDisplay(),
-            new EffectiveHealthDisplay(),
-            new ManaDisplay(),
-            new HealthDisplay(),
-            new SecretDisplay(),
-            new CryptDisplay(),
-            new DefenceDisplay(),
-            new ActionBarListener(),
-            new CommisionsTracker(),
-            new FairySoulWaypoints(),
-            new JerryTimer(),
-            new GiftTracker(),
-            new CropCounter(),
-            new HideGlass(),
-            new AuctionFeatures(),
-            new CapeUtils(),
-            new MinionOverlay(),
-            new AutomatonTracker(),
-            new GemstoneMiningOverlay(),
-            new TreecapCooldown(),
-            new LividFinder(),
-            new IceTreasureTracker(),
-            new EnderNodeTracker(),
-            new HighlightCobblestone(),
-            new MissingTalismans(),
-            new PlayerDiguiser(),
-            new AutoAuctionFlip(),
-            new MetalDetectorSolver(),
-            new ChronomotronSolver(),
-            new UltrasequencerSolver(),
-            new TradingOverlay(),
-            new MiscOverlays(),
-            new TrevorHelper(),
-            new GhostTracker(),
-            new CreeperSolver(),
-            new PowderTracker(),
-            new DwarvenMap(),
-            new GrandmaWolfTimer(),
-            new RelicFinderWaypoints(),
-            new DynamicFullbright(),
-            new GardenFeatures(),
-            new HighlightCropArea(),
-            new MythologicalEvent(),
-            new TeleportPadSolver(),
-            new WaterBoardSolver(),
-            new ShadowAssasinFeatures(),
-            new SlayerFeatures(),
-            new CrimsonMap(),
-            new RiftFeatures(),
-            new BlazeSolver(),
-            new ThreeWeirdosSolver(),
-            new SkyblockInfo(),
-            new Reparty(),
-            new ProfileViewerUtils(),
-            new PartyFinderFeatures(),
-            new CollectionOverlay()
+                this,
+                new ChatEventListener(),
+                GUIMANAGER,
+                new SkyblockInfo(),
+                new SpamHider(),
+                new PricingData(),
+                new APIUtils(),
+                new ZealotSpawnLocations(),
+                new ChestProfit(),
+                new DungeonMap(),
+                new DungeonsFeatures(),
+                new ItemFeatures(),
+                new CrystalHollowsMap(),
+                new MayorJerry(),
+                new MiningFeatures(),
+                new MiscFeatures(),
+                new DamageOverlays(),
+                new Nametags(),
+                new SkyblockMobDetector(),
+                new CooldownTracker(),
+                new SpeedDisplay(),
+                new EffectiveHealthDisplay(),
+                new ManaDisplay(),
+                new HealthDisplay(),
+                new SecretDisplay(),
+                new CryptDisplay(),
+                new DefenceDisplay(),
+                new ActionBarListener(),
+                new CommisionsTracker(),
+                new FairySoulWaypoints(),
+                new JerryTimer(),
+                new GiftTracker(),
+                new CropCounter(),
+                new HideGlass(),
+                new AuctionFeatures(),
+                new CapeUtils(),
+                new MinionOverlay(),
+                new AutomatonTracker(),
+                new GemstoneMiningOverlay(),
+                new TreecapCooldown(),
+                new LividFinder(),
+                new IceTreasureTracker(),
+                new EnderNodeTracker(),
+                new HighlightCobblestone(),
+                new MissingTalismans(),
+                new PlayerDiguiser(),
+                new AutoAuctionFlip(),
+                new MetalDetectorSolver(),
+                new ChronomotronSolver(),
+                new UltrasequencerSolver(),
+                new TradingOverlay(),
+                new MiscOverlays(),
+                new TrevorHelper(),
+                new GhostTracker(),
+                new CreeperSolver(),
+                new PowderTracker(),
+                new DwarvenMap(),
+                new GrandmaWolfTimer(),
+                new RelicFinderWaypoints(),
+                new DynamicFullbright(),
+                new GardenFeatures(),
+                new HighlightCropArea(),
+                new MythologicalEvent(),
+                new TeleportPadSolver(),
+                new WaterBoardSolver(),
+                new ShadowAssasinFeatures(),
+                new SlayerFeatures(),
+                new CrimsonMap(),
+                new RiftFeatures(),
+                new BlazeSolver(),
+                new ThreeWeirdosSolver(),
+                new SkyblockInfo(),
+                new Reparty(),
+                new ProfileViewerUtils(),
+                new PartyFinderFeatures(),
+                new CollectionOverlay()
         );
         features.forEach(MinecraftForge.EVENT_BUS::register);
         // Checks mod folder for version of Skyblock Features your using
         List<ModContainer> modList = Loader.instance().getModList();
-        for(ModContainer mod:modList) {
-            if(mod.getModId().equals(MODID)) {
+        for (ModContainer mod : modList) {
+            if (mod.getModId().equals(MODID)) {
                 VERSION = mod.getDisplayVersion();
                 break;
             }
@@ -178,7 +177,7 @@ public class SkyblockFeatures {
         SkyblockFeatures.config.aucFlipperEnabled = false;
 
         SkyblockFeatures.config.forceSave();
-        System.out.println("You have started Skyblock Features up "+SkyblockFeatures.config.timeStartedUp+" times!");
+        System.out.println("You have started Skyblock Features up " + SkyblockFeatures.config.timeStartedUp + " times!");
     }
 
     /*
@@ -190,11 +189,12 @@ public class SkyblockFeatures {
             BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream()));
             String s;
             while ((s = reader.readLine()) != null) {
-                if(s.equals(playerUUID)) {
+                if (s.equals(playerUUID)) {
                     throw new Error("You're blacklisted from using SBF! If you think this is a mistake contact 'mrfast' on discord.");
                 }
             }
-        } catch (Exception ignored) {}
+        } catch (Exception ignored) {
+        }
     }
 
     @Mod.EventHandler
@@ -242,7 +242,7 @@ public class SkyblockFeatures {
     private KeyBinding toggleSprint;
     public final static KeyBinding reloadPartyFinder = new KeyBinding("Reload Party Finder", Keyboard.KEY_R, "Skyblock Features");
     public final static KeyBinding openBestFlipKeybind = new KeyBinding("Open Best Flip", Keyboard.KEY_J, "Skyblock Features");
-    
+
     @EventHandler
     public void initKeybinds(FMLInitializationEvent event) {
         MinecraftForge.EVENT_BUS.register(this);
@@ -262,7 +262,7 @@ public class SkyblockFeatures {
             }
             config.toggleSprint = !config.toggleSprint;
         }
-        if(config.toggleSprint) {
+        if (config.toggleSprint) {
             KeyBinding.setKeyBindState(mc.gameSettings.keyBindSprint.getKeyCode(), true);
         }
     }

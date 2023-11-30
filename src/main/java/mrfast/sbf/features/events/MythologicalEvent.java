@@ -46,17 +46,17 @@ public class MythologicalEvent {
         }
 
         if (event.packet instanceof S2APacketParticles) {
-            processParticles((S2APacketParticles) event.packet,event);
+            processParticles((S2APacketParticles) event.packet, event);
         }
     }
 
-    private void processParticles(S2APacketParticles packet,ReceiveEvent event) {
+    private void processParticles(S2APacketParticles packet, ReceiveEvent event) {
         EnumParticleTypes type = packet.getParticleType();
 
         if (type == EnumParticleTypes.FOOTSTEP) {
             handleBurrowParticles(packet);
         } else if (SkyblockInfo.localLocation.contains("Volcano")) {
-            handleVolcanoParticles(packet,event);
+            handleVolcanoParticles(packet, event);
         }
 
         handleAncestralParticles(packet);
@@ -74,14 +74,14 @@ public class MythologicalEvent {
         }
     }
 
-    private void handleVolcanoParticles(S2APacketParticles packet,ReceiveEvent event) {
+    private void handleVolcanoParticles(S2APacketParticles packet, ReceiveEvent event) {
         if (packet.getParticleType() == EnumParticleTypes.CLOUD && SkyblockFeatures.config.geyserBoundingBox) {
             geyser = packet;
             fishingHook = findFishingHook();
         }
 
         if (fishingHook != null && SkyblockFeatures.config.hideGeyserParticles) {
-            handleGeyserParticles(packet,event);
+            handleGeyserParticles(packet, event);
         }
     }
 
@@ -94,7 +94,7 @@ public class MythologicalEvent {
         return null;
     }
 
-    private void handleGeyserParticles(S2APacketParticles packet,ReceiveEvent event) {
+    private void handleGeyserParticles(S2APacketParticles packet, ReceiveEvent event) {
         if (packet.getParticleType() == EnumParticleTypes.SMOKE_NORMAL) {
             if (!(packet.getYCoordinate() > fishingHook.posY - 0.2 && packet.getYCoordinate() < fishingHook.posY + 0.2)) {
                 event.setCanceled(true);
