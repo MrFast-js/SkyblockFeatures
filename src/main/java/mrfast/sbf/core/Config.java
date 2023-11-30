@@ -686,15 +686,6 @@ public class Config extends Vigilant {
         subcategory = "Hide Things"
     )
     public boolean hideArrows = false;
-
-    @Property(
-            type = PropertyType.SWITCH,
-            name = "Bait Display",
-            description = "Displays the current bait and amount in your Fishing Bag",
-            category = "Quality of Life",
-            subcategory = "Fishing"
-    )
-    public boolean baitCounter = false;
     
     @Property(
             type = PropertyType.SWITCH,
