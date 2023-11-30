@@ -188,7 +188,6 @@ public class CooldownTracker {
                 if(justUsedAbility.type.equals("SNEAK RIGHT")) item.sneakRightClick=justUsedAbility;
                 if(justUsedAbility.type.equals("LEFT")) item.leftClick=justUsedAbility;
                 if(justUsedAbility.type.equals("SNEAK LEFT")) item.sneakLeftClick=justUsedAbility;
-                Utils.SendMessage("ADDING COOLDOWN TO "+justUsedAbility.itemId);
 
                 // update cooldown
                 activeCooldowns.put(justUsedAbility.itemId,item);
@@ -226,7 +225,6 @@ public class CooldownTracker {
                 item.sneakLeftClick.currentCount=0;
                 item.rightClick.counting=false;
             }
-            Utils.SendMessage("Update Ended! "+ability.itemId+" "+ability);
         }
         endedCooldowns.clear();
     }
@@ -238,7 +236,6 @@ public class CooldownTracker {
             if (cooldownInfo.currentCount >= cooldownInfo.cooldownSeconds) {
                 // Remove item from list using the iterator
                 cooldownInfo.counting = false;
-                Utils.SendMessage(cooldownInfo.abilityName+" Recharged!");
             }
         }
     }

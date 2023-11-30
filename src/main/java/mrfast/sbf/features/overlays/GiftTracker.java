@@ -111,7 +111,6 @@ public class GiftTracker {
                 }
 
                 if (gift.toEntity.getDistanceToEntity(gift.entity) > 1 || gift.fromEntity.getDistanceToEntity(gift.entity) > 1 || gift.entity.getDistanceToEntity(Utils.GetMC().thePlayer) > 30) {
-                    Utils.SendMessage("Dist req " + gift.toEntity.getDistanceToEntity(gift.entity) + " " + gift.fromEntity.getDistanceToEntity(gift.entity));
                     continue;
                 }
 
