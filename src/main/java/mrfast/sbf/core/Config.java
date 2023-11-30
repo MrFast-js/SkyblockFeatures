@@ -1199,6 +1199,15 @@ public class Config extends Vigilant {
     )
     public boolean teleportDestination = false;
 
+    @Property(
+            type = PropertyType.SWITCH,
+            name = "Cooldown Display",
+            description = "Shows a display with your hotbar items cooldowns.",
+            category = "Miscellaneous",
+            subcategory = "Items"
+    )
+    public boolean cooldownDisplay = false;
+
      @Property(
             type = PropertyType.SWITCH,
             name = "Chat Timestamps",
