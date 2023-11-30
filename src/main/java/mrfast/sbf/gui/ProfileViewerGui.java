@@ -584,8 +584,10 @@ public class ProfileViewerGui extends WindowScreen {
             if(gamemode.equals("bingo")) profileType = ChatFormatting.YELLOW+bold+"Ⓑ Bingo";
         }
 
-        String fairySouls = ProfilePlayerResponse.get("fairy_souls_collected").getAsInt()+" / 240";
-
+        String fairySouls = 0+" / 240";
+        if(ProfilePlayerResponse.has("fairy_souls_collected")) {
+            fairySouls=ProfilePlayerResponse.get("fairy_souls_collected").getAsInt()+" / 240";
+        }
         UIComponent topRow = new UIBlock(clear).setWidth(new RelativeConstraint(1f)).setY(new PixelConstraint(0f)).setChildOf(generalInfoContainer).setHeight(new RelativeConstraint(0.15f));
         UIComponent midRow = new UIBlock(clear).setWidth(new RelativeConstraint(1f)).setY(new SiblingConstraint(2f)).setChildOf(generalInfoContainer).setHeight(new RelativeConstraint(0.15f));
         UIComponent lastRow = new UIBlock(clear).setWidth(new RelativeConstraint(1f)).setY(new SiblingConstraint(2f)).setChildOf(generalInfoContainer).setHeight(new RelativeConstraint(0.15f));
