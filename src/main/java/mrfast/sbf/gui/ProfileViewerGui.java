@@ -491,8 +491,10 @@ public class ProfileViewerGui extends WindowScreen {
         if(Utils.isDeveloper()) System.out.println("getting profiles");
 
         new Thread(()->{
-            profiles = APIUtils.getJSONResponse("https://sky.shiiyu.moe/api/v2/profile/"+playerUuid+"#skycryptForPV").get("profiles").getAsJsonObject();
-            if(Utils.isDeveloper()) System.out.println("got profiles");
+            try {
+                profiles = APIUtils.getJSONResponse("https://sky.shiiyu.moe/api/v2/profile/"+playerUuid+"#skycryptForPV").get("profiles").getAsJsonObject();
+                if(Utils.isDeveloper()) System.out.println("got profiles");
+            } catch (Exception ignored) {}
         }).start();
 
         Integer sbLevelCurrXp = sbLevelXP%100;
