@@ -59,6 +59,18 @@ mixin {
     add sourceSets.main, "mixins.skyblockfeatures.refmap.json"
 }
 
+def tweakClass = "org.spongepowered.asm.launch.MixinTweaker"
+
+task setDevEnv {
+    doLast {
+        if (project.hasProperty('devEnv')) {
+            tweakClass = project.devEnv.toBoolean()
+                    ? "gg.essential.loader.stage0.EssentialSetupTweaker"
+                    : "org.spongepowered.asm.launch.MixinTweaker"
+        }
+    }
+}
+
 jar {
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     manifest.attributes(
@@ -66,13 +78,21 @@ jar {
             "MixinConfigs": "mixins.skyblockfeatures.json",
             "FMLAT": "mrfast_at.cfg",
             "ModSide": "CLIENT",
-            "TweakClass": "gg.essential.loader.stage0.EssentialSetupTweaker",
             "TweakOrder": "0"
     )
+
+    // Dynamically set the tweak class based on the condition
+    doLast {
+        manifest.attributes(
+                "TweakClass": tweakClass
+        )
+    }
+
     from {
         configurations.packageLib.collect { it.isDirectory() ? it : zipTree(it) }
     }
 }
+jar.dependsOn setDevEnv
 
 
 processResources {
