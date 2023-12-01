@@ -5,11 +5,7 @@ plugins {
     id "java"
 }
 
-apply plugin: 'net.minecraftforge.gradle.forge'
-apply plugin: 'org.spongepowered.mixin'
-apply plugin: 'java'
-
-version = "1.2.8-BETA3"
+version = "1.2.8-BETA4"
 group = "mrfast.sbf"
 archivesBaseName = "Skyblock-Features"
 
@@ -26,7 +22,7 @@ minecraft {
     runDir = "run"
     mappings = "stable_22"
     makeObfSourceJar = false
-    clientRunArgs += '--mixin mixins.skyblockfeatures.json --tweakClass org.spongepowered.asm.launch.MixinTweaker '
+    clientRunArgs += '--mixin mixins.skyblockfeatures.json --tweakClass org.spongepowered.asm.launch.MixinTweaker --tweakClass gg.essential.loader.stage0.EssentialSetupTweaker'
 }
 
 repositories {
@@ -34,6 +30,7 @@ repositories {
     jcenter();
     maven { url "https://repo.spongepowered.org/repository/maven-public/" }
     maven { url "https://jitpack.io/" }
+    maven { url "https://repo.nea.moe/releases"}
     maven { url "https://repo.essential.gg/repository/maven-public" }
 }
 
@@ -45,16 +42,16 @@ configurations {
 
 
 dependencies {
+    packageLib "gg.essential:loader-launchwrapper:1.1.1"
     implementation "gg.essential:essential-1.8.9-forge:12132+g6e2bf4dc5"
-    implementation "gg.essential:elementa-1.8.9-forge:614"
-    implementation "gg.essential:vigilance-1.8.9-forge:295"
 
-    // Kotlin Standard Library
     implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.6.10'
 
     implementation "org.spongepowered:mixin:0.7.11-SNAPSHOT"
     implementation 'org.jetbrains:annotations:24.0.0'
-    packageLib("org.spongepowered:mixin:0.7.11-SNAPSHOT")
+    implementation("moe.nea:libautoupdate:1.2.0")
+
+    implementation("org.spongepowered:mixin:0.7.11-SNAPSHOT")
     annotationProcessor("org.spongepowered:mixin:0.7.11-SNAPSHOT")
 }
 
@@ -69,7 +66,7 @@ jar {
             "MixinConfigs": "mixins.skyblockfeatures.json",
             "FMLAT": "mrfast_at.cfg",
             "ModSide": "CLIENT",
-            "TweakClass": "org.spongepowered.asm.launch.MixinTweaker",
+            "TweakClass": "gg.essential.loader.stage0.EssentialSetupTweaker",
             "TweakOrder": "0"
     )
     from {
