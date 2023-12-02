@@ -277,9 +277,9 @@ public class ConfigGui extends WindowScreen {
                 Utils.overrideDevMode = true;
                 Utils.overrideDevModeValue = !Utils.overrideDevModeValue;
                 if(Utils.overrideDevModeValue) {
-                    Utils.SendMessage(ChatFormatting.YELLOW+"Developer Mode Enabled!");
+                    Utils.sendMessage(ChatFormatting.YELLOW+"Developer Mode Enabled!");
                 } else {
-                    Utils.SendMessage(ChatFormatting.YELLOW+"Developer Mode Disabled!");
+                    Utils.sendMessage(ChatFormatting.YELLOW+"Developer Mode Disabled!");
                 }
                 Utils.playSound("random.orb", 0.1);
                 return;

@@ -38,7 +38,6 @@ import org.lwjgl.input.Mouse;
 import java.io.ByteArrayInputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 public class AutoAuctionFlip {
     static Auction bestAuction = null;
@@ -157,7 +156,7 @@ public class AutoAuctionFlip {
                         AutoAuctionFlip.sent = false;
                     }, 1000);
                 } else {
-                    Utils.SendMessage(ChatFormatting.RED+"Best flip not found! Keep holding to open next.");
+                    Utils.sendMessage(ChatFormatting.RED+"Best flip not found! Keep holding to open next.");
                 }
             }
         } catch (Exception ignored) {
@@ -180,7 +179,7 @@ public class AutoAuctionFlip {
         if(timeUntilReload == 40) {
             messageSent = 0;
             if((earliestApiUpdateTime!=60 && latestApiUpdateTime!=0) && stage == 3) {
-                Utils.SendMessage(ChatFormatting.GRAY+"Filtered out "+Utils.nf.format((auctionsFilteredThrough-auctionsPassedFilteredThrough))+" auctions in the past 60s ");
+                Utils.sendMessage(ChatFormatting.GRAY+"Filtered out "+Utils.nf.format((auctionsFilteredThrough-auctionsPassedFilteredThrough))+" auctions in the past 60s ");
             }
         }
         if(timeUntilReload == 60) {
@@ -188,7 +187,7 @@ public class AutoAuctionFlip {
         }
         if(timeUntilReload == 10) {
             if(earliestApiUpdateTime!=60 && latestApiUpdateTime!=0 && stage==3) {
-                Utils.SendMessage(ChatFormatting.GRAY+"Scanning for auctions in 10s");
+                Utils.sendMessage(ChatFormatting.GRAY+"Scanning for auctions in 10s");
 
             }
             auctionsFilteredThrough = 0;
@@ -198,7 +197,7 @@ public class AutoAuctionFlip {
         if(checkForNewReloadTime && !checkingForNewReloadTime) {
             stage = 1;
             checkingForNewReloadTime=true;
-            Utils.SendMessage(ChatFormatting.YELLOW+"Starting Flipper..");
+            Utils.sendMessage(ChatFormatting.YELLOW+"Starting Flipper..");
 
             new Thread(()->{
                 /*
@@ -225,7 +224,7 @@ public class AutoAuctionFlip {
 
                 // Status message
                 System.out.println("Searching for "+lengthOfSearch+" seconds low:"+earliestApiUpdateTime+" high:"+latestApiUpdateTime);
-                Utils.SendMessage(ChatFormatting.GRAY+"Scanning for auctions..");
+                Utils.sendMessage(ChatFormatting.GRAY+"Scanning for auctions..");
 
                 for(int i=0;i<lengthOfSearch;i++) {
                     Utils.setTimeout(()->{
@@ -261,7 +260,7 @@ public class AutoAuctionFlip {
                                             }
                                         }
                                     } else {
-                                        Utils.SendMessage(ChatFormatting.RED+"No flips that match your filter found!");
+                                        Utils.sendMessage(ChatFormatting.RED+"No flips that match your filter found!");
                                     }
                                 }
                             }
@@ -299,7 +298,7 @@ public class AutoAuctionFlip {
 //                            }
 //                        }).start();
 //                        stage = 1;
-                        Utils.SendMessage(ChatFormatting.RED+"The API Didnt update when expected! Current Check Time: "+seconds+"s");
+                        Utils.sendMessage(ChatFormatting.RED+"The API Didnt update when expected! Current Check Time: "+seconds+"s");
                     }
                 },lengthOfSearch*1000+1500);
             }).start();
@@ -314,7 +313,7 @@ public class AutoAuctionFlip {
         stage = 3;
         checkForNewReloadTime = false;
         checkingForNewReloadTime = false;
-        Utils.SendMessage(ChatFormatting.GREEN+"Auction Flipper Setup!");
+        Utils.sendMessage(ChatFormatting.GREEN+"Auction Flipper Setup!");
         Utils.playSound("random.orb", 0.1);
     }
 

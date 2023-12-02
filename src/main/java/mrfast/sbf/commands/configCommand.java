@@ -1,20 +1,18 @@
 package mrfast.sbf.commands;
 
-import java.lang.management.ManagementFactory;
 import java.util.List;
 import java.util.Locale;
-import java.util.Objects;
 
 import com.google.common.collect.Lists;
 import com.mojang.realmsclient.gui.ChatFormatting;
 
 import mrfast.sbf.SkyblockFeatures;
 import mrfast.sbf.core.SkyblockInfo;
+import mrfast.sbf.core.VersionManager;
 import mrfast.sbf.gui.EditLocationsGui;
 import mrfast.sbf.gui.GuiManager;
 import mrfast.sbf.gui.ConfigGui;
 import mrfast.sbf.gui.components.Point;
-import mrfast.sbf.utils.APIUtils;
 import mrfast.sbf.utils.GuiUtils;
 import mrfast.sbf.utils.Utils;
 import net.minecraft.client.entity.EntityPlayerSP;
@@ -23,11 +21,6 @@ import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.ChatComponentText;
-
-import javax.management.JMX;
-import javax.management.MBeanServer;
-import javax.management.MXBean;
-import javax.management.ObjectName;
 
 public class configCommand extends CommandBase {
 
@@ -67,18 +60,21 @@ public class configCommand extends CommandBase {
         String subcommand = args[0].toLowerCase(Locale.ENGLISH);
         
         switch (subcommand) {
+            case "update":
+                VersionManager.checkForUpdates();
+                break;
             case "version":
-                Utils.SendMessage(ChatFormatting.YELLOW+"Your using Skyblock Features v"+SkyblockFeatures.VERSION);
+                Utils.sendMessage(ChatFormatting.YELLOW+"Your using Skyblock Features v"+SkyblockFeatures.VERSION);
                 break;
             case "loc":
-                Utils.SendMessage(ChatFormatting.GRAY+"Local:'"+SkyblockInfo.localLocation+"' Map:"+SkyblockInfo.map+" Location:'"+SkyblockInfo.location+"'");
+                Utils.sendMessage(ChatFormatting.GRAY+"Local:'"+SkyblockInfo.localLocation+"' Map:"+SkyblockInfo.map+" Location:'"+SkyblockInfo.location+"'");
                 break;
             case "resetgui":
                 GuiManager.GuiPositions.forEach((name,point)->{
                     Point pnt = GuiManager.names.get(name).getPos();
                     GuiManager.GuiPositions.put(name, pnt);
                 });
-                Utils.SendMessage("Gui Positions Reset!");
+                Utils.sendMessage("Gui Positions Reset!");
                 break;
             case "config":
                 GuiUtils.openGui(new ConfigGui(true));

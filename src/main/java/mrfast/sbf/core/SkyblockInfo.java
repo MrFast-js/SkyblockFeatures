@@ -8,7 +8,6 @@ import mrfast.sbf.events.PacketEvent;
 import mrfast.sbf.utils.ScoreboardUtil;
 import mrfast.sbf.utils.Utils;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.client.C16PacketClientStatus;
 import net.minecraft.network.play.client.C16PacketClientStatus.EnumState;
@@ -47,7 +46,7 @@ public class SkyblockInfo {
         if(waitingForResponse && event.packet instanceof S37PacketStatistics) {
             waitingForResponse = false;
             Utils.playSound("random.orb", 0.1);
-            Utils.SendMessage(ChatFormatting.GREEN+"Your current ping is "+ChatFormatting.YELLOW+(System.currentTimeMillis()-startTime)+"ms");
+            Utils.sendMessage(ChatFormatting.GREEN+"Your current ping is "+ChatFormatting.YELLOW+(System.currentTimeMillis()-startTime)+"ms");
         }
     }
 

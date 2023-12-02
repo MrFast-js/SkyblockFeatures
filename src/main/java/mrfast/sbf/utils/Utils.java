@@ -1,48 +1,25 @@
 package mrfast.sbf.utils;
 
-import java.awt.Color;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
 
 import com.google.gson.JsonObject;
-import mrfast.sbf.gui.ConfigGui;
-import mrfast.sbf.gui.ProfileViewerGui;
-import net.minecraft.client.gui.GuiOptions;
-import net.minecraft.client.gui.GuiScreen;
-import org.apache.commons.lang3.time.DurationFormatUtils;
-import org.lwjgl.input.Mouse;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL14;
-import org.lwjgl.util.vector.Vector2f;
 
 import com.mojang.realmsclient.gui.ChatFormatting;
 
-import gg.essential.elementa.components.UIRoundedRectangle;
-import gg.essential.universal.UMatrixStack;
-import mrfast.sbf.gui.ProfileViewerUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.network.NetworkPlayerInfo;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.WorldRenderer;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.scoreboard.ScoreObjective;
-import net.minecraft.util.BlockPos;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IChatComponent;
@@ -260,13 +237,13 @@ public class Utils {
     }
 
 
-    public static void SendMessage(String string) {
+    public static void sendMessage(String string) {
         if (Utils.GetMC().ingameGUI != null || Utils.GetMC().thePlayer == null) {
             Utils.GetMC().ingameGUI.getChatGUI().printChatMessage(new ChatComponentText(ChatFormatting.AQUA+"[SBF] "+ChatFormatting.RESET+string));
         }
     }
 
-    public static void SendMessage(IChatComponent msg) {
+    public static void sendMessage(IChatComponent msg) {
         if (Utils.GetMC().ingameGUI != null || Utils.GetMC().thePlayer == null) {
             ChatComponentText prefix = new ChatComponentText(EnumChatFormatting.AQUA+"[SBF] "+EnumChatFormatting.RESET);
             Utils.GetMC().thePlayer.addChatMessage(new ChatComponentText("").appendSibling(prefix).appendSibling(msg));

@@ -1,12 +1,9 @@
 package mrfast.sbf.utils;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.InputStreamReader;
-import java.net.Socket;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 import java.security.KeyManagementException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
@@ -123,7 +120,7 @@ public class APIUtils {
                             return getJSONResponse(urlString, headers);
                         }
                         if(statusCode!=200) {
-                            Utils.SendMessage(ChatFormatting.RED+"Server Error: "+out.get("cause").getAsString()+" "+ChatFormatting.YELLOW+ChatFormatting.ITALIC+out.get("err_code")+" "+urlString);
+                            Utils.sendMessage(ChatFormatting.RED+"Server Error: "+out.get("cause").getAsString()+" "+ChatFormatting.YELLOW+ChatFormatting.ITALIC+out.get("err_code")+" "+urlString);
                             return null;
                         }
                     }
@@ -196,7 +193,7 @@ public class APIUtils {
             HttpEntity entity = response.getEntity();
 
             if (response.getStatusLine().getStatusCode() == 200) {
-                BufferedReader in = new BufferedReader(new InputStreamReader(entity.getContent()));
+                BufferedReader in = new BufferedReader(new InputStreamReader(entity.getContent(),StandardCharsets.UTF_8));
                 String input;
                 StringBuilder r = new StringBuilder();
 
@@ -252,20 +249,20 @@ public class APIUtils {
         if(profilesResponse.toString().length()>2) {
             if(Utils.isDeveloper()) System.out.println("GOT https://api.hypixel.net/skyblock/profiles?uuid=" + uuid);
         } else {
-            Utils.SendMessage(ChatFormatting.RED+"There was a problem with the "+ChatFormatting.YELLOW+"Hypixel API"+ChatFormatting.RED+". Is it down?");
+            Utils.sendMessage(ChatFormatting.RED+"There was a problem with the "+ChatFormatting.YELLOW+"Hypixel API"+ChatFormatting.RED+". Is it down?");
             if(Utils.isDeveloper()) System.out.println("FAILED https://api.hypixel.net/skyblock/profiles?uuid=" + uuid);
             GuiUtils.openGui(null);
         }
 
         if (profilesResponse.has("error")) {
             String reason = profilesResponse.get("error").getAsString();
-            Utils.SendMessage(EnumChatFormatting.RED + "Failed with reason: " + reason);
+            Utils.sendMessage(EnumChatFormatting.RED + "Failed with reason: " + reason);
             GuiUtils.openGui(null);
             return null;
         }
 
         if (!profilesResponse.has("profiles") || profilesResponse.get("profiles").isJsonNull()) {
-            Utils.SendMessage(EnumChatFormatting.RED + "This player has no Skyblock profiles!");
+            Utils.sendMessage(EnumChatFormatting.RED + "This player has no Skyblock profiles!");
             GuiUtils.openGui(null);
             return null;
         }

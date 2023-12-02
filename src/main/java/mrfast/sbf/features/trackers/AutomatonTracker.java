@@ -61,7 +61,7 @@ public class AutomatonTracker {
                 seconds++;
             }
             if(seconds >= 60) {
-                Utils.SendMessage(oldKills +" "+ kills);
+                Utils.sendMessage(oldKills +" "+ kills);
                 if(oldKills == kills) {
                     hidden = true;
                     totalSeconds=0;

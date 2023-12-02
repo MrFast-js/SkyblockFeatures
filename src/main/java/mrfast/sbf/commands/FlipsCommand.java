@@ -1,9 +1,7 @@
 package mrfast.sbf.commands;
 
 import java.awt.Desktop;
-import java.io.IOException;
 import java.net.URI;
-import java.net.URISyntaxException;
 
 import com.mojang.realmsclient.gui.ChatFormatting;
 
@@ -12,10 +10,6 @@ import mrfast.sbf.utils.Utils;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
-import net.minecraft.event.ClickEvent;
-import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.ChatStyle;
-import net.minecraft.util.EnumChatFormatting;
 
 public class FlipsCommand extends CommandBase {
 
@@ -49,6 +43,6 @@ public class FlipsCommand extends CommandBase {
             e.printStackTrace();
         }
 
-        Utils.SendMessage(ChatFormatting.LIGHT_PURPLE+"Opening "+username+"'s Flipper stats");
+        Utils.sendMessage(ChatFormatting.LIGHT_PURPLE+"Opening "+username+"'s Flipper stats");
 	}
 }

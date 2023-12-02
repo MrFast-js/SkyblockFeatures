@@ -427,11 +427,11 @@ public class ProfileViewerGui extends WindowScreen {
             });
             drawSideButton(sideButtonContainer,"Crimson",()->{
                 // loadCategory("Crimson");
-                Utils.SendMessage(ChatFormatting.RED+"Currently Disabled");
+                Utils.sendMessage(ChatFormatting.RED+"Currently Disabled");
             });
             drawSideButton(sideButtonContainer,"Misc Stats",()->{
                 // loadCategory("Misc Stats");
-                Utils.SendMessage(ChatFormatting.RED+"Currently Disabled");
+                Utils.sendMessage(ChatFormatting.RED+"Currently Disabled");
             });
         }
 

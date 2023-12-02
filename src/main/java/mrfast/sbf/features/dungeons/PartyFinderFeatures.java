@@ -41,7 +41,6 @@ import java.io.InputStream;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 public class PartyFinderFeatures {
     static List<String> neededClasses = new ArrayList<>(Arrays.asList("Mage","Archer","Tank","Healer","Berserk"));
@@ -125,7 +124,7 @@ public class PartyFinderFeatures {
             JsonObject profileResponse = APIUtils.getJSONResponse(profileURL);
             if (!profileResponse.get("success").getAsBoolean()) {
                 String reason = profileResponse.get("cause").getAsString();
-                Utils.SendMessage(ChatFormatting.RED + "Failed with reason: " + reason);
+                Utils.sendMessage(ChatFormatting.RED + "Failed with reason: " + reason);
                 return;
             }
 
@@ -136,7 +135,7 @@ public class PartyFinderFeatures {
 
             if(!playerResponse.get("success").getAsBoolean()){
                 String reason = profileResponse.get("cause").getAsString();
-                Utils.SendMessage(ChatFormatting.RED + "Failed with reason: " + reason);
+                Utils.sendMessage(ChatFormatting.RED + "Failed with reason: " + reason);
                 return;
             }
 
@@ -280,7 +279,7 @@ public class PartyFinderFeatures {
                 completions.setChatStyle(completions.getChatStyle().setChatHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ChatComponentText(completionsHoverString.toString()))));
                 String delimiter = ChatFormatting.RED.toString() + ChatFormatting.STRIKETHROUGH + ChatFormatting.BOLD + "---------------------------";
 
-                Utils.SendMessage(
+                Utils.sendMessage(
                         new ChatComponentText(delimiter)
                                 .appendText("\n")
                                 .appendSibling(nameComponent)
@@ -301,7 +300,7 @@ public class PartyFinderFeatures {
                 );
             } catch (IOException ex) {
                 System.out.println(ex);
-                Utils.SendMessage(ChatFormatting.RED+"Error! This player may not have there API on.");
+                Utils.sendMessage(ChatFormatting.RED+"Error! This player may not have there API on.");
             }
         }).start();
     }

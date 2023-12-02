@@ -1,33 +1,15 @@
 package mrfast.sbf.events;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.event.ClickEvent;
-import net.minecraft.event.HoverEvent;
-import net.minecraft.nbt.CompressedStreamTools;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
-import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Base64;
-import java.util.Collections;
 import java.util.List;
 
-import com.google.gson.JsonObject;
-import com.mojang.realmsclient.gui.ChatFormatting;
-
 import mrfast.sbf.SkyblockFeatures;
-import mrfast.sbf.utils.APIUtils;
-import mrfast.sbf.utils.ItemUtils;
 import mrfast.sbf.utils.Utils;
 
 public class ChatEventListener {
@@ -54,13 +36,13 @@ public class ChatEventListener {
         if(unformatted.startsWith("You have joined ") && unformatted.contains("party!") && SkyblockFeatures.config.autoPartyChat) {
             Utils.GetMC().thePlayer.sendChatMessage("/chat p");
             Utils.setTimeout(()->{
-                Utils.SendMessage(EnumChatFormatting.YELLOW + "Auto Joined Party Chat.");
+                Utils.sendMessage(EnumChatFormatting.YELLOW + "Auto Joined Party Chat.");
             },10);
         }
         
         // Welcome message
         if (SkyblockFeatures.config.firstLaunch && unformatted.equals("Welcome to Hypixel SkyBlock!")) {
-            Utils.SendMessage("§bThank You for downloading Skyblock Features!§e Do /sbf for config!");
+            Utils.sendMessage("§bThank You for downloading Skyblock Features!§e Do /sbf for config!");
 
             SkyblockFeatures.config.firstLaunch = false;
             SkyblockFeatures.config.forceSave();

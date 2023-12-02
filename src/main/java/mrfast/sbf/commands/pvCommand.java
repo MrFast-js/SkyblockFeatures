@@ -1,25 +1,18 @@
 package mrfast.sbf.commands;
 
 import java.util.List;
-import java.util.Locale;
-import java.util.Objects;
 
 import com.google.common.collect.Lists;
 import com.mojang.realmsclient.gui.ChatFormatting;
 
-import mrfast.sbf.SkyblockFeatures;
-import mrfast.sbf.gui.EditLocationsGui;
 import mrfast.sbf.gui.ProfileViewerGui;
-import mrfast.sbf.gui.ConfigGui;
 import mrfast.sbf.utils.APIUtils;
 import mrfast.sbf.utils.GuiUtils;
 import mrfast.sbf.utils.Utils;
-import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.util.BlockPos;
-import net.minecraft.util.ChatComponentText;
 
 public class pvCommand extends CommandBase {
 
@@ -53,15 +46,15 @@ public class pvCommand extends CommandBase {
         if (args.length == 0) {
             String username = Utils.GetMC().thePlayer.getName();
 
-            Utils.SendMessage(ChatFormatting.YELLOW+"Opening "+username+"'s Profile "+ChatFormatting.GRAY+"(This may take a second)");
+            Utils.sendMessage(ChatFormatting.YELLOW+"Opening "+username+"'s Profile "+ChatFormatting.GRAY+"(This may take a second)");
             GuiUtils.openGui(new ProfileViewerGui(true,username,"auto"));
         } else {
             String playerUuid = APIUtils.getUUID(args[0],true);
             if(playerUuid==null) {
-                Utils.SendMessage(ChatFormatting.RED+"A player with that username doesn't exist");
+                Utils.sendMessage(ChatFormatting.RED+"A player with that username doesn't exist");
                 return;
             }
-            Utils.SendMessage(ChatFormatting.YELLOW+"Opening "+args[0]+"'s Profile "+ChatFormatting.GRAY+"(This may take a second)");
+            Utils.sendMessage(ChatFormatting.YELLOW+"Opening "+args[0]+"'s Profile "+ChatFormatting.GRAY+"(This may take a second)");
             GuiUtils.openGui(new ProfileViewerGui(true,args[0],"auto"));
         }
     }

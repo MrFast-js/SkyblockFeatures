@@ -57,6 +57,8 @@ public class SkyblockFeatures {
     public static final String MODID = "skyblockfeatures";
     public static final String MOD_NAME = "skyblockfeatures";
     public static String VERSION = ChatFormatting.RED + "Unknown";
+    public static File SOURCE;
+
     public static Minecraft mc = Minecraft.getMinecraft();
 
     public static Config config = new Config();
@@ -169,6 +171,7 @@ public class SkyblockFeatures {
         for (ModContainer mod : modList) {
             if (mod.getModId().equals(MODID)) {
                 VERSION = mod.getDisplayVersion();
+                SOURCE = mod.getSource();
                 break;
             }
         }
@@ -256,9 +259,9 @@ public class SkyblockFeatures {
     public void onTick2(TickEvent.ClientTickEvent e) {
         if (toggleSprint.isPressed()) {
             if (config.toggleSprint) {
-                Utils.SendMessage(EnumChatFormatting.RED + "Togglesprint disabled.");
+                Utils.sendMessage(EnumChatFormatting.RED + "Togglesprint disabled.");
             } else {
-                Utils.SendMessage(EnumChatFormatting.GREEN + "Togglesprint enabled.");
+                Utils.sendMessage(EnumChatFormatting.GREEN + "Togglesprint enabled.");
             }
             config.toggleSprint = !config.toggleSprint;
         }

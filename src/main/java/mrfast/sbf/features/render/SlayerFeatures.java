@@ -51,7 +51,7 @@ public class SlayerFeatures {
             String totalTime = Utils.secondsToTime((long) Math.ceil(spawnTime + killTime));
 
             Utils.setTimeout(()-> {
-                    Utils.SendMessage(ChatFormatting.GOLD+ChatFormatting.BOLD.toString() + "Slayer Timer\n" +
+                    Utils.sendMessage(ChatFormatting.GOLD+ChatFormatting.BOLD.toString() + "Slayer Timer\n" +
                             ChatFormatting.AQUA + "        • Total Time: " + totalTime + "\n" +
                             ChatFormatting.YELLOW + "        • Spawn: " + Utils.secondsToTime((long) spawnTime) + "\n" +
                             ChatFormatting.YELLOW + "        • Kill: " + Utils.secondsToTime((long) killTime));

@@ -13,7 +13,6 @@ import mrfast.sbf.utils.RenderUtil;
 import mrfast.sbf.utils.TabListUtils;
 import mrfast.sbf.utils.Utils;
 import net.minecraft.client.network.NetworkPlayerInfo;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityArmorStand;
 import net.minecraft.entity.passive.EntityChicken;
@@ -30,7 +29,6 @@ import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
-import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class TrevorHelper {
@@ -63,7 +61,7 @@ public class TrevorHelper {
         }
         if(msg.contains("animal near the ")) {
             Utils.setTimeout(()->{
-                Utils.SendMessage(ChatFormatting.GOLD+"Biome location marked with beacon.");
+                Utils.sendMessage(ChatFormatting.GOLD+"Biome location marked with beacon.");
                 GuiManager.createTitle(ChatFormatting.GOLD+"Marked Biome", 20);
                 Utils.setTimeout(()->{
                     if(location.contains("Oasis") || location.contains("Settlement")) {
@@ -73,7 +71,7 @@ public class TrevorHelper {
                         .setChatClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/warp desert"))
                         .setChatHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ChatComponentText(EnumChatFormatting.GREEN+"/warp desert"))));
                         
-                        Utils.SendMessage(
+                        Utils.sendMessage(
                             new ChatComponentText("")
                             .appendText(ChatFormatting.GOLD+"Location Near Spawn!")
                             .appendSibling(message)
@@ -90,7 +88,7 @@ public class TrevorHelper {
             .setChatClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/warp trapper"))
             .setChatHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ChatComponentText(EnumChatFormatting.GREEN+"/warp trapper"))));
             
-            Utils.SendMessage(
+            Utils.sendMessage(
                 new ChatComponentText("")
                 .appendText(ChatFormatting.GOLD+"Marked Trevor!")
                 .appendSibling(message)

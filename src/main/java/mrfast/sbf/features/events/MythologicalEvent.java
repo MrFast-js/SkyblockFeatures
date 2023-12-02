@@ -8,7 +8,6 @@ import com.mojang.realmsclient.gui.ChatFormatting;
 
 import mrfast.sbf.SkyblockFeatures;
 import mrfast.sbf.core.SkyblockInfo;
-import mrfast.sbf.events.PacketEvent;
 import mrfast.sbf.events.PacketEvent.ReceiveEvent;
 import mrfast.sbf.utils.RenderUtil;
 import mrfast.sbf.utils.Utils;
@@ -66,7 +65,7 @@ public class MythologicalEvent {
         if (burrow == null || (burrow.getX() != Math.floor(packet.getXCoordinate()) && burrow.getZ() != Math.floor(packet.getZCoordinate()))) {
             if (sendNotification) {
                 sendNotification = false;
-                Utils.SendMessage(ChatFormatting.GREEN + "Located a new Griffin Burrow!");
+                Utils.sendMessage(ChatFormatting.GREEN + "Located a new Griffin Burrow!");
                 Utils.playSound("random.orb", 0.1);
                 Utils.setTimeout(() -> sendNotification = true, 15 * 1000);
             }

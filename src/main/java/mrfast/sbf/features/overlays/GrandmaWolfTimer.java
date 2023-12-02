@@ -78,7 +78,7 @@ public class GrandmaWolfTimer {
                             }
                         }
                         if(((int) (fiveComboSeconds*10))!=SkyblockFeatures.config.gMaWolf5Second) {
-                            Utils.SendMessage(ChatFormatting.GREEN+"Updated Grandma Wolf combo times");
+                            Utils.sendMessage(ChatFormatting.GREEN+"Updated Grandma Wolf combo times");
                         }
                         SkyblockFeatures.config.gMaWolf5Second=(int) (fiveComboSeconds*10);
                         SkyblockFeatures.config.gMaWolf10Second=(int) (TenComboSeconds*10);

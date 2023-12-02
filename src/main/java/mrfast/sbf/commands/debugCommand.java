@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
-import java.net.URI;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -91,7 +90,7 @@ public class debugCommand extends CommandBase {
                 if(heldItem != null) {
                     getItemData(heldItem);
                 } else {
-                    Utils.SendMessage(ChatFormatting.RED + "You must be holding an item!");
+                    Utils.sendMessage(ChatFormatting.RED + "You must be holding an item!");
                 }
                 break;
             case "sidebar":
@@ -115,7 +114,7 @@ public class debugCommand extends CommandBase {
         for(String arg:arguments) {
             usage.append(arg).append(" ");
         }
-        Utils.SendMessage(usage.toString());
+        Utils.sendMessage(usage.toString());
     }
 
     public static void getSidebarData() {
@@ -321,7 +320,7 @@ public class debugCommand extends CommandBase {
     }
 
     public static void uploadData(String text) {
-        Utils.SendMessage(ChatFormatting.GRAY+"Uploading data...");
+        Utils.sendMessage(ChatFormatting.GRAY+"Uploading data...");
         new Thread(()-> {
             try {
                 URL url = new URL("https://hst.sh/documents");
@@ -346,13 +345,13 @@ public class debugCommand extends CommandBase {
                     JsonObject json = new Gson().fromJson(out, JsonObject.class);
                     hostUrl = "https://hst.sh/raw/" + json.get("key").getAsString();
                 } else {
-                    Utils.SendMessage("That failed too :(");
+                    Utils.sendMessage("That failed too :(");
                     System.out.println("Request failed with code " + responseCode);
                 }
 
                 IChatComponent message = new ChatComponentText(ChatFormatting.GREEN + "Succesfully uploaded debug data!" + ChatFormatting.GOLD + ChatFormatting.BOLD + " Click here to open");
                 message.getChatStyle().setChatClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, hostUrl));
-                Utils.SendMessage(message);
+                Utils.sendMessage(message);
 
                 connection.disconnect();
             } catch (Exception e) {

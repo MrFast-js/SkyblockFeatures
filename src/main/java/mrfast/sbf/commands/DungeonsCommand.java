@@ -3,22 +3,12 @@ package mrfast.sbf.commands;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.event.HoverEvent;
-import net.minecraft.util.BlockPos;
-import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.EnumChatFormatting;
 
-import java.text.DecimalFormat;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
-import com.google.gson.JsonObject;
 import com.mojang.realmsclient.gui.ChatFormatting;
 
-import mrfast.sbf.SkyblockFeatures;
-import mrfast.sbf.utils.APIUtils;
 import mrfast.sbf.utils.Utils;
 
 public class DungeonsCommand extends CommandBase {
@@ -54,7 +44,7 @@ public class DungeonsCommand extends CommandBase {
 	@Override
 	public void processCommand(ICommandSender arg0, String[] arg1) throws CommandException {
 		if(arg1.length!=1) {
-			Utils.SendMessage(ChatFormatting.RED+"Invalid Command Usage! Example Usage /jd m4");
+			Utils.sendMessage(ChatFormatting.RED+"Invalid Command Usage! Example Usage /jd m4");
 			return;
 		}
 		boolean masterMode = arg1[0].toLowerCase().contains("m");
