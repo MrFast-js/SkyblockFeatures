@@ -229,7 +229,6 @@ public class SkyblockFeatures {
             VersionManager.silentUpdateCheck();
         }
 
-
         if (ticks % 20 == 0) {
             if (mc.thePlayer != null) {
                 Utils.checkForSkyblock();

@@ -38,15 +38,20 @@ public class CooldownTracker {
         int cooldownSeconds;
         int currentCount;
         boolean counting = false;
+        long usedAt;
         String itemId;
         String abilityName;
         String type;
         public ItemAbility(String id) {
             this.itemId=id;
+            this.usedAt=System.currentTimeMillis();
         }
         public void reset() {
-            if(this.cooldownSeconds-this.currentCount==0) this.currentCount=0;
+            if(this.cooldownSeconds-this.currentCount==0) {
+                this.currentCount=0;
+            }
             this.counting = true;
+            this.usedAt=System.currentTimeMillis();
         }
     }
     @SubscribeEvent
@@ -151,7 +156,7 @@ public class CooldownTracker {
         boolean sneaking = Utils.GetMC().thePlayer.isSneaking();
         if (event.button == 0 && event.buttonstate) {
             // Left mouse button pressed
-            if(cdItem.leftClick!=null && !sneaking) {
+            if(cdItem.leftClick!=null && (cdItem.sneakLeftClick == null || !sneaking)) {
                 justUsedAbility = cdItem.leftClick;
                 cdItem.leftClick.reset();
                 activeCooldowns.put(skyblockId,cdItem);
@@ -163,7 +168,7 @@ public class CooldownTracker {
             }
         } else if (event.button == 1 && event.buttonstate) {
             // Right mouse button pressed
-            if(cdItem.rightClick!=null && !sneaking) {
+            if(cdItem.rightClick!=null && (!sneaking || cdItem.sneakRightClick==null)) {
                 justUsedAbility = cdItem.rightClick;
                 cdItem.rightClick.reset();
                 activeCooldowns.put(skyblockId,cdItem);
@@ -177,9 +182,21 @@ public class CooldownTracker {
     }
     @SubscribeEvent
     public void onChat(ClientChatReceivedEvent event) {
+        String clean = Utils.cleanColor(event.message.getUnformattedText());
+
+        if(clean.startsWith("Used")) {
+            justUsedAbility = new ItemAbility("Dungeon_Ability");
+        }
         if(justUsedAbility!=null) {
-            String clean = Utils.cleanColor(event.message.getUnformattedText());
+            ItemStack heldItem = Utils.GetMC().thePlayer.getHeldItem();
+            if(heldItem==null) return;
+            String skyblockId = ItemUtils.getSkyBlockItemID(heldItem);
+            if(!justUsedAbility.itemId.equals(skyblockId)) return;;
+
             if(clean.startsWith("This ability is on cooldown for")) {
+                if(System.currentTimeMillis()-justUsedAbility.usedAt>750) {
+                    return;
+                }
                 int currentCooldown = Integer.parseInt(clean.replaceAll("[^0-9]",""));
                 justUsedAbility.currentCount= justUsedAbility.cooldownSeconds-currentCooldown;
                 CooldownItem item = activeCooldowns.get(justUsedAbility.itemId);
