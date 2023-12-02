@@ -61,7 +61,15 @@ public class configCommand extends CommandBase {
         
         switch (subcommand) {
             case "update":
-                VersionManager.checkForUpdates();
+                if(args.length>1) {
+                    if(!args[1].equals("pre") && !args[1].equals("full")) {
+                        Utils.sendMessage(ChatFormatting.RED + "Invalid Usage! " + ChatFormatting.YELLOW + "/update pre, full");
+                    } else {
+                        VersionManager.checkForUpdates(args[1]);
+                    }
+                } else {
+                    VersionManager.checkForUpdates("pre");
+                }
                 break;
             case "version":
                 Utils.sendMessage(ChatFormatting.YELLOW+"Your using Skyblock Features v"+SkyblockFeatures.VERSION);

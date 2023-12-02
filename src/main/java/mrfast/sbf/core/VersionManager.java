@@ -4,25 +4,67 @@ import com.mojang.realmsclient.gui.ChatFormatting;
 import moe.nea.libautoupdate.*;
 import mrfast.sbf.SkyblockFeatures;
 import mrfast.sbf.utils.Utils;
+import net.minecraft.event.ClickEvent;
+import net.minecraft.event.HoverEvent;
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.ChatStyle;
+import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.IChatComponent;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.util.concurrent.CompletableFuture;
 
 public class VersionManager {
     static PotentialUpdate potentialUpdate;
-    static boolean betaTester = true;
     private static final UpdateContext context = new UpdateContext(
             UpdateSource.githubUpdateSource("MrFast-js", "SkyblockFeatures"),
             UpdateTarget.deleteAndSaveInTheSameFolder(VersionManager.class),
             CurrentVersion.ofTag(SkyblockFeatures.VERSION),
             SkyblockFeatures.MODID
             );
-    public static void checkForUpdates() {
+
+    public static void silentUpdateCheck() {
+        context.checkUpdate(getUpdatePreference()).thenAcceptAsync((update)->{
+            if (update != null) {
+                potentialUpdate = update;
+                if(isClientOutdated()) {
+                    String updatePreference = getUpdatePreference();
+                    String updateVersion = "v"+potentialUpdate.getUpdate().getVersionName().split("v")[1].trim();
+                    IChatComponent notificationText = new ChatComponentText(
+                            ChatFormatting.GREEN+"Version "+EnumChatFormatting.GOLD+EnumChatFormatting.BOLD+ updateVersion+ChatFormatting.RESET+
+                                    ChatFormatting.GREEN+" is available. "
+                                    +ChatFormatting.YELLOW+"Click to update!")
+                            .setChatStyle(new ChatStyle()
+                                    .setChatClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/sf update " + updatePreference))
+                                    .setChatHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ChatComponentText(ChatFormatting.GREEN+"Click to update"))));
+
+                    Utils.setTimeout(()->{
+                        Utils.playSound("random.orb", 0.1);
+                        Utils.sendMessage(notificationText);
+                    },1000);
+                }
+            }
+        });
+    }
+
+    public static String getUpdatePreference() {
+        int type = SkyblockFeatures.config.updateCheckType;
+        if(type==0) return "full";
+        else return "pre";
+    }
+    public static boolean isClientOutdated() {
+        double currentVersionValue = getVersionValue(SkyblockFeatures.VERSION);
+        String updateVersionName = potentialUpdate.getUpdate().getVersionName().split("v")[1];
+        double updateVersionValue = getVersionValue(updateVersionName);
+
+        return currentVersionValue<updateVersionValue;
+    }
+
+    public static void checkForUpdates(String updateType) {
         // pre full
         Utils.sendMessage(ChatFormatting.YELLOW + "Checking for updates...");
-        context.checkUpdate("pre").thenAcceptAsync((update)->{
+        context.checkUpdate(updateType).thenAcceptAsync((update)->{
             if (update != null) {
                 potentialUpdate = update;
                 checkIfNeedUpdate();
@@ -32,10 +74,10 @@ public class VersionManager {
         });
     }
     private static double getVersionValue(String version) {
-        String part1 = version.substring(0, 6);
+        String part1 = version.split("-")[0];
         int num1 = Integer.parseInt(part1.replaceAll("[^0-9]", ""));
 
-        if(version.length()>7) {
+        if(version.contains("BETA")) {
             String part2 = version.split(part1)[1];
 
             int num2 = Integer.parseInt(part2.replaceAll("[^0-9]", ""));
@@ -59,7 +101,7 @@ public class VersionManager {
         Utils.sendMessage(ChatFormatting.GREEN + "Latest version available: " + ChatFormatting.AQUA + updateVersionName);
 
         if (currentVersionValue > updateVersionValue) {
-            Utils.sendMessage(ChatFormatting.GREEN + "You are using an unreleased version. No update needed.");
+            Utils.sendMessage(ChatFormatting.GREEN + "You are using an more re version. No update needed.");
         } else if (currentVersionValue == updateVersionValue) {
             Utils.sendMessage(ChatFormatting.GREEN + "You are already using the latest version.");
         } else {

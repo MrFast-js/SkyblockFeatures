@@ -21,6 +21,25 @@ public class Config extends Vigilant {
 
     @Property(
             type = PropertyType.SWITCH,
+            name = "Outdated Version Notification",
+            description = "Receive a chat notification when using an outdated version of Skyblock Features",
+            category = "§2§rCustomization",
+            subcategory = "Mod"
+    )
+    public boolean updateNotify = true;
+
+    @Property(
+            type = PropertyType.SELECTOR,
+            name = "Update Check Type",
+            description = "Choose between Full and Beta Releases for update checks",
+            category = "§2§rCustomization",
+            subcategory = "Mod",
+            options = {"Full Releases","Beta Releases"}
+    )
+    public int updateCheckType = 0;
+
+    @Property(
+            type = PropertyType.SWITCH,
             name = "First Launch",
             description = "Used to see if the user is a new user of skyblockfeatures.",
             category = "General",

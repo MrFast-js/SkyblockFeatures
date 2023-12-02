@@ -7,16 +7,13 @@ import java.net.URL;
 import java.util.*;
 
 import com.mojang.realmsclient.gui.ChatFormatting;
-import mrfast.sbf.core.SkyblockMobDetector;
+import mrfast.sbf.core.*;
 import mrfast.sbf.features.dungeons.*;
 import mrfast.sbf.features.items.CooldownTracker;
 import net.minecraftforge.fml.common.ModContainer;
 import org.lwjgl.input.Keyboard;
 
 import mrfast.sbf.commands.*;
-import mrfast.sbf.core.Config;
-import mrfast.sbf.core.PricingData;
-import mrfast.sbf.core.SkyblockInfo;
 import mrfast.sbf.events.ChatEventListener;
 import mrfast.sbf.events.SecondPassedEvent;
 import mrfast.sbf.features.statDisplays.*;
@@ -58,9 +55,7 @@ public class SkyblockFeatures {
     public static final String MOD_NAME = "skyblockfeatures";
     public static String VERSION = ChatFormatting.RED + "Unknown";
     public static File SOURCE;
-
     public static Minecraft mc = Minecraft.getMinecraft();
-
     public static Config config = new Config();
     public static GuiManager GUIMANAGER;
     public static int ticks = 0;
@@ -225,10 +220,13 @@ public class SkyblockFeatures {
         }
     }
 
+    boolean sentUpdateNotification = false;
     @SubscribeEvent
     public void onTick(TickEvent.ClientTickEvent event) {
-        if (event.phase != TickEvent.Phase.START) return;
-        // Small items
+        if(Utils.GetMC().thePlayer!=null && SkyblockFeatures.config.updateNotify && !sentUpdateNotification && Utils.inSkyblock) {
+            sentUpdateNotification = true;
+            VersionManager.silentUpdateCheck();
+        }
 
         if (ticks % 20 == 0) {
             if (mc.thePlayer != null) {
@@ -242,7 +240,7 @@ public class SkyblockFeatures {
         ticks++;
     }
 
-    private KeyBinding toggleSprint;
+    private final static KeyBinding toggleSprint = new KeyBinding("Toggle Sprint", 0, "Skyblock Features");
     public final static KeyBinding reloadPartyFinder = new KeyBinding("Reload Party Finder", Keyboard.KEY_R, "Skyblock Features");
     public final static KeyBinding openBestFlipKeybind = new KeyBinding("Open Best Flip", Keyboard.KEY_J, "Skyblock Features");
 
@@ -251,7 +249,6 @@ public class SkyblockFeatures {
         MinecraftForge.EVENT_BUS.register(this);
         ClientRegistry.registerKeyBinding(openBestFlipKeybind);
         ClientRegistry.registerKeyBinding(reloadPartyFinder);
-        toggleSprint = new KeyBinding("Toggle Sprint", 0, "Skyblock Features");
         ClientRegistry.registerKeyBinding(toggleSprint);
     }
 
