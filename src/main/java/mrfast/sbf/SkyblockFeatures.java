@@ -223,10 +223,12 @@ public class SkyblockFeatures {
     boolean sentUpdateNotification = false;
     @SubscribeEvent
     public void onTick(TickEvent.ClientTickEvent event) {
+        if (event.phase != TickEvent.Phase.START) return;
         if(Utils.GetMC().thePlayer!=null && SkyblockFeatures.config.updateNotify && !sentUpdateNotification && Utils.inSkyblock) {
             sentUpdateNotification = true;
             VersionManager.silentUpdateCheck();
         }
+
 
         if (ticks % 20 == 0) {
             if (mc.thePlayer != null) {
