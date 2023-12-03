@@ -194,7 +194,7 @@ public class CooldownTracker {
             if(!justUsedAbility.itemId.equals(skyblockId)) return;;
 
             if(clean.startsWith("This ability is on cooldown for")) {
-                if(System.currentTimeMillis()-justUsedAbility.usedAt>750) {
+                if(System.currentTimeMillis()-justUsedAbility.usedAt>300) {
                     return;
                 }
                 int currentCooldown = Integer.parseInt(clean.replaceAll("[^0-9]",""));

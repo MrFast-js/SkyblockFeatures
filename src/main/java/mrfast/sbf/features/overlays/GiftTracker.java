@@ -1,6 +1,9 @@
 package mrfast.sbf.features.overlays;
 
 import java.awt.Color;
+import java.time.LocalDate;
+import java.time.Month;
+import java.time.Year;
 import java.util.*;
 
 import com.mojang.realmsclient.gui.ChatFormatting;
@@ -8,7 +11,11 @@ import com.mojang.realmsclient.gui.ChatFormatting;
 import mrfast.sbf.SkyblockFeatures;
 import mrfast.sbf.core.SkyblockInfo;
 import mrfast.sbf.events.CheckRenderEntityEvent;
+import mrfast.sbf.events.GuiContainerEvent;
 import mrfast.sbf.events.PacketEvent;
+import mrfast.sbf.gui.components.Point;
+import mrfast.sbf.gui.components.UIElement;
+import mrfast.sbf.utils.GuiUtils;
 import mrfast.sbf.utils.ItemUtils;
 import mrfast.sbf.utils.RenderUtil;
 import mrfast.sbf.utils.Utils;
@@ -19,11 +26,15 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityArmorStand;
+import net.minecraft.inventory.Slot;
+import net.minecraft.item.ItemStack;
 import net.minecraft.network.play.server.S2APacketParticles;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.Vec3;
+import net.minecraftforge.client.event.ClientChatReceivedEvent;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
+import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 
@@ -50,7 +61,23 @@ public class GiftTracker {
     private static HashMap<Entity, Gift> gifts = new HashMap<>();
 
     @SubscribeEvent
+    public void onWorldChange(WorldEvent.Load event) {
+        gifts.clear();
+        // Reset unique gifts given next time the event comes next year
+        if(SkyblockFeatures.config.winterYear==0) {
+            SkyblockFeatures.config.winterYear= Year.now().getValue();
+        } else {
+            if(Year.now().getValue()!=SkyblockFeatures.config.winterYear) {
+                SkyblockFeatures.config.uniqueGiftsGiven = 0;
+                SkyblockFeatures.config.winterYear = Year.now().getValue();
+            }
+        }
+    }
+
+    @SubscribeEvent
     public void onRenderEntity(CheckRenderEntityEvent event) {
+        if(!SkyblockFeatures.config.hideOtherGifts) return;
+
         if (event.entity instanceof EntityArmorStand) {
             for (Gift gift : gifts.values()) {
                 if (gift.fromEntity.getCustomNameTag().contains(Utils.GetMC().thePlayer.getName())) continue;
@@ -58,9 +85,40 @@ public class GiftTracker {
                 boolean isFrom = gift.fromEntity.getUniqueID().equals(event.entity.getUniqueID());
                 boolean isGift = gift.entity.getUniqueID().equals(event.entity.getUniqueID());
 
-                if ((isFrom || isRecipient || isGift) && !gift.giftToSelf && SkyblockFeatures.config.hideOtherGifts) {
+                if ((isFrom || isRecipient || isGift) && !gift.giftToSelf) {
                     event.setCanceled(true);
                     return;
+                }
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public void onChat(ClientChatReceivedEvent event) {
+        if(!SkyblockFeatures.config.showGiftingInfo) return;
+
+        String clean = Utils.cleanColor(event.message.getUnformattedText());
+        if(clean.startsWith("+1 Unique Gift given!")) {
+            SkyblockFeatures.config.uniqueGiftsGiven++;
+            SkyblockFeatures.config.forceSave();
+        }
+    }
+
+    @SubscribeEvent
+    public void onDrawTitle(GuiContainerEvent.TitleDrawnEvent event) {
+        if(!SkyblockFeatures.config.showGiftingInfo) return;
+
+        if(event.displayName.equals("Generow")) {
+            ItemStack giftStack = event.container.getSlot(40).getStack();
+            if(giftStack!=null) {
+                for(String line:ItemUtils.getItemLore(giftStack)) {
+                    line = Utils.cleanColor(line);
+                    if(line.startsWith("Unique Players Gifted:")) {
+                        int gifts = Integer.parseInt(line.replaceAll("[^0-9]",""));
+                        SkyblockFeatures.config.uniqueGiftsGiven = gifts;
+                        SkyblockFeatures.config.forceSave();
+                        break;
+                    }
                 }
             }
         }
@@ -86,15 +144,16 @@ public class GiftTracker {
     @SubscribeEvent
     public void onTick(TickEvent.ClientTickEvent event) {
         if (Utils.GetMC().theWorld == null) return;
-        ;
+        if(!(SkyblockFeatures.config.highlightSelfGifts||SkyblockFeatures.config.hideOtherGifts||SkyblockFeatures.config.hideGiftParticles)) return;
+
         for (Map.Entry<Entity, Gift> entry : new HashMap<>(gifts).entrySet()) {
             if (!entry.getKey().isEntityAlive()) {
                 gifts.remove(entry.getKey());
             }
         }
+
         for (Entity entity : Utils.GetMC().theWorld.loadedEntityList) {
             if (!(entity instanceof EntityArmorStand)) continue;
-            ;
             if (isPlayerPresent((EntityArmorStand) entity)) {
                 Gift gift = new Gift();
                 gift.entity = entity;
@@ -138,11 +197,12 @@ public class GiftTracker {
         if (SkyblockFeatures.config.highlightSelfGifts) {
             for (Gift gift : gifts.values()) {
                 if (!gift.giftToSelf) continue;
-
                 highlightBlock(SkyblockFeatures.config.selfGiftHighlightColor, gift.entity.posX - 0.5, gift.entity.posY + 1.5, gift.entity.posZ - 0.5, 1.0D, event.partialTicks);
             }
         }
-        if (SkyblockFeatures.config.icecaveHighlightWalls) GlStateManager.disableDepth();
+        if(!(SkyblockFeatures.config.icecaveHighlightWalls || SkyblockFeatures.config.presentWaypoints)) return;
+
+        if(SkyblockFeatures.config.icecaveHighlightWalls) GlStateManager.disableDepth();
 
         for (Entity entity : mc.theWorld.loadedEntityList) {
             if (SkyblockFeatures.config.presentWaypoints && entity instanceof EntityArmorStand && !inGlacialCave && ((EntityArmorStand) entity).getCurrentArmor(3) != null && ((EntityArmorStand) entity).getCurrentArmor(3).serializeNBT().getCompoundTag("tag").getCompoundTag("SkullOwner").getCompoundTag("Properties").toString().contains("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMTBmNTM5ODUxMGIxYTA1YWZjNWIyMDFlYWQ4YmZjNTgzZTU3ZDcyMDJmNTE5M2IwYjc2MWZjYmQwYWUyIn19fQ=")) {
@@ -219,6 +279,79 @@ public class GiftTracker {
 
     public static void highlightBlock(Color c, double d, double d1, double d2, double size, float ticks) {
         RenderUtil.drawOutlinedFilledBoundingBox(new AxisAlignedBB(d, d1, d2, d + size, d1 + size, d2 + size), c, ticks);
+    }
+
+    private static boolean isInMonthRange() {
+        Month start= Month.NOVEMBER;
+        Month event= Month.DECEMBER;
+        Month end=Month.FEBRUARY;
+        Month currentMonth = LocalDate.now().getMonth();
+        return currentMonth.equals(start) || currentMonth.equals(end) || currentMonth.equals(event);
+    }
+    static {
+        new giftingOverlay();
+    }
+    public static int getGiftMilestone(int gifts) {
+        if (gifts <= 100) {
+            return (gifts / 10);
+        } else if (gifts <= 200) {
+            gifts-=100;
+            return 10 + (gifts / 20);
+        } else if (gifts <= 350) {
+            gifts-=200;
+            return 15 + (gifts / 30);
+        } else if (gifts > 350) {
+            gifts-=350;
+            return 20 + (gifts / 50);
+        }
+        return -1;
+    }
+    public static class giftingOverlay extends UIElement {
+        public giftingOverlay() {
+            super("giftingOverlay", new Point(0f,0f));
+            SkyblockFeatures.GUIMANAGER.registerElement(this);
+        }
+
+        @Override
+        public void drawElement() {
+            if(Utils.GetMC().thePlayer == null || !Utils.inSkyblock) return;
+            if (this.getToggled() && Minecraft.getMinecraft().thePlayer != null) {
+                int milestone = getGiftMilestone(SkyblockFeatures.config.uniqueGiftsGiven);
+                String[] lines = {
+                        "§e§lGifting Info",
+                        " §f"+SkyblockFeatures.config.uniqueGiftsGiven+"§7/600 §6Unique Gifts ",
+                        " §aMilestone §b"+milestone,
+                };
+                GuiUtils.drawTextLines(Arrays.asList(lines),0,0, GuiUtils.TextStyle.DROP_SHADOW);
+            }
+        }
+
+        @Override
+        public void drawElementExample() {
+            if(Utils.GetMC().thePlayer == null || !Utils.inSkyblock) return;
+            int milestone = getGiftMilestone(SkyblockFeatures.config.uniqueGiftsGiven);
+            String[] lines = {
+                    "§e§lGifting Info",
+                    " §f"+SkyblockFeatures.config.uniqueGiftsGiven+"§7/600 §6Unique Gifts",
+                    " §aMilestone §b"+milestone,
+            };
+            GuiUtils.drawTextLines(Arrays.asList(lines),0,0, GuiUtils.TextStyle.DROP_SHADOW);
+        }
+
+        @Override
+        public boolean getToggled() {
+            return SkyblockFeatures.config.showGiftingInfo;
+        }
+
+        @Override
+        public int getHeight() {
+            return (Utils.GetMC().fontRendererObj.FONT_HEIGHT+1)*3;
+        }
+
+        @Override
+        public int getWidth() {
+            return Utils.GetMC().fontRendererObj.getStringWidth("100/600 Unique Gifts");
+        }
     }
 }
 

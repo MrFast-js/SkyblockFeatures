@@ -263,6 +263,34 @@ public class Config extends Vigilant {
     )
     public boolean icecaveHighlightWalls = false;
 
+    @Property(
+            type = PropertyType.SWITCH,
+            name = "Show Gifting Info",
+            description = "Displays your current count of unique gifts given along with the corresponding milestone achieved",
+            category = "§1§rEvents",
+            subcategory = "Jerrys Workshop"
+    )
+    public boolean showGiftingInfo = false;
+
+    @Property(
+            type = PropertyType.SLIDER,
+            name = "Unique Gifts Given",
+            description = "",
+            category = "§1§rEvents",
+            subcategory = "Jerrys Workshop",
+            hidden = true
+    )
+    public int uniqueGiftsGiven = 0;
+    @Property(
+            type = PropertyType.SLIDER,
+            name = "December Hypixel Winter Events",
+            description = "Tracks the year that the event was happening last, and if its different than this year than reset",
+            category = "§1§rEvents",
+            subcategory = "Jerrys Workshop",
+            hidden = true
+    )
+    public int winterYear = 0;
+
      @Property(
             type = PropertyType.SWITCH,
             name = "Glacial Cave Treasure Tracker",
