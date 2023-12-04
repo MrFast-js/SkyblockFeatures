@@ -1,6 +1,7 @@
 package mrfast.sbf.features.dungeons;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.mojang.realmsclient.gui.ChatFormatting;
@@ -9,6 +10,7 @@ import mrfast.sbf.SkyblockFeatures;
 import mrfast.sbf.utils.ScoreboardUtil;
 import mrfast.sbf.utils.Utils;
 
+import net.minecraft.client.renderer.entity.RenderManager;
 import org.lwjgl.opengl.GL11;
 
 import net.minecraft.client.Minecraft;
@@ -22,7 +24,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 public class Nametags {
 
     public Minecraft mc = Minecraft.getMinecraft();
-    public static Map<EntityPlayer, String> players = new HashMap<EntityPlayer, String>();
+    public static Map<EntityPlayer, String> players = new HashMap<>();
 
     @SubscribeEvent
     public void onWorldChange(WorldEvent.Load event) {
@@ -33,36 +35,52 @@ public class Nametags {
     public void onRender3D(RenderWorldLastEvent event) {
         if(!SkyblockFeatures.config.NameTags || !Utils.inDungeons) return;
         try {
-            for(EntityPlayer player : Utils.GetMC().theWorld.playerEntities) {
-                double x = interpolate(player.lastTickPosX, player.posX, event.partialTicks) - Utils.GetMC().getRenderManager().viewerPosX;
-                double y = interpolate(player.lastTickPosY, player.posY, event.partialTicks) - Utils.GetMC().getRenderManager().viewerPosY;
-                double z = interpolate(player.lastTickPosZ, player.posZ, event.partialTicks) - Utils.GetMC().getRenderManager().viewerPosZ;
-                // renderNameTag(player, ChatFormatting.GREEN+player.getName(), x , y, z, event.partialTicks);
-                for (String cleanedLine : ScoreboardUtil.getSidebarLines()) {
-                    String cutShort = player.getName();
-                    if(cutShort.length()>12) {
-                        cutShort = cutShort.substring(0, 12);
-                    }
-                    
-                    if(cleanedLine.contains("[M] "+cutShort)) {// MAGE CLASS "[M] Skyblock_Lobby"
-                        renderNameTag(player, ChatFormatting.YELLOW+"[M] "+ChatFormatting.GREEN+player.getName(), x , y, z, "§b");
-                    }
-                    if(cleanedLine.contains("[T] "+cutShort)) {// TANK CLASS "[T] Skyblock_Lobby"
-                        renderNameTag(player, ChatFormatting.YELLOW+"[T] "+ChatFormatting.GREEN+player.getName(), x , y, z, "§7");
-                    }
-                    if(cleanedLine.contains("[A] "+cutShort)) {// ARCHER CLASS "[A] Skyblock_Lobby"
-                        renderNameTag(player, ChatFormatting.YELLOW+"[A] "+ChatFormatting.GREEN+player.getName(), x , y, z, "§a");
-                    }
-                    if(cleanedLine.contains("[B] "+cutShort)) {// BESERKER CLASS "[B] Skyblock_Lobby"
-                        renderNameTag(player, ChatFormatting.YELLOW+"[B] "+ChatFormatting.GREEN+player.getName(), x , y, z, "§c");
-                    }
-                    if(cleanedLine.contains("[H] "+cutShort)) {// HEALER CLASS "[H] Skyblock_Lobby"
-                        renderNameTag(player, ChatFormatting.YELLOW+"[H] "+ChatFormatting.GREEN+player.getName(), x , y, z, "§d");
+            List<String> sidebarLines = ScoreboardUtil.getSidebarLines();
+            RenderManager renderManager = Utils.GetMC().getRenderManager();
+
+            for (EntityPlayer player : mc.theWorld.playerEntities) {
+                double x = interpolate(player.lastTickPosX, player.posX, event.partialTicks) - renderManager.viewerPosX;
+                double y = interpolate(player.lastTickPosY, player.posY, event.partialTicks) - renderManager.viewerPosY;
+                double z = interpolate(player.lastTickPosZ, player.posZ, event.partialTicks) - renderManager.viewerPosZ;
+
+                String cutShort = player.getName().substring(0, Math.min(12, player.getName().length()));
+
+                for (String cleanedLine : sidebarLines) {
+                    String classTag = getClassTag(cleanedLine);
+                    if (classTag != null && cleanedLine.contains("[" + classTag + "] " + cutShort)) {
+                        renderNameTag(player, ChatFormatting.YELLOW + "[" + classTag + "] " + ChatFormatting.GREEN + player.getName(), x, y, z, getColorForClass(classTag));
+                        break;
                     }
                 }
             }
         } catch (Exception e) {
-            //TODO: handle exception
+            e.printStackTrace();
+        }
+    }
+
+    private String getClassTag(String cleanedLine) {
+        // Example: "[M] Skyblock_Lobby" -> "M"
+        if(cleanedLine.contains("[") && cleanedLine.indexOf("[") < cleanedLine.indexOf("]")) {
+            return cleanedLine.substring(cleanedLine.indexOf("[") + 1, cleanedLine.indexOf("]"));
+        }
+        return null;
+    }
+
+    private String getColorForClass(String classTag) {
+        // Example: "M" -> "§b" (Blue for Mage)
+        switch (classTag) {
+            case "M":
+                return "§b";
+            case "T":
+                return "§7";
+            case "A":
+                return "§a";
+            case "B":
+                return "§c";
+            case "H":
+                return "§d";
+            default:
+                return "§f"; // Default color if no match is found
         }
     }
 

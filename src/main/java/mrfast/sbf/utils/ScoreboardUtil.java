@@ -28,18 +28,19 @@ public class ScoreboardUtil {
             "\uD83D\uDC7E", "\uD83C\uDF20", "\uD83C\uDF6D", "⚽", "\uD83C\uDFC0", "\uD83D\uDC79",
             "\uD83C\uDF81", "\uD83C\uDF89", "\uD83C\uDF82", "\uD83D\uDD2B"
     );
-    public static String fixFormatting(String input) {
+    public static String fixFormatting(String input,Boolean cleanColor) {
         for (String weirdIcon : hypixelsWeirdIcons) {
             if (input.contains(weirdIcon)) {
                 String[] parts = input.split(weirdIcon, 2);
                 input = parts[0] + (parts.length > 1 ? parts[1].length()>2?parts[1].substring(2):"" : "");
             }
         }
+        if(cleanColor) input = Utils.cleanColor(input);
         return input;
     }
 
     public static List<String> getSidebarLines() {
-        return getSidebarLines(false);
+        return getSidebarLines(true);
     }
     public static List<String> getSidebarLines(boolean clean) {
         List<String> lines = new ArrayList<>();
@@ -65,18 +66,11 @@ public class ScoreboardUtil {
 
         for (Score score : scores) {
             ScorePlayerTeam team = scoreboard.getPlayersTeam(score.getPlayerName());
-            lines.add(fixFormatting(ScorePlayerTeam.formatPlayerName(team, score.getPlayerName())));
+            lines.add(fixFormatting(ScorePlayerTeam.formatPlayerName(team, score.getPlayerName()),clean));
         }
+        // Reverse it so its from top to bottom
         lines.add(objective.getDisplayName());
         Collections.reverse(lines);
-        if(clean) {
-            List<String> out = new ArrayList<>();
-            for (String line : lines) {
-                out.add(Utils.cleanColor(line));
-            }
-            return out;
-        } else {
-            return lines;
-        }
+        return lines;
     }
 }

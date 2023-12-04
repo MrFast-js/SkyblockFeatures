@@ -1085,7 +1085,7 @@ public class Config extends Vigilant {
     @Property(
             type = PropertyType.SWITCH,
             name = "Glowing Dungeon Teammates!",
-            description = "Make your teamates glow based on there class in dungeons.",
+            description = "Make your teamates glow based on there class in dungeons. §cSignificant performance impact.",
             category = "Render",
             subcategory = "1.9 Glow Effect"
     )
@@ -1094,7 +1094,7 @@ public class Config extends Vigilant {
     @Property(
             type = PropertyType.SWITCH,
             name = "Glowing Players",
-            description = "Make visible players anywhere glow",
+            description = "Make visible players anywhere glow. §cSignificant performance impact.",
             category = "Render",
             subcategory = "1.9 Glow Effect"
     )
@@ -1103,7 +1103,7 @@ public class Config extends Vigilant {
     @Property(
             type = PropertyType.SWITCH,
             name = "Glowing Items!",
-            description = "Make items glow depending on rarity (Requires Fast render to be off.)",
+            description = "Make items glow depending on rarity. (Requires Fast render to be off) §cSignificant performance impact.",
             category = "Render",
             subcategory = "1.9 Glow Effect"
     )
@@ -1350,7 +1350,7 @@ public class Config extends Vigilant {
     @Property(
         type = PropertyType.SWITCH,
         name = "Make Zealots Glow",
-        description = "Applys the 1.9 glow effect to zealots to make them glow and shiny :D ",
+        description = "Applys the 1.9 glow effect to zealots to make them glow and shiny. §cSignificant performance impact.",
         category = "§1§rThe End",
         subcategory = "Zealots"
     )

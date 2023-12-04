@@ -111,7 +111,7 @@ public class Utils {
             if(mc.theWorld.getScoreboard() == null) return;
             ScoreObjective scoreboardObj = mc.theWorld.getScoreboard().getObjectiveInDisplaySlot(1);
             if (scoreboardObj != null) {
-                String scObjName = ScoreboardUtil.fixFormatting(scoreboardObj.getDisplayName());
+                String scObjName = ScoreboardUtil.fixFormatting(scoreboardObj.getDisplayName(),true);
                 if (scObjName.contains("SKYBLOCK")) {
                     inSkyblock = true;
                     return;
