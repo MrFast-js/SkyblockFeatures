@@ -8,10 +8,7 @@ import net.minecraft.scoreboard.ScoreObjective;
 import net.minecraft.scoreboard.ScorePlayerTeam;
 import net.minecraft.scoreboard.Scoreboard;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -20,18 +17,27 @@ import java.util.stream.Collectors;
  * @author bowser0000
  */
 public class ScoreboardUtil {
-    public static String cleanSB(String scoreboard) {
-        char[] nvString = Utils.cleanColor(scoreboard).toCharArray();
-        StringBuilder cleaned = new StringBuilder();
 
-        for (char c : nvString) {
-            if ((int) c > 20 && (int) c < 127) {
-                cleaned.append(c);
+    /**
+     * Data from Skyhanni
+     * https://github.com/hannibal002/SkyHanni/blob/beta/src/main/java/at/hannibal2/skyhanni/data/ScoreboardData.kt
+     * @author CalMWolfs
+     */
+    private static final List<String> hypixelsWeirdIcons = Arrays.asList(
+            "\uD83C\uDF6B", "\uD83D\uDCA3", "\uD83D\uDC7D", "\uD83D\uDD2E", "\uD83D\uDC0D",
+            "\uD83D\uDC7E", "\uD83C\uDF20", "\uD83C\uDF6D", "⚽", "\uD83C\uDFC0", "\uD83D\uDC79",
+            "\uD83C\uDF81", "\uD83C\uDF89", "\uD83C\uDF82", "\uD83D\uDD2B"
+    );
+    public static String fixFormatting(String input) {
+        for (String weirdIcon : hypixelsWeirdIcons) {
+            if (input.contains(weirdIcon)) {
+                String[] parts = input.split(weirdIcon, 2);
+                input = parts[0] + (parts.length > 1 ? parts[1].length()>2?parts[1].substring(2):"" : "");
             }
         }
-
-        return cleaned.toString();
+        return input;
     }
+
     public static List<String> getSidebarLines() {
         return getSidebarLines(false);
     }
@@ -42,7 +48,7 @@ public class ScoreboardUtil {
         if (scoreboard == null) return lines;
 
         ScoreObjective objective = scoreboard.getObjectiveInDisplaySlot(1);
-        
+
         if (objective == null) return lines;
 
         Collection<Score> scores = scoreboard.getSortedScores(objective);
@@ -59,14 +65,15 @@ public class ScoreboardUtil {
 
         for (Score score : scores) {
             ScorePlayerTeam team = scoreboard.getPlayersTeam(score.getPlayerName());
-            lines.add(ScorePlayerTeam.formatPlayerName(team, score.getPlayerName()));
+            lines.add(fixFormatting(ScorePlayerTeam.formatPlayerName(team, score.getPlayerName())));
         }
+        lines.add(objective.getDisplayName());
+        Collections.reverse(lines);
         if(clean) {
             List<String> out = new ArrayList<>();
             for (String line : lines) {
-                out.add(cleanSB(line));
+                out.add(Utils.cleanColor(line));
             }
-            Collections.reverse(out);
             return out;
         } else {
             return lines;

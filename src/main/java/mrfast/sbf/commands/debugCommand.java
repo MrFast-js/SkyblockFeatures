@@ -119,13 +119,12 @@ public class debugCommand extends CommandBase {
 
     public static void getSidebarData() {
         StringBuilder output = new StringBuilder();
-        int count = 0;
         List<String> lines = ScoreboardUtil.getSidebarLines(true);
+        lines.add("==== Raw ====");
         lines.addAll(ScoreboardUtil.getSidebarLines(false));
 
         for (String line : lines) {
-            count++;
-            output.append(count).append(": ").append(line).append("\n");
+            output.append(line).append("\n");
         }
 
         uploadData(output.toString());

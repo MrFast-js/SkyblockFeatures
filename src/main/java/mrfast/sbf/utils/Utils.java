@@ -107,22 +107,18 @@ public class Utils {
      * @author bowser0000
     */
     public static void checkForSkyblock() {
-        try {
-            if (isOnHypixel()) {
-                if(mc.theWorld.getScoreboard() == null) return;
-                ScoreObjective scoreboardObj = mc.theWorld.getScoreboard().getObjectiveInDisplaySlot(1);
-                if (scoreboardObj != null) {
-                    String scObjName = ScoreboardUtil.cleanSB(scoreboardObj.getDisplayName());
-                    if (scObjName.contains("SKYBLOCK")) {
-                        inSkyblock = true;
-                        return;
-                    }
+        if (isOnHypixel()) {
+            if(mc.theWorld.getScoreboard() == null) return;
+            ScoreObjective scoreboardObj = mc.theWorld.getScoreboard().getObjectiveInDisplaySlot(1);
+            if (scoreboardObj != null) {
+                String scObjName = ScoreboardUtil.fixFormatting(scoreboardObj.getDisplayName());
+                if (scObjName.contains("SKYBLOCK")) {
+                    inSkyblock = true;
+                    return;
                 }
             }
-            inSkyblock = false;
-        } catch (NoSuchMethodError e) {
-            //TODO: handle exception
         }
+        inSkyblock = false;
     }
 
     public static String cleanColor(String in) {
