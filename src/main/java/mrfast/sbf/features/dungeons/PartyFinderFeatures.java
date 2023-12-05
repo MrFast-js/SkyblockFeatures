@@ -4,6 +4,7 @@ import com.google.gson.JsonObject;
 import com.mojang.realmsclient.gui.ChatFormatting;
 import mrfast.sbf.SkyblockFeatures;
 import mrfast.sbf.events.GuiContainerEvent;
+import mrfast.sbf.events.SlotClickedEvent;
 import mrfast.sbf.features.items.HideGlass;
 import mrfast.sbf.gui.components.Point;
 import mrfast.sbf.gui.components.UIElement;
@@ -71,6 +72,30 @@ public class PartyFinderFeatures {
                     selfPlayerClass = Utils.cleanColor(line.split(": ")[1]);
                     PartyFinderMonkey monkey = new PartyFinderMonkey(Utils.GetMC().thePlayer.getName(),"",line.split(": ")[1]);
                     partyFinderMonkeys.put(Utils.GetMC().thePlayer.getName(),monkey);
+                }
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public void onSlotClick(SlotClickedEvent event) {
+        if(event.item==null || !SkyblockFeatures.config.dungeonPartyDisplay) return;
+
+        if(event.item.getItem() instanceof ItemSkull && event.item.getDisplayName().contains("'s Party")) {
+            String regex = "^(\\w+):\\s(\\w+)\\s\\((\\d+)\\)$";
+            Pattern pattern = Pattern.compile(regex);
+
+            for(String line:ItemUtils.getItemLore(event.item)) {
+                line = Utils.cleanColor(line.trim());
+                // Match the input against the pattern
+                Matcher matcher = pattern.matcher(line);
+                if(matcher.matches()) {
+                    // Extract information using groups
+                    String playerName = matcher.group(1);
+                    String className = matcher.group(2);
+                    String classLvl = matcher.group(3);
+                    PartyFinderMonkey monkey = new PartyFinderMonkey(playerName,classLvl,className);
+                    partyFinderMonkeys.put(playerName,monkey);
                 }
             }
         }
