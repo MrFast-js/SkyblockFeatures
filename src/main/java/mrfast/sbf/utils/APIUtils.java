@@ -12,6 +12,7 @@ import java.security.cert.X509Certificate;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import com.google.gson.*;
 import mrfast.sbf.SkyblockFeatures;
 import net.minecraft.util.*;
 import org.apache.http.HttpEntity;
@@ -25,10 +26,6 @@ import org.apache.http.conn.ssl.TrustStrategy;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import com.mojang.realmsclient.gui.ChatFormatting;
 
 import net.minecraft.client.Minecraft;
@@ -132,6 +129,11 @@ public class APIUtils {
             System.out.println(urlString);
             ex.printStackTrace();
             player.addChatMessage(new ChatComponentText(EnumChatFormatting.RED + "Your API request has been blocked by your administrator!"));
+        } catch (JsonSyntaxException ex) {
+            // Will typically happen if the server is offline so will return '502 Bad Gateway'
+            System.out.println(urlString);
+            ex.printStackTrace();
+            player.addChatMessage(new ChatComponentText(EnumChatFormatting.RED + "The Skyblock Features API service seems to be down. Try again later."));
         } catch (Exception ex) {
             ex.printStackTrace();
         }
