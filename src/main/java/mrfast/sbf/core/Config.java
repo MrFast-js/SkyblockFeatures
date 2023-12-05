@@ -1331,6 +1331,25 @@ public class Config extends Vigilant {
 
     @Property(
             type = PropertyType.SWITCH,
+            name = "Show Advanced Dragon Hitbox",
+            description = "Draws a better hitbox for dragons. Useful for §cMaster Mode 7§r and §eDragons",
+            category = "Render",
+            subcategory = "Highlights",
+            searchTags = {"parent"}
+    )
+    public boolean advancedDragonHitbox = false;
+
+    @Property(
+            type = PropertyType.COLOR,
+            name = "Dragon Hitbox Color",
+            description = "",
+            category = "Render",
+            subcategory = "Highlights"
+    )
+    public Color advancedDragonHitboxColor = Color.green;
+
+    @Property(
+            type = PropertyType.SWITCH,
             name = "Garden Visitor Overlay",
             description = "Shows the extra information inside the Garden Visitor Gui.",
             category = "§1§rFarming",
