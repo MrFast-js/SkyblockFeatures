@@ -110,6 +110,8 @@ public class Nametags {
         y += player.height;
 
         GlStateManager.pushMatrix();
+        GlStateManager.pushAttrib();
+
         GlStateManager.translate(x, y+distanceScale, z);
         GL11.glNormal3f(0.0F, 1.0F, 0.0F);
         GlStateManager.rotate(-mc.getRenderManager().playerViewY, 0.0F, 1.0F, 0.0F);
@@ -135,5 +137,6 @@ public class Nametags {
         GlStateManager.disableBlend();
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
         GlStateManager.popMatrix();
+        GlStateManager.popAttrib();
     }
 }
