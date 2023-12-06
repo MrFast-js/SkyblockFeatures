@@ -119,7 +119,7 @@ public class PartyFinderFeatures {
 
         // Remove specific person
         if((message.contains(" has been removed from the party.") || message.contains(" has left the party.")) && fromServer) {
-            Pattern pattern = Pattern.compile("\\[\\w+\\+?] (\\w+)");
+            Pattern pattern = Pattern.compile("\\[\\w+\\+?]? (\\w+)");
             Matcher matcher = pattern.matcher(message);
 
             if (matcher.find()) {

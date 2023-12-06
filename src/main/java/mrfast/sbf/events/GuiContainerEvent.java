@@ -1,5 +1,6 @@
 package mrfast.sbf.events;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiChest;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.inventory.Container;
@@ -27,10 +28,15 @@ public abstract class GuiContainerEvent extends Event {
 
     public static class TitleDrawnEvent extends GuiContainerEvent {
         public String displayName;
+        public IInventory chestInventory;
 
         public TitleDrawnEvent(GuiContainer gui, Container container,String displayName) {
             super(gui, container);
             this.displayName = displayName;
+            if(Minecraft.getMinecraft().currentScreen instanceof GuiChest) {
+                GuiChest chest = (GuiChest) Minecraft.getMinecraft().currentScreen;
+                chestInventory = ((ContainerChest) chest.inventorySlots).getLowerChestInventory();
+            }
         }
     }
 

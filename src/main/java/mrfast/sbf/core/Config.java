@@ -34,7 +34,7 @@ public class Config extends Vigilant {
             description = "Choose between Full and Beta Releases for update checks",
             category = "§2§rCustomization",
             subcategory = "Mod",
-            options = {"Full Releases","Beta Releases"}
+            options = {"Full Releases", "Beta Releases"}
     )
     public int updateCheckType = 0;
 
@@ -121,29 +121,29 @@ public class Config extends Vigilant {
     public boolean stopBloodMusic = false;
 
     @Property(
-        type = PropertyType.SWITCH,
-        name = "Blaze Solver",
-        description = "Highlights the correct blazes to shoot.",
-        category = "§1§rDungeons",
-        subcategory = "Solvers"
+            type = PropertyType.SWITCH,
+            name = "Blaze Solver",
+            description = "Highlights the correct blazes to shoot.",
+            category = "§1§rDungeons",
+            subcategory = "Solvers"
     )
     public boolean blazeSolver = false;
 
     @Property(
-        type = PropertyType.SWITCH,
-        name = "Water Board Solver",
-        description = "Highlights the correct levers to flip to solve for the water puzzle.",
-        category = "§1§rDungeons",
-        subcategory = "Solvers"
+            type = PropertyType.SWITCH,
+            name = "Water Board Solver",
+            description = "Highlights the correct levers to flip to solve for the water puzzle.",
+            category = "§1§rDungeons",
+            subcategory = "Solvers"
     )
     public boolean WaterBoardSolver = false;
 
     @Property(
-        type = PropertyType.SWITCH,
-        name = "Three Weirdo Solver",
-        description = "Highlights the correct chest to solve for the riddle puzzle.",
-        category = "§1§rDungeons",
-        subcategory = "Solvers"
+            type = PropertyType.SWITCH,
+            name = "Three Weirdo Solver",
+            description = "Highlights the correct chest to solve for the riddle puzzle.",
+            category = "§1§rDungeons",
+            subcategory = "Solvers"
     )
     public boolean ThreeWeirdosSolver = false;
 
@@ -155,7 +155,7 @@ public class Config extends Vigilant {
             subcategory = "Solvers"
     )
     public boolean teleportPadSolver = false;
-    
+
     @Property(
             type = PropertyType.SWITCH,
             name = "Creeper Solver",
@@ -208,7 +208,7 @@ public class Config extends Vigilant {
             name = "Highlight Gifts",
             description = "Highlights with a box of where gifts are at the Jerry's workshop.",
             category = "§1§rEvents",
-	        subcategory = "Jerrys Workshop",
+            subcategory = "Jerrys Workshop",
             searchTags = {"parent"}
     )
     public boolean presentWaypoints = false;
@@ -291,7 +291,7 @@ public class Config extends Vigilant {
     )
     public int winterYear = 0;
 
-     @Property(
+    @Property(
             type = PropertyType.SWITCH,
             name = "Glacial Cave Treasure Tracker",
             description = "Tracks the items you get from ice treasures",
@@ -333,7 +333,7 @@ public class Config extends Vigilant {
             name = "Highlight Thrown Beacon",
             description = "Highlights the beacon thats thrown by the enderman slayer.",
             category = "Slayers",
-	    subcategory = "Voidgloom",
+            subcategory = "Voidgloom",
             searchTags = {"parent"}
     )
     public boolean highlightBeacons = false;
@@ -343,17 +343,17 @@ public class Config extends Vigilant {
             name = "Highlight Through Walls",
             description = "Highlights the beacon that's thrown by the enderman slayer through walls. §cWarning Use At Own Risk",
             category = "Slayers",
-	    subcategory = "Voidgloom",
+            subcategory = "Voidgloom",
             searchTags = {"Highlight Thrown Beacon"}
     )
     public boolean highlightBeaconsThroughWalls = false;
-    
+
     @Property(
             type = PropertyType.COLOR,
             name = "Beacon Highlight Color",
             description = "",
             category = "Slayers",
-	    subcategory = "Voidgloom",
+            subcategory = "Voidgloom",
             searchTags = {"Highlight Thrown Beacon"}
     )
     public Color highlightBeaconsColor = Color.green;
@@ -363,7 +363,7 @@ public class Config extends Vigilant {
             name = "Ender Node Tracker",
             description = "Tracks the items you get from ender nodes",
             category = "§1§rThe End",
-	    subcategory = "Trackers"
+            subcategory = "Trackers"
     )
     public boolean EnderNodeTracker = false;
 
@@ -372,7 +372,7 @@ public class Config extends Vigilant {
             name = "Day Tracker",
             description = "Tracks the day in the Crystal Hollows",
             category = "Mining",
-	    subcategory = "Trackers"
+            subcategory = "Trackers"
     )
     public boolean dayTracker = false;
 
@@ -381,7 +381,7 @@ public class Config extends Vigilant {
             name = "Highlight Ender Nodes",
             description = "Highlights the sparkly blocks in the end",
             category = "§1§rThe End",
-	    subcategory = "Mining",
+            subcategory = "Mining",
             searchTags = {"parent"}
     )
     public boolean highlightEnderNodes = false;
@@ -391,7 +391,7 @@ public class Config extends Vigilant {
             name = "Show Nodes Through the walls",
             description = "Makes the Ender Node Highlight go through walls. §cWarning Use At Own Risk",
             category = "§1§rThe End",
-	    subcategory = "Mining",
+            subcategory = "Mining",
             searchTags = {"Highlight Ender Nodes"}
     )
     public boolean highlightEnderNodesWalls = false;
@@ -401,7 +401,7 @@ public class Config extends Vigilant {
             name = "Endstone Node Color",
             description = "",
             category = "§1§rThe End",
-	    subcategory = "Mining",
+            subcategory = "Mining",
             searchTags = {"Highlight Ender Nodes"}
     )
     public Color highlightEnderNodesEndstoneColor = Color.magenta;
@@ -411,7 +411,7 @@ public class Config extends Vigilant {
             name = "Obsidian Node Color",
             description = "",
             category = "§1§rThe End",
-	    subcategory = "Mining",
+            subcategory = "Mining",
             searchTags = {"Highlight Ender Nodes"}
     )
     public Color highlightEnderNodesObiColor = new Color(0x4f024f);
@@ -434,7 +434,7 @@ public class Config extends Vigilant {
     )
     public boolean hideHealthAndMana = false;
 
-     @Property(
+    @Property(
             type = PropertyType.SWITCH,
             name = "Health Display",
             description = "Movable health display",
@@ -601,15 +601,15 @@ public class Config extends Vigilant {
     public Color fairySoulFound = Color.GREEN;
 
     @Property(
-        type = PropertyType.SWITCH,
-        name = "Rift Enigma Soul Helper",
-        description = "Highlights nearby Enigma souls using waypoints in the Rift",
-        category = "The Rift",
-        subcategory = "General",
-        searchTags = {"parent"}
+            type = PropertyType.SWITCH,
+            name = "Rift Enigma Soul Helper",
+            description = "Highlights nearby Enigma souls using waypoints in the Rift",
+            category = "The Rift",
+            subcategory = "General",
+            searchTags = {"parent"}
     )
     public boolean riftSouls = false;
-     @Property(
+    @Property(
             type = PropertyType.COLOR,
             name = "Uncollected Color",
             description = "",
@@ -629,12 +629,12 @@ public class Config extends Vigilant {
     public Color riftSoulFound = Color.GREEN;
 
     @Property(
-        type = PropertyType.SWITCH,
-        name = "Rift Mirrorverse Helper",
-        description = "Solvers for some of the puzzles in the mirrorverse in the Rift",
-        category = "The Rift",
-        subcategory = "General",
-        searchTags = {"parent"}
+            type = PropertyType.SWITCH,
+            name = "Rift Mirrorverse Helper",
+            description = "Solvers for some of the puzzles in the mirrorverse in the Rift",
+            category = "The Rift",
+            subcategory = "General",
+            searchTags = {"parent"}
     )
     public boolean riftMirrorverseHelper = false;
 
@@ -649,20 +649,20 @@ public class Config extends Vigilant {
     public Color riftMirrorverseHelperColor = new Color(0x00FFFF);
 
     @Property(
-        type = PropertyType.SWITCH,
-        name = "Rift Hacking Helper",
-        description = "Highlights the correct numbers in the hacking gui",
-        category = "The Rift",
-        subcategory = "General"
+            type = PropertyType.SWITCH,
+            name = "Rift Hacking Helper",
+            description = "Highlights the correct numbers in the hacking gui",
+            category = "The Rift",
+            subcategory = "General"
     )
     public boolean riftHackingHelper = false;
-    
+
     @Property(
-        type = PropertyType.SWITCH,
-        name = "Relic Helper",
-        description = "Highlights relics in the §cSpider's Den§r using waypoints",
-        category = "General",
-        subcategory = "Other"
+            type = PropertyType.SWITCH,
+            name = "Relic Helper",
+            description = "Highlights relics in the §cSpider's Den§r using waypoints",
+            category = "General",
+            subcategory = "Other"
     )
     public boolean spiderRelicHelper = false;
 
@@ -755,23 +755,23 @@ public class Config extends Vigilant {
     public boolean hideAllNametags = false;
 
     @Property(
-        type = PropertyType.SWITCH,
-        name = "Hide players near NPC's",
-        description = "Disables Player models from rendering near NPC's",
-        category = "Render",
-        subcategory = "Hide Things"
+            type = PropertyType.SWITCH,
+            name = "Hide players near NPC's",
+            description = "Disables Player models from rendering near NPC's",
+            category = "Render",
+            subcategory = "Hide Things"
     )
     public boolean hidePlayersNearNPC = false;
 
     @Property(
-        type = PropertyType.SWITCH,
-        name = "Hide Arrows",
-        description = "Stops arrows from being rendered.",
-        category = "Render",
-        subcategory = "Hide Things"
+            type = PropertyType.SWITCH,
+            name = "Hide Arrows",
+            description = "Stops arrows from being rendered.",
+            category = "Render",
+            subcategory = "Hide Things"
     )
     public boolean hideArrows = false;
-    
+
     @Property(
             type = PropertyType.SWITCH,
             name = "Display Tree Capitator Cooldown",
@@ -826,43 +826,43 @@ public class Config extends Vigilant {
     )
     public boolean furfSkyThemed = false;
 
-    @Property(type = PropertyType.COLOR,name = "Gui Lines",description = "",category = "§2§rCustomization",subcategory = "§1§rGui")
+    @Property(type = PropertyType.COLOR, name = "Gui Lines", description = "", category = "§2§rCustomization", subcategory = "§1§rGui")
     public Color guiLines = new Color(0x000000);
 
-    @Property(type = PropertyType.COLOR,name = "Selected Category Text",description = "",category = "§2§rCustomization",subcategory = "§1§rGui")
+    @Property(type = PropertyType.COLOR, name = "Selected Category Text", description = "", category = "§2§rCustomization", subcategory = "§1§rGui")
     public Color selectedCategory = new Color(0x02A9EA);
 
-    @Property(type = PropertyType.COLOR,name = "Hovered Category Text",description = "",category = "§2§rCustomization",subcategory = "§1§rGui")
+    @Property(type = PropertyType.COLOR, name = "Hovered Category Text", description = "", category = "§2§rCustomization", subcategory = "§1§rGui")
     public Color hoveredCategory = new Color(0x2CC8F7);
 
-    @Property(type = PropertyType.COLOR,name = "Default Category Text",description = "",category = "§2§rCustomization",subcategory = "§1§rGui")
+    @Property(type = PropertyType.COLOR, name = "Default Category Text", description = "", category = "§2§rCustomization", subcategory = "§1§rGui")
     public Color defaultCategory = new Color(0xFFFFFF);
 
-    @Property(type = PropertyType.COLOR,name = "Feature Box Outline",description = "",category = "§2§rCustomization",subcategory = "§1§rGui")
+    @Property(type = PropertyType.COLOR, name = "Feature Box Outline", description = "", category = "§2§rCustomization", subcategory = "§1§rGui")
     public Color featureBoxOutline = new Color(0xa9a9a9);
 
-    @Property(type = PropertyType.COLOR,name = "Feature Description Text",description = "",category = "§2§rCustomization",subcategory = "§1§rGui")
+    @Property(type = PropertyType.COLOR, name = "Feature Description Text", description = "", category = "§2§rCustomization", subcategory = "§1§rGui")
     public Color featureDescription = new Color(0xbbbbbb);
 
-    @Property(type = PropertyType.COLOR,name = "Main Box Background",description = "",category = "§2§rCustomization",subcategory = "§1§rGui")
-    public Color mainBackground = new Color(25,25,25,200);
+    @Property(type = PropertyType.COLOR, name = "Main Box Background", description = "", category = "§2§rCustomization", subcategory = "§1§rGui")
+    public Color mainBackground = new Color(25, 25, 25, 200);
 
-    @Property(type = PropertyType.COLOR,name = "Search Box Background",description = "",category = "§2§rCustomization",subcategory = "§1§rGui")
-    public Color searchBoxBackground = new Color(120,120,120,60);
+    @Property(type = PropertyType.COLOR, name = "Search Box Background", description = "", category = "§2§rCustomization", subcategory = "§1§rGui")
+    public Color searchBoxBackground = new Color(120, 120, 120, 60);
 
-    @Property(type = PropertyType.COLOR,name = "Button Background",description = "",category = "§2§rCustomization",subcategory = "§1§rGui")
-    public Color editGuiUnhovered = new Color(0,0,0,50);
-    
-    @Property(type = PropertyType.COLOR,name = "Button Hover Background",description = "",category = "§2§rCustomization",subcategory = "§1§rGui")
-    public Color editGuiHovered = new Color(0,0,0,75);
+    @Property(type = PropertyType.COLOR, name = "Button Background", description = "", category = "§2§rCustomization", subcategory = "§1§rGui")
+    public Color editGuiUnhovered = new Color(0, 0, 0, 50);
 
-    @Property(type = PropertyType.COLOR,name = "Edit Gui Text",description = "",category = "§2§rCustomization",subcategory = "§1§rGui")
+    @Property(type = PropertyType.COLOR, name = "Button Hover Background", description = "", category = "§2§rCustomization", subcategory = "§1§rGui")
+    public Color editGuiHovered = new Color(0, 0, 0, 75);
+
+    @Property(type = PropertyType.COLOR, name = "Edit Gui Text", description = "", category = "§2§rCustomization", subcategory = "§1§rGui")
     public Color editGuiText = new Color(0xFFFFFF);
 
-    @Property(type = PropertyType.COLOR,name = "Title Text",description = "",category = "§2§rCustomization",subcategory = "§1§rGui")
+    @Property(type = PropertyType.COLOR, name = "Title Text", description = "", category = "§2§rCustomization", subcategory = "§1§rGui")
     public Color titleColor = new Color(0x00FFFF);
 
-    @Property(type = PropertyType.COLOR,name = "Version Text",description = "",category = "§2§rCustomization",subcategory = "§1§rGui")
+    @Property(type = PropertyType.COLOR, name = "Version Text", description = "", category = "§2§rCustomization", subcategory = "§1§rGui")
     public Color versionColor = new Color(0xFFFFFF);
 
     @Property(
@@ -880,7 +880,7 @@ public class Config extends Vigilant {
             name = "Disguise Players As",
             category = "§2§rCustomization",
             subcategory = "Player",
-            options = {"Cow","Pig","Sheep","Zombie","Jerry","Enderman","Giant","Baby Player","Monki"},
+            options = {"Cow", "Pig", "Sheep", "Zombie", "Jerry", "Enderman", "Giant", "Baby Player", "Monki"},
             searchTags = {"Disguise Players As"}
     )
     public int DisguisePlayersAs = 0;
@@ -1039,7 +1039,7 @@ public class Config extends Vigilant {
             subcategory = "Dungeon Map",
             searchTags = {"Dungeon Map"}
     )
-    public boolean dungeonMapPlayerNames= true;
+    public boolean dungeonMapPlayerNames = true;
 
     @Property(
             type = PropertyType.SWITCH,
@@ -1073,7 +1073,7 @@ public class Config extends Vigilant {
     )
     public int dungeonMapHeadScale = 100;
 
-     @Property(
+    @Property(
             type = PropertyType.SWITCH,
             name = "Quick Start",
             description = "Sends a chat message at the end of a dungeon that can be used to reparty or warp out of a dungeon",
@@ -1275,7 +1275,7 @@ public class Config extends Vigilant {
     )
     public boolean prehistoricEggDistance = false;
 
-     @Property(
+    @Property(
             type = PropertyType.SWITCH,
             name = "Show teleport overlay",
             description = "Highlights the block that your teleporting to with Aspect of the End or Aspect of the Void",
@@ -1293,7 +1293,7 @@ public class Config extends Vigilant {
     )
     public boolean cooldownDisplay = false;
 
-     @Property(
+    @Property(
             type = PropertyType.SWITCH,
             name = "Chat Timestamps",
             description = "Add Chat Timestamps to Messages",
@@ -1310,7 +1310,7 @@ public class Config extends Vigilant {
             subcategory = "Solvers"
     )
     public boolean enchantingSolvers = false;
-    
+
     @Property(
             type = PropertyType.SWITCH,
             name = "Hide White Square",
@@ -1344,7 +1344,8 @@ public class Config extends Vigilant {
             name = "Dragon Hitbox Color",
             description = "",
             category = "Render",
-            subcategory = "Highlights"
+            subcategory = "Highlights",
+            searchTags = {"Show Advanced Dragon Hitbox"}
     )
     public Color advancedDragonHitboxColor = Color.green;
 
@@ -1367,40 +1368,40 @@ public class Config extends Vigilant {
     public boolean GardenBlocksToRemove = false;
 
     @Property(
-        type = PropertyType.SWITCH,
-        name = "Make Zealots Glow",
-        description = "Applys the 1.9 glow effect to zealots to make them glow and shiny. §cSignificant performance impact.",
-        category = "§1§rThe End",
-        subcategory = "Zealots"
+            type = PropertyType.SWITCH,
+            name = "Make Zealots Glow",
+            description = "Applys the 1.9 glow effect to zealots to make them glow and shiny. §cSignificant performance impact.",
+            category = "§1§rThe End",
+            subcategory = "Zealots"
     )
     public boolean glowingZealots = false;
 
     @Property(
-        type = PropertyType.SWITCH,
-        name = "Highlight Glowing Mushrooms",
-        description = "Highlights glowing mushrooms in the Glowing Mushroom Cave",
-        category = "§1§rFarming",
-        subcategory = "Glowing Mushroom Cave",
-        searchTags = {"parent"}
+            type = PropertyType.SWITCH,
+            name = "Highlight Glowing Mushrooms",
+            description = "Highlights glowing mushrooms in the Glowing Mushroom Cave",
+            category = "§1§rFarming",
+            subcategory = "Glowing Mushroom Cave",
+            searchTags = {"parent"}
     )
     public boolean highlightMushrooms = false;
 
     @Property(
-        type = PropertyType.COLOR,
-        name = "Mushroom Highlight Color",
-        description = "",
-        category = "§1§rFarming",
-        subcategory = "Glowing Mushroom Cave",
-        searchTags = {"Highlight Glowing Mushrooms"}
+            type = PropertyType.COLOR,
+            name = "Mushroom Highlight Color",
+            description = "",
+            category = "§1§rFarming",
+            subcategory = "Glowing Mushroom Cave",
+            searchTags = {"Highlight Glowing Mushrooms"}
     )
     public Color highlightMushroomsColor = Color.green;
 
     @Property(
-        type = PropertyType.SWITCH,
-        name = "1.12 Crop Hitbox",
-        description = "Applys full sized hitbox for crops",
-        category = "§1§rFarming",
-        subcategory = "Garden"
+            type = PropertyType.SWITCH,
+            name = "1.12 Crop Hitbox",
+            description = "Applys full sized hitbox for crops",
+            category = "§1§rFarming",
+            subcategory = "Garden"
     )
     public boolean cropBox = false;
 
@@ -1532,6 +1533,25 @@ public class Config extends Vigilant {
 
     @Property(
             type = PropertyType.SWITCH,
+            name = "Quiver Overlay",
+            description = "Shows the arrows in currently your quiver. §cThis will also estimate the count after arrows are shot",
+            category = "Miscellaneous",
+            subcategory = "Overlay"
+    )
+    public boolean quiverOverlay = false;
+
+    @Property(
+            type = PropertyType.SLIDER,
+            name = "Quiver Overlay Count",
+            description = "Shows the arrows in currently your quiver. §cThis will also estimate the count after arrows are shot",
+            category = "Miscellaneous",
+            subcategory = "Overlay",
+            hidden = true
+    )
+    public int quiverOverlayCount = 0;
+
+    @Property(
+            type = PropertyType.SWITCH,
             name = "Collections Leaderboard Overlay",
             description = "Shows a leaderboard for the collection types",
             category = "Miscellaneous",
@@ -1603,11 +1623,11 @@ public class Config extends Vigilant {
     public boolean aucFlipperBins = false;
 
     @Property(
-        type = PropertyType.SWITCH,
-        name = "Include Auction Flips",
-        description = "Check auctions for flips",
-        category = "§1§rAuction Flipper",
-        subcategory = "Flipper Settings"
+            type = PropertyType.SWITCH,
+            name = "Include Auction Flips",
+            description = "Check auctions for flips",
+            category = "§1§rAuction Flipper",
+            subcategory = "Flipper Settings"
     )
     public boolean aucFlipperAucs = true;
 
@@ -1619,7 +1639,7 @@ public class Config extends Vigilant {
             subcategory = "Flipper Settings"
     )
     public int autoAuctionFlipMargin = 200000;
-    
+
     @Property(
             type = PropertyType.NUMBER,
             name = "Minimum Volume",
@@ -1628,7 +1648,7 @@ public class Config extends Vigilant {
             subcategory = "Flipper Settings"
     )
     public int autoAuctionFlipMinVolume = 1;
- 
+
     @Property(
             type = PropertyType.NUMBER,
             name = "Minimum Flip Percent",
@@ -1757,7 +1777,7 @@ public class Config extends Vigilant {
     )
     public boolean GrandmaWolfTimer = false;
 
-     @Property(
+    @Property(
             type = PropertyType.SWITCH,
             name = "Ad Blocker",
             description = "Hides auction/lowballing advertisments in chat",
@@ -1793,7 +1813,7 @@ public class Config extends Vigilant {
             hidden = true
     )
     public boolean toggleSprint = false;
-    
+
     @Property(
             type = PropertyType.SLIDER,
             name = "gMaWolf5Second",
@@ -1932,6 +1952,7 @@ public class Config extends Vigilant {
     public boolean showMobIds = false;
 
     public static File file = new File("./config/skyblockfeatures/config.toml");
+
     public Config() {
         super(file);
         initialize();
