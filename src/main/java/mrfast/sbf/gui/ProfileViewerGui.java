@@ -746,6 +746,22 @@ public class ProfileViewerGui extends WindowScreen {
         box.addChild(sidebarSeparator);
         box.addChild(statsAreaContainer);
 
+        UIComponent sidebarContainer = new UIBlock(clear)
+                .setX(new PixelConstraint(3f,true))
+                .setY(new PixelConstraint(titleArea.getHeight()))
+                .setChildOf(box)
+                .setWidth(new PixelConstraint(5f))
+                .setHeight(new PixelConstraint(((0.85f*guiHeight)-1)));
+
+        UIComponent scrollbar = new UIRoundedRectangle(3f)
+                .setColor(new Color(200,200,200,200))
+                .setChildOf(sidebarContainer)
+                .setWidth(new PixelConstraint(5f))
+                .setX(new PixelConstraint(0f))
+                .setHeight(new RelativeConstraint(1f));
+
+        ((ScrollComponent) statsAreaContainer).setVerticalScrollBarComponent(scrollbar,true);
+
         titleText.setTextScale(new PixelConstraint((float) (3.0*fontScale)));
         loadCollectionsCategories();
 

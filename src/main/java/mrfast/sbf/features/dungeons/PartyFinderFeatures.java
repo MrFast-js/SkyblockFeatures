@@ -269,7 +269,7 @@ public class PartyFinderFeatures {
                 armourStream.close();
 
                 ChatComponentText nameComponent = new ChatComponentText(ChatFormatting.AQUA+" Data For: " +ChatFormatting.YELLOW+ name + "\n ");
-                ChatComponentText kickComponent = new ChatComponentText("\n"+ChatFormatting.GREEN+"Click here to remove "+ChatFormatting.LIGHT_PURPLE+nameComponent+ChatFormatting.GREEN+" from the party");
+                ChatComponentText kickComponent = new ChatComponentText("\n"+ChatFormatting.GREEN+"Click here to remove "+ChatFormatting.LIGHT_PURPLE+name+ChatFormatting.GREEN+" from the party");
                 ChatComponentText weaponComponent = new ChatComponentText(ChatFormatting.DARK_AQUA + weapon + "\n ");
                 ChatComponentText helmetComponent = new ChatComponentText(" "+ChatFormatting.DARK_AQUA + helmet + "\n ");
                 ChatComponentText chestComponent = new ChatComponentText(ChatFormatting.DARK_AQUA + chest + "\n ");
@@ -281,6 +281,8 @@ public class PartyFinderFeatures {
                 chestComponent.setChatStyle(chestComponent.getChatStyle().setChatHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ChatComponentText(chestLore))));
                 legComponent.setChatStyle(legComponent.getChatStyle().setChatHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ChatComponentText(legsLore))));
                 kickComponent.setChatStyle(kickComponent.getChatStyle().setChatClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND,"/p kick "+name)));
+                kickComponent.setChatStyle(kickComponent.getChatStyle().setChatHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,new ChatComponentText(ChatFormatting.YELLOW+"/p kick "+name))));
+
                 bootComponent.setChatStyle(bootComponent.getChatStyle().setChatHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ChatComponentText(bootsLore))));
 
                 StringBuilder completionsHoverString = new StringBuilder();
@@ -309,9 +311,9 @@ public class PartyFinderFeatures {
                                 .appendText("\n")
                                 .appendSibling(nameComponent)
                                 .appendText(ChatFormatting.GREEN+"☠ Cata Level: "+ChatFormatting.YELLOW+catacombs+"\n")
-                                .appendText(ChatFormatting.GREEN+"• Total Secrets Found: "+ChatFormatting.YELLOW+secrets+"\n")
-                                .appendText(ChatFormatting.GREEN+"• Average Secrets: "+ChatFormatting.YELLOW+((secrets/totalRuns))+"\n")
-                                .appendText(ChatFormatting.GRAY+"• Magic Power: "+ChatFormatting.GOLD+magicPower+"\n\n")
+                                .appendText(ChatFormatting.GREEN+" • Total Secrets Found: "+ChatFormatting.YELLOW+secrets+"\n")
+                                .appendText(ChatFormatting.GREEN+" • Average Secrets: "+ChatFormatting.YELLOW+((secrets/totalRuns))+"\n")
+                                .appendText(ChatFormatting.GRAY+" • Magic Power: "+ChatFormatting.GOLD+magicPower+"\n\n")
                                 .appendSibling(helmetComponent)
                                 .appendSibling(chestComponent)
                                 .appendSibling(legComponent)

@@ -176,6 +176,7 @@ public class ConfigGui extends WindowScreen {
             .enableEffect(new ScissorEffect())
             .setWidth(new PixelConstraint(0.75f*guiWidth))
             .setHeight(new PixelConstraint(((0.85f*guiHeight)-(furfSkyThemed?6:1))));
+
         loadedFeaturesList.clearChildren();
         reloadFeatures(loadedFeaturesList,guiHeight,guiWidth,fontScale);
 
@@ -307,6 +308,22 @@ public class ConfigGui extends WindowScreen {
         box.addChild(sidebarSeperator);
         box.addChild(loadedFeaturesList);
         box.addChild(editGuiButton);
+
+        UIComponent sidebarContainer = new UIBlock(clear)
+                .setX(new PixelConstraint(3f,true))
+                .setY(new PixelConstraint(titleArea.getHeight()))
+                .setChildOf(box)
+                .setWidth(new PixelConstraint(5f))
+                .setHeight(new PixelConstraint(((0.85f*guiHeight)-(furfSkyThemed?6:1))));
+
+        UIComponent scrollbar = new UIRoundedRectangle(3f)
+                .setColor(new Color(200,200,200,200))
+                .setChildOf(sidebarContainer)
+                .setWidth(new PixelConstraint(5f))
+                .setX(new PixelConstraint(0f))
+                .setHeight(new RelativeConstraint(1f));
+
+        ((ScrollComponent) loadedFeaturesList).setVerticalScrollBarComponent(scrollbar,true);
         
         if(doAnimation) {
             box.setWidth(new PixelConstraint(0f));
