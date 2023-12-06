@@ -11,16 +11,11 @@ import net.minecraft.scoreboard.Scoreboard;
 import java.util.*;
 import java.util.stream.Collectors;
 
-/**
- * Taken from Danker's Skyblock Mod under GPL 3.0 license
- * https://github.com/bowser0000/SkyblockMod/blob/master/LICENSE
- * @author bowser0000
- */
 public class ScoreboardUtil {
 
     /**
      * Data from Skyhanni
-     * https://github.com/hannibal002/SkyHanni/blob/beta/src/main/java/at/hannibal2/skyhanni/data/ScoreboardData.kt
+     * Source: https://github.com/hannibal002/SkyHanni
      * @author CalMWolfs
      */
     private static final List<String> hypixelsWeirdIcons = Arrays.asList(
@@ -39,6 +34,11 @@ public class ScoreboardUtil {
         return input;
     }
 
+    /**
+     * Taken from Danker's Skyblock Mod and modified under GPL 3.0 license
+     * https://github.com/bowser0000/SkyblockMod/blob/master/LICENSE
+     * @author bowser0000
+     */
     public static List<String> getSidebarLines() {
         return getSidebarLines(true);
     }

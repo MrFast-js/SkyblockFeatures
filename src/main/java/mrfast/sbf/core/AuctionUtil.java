@@ -36,10 +36,9 @@ import com.google.gson.JsonObject;
 import net.minecraft.nbt.NBTTagCompound;
 
 /*
- * Modified from NotEnoughUpdates
- * https://github.com/NotEnoughUpdates/NotEnoughUpdates/blob/master/src/main/java/io/github/moulberry/notenoughupdates/auction/APIManager.java
+ * Taken and modified from NotEnoughUpdates
+ * https://github.com/NotEnoughUpdates/NotEnoughUpdates/
  */
-
 public class AuctionUtil {
     private static final Gson gson = new Gson();
 
