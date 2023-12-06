@@ -166,7 +166,6 @@ public class ItemUtils {
         nbtTagCompound.merge(extraAttributes);
 
         itemStack.setTagCompound(nbtTagCompound);
-        System.out.println(itemStack.getTagCompound().toString());
 
         itemStack.setStackDisplayName(itemData.displayname);
         return itemStack;
