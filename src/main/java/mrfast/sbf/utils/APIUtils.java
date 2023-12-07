@@ -63,6 +63,7 @@ public class APIUtils {
         client = HttpClients.custom().setSSLSocketFactory(sslsf).setUserAgent("Mozilla/5.0").build();
         System.out.println("CREATED CUSTOM CLIENT");
     }
+
     public static JsonObject getJSONResponse(String urlString) {
         return getJSONResponse(urlString, new String[]{});
     }
@@ -243,8 +244,11 @@ public class APIUtils {
             return null;
         }
     }
-
+    static HashMap<String,String> latestProfileCache = new HashMap<>();
     public static String getLatestProfileID(String uuid) {
+        if(latestProfileCache.containsKey(uuid)) {
+            return latestProfileCache.get(uuid);
+        }
         String latestProfile = "";
         String cuteName = "";
         JsonObject profilesResponse = getJSONResponse("https://api.hypixel.net/skyblock/profiles?uuid=" + uuid);
@@ -286,6 +290,7 @@ public class APIUtils {
             cuteName = profileJSON.get("cute_name").getAsString();
         }
         if(Utils.isDeveloper()) System.out.println("Found Latest Profile: " + latestProfile + " " + cuteName);
+        latestProfileCache.put(uuid,latestProfile);
         return latestProfile;
     }
 }
