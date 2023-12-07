@@ -1,6 +1,5 @@
 package mrfast.sbf.features.dungeons;
 
-import java.awt.Color;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
@@ -29,7 +28,6 @@ import net.minecraft.client.resources.DefaultPlayerSkin;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemMap;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Vec4b;
 import net.minecraft.world.storage.MapData;
@@ -100,7 +98,7 @@ public class DungeonMap {
 		playerSkins.clear();
 		playerNames.clear();
 		dungeonTeammates.clear();
-		farplayerPosition.clear();
+		farPlayerPosition.clear();
 		closePlayerPosition.clear();
     }
 
@@ -119,7 +117,7 @@ public class DungeonMap {
 	static HashMap<String, NetworkPlayerInfo> dungeonTeammates = new HashMap<String, NetworkPlayerInfo>();
 	static HashMap<Integer, ResourceLocation> playerSkins = new HashMap<Integer, ResourceLocation>();
 	static HashMap<Integer, String> playerNames = new HashMap<Integer, String>();
-	static HashMap<String, MapPosition> farplayerPosition = new HashMap<>();
+	static HashMap<String, MapPosition> farPlayerPosition = new HashMap<>();
 	static HashMap<String, MapPosition> closePlayerPosition = new HashMap<>();
 
 	static Double playerHeadOffsetX = null;
@@ -261,7 +259,7 @@ public class DungeonMap {
 				// Raw icon number
 				Integer playerId = Integer.parseInt(mapEntry.getKey().replaceAll("[^0-9]", ""));
 				// Draw self head
-				if(self != "" && playerId == Integer.parseInt(self.replaceAll("[^0-9]", ""))) {
+				if(!self.equals("") && playerId == Integer.parseInt(self.replaceAll("[^0-9]", ""))) {
 					AbstractClientPlayer player = Utils.GetMC().thePlayer;
 					if(player != null) {
 						double x = (player.posX)/(mapData.scale*0.8);
@@ -285,7 +283,7 @@ public class DungeonMap {
 
 							double deltaX = newX-x;
 							double deltaZ = newZ-z;
-							double deltaR = newRotation-rotation;
+							double deltaR = (newRotation-rotation)%360;
 
 							x+=deltaX/50;
 							z+=deltaZ/50;
@@ -355,7 +353,7 @@ public class DungeonMap {
 							playerSkins.put(playerId, skin);
 							if(player.getName() != null) playerNames.put(playerId, player.getName());
 							closePlayerPosition.put(shortName,new MapPosition(x, z,rotation));
-							farplayerPosition.put(shortName,new MapPosition(x, z,rotation));
+							farPlayerPosition.put(shortName,new MapPosition(x, z,rotation));
 							DrawHead(x,z,skin,(float) rotation,shortName);
 						}
 					} else {
@@ -369,10 +367,10 @@ public class DungeonMap {
 							double x = Math.round((mapEntry.getValue().func_176112_b()/2)+64);
 							double z = Math.round((mapEntry.getValue().func_176113_c()/2)+64);
 							double rotation = mapEntry.getValue().func_176111_d()* 360F;;
-							if(farplayerPosition.containsKey(shortName)) {
-								x = farplayerPosition.get(shortName).x;
-								z = farplayerPosition.get(shortName).y;
-								rotation = farplayerPosition.get(shortName).rotation;
+							if(farPlayerPosition.containsKey(shortName)) {
+								x = farPlayerPosition.get(shortName).x;
+								z = farPlayerPosition.get(shortName).y;
+								rotation = farPlayerPosition.get(shortName).rotation;
 
 								double newX = Math.round((mapEntry.getValue().func_176112_b()/2)+64);
 								double newZ = Math.round((mapEntry.getValue().func_176113_c()/2)+64);
@@ -384,13 +382,12 @@ public class DungeonMap {
 								x+=deltaX/50;
 								z+=deltaZ/50;
 								rotation+=deltaR/50;
-
 							}
 
 							ResourceLocation skin = playerSkins.get(playerId);
 							
 							if(skin != null) {
-								farplayerPosition.put(shortName,new MapPosition(x, z,rotation));
+								farPlayerPosition.put(shortName,new MapPosition(x, z,rotation));
 								closePlayerPosition.put(shortName,new MapPosition(x, z,rotation));
 								DrawHead(x,z,skin,(float) ((rotation) / 16.0F),shortName);
 							}
