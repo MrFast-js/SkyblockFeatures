@@ -443,6 +443,7 @@ public class PartyFinderFeatures {
             hoverItemStack = event.itemStack;
         }
         if("Party Finder".equals(name) && event.itemStack.getItem() instanceof ItemSkull) {
+            if(event.itemStack.hasDisplayName() && event.itemStack.getDisplayName().contains("Your Party")) return;
             event.toolTip.clear();
         }
     }
