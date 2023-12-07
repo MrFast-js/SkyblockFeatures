@@ -54,6 +54,7 @@ public class DungeonsFeatures {
 
     private static final Minecraft mc = Minecraft.getMinecraft();
     public static Entity livid = null;
+    public static boolean dungeonStarted = false;
 
     @SubscribeEvent
     public void onRender3D(RenderWorldLastEvent event) {
@@ -103,6 +104,7 @@ public class DungeonsFeatures {
         count = 0;
         bloodguy = null;
         blessings.clear();
+        dungeonStarted = false;
         livid = null;
     }
 
@@ -111,11 +113,16 @@ public class DungeonsFeatures {
     public static EntityPlayer bloodguy;
     static Map<String,Integer> blessings = new HashMap<String,Integer>();
 
-
     @SubscribeEvent(priority = EventPriority.HIGHEST, receiveCanceled = true)
     public void onChatMesaage(ClientChatReceivedEvent event) {
         if (!Utils.inDungeons || event.type == 2) return;
         String text = event.message.getUnformattedText();
+        if(text.startsWith("Starting in 1 second.")) {
+            dungeonStarted = true;
+        }
+        if(text.startsWith("[BOSS] ") && !text.contains("The Watcher")) {
+            dungeonStarted = false;
+        }
         if(text.endsWith("has obtained Blood Key!")) {
             for (Map.Entry<EntityPlayer,String> entry : Nametags.players.entrySet()) {
                 if(text.contains(entry.getKey().getName())) {

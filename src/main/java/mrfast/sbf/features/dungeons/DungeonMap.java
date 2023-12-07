@@ -72,8 +72,10 @@ public class DungeonMap {
 		}
 		Minecraft.getMinecraft().entityRenderer.getMapItemRenderer().renderMap(mapData, true);
 
-		drawPlayersOnMap();
-		drawHeadOnMap();
+		if(DungeonsFeatures.dungeonStarted) {
+			drawPlayersOnMap();
+			drawHeadOnMap();
+		}
 		GlStateManager.popMatrix();
 	}
 
