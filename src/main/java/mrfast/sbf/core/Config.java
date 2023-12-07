@@ -756,8 +756,8 @@ public class Config extends Vigilant {
 
     @Property(
             type = PropertyType.SWITCH,
-            name = "Hide players near NPC's",
-            description = "Disables Player models from rendering near NPC's",
+            name = "Hide Players Near NPC's",
+            description = "Disables Players from rendering near NPC's",
             category = "Render",
             subcategory = "Hide Things"
     )
