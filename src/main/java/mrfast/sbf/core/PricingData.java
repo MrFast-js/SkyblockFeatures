@@ -87,8 +87,9 @@ public class PricingData {
     @SubscribeEvent
     public void onTick(TickEvent.ClientTickEvent event) {
         if (event.phase != TickEvent.Phase.START || !Utils.inSkyblock || Utils.GetMC().theWorld==null) return;
-        if (reloadTimer.getTime() >= 90000 || !reloadTimer.isStarted()) {
-            if(reloadTimer.getTime() >= 90000) reloadTimer.reset();
+        int reloadTime = 5*60*1000;
+        if (reloadTimer.getTime() >= reloadTime || !reloadTimer.isStarted()) {
+            if(reloadTimer.getTime() >= reloadTime) reloadTimer.reset();
             reloadTimer.start();
 
             // Load lowest bins - Taken from NotEnoughUpdates
