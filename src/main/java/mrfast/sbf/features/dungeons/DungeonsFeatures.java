@@ -90,7 +90,7 @@ public class DungeonsFeatures {
         if(dungeonStarted && !inSpecialRoom && SkyblockFeatures.config.boxStarredMobs) {
             starredMobs.forEach((sbMob,starred)->{
                 if(starred) {
-                    RenderUtil.drawOutlinedFilledBoundingBox(sbMob.getSkyblockMob().getEntityBoundingBox(), Color.RED,event.partialTicks);
+                    RenderUtil.drawOutlinedFilledBoundingBox(sbMob.getSkyblockMob().getEntityBoundingBox(), SkyblockFeatures.config.boxStarredMobsColor, event.partialTicks);
                 }
             });
         }

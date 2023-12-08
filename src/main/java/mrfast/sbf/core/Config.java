@@ -566,9 +566,19 @@ public class Config extends Vigilant {
             name = "Highlight Starred Mobs",
             description = "Draws a box around starred mobs in dungeons.",
             category = "§1§rDungeons",
-            subcategory = "Miscellaneous"
+            subcategory = "Miscellaneous",
+            searchTags = {"parent"}
     )
     public boolean boxStarredMobs = false;
+    @Property(
+            type = PropertyType.COLOR,
+            name = "Starred Mobs Highlight Color",
+            description = "",
+            category = "§1§rDungeons",
+            subcategory = "Miscellaneous",
+            searchTags = {"Highlight Starred Mobs"}
+    )
+    public Color boxStarredMobsColor = Color.CYAN;
 
     @Property(
             type = PropertyType.SWITCH,
