@@ -105,7 +105,7 @@ public class HideGlass {
                             TerminalCommand.clicked.add(event.slot.slotNumber);
                             event.inventory.setInventorySlotContents(event.slot.slotNumber, new ItemStack(Blocks.stained_glass_pane, 1, 5).setStackDisplayName(ChatFormatting.RESET+""));
                             if(TerminalCommand.clicked.size() == 14) {
-                                Utils.sendMessage(ChatFormatting.GREEN+"You completed 'Correct all the panes!' in "+Utils.round(System.currentTimeMillis()-TerminalCommand.start,2)+"s");
+                                Utils.sendMessage(ChatFormatting.GREEN+"You completed 'Correct all the panes!' in "+Utils.round((System.currentTimeMillis()-TerminalCommand.start)/1000,2)+"s");
                                 mc.thePlayer.closeScreen();
                             }
                             if(TerminalCommand.start == 0) {
@@ -128,7 +128,7 @@ public class HideGlass {
                         TerminalCommand.clicked.add(event.slot.slotNumber);
                         event.inventory.setInventorySlotContents(event.slot.slotNumber, new ItemStack(Blocks.stained_glass_pane, 1, 5).setStackDisplayName(ChatFormatting.RESET+""));
                         if(TerminalCommand.clicked.size() == TerminalCommand.mazeSlots.length) {
-                            Utils.sendMessage(ChatFormatting.GREEN+"You completed 'Maze!' in "+Utils.round(System.currentTimeMillis()-TerminalCommand.start,2)+"s");
+                            Utils.sendMessage(ChatFormatting.GREEN+"You completed 'Maze!' in "+Utils.round((System.currentTimeMillis()-TerminalCommand.start)/1000,2)+"s");
                             mc.thePlayer.closeScreen();
                             TerminalCommand.mazeIndex = 0;
                         }
@@ -143,7 +143,7 @@ public class HideGlass {
             if(event.inventoryName.contains("Click in order") && event.item.getUnlocalizedName().contains("red")) {
                 if(event.item.stackSize==TerminalCommand.orderNumber) {
                     if(TerminalCommand.orderNumber==14) {
-                        Utils.sendMessage(ChatFormatting.GREEN+"You completed 'Click in order!' in "+Utils.round(System.currentTimeMillis()-TerminalCommand.start,2)+"s");
+                        Utils.sendMessage(ChatFormatting.GREEN+"You completed 'Click in order!' in "+Utils.round((System.currentTimeMillis()-TerminalCommand.start)/1000,2)+"s");
                         mc.thePlayer.closeScreen();
                         TerminalCommand.orderNumber = 1;
                     }
