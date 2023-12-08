@@ -40,7 +40,7 @@ public class Utils {
 
     private static final String[] steps = new String[] {"", "K", "M", "B","T"};
 
-    public static String formatNumber(double number) {
+    public static String shortenNumber(double number) {
         if(number<1000) {
             return ((int) number)+"";
         }
