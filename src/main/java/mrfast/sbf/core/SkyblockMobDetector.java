@@ -169,7 +169,7 @@ public class SkyblockMobDetector {
 
         return getLoadedSkyblockMobs()
                 .stream()
-                .filter(mob -> mob.getSkyblockMob().equals(entity) || mob.mobNameEntity.equals(entity))
+                .filter(mob -> mob.skyblockMob.equals(entity) || mob.mobNameEntity.equals(entity))
                 .findFirst()
                 .orElseGet(() -> null);
     }

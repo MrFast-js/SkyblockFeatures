@@ -55,13 +55,14 @@ public class DungeonsFeatures {
     HashMap<SkyblockMobDetector.SkyblockMob, Boolean> starredMobs = new HashMap<>();
     @SubscribeEvent
     public void onTick(TickEvent.ClientTickEvent event) {
-        if((!Utils.inDungeons || !dungeonStarted) && (!SkyblockFeatures.config.boxStarredMobs && !SkyblockFeatures.config.hideNonStarredMobs)) return;
+        if(!Utils.inDungeons || !dungeonStarted) return;
+        if(!SkyblockFeatures.config.boxStarredMobs && !SkyblockFeatures.config.hideNonStarredMobs) return;
 
         ticks++;
         if(ticks%20==0) {
             ticks = 0;
             int id = getDungeonRoomId();
-            inSpecialRoom = id==138||id==210;
+            inSpecialRoom = id==138||id==210||id==-96;
             starredMobs.entrySet().removeIf((sbMob)-> !sbMob.getKey().getSkyblockMob().isEntityAlive());
             for(SkyblockMobDetector.SkyblockMob sbMob:SkyblockMobDetector.getLoadedSkyblockMobs()) {
                 if(sbMob.skyblockMob.isInvisible()) continue;
@@ -76,8 +77,8 @@ public class DungeonsFeatures {
 
         if(Utils.inDungeons && dungeonStarted && !inSpecialRoom) {
             SkyblockMobDetector.SkyblockMob sbMob = SkyblockMobDetector.getSkyblockMob(event.entity);
-            if(sbMob==null) return;
-            if(!starredMobs.containsKey(sbMob)) {
+            if(sbMob==null || !starredMobs.containsKey(sbMob)) return;
+            if(!starredMobs.get(sbMob)) {
                 event.setCanceled(true);
             }
         }
