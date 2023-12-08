@@ -3,14 +3,12 @@ package mrfast.sbf.utils;
 import java.awt.Color;
 import java.util.List;
 
+import net.minecraft.client.renderer.*;
+import net.minecraft.item.ItemStack;
 import org.lwjgl.opengl.GL11;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.RenderGlobal;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.Entity;
@@ -347,7 +345,25 @@ public class RenderUtil {
         }
     }
 
+    public static void renderItemStackOnScreen(ItemStack stack, float x, float y,float width,float height) {
+        if (stack == null || stack.getItem() == null) {
+            return;
+        }
 
+        GlStateManager.pushMatrix();
+        RenderHelper.enableGUIStandardItemLighting();
+        GlStateManager.enableDepth();
+        GlStateManager.depthFunc(GL11.GL_LEQUAL);
+
+        GlStateManager.translate(x, y, 0);
+        GlStateManager.scale(width/16f, height/16f, 1.0f);
+
+        Minecraft.getMinecraft().getRenderItem().renderItemIntoGUI(stack, 0, 0);
+        Minecraft.getMinecraft().getRenderItem().renderItemOverlays(Utils.GetMC().fontRendererObj, stack,0,0);
+
+        RenderHelper.disableStandardItemLighting();
+        GlStateManager.popMatrix();
+    }
     private static final ResourceLocation IMAGE_TEXTURE = new ResourceLocation("skyblockfeatures", "path_arrow.png");
     public static void drawImageInWorld(Vec3 start, float pitch, float yaw, Color color) {
         Minecraft mc = Minecraft.getMinecraft();

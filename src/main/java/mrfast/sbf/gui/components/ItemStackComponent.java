@@ -7,8 +7,10 @@ import gg.essential.elementa.state.State;
 import gg.essential.universal.UGraphics;
 import gg.essential.universal.UMatrixStack;
 import mrfast.sbf.gui.ProfileViewerGui;
+import mrfast.sbf.utils.RenderUtil;
 import mrfast.sbf.utils.Utils;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.item.Item;
@@ -40,28 +42,22 @@ public class ItemStackComponent extends UIComponent {
 
         matrixStack.push();
         matrixStack.translate(getLeft(), getTop(), 100f);
-        matrixStack.scale(getWidth() / 16f, getHeight() / 16f, 0f);
-
+        matrixStack.scale(getWidth() / 16f, getHeight() / 16f, 1f);
         UGraphics.color4f(1f, 1f, 1f, 1f);
-        UGraphics.disableLighting();
-
         matrixStack.runWithGlobalState(() -> {
-            RenderItem itemRender = Minecraft.getMinecraft().getRenderItem();
-            RenderHelper.enableGUIStandardItemLighting();
-            itemRender.zLevel = -145; // Negates the z-offset of the below method.
-            itemRender.renderItemIntoGUI(item, 0, 0);
-            itemRender.renderItemOverlays(Utils.GetMC().fontRendererObj, item, 0, 0);
-            RenderHelper.disableStandardItemLighting();
+            RenderUtil.renderItemStackOnScreen(item, 0, 0, 16, 16);
         });
-
-        UGraphics.disableLighting();
         matrixStack.pop();
+        UGraphics.disableLighting();
+
 
         if (!item.hasDisplayName()) return;
         if (item.getDisplayName().trim().isEmpty()) return;
-        
+
         if (this.isHovered()) {
             ProfileViewerGui.renderTooltip = item.getTooltip(Utils.GetMC().thePlayer, false);
         }
     }
+
+
 }

@@ -14,11 +14,14 @@ import mrfast.sbf.gui.components.Point;
 import mrfast.sbf.gui.components.UIElement;
 import mrfast.sbf.utils.GuiUtils;
 import mrfast.sbf.utils.ItemUtils;
+import mrfast.sbf.utils.RenderUtil;
 import mrfast.sbf.utils.Utils;
 import net.minecraft.client.Minecraft;
+import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemBow;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.play.server.S29PacketSoundEffect;
@@ -174,14 +177,20 @@ public class MiscOverlays {
         public void drawElement() {
             if(mc.thePlayer == null || !Utils.inSkyblock || Utils.GetMC().theWorld==null) return;
             String display = quiverArrows!=0?"§r§7x"+Utils.nf.format(quiverArrows):"§cOpen Quiver";
-            GuiUtils.drawText("§e§lQuiver: "+display,0,0, GuiUtils.TextStyle.DROP_SHADOW);
+            RenderUtil.renderItemStackOnScreen(new ItemStack(Items.arrow),0,0,12,12);
+            GuiUtils.drawText(display,14,2, GuiUtils.TextStyle.DROP_SHADOW);
+
+            RenderUtil.renderItemStackOnScreen(Utils.GetMC().thePlayer.getHeldItem(),0,16,16,16);
         }
 
         @Override
         public void drawElementExample() {
             if(mc.thePlayer == null || !Utils.inSkyblock) return;
             String display = quiverArrows!=0?"§r§7x"+Utils.nf.format(quiverArrows):"§cOpen Quiver";
-            GuiUtils.drawText("§e§lQuiver: "+display,0,0, GuiUtils.TextStyle.DROP_SHADOW);
+            RenderUtil.renderItemStackOnScreen(new ItemStack(Items.arrow),0,0,12,12);
+            GuiUtils.drawText(display,14,2, GuiUtils.TextStyle.DROP_SHADOW);
+
+            RenderUtil.renderItemStackOnScreen(Utils.GetMC().thePlayer.getHeldItem(),0,16,16,16);
         }
 
         @Override
@@ -191,12 +200,12 @@ public class MiscOverlays {
 
         @Override
         public int getHeight() {
-            return (Utils.GetMC().fontRendererObj.FONT_HEIGHT + 1);
+            return (Utils.GetMC().fontRendererObj.FONT_HEIGHT + 2);
         }
 
         @Override
         public int getWidth() {
-            return Utils.GetMC().fontRendererObj.getStringWidth(" §8Bouncy Arrow §7x289");
+            return 16+Utils.GetMC().fontRendererObj.getStringWidth("x2893");
         }
     }
 }
