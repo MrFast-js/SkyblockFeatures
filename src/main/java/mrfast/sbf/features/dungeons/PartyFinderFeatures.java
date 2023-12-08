@@ -326,7 +326,6 @@ public class PartyFinderFeatures {
                                 .appendSibling(kickComponent)
                 );
             } catch (IOException ex) {
-                System.out.println(ex);
                 Utils.sendMessage(ChatFormatting.RED+"Error! This player may not have there API on.");
             }
         }).start();

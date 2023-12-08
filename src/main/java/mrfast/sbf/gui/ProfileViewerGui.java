@@ -71,7 +71,7 @@ public class ProfileViewerGui extends WindowScreen {
     static JsonObject ProfilePlayerResponse = null;
     //  The specified profile's data
     JsonObject ProfileResponse = null;
-    //  The users profiles according to hypixel
+    //  The users profile's according to hypixel
 
     JsonArray hypixelProfilesResponse = null;
     // Hoverables are what is used for the lore popups for skills, etc.
@@ -197,6 +197,7 @@ public class ProfileViewerGui extends WindowScreen {
         super(ElementaVersion.V2);
 
         String uuidString = APIUtils.getUUID(username, true);
+        if(uuidString==null) return;
         UUID uuid = UUID.fromString(uuidString);
 
         if (doAnimation) mrfast.sbf.utils.GuiUtils.saveGuiScale();
@@ -293,6 +294,12 @@ public class ProfileViewerGui extends WindowScreen {
             }
         }
 
+        Thread profileThread = getProfileThread(profileString);
+        profileThread.start();
+    }
+
+    @NotNull
+    private Thread getProfileThread(String profileString) {
         Thread profileThread = new Thread(() -> {
             if (Utils.isDeveloper()) System.out.println("Starting thread ");
 
@@ -352,7 +359,7 @@ public class ProfileViewerGui extends WindowScreen {
             }
         });
         profileThread.setUncaughtExceptionHandler(new ExceptionHandler());
-        profileThread.start();
+        return profileThread;
     }
 
     public void displayError(String error) {
@@ -416,28 +423,13 @@ public class ProfileViewerGui extends WindowScreen {
                         throw new RuntimeException(e);
                     }
                 }
-                drawSideButton(sideButtonContainer, "General", () -> {
-                    loadCategory("General");
-                });
-                drawSideButton(sideButtonContainer, "Inventories", () -> {
-                    loadCategory("Inventories");
-                });
-                drawSideButton(sideButtonContainer, "Pets", () -> {
-                    loadCategory("Pets");
-                });
-                drawSideButton(sideButtonContainer, "Skills", () -> {
-                    loadCategory("Skills");
-                });
-                drawSideButton(sideButtonContainer, "Dungeons", () -> {
-                    loadCategory("Dungeons");
-                });
-                drawSideButton(sideButtonContainer, "Collections", () -> {
-                    loadCategory("Collections");
-                });
-                drawSideButton(sideButtonContainer, "Rift", () -> {
-                    loadCategory("Rift");
-                    //                Utils.sendMessage(ChatFormatting.RED+"Currently Disabled");
-                });
+                drawSideButton(sideButtonContainer, "General", () -> loadCategory("General"));
+                drawSideButton(sideButtonContainer, "Inventories", () -> loadCategory("Inventories"));
+                drawSideButton(sideButtonContainer, "Pets", () -> loadCategory("Pets"));
+                drawSideButton(sideButtonContainer, "Skills", () -> loadCategory("Skills"));
+                drawSideButton(sideButtonContainer, "Dungeons", () -> loadCategory("Dungeons"));
+                drawSideButton(sideButtonContainer, "Collections", () -> loadCategory("Collections"));
+                drawSideButton(sideButtonContainer, "Rift", () -> loadCategory("Rift"));
                 drawSideButton(sideButtonContainer, "Misc Stats", () -> {
                     // loadCategory("Misc Stats");
                     Utils.sendMessage(ChatFormatting.RED + "Currently Disabled");
@@ -788,14 +780,10 @@ public class ProfileViewerGui extends WindowScreen {
             JsonObject profiles = APIUtils.getJSONResponse("https://sky.shiiyu.moe/api/v2/profile/" + playerUuid + "#skycryptForNw").get("profiles").getAsJsonObject();
 
             List<String> networthTooltip;
-            String networth = ChatFormatting.RED + "Loading";
+            String networth;
 
             while (profiles.entrySet().isEmpty()) {
-                try {
-                    Thread.sleep(100); // Add a delay of 100 milliseconds
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+                try {Thread.sleep(100);} catch (InterruptedException ignored) {}
             }
 
             if (profiles.has(profileUUID) && profiles.get(profileUUID).isJsonObject()) {
@@ -1141,7 +1129,7 @@ public class ProfileViewerGui extends WindowScreen {
                                     wardrobePage1.setInventorySlotContents(index, item);
                                 }
                             }
-                            ;
+
                             index++;
                         }
                     }
@@ -1369,7 +1357,7 @@ public class ProfileViewerGui extends WindowScreen {
                     Integer secrets = dungeons.get("secrets_found").getAsInt();
                     String selectedClass = ProfileViewerUtils.formatTitle(dungeons.get("selected_class").getAsString());
                     double classAverage = Math.floor(dungeons.get("class_average").getAsJsonObject().get("avrg_level").getAsDouble() * 10) / 10;
-                    ;
+
                     int itemBoost = catacombs.get("bonuses").getAsJsonObject().get("item_boost").getAsInt();
                     String highestFloorNormal = ProfileViewerUtils.formatTitle(catacombs.get("highest_floor").getAsString());
                     String highestFloorMaster = ProfileViewerUtils.formatTitle(mastermode.get("highest_floor").getAsString());
@@ -1468,7 +1456,7 @@ public class ProfileViewerGui extends WindowScreen {
                         commisionsMilestone = Integer.parseInt(element.getAsString().substring(43, 44));
                     }
                 }
-                ;
+
 
                 String passStatus = ChatFormatting.RED + "Expired";
                 if (miningCore.has("greater_mines_last_access")) {
@@ -1517,7 +1505,7 @@ public class ProfileViewerGui extends WindowScreen {
                 drawHotmGrid(miningContainer);
             }
             if (ProfilePlayerResponse == null) return;
-            ;
+
             {// Farming
                 new UIText(ChatFormatting.YELLOW + "" + ChatFormatting.BOLD + "Farming").setChildOf(farmingContainer).setY(new SiblingConstraint(4f)).setX(new CenterConstraint()).setTextScale(new PixelConstraint(2f));
                 int pelts = 0;
@@ -1572,11 +1560,7 @@ public class ProfileViewerGui extends WindowScreen {
             new Thread(() -> {
                 // Wait for skycrypt before displaying the page
                 while (skycryptProfiles.entrySet().isEmpty()) {
-                    try {
-                        Thread.sleep(100); // Add a delay of 100 milliseconds
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
+                    try {Thread.sleep(100);} catch (Exception ignored) {}
                 }
                 statsAreaContainer.removeChild(loadingText);
                 String id = ProfileResponse.get("profile_id").toString().replaceAll("\"", "");
@@ -1606,7 +1590,6 @@ public class ProfileViewerGui extends WindowScreen {
 
                             imageFuture.complete(image);
                         } catch (Exception e) {
-                            e.printStackTrace();
                             imageFuture.completeExceptionally(e);
                         }
                     });
@@ -1658,9 +1641,11 @@ public class ProfileViewerGui extends WindowScreen {
             }
             JsonArray trophiesArray = null;
             try {
+                assert riftObj != null;
                 trophiesArray = riftObj.get("gallery").getAsJsonObject().get("secured_trophies").getAsJsonArray();
             } catch (Exception ignored) {
             }
+
             UIComponent topContainer = new UIBlock(clear)
                     .setWidth(new RelativeConstraint(1f))
                     .setChildOf(statsAreaContainer)

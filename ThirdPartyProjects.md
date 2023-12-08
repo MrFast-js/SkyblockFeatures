@@ -3,7 +3,7 @@ This section highlights various third-party projects that are utilized within Sk
 
 | Software                                                              | License                                                                              |
 |-----------------------------------------------------------------------|--------------------------------------------------------------------------------------|
-| [Forge1.8.9Template](https://github.com/nea89o/Forge1.8.9Template)    | [Unlicense](https://github.com/nea89o/Forge1.8.9Template/blob/master/LICENSE)                                                                           |
+| [Forge1.8.9Template](https://github.com/nea89o/Forge1.8.9Template)    | [Unlicense](https://github.com/nea89o/Forge1.8.9Template/blob/master/LICENSE)        |
 | [Danker's Skyblock Mod](https://github.com/bowser0000/SkyblockMod/)   | [GPL 3.0](https://github.com/bowser0000/SkyblockMod/blob/master/COPYING)             |
 | [Skytils 0.x](https://github.com/Skytils/SkytilsMod/blob/0.x/LICENSE) | [AGPL 3.0](https://github.com/Skytils/SkytilsMod/blob/0.x/LICENSE)                   |
 | [NotEnoughUpdates](https://github.com/Moulberry/NotEnoughUpdates/)    | [LGPL 3.0](https://github.com/NotEnoughUpdates/NotEnoughUpdates/blob/master/COPYING) |

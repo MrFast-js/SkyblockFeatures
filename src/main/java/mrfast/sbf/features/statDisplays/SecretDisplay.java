@@ -11,7 +11,7 @@ import mrfast.sbf.SkyblockFeatures;
 import mrfast.sbf.gui.components.Point;
 import mrfast.sbf.gui.components.UIElement;
 import mrfast.sbf.utils.Utils;
-
+import org.jetbrains.annotations.NotNull;
 
 
 public class SecretDisplay {
@@ -36,26 +36,7 @@ public class SecretDisplay {
             int maxSecrets = ActionBarListener.maxSecrets;
 
             if (this.getToggled() && Minecraft.getMinecraft().thePlayer != null && mc.theWorld != null) {
-                List<String> text = new ArrayList<>();
-
-                String color;
-
-                if(secrets == maxSecrets) {
-                    color = "§a";
-                } else if(secrets > maxSecrets/2) {
-                    color = "§e";
-                } else {
-                    color = "§c";
-                }
-
-                text.add("§7Secrets");
-
-                if(secrets == -1) {
-                    text.add("§7None");
-                } else {
-                    text.add(color+secrets+"§7/"+color+maxSecrets);
-                }
-
+                List<String> text = getSecrets(secrets, maxSecrets);
 
                 for (int i = 0; i < text.size(); i++) {
                     GuiUtils.drawText(text.get(i), ((float) getWidth() /3)*i, i * Utils.GetMC().fontRendererObj.FONT_HEIGHT, GuiUtils.TextStyle.BLACK_OUTLINE);
@@ -88,5 +69,29 @@ public class SecretDisplay {
         public int getWidth() {
             return Utils.GetMC().fontRendererObj.getStringWidth("§7Secrets");
         }
+    }
+
+    @NotNull
+    private static List<String> getSecrets(int secrets, int maxSecrets) {
+        List<String> text = new ArrayList<>();
+
+        String color;
+
+        if(secrets == maxSecrets) {
+            color = "§a";
+        } else if(secrets > maxSecrets /2) {
+            color = "§e";
+        } else {
+            color = "§c";
+        }
+
+        text.add("§7Secrets");
+
+        if(secrets == -1) {
+            text.add("§7None");
+        } else {
+            text.add(color+ secrets +"§7/"+color+ maxSecrets);
+        }
+        return text;
     }
 }
