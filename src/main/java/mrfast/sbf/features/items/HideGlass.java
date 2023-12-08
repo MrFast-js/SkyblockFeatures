@@ -173,8 +173,9 @@ public class HideGlass {
         ContainerChest chest = (ContainerChest) gui.inventorySlots;
         IInventory inv = chest.getLowerChestInventory();
         String chestName = inv.getDisplayName().getUnformattedText().trim();
-        if(chestName.contains("✯") && TerminalCommand.start!=0) {
-            Utils.GetMC().fontRendererObj.drawString(chestName+" "+(Utils.round((System.currentTimeMillis() - TerminalCommand.start)/1000d,2))+"s", 8, 6, 0);
+        if(chestName.contains("✯")) {
+            if(TerminalCommand.start!=0) Utils.GetMC().fontRendererObj.drawStringWithShadow(chestName+" "+(Utils.round((System.currentTimeMillis() - TerminalCommand.start)/1000d,2))+"s", 8, 6, 0);
+            else Utils.GetMC().fontRendererObj.drawStringWithShadow(chestName, 8, 6, 0);
         }
     }
 
