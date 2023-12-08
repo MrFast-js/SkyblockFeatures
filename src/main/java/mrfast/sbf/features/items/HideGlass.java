@@ -95,7 +95,7 @@ public class HideGlass {
                 System.out.println("-====================================-");
             }
         }
-        if(event.inventoryName.contains(ChatFormatting.GREEN+"✯")) {
+        if(event.inventoryName.contains(ChatFormatting.GOLD+"✯")) {
             if(event.inventoryName.contains("Correct Panes")) {
                 for(int slot : TerminalCommand.paneSlots) {
                     if(event.slot==null) continue;

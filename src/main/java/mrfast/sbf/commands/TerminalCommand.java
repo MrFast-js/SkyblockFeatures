@@ -56,7 +56,7 @@ public class TerminalCommand extends CommandBase {
 		start = 0;
 		double termId = Utils.randomNumber(1,3);
 		if(termId==1) {
-			InventoryBasic Terminal = new InventoryBasic(ChatFormatting.GREEN+"✯ Correct Panes", true, 45);
+			InventoryBasic Terminal = new InventoryBasic(ChatFormatting.GOLD+"✯ Correct Panes", true, 45);
 			clicked.clear();
 			for(int i = 0; i < 45; i++) {
 				Terminal.setInventorySlotContents(i, new ItemStack(Blocks.stained_glass_pane, 1, 15).setStackDisplayName(ChatFormatting.RESET+""));
@@ -73,7 +73,7 @@ public class TerminalCommand extends CommandBase {
 			GuiUtils.openGui(new GuiChest(Utils.GetMC().thePlayer.inventory, Terminal));
 		} else if(termId==2) {
 			mazeIndex = 1;
-			InventoryBasic Terminal = new InventoryBasic(ChatFormatting.GREEN+"✯ Solve Maze", true, 54);
+			InventoryBasic Terminal = new InventoryBasic(ChatFormatting.GOLD+"✯ Solve Maze", true, 54);
 			clicked.clear();
 			for(int i = 0; i < 54; i++) {
 				Terminal.setInventorySlotContents(i, new ItemStack(Blocks.stained_glass_pane, 1, 15).setStackDisplayName(ChatFormatting.RESET+""));
@@ -91,7 +91,7 @@ public class TerminalCommand extends CommandBase {
 			GuiUtils.openGui(new GuiChest(Utils.GetMC().thePlayer.inventory, Terminal));
 		} else if(termId==3) {
 			TerminalCommand.orderNumber = 1;
-			InventoryBasic Terminal = new InventoryBasic(ChatFormatting.GREEN+"✯ Click in order", true, 36);
+			InventoryBasic Terminal = new InventoryBasic(ChatFormatting.GOLD+"✯ Click in order", true, 36);
 			for(int i = 0; i < 36; i++) {
 				Terminal.setInventorySlotContents(i, new ItemStack(Blocks.stained_glass_pane, 1, 15).setStackDisplayName(ChatFormatting.RESET+""));
 			}
