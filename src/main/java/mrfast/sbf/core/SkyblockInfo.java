@@ -86,7 +86,7 @@ public class SkyblockInfo {
         if (event.phase != Phase.END || Utils.GetMC().theWorld == null) return;
         if(!waitingForLocrawResponse) ticks++;
 
-        if (ticks >= 30 && Utils.isOnHypixel() && !waitingForLocrawResponse) {
+        if (ticks >= 40 && Utils.isOnHypixel() && !waitingForLocrawResponse) {
             ticks = 0;
             sendLocraw();
         }

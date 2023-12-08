@@ -179,8 +179,6 @@ public class MiscOverlays {
             String display = quiverArrows!=0?"§r§7x"+Utils.nf.format(quiverArrows):"§cOpen Quiver";
             RenderUtil.renderItemStackOnScreen(new ItemStack(Items.arrow),0,0,12,12);
             GuiUtils.drawText(display,14,2, GuiUtils.TextStyle.DROP_SHADOW);
-
-            RenderUtil.renderItemStackOnScreen(Utils.GetMC().thePlayer.getHeldItem(),0,16,16,16);
         }
 
         @Override
@@ -189,8 +187,6 @@ public class MiscOverlays {
             String display = quiverArrows!=0?"§r§7x"+Utils.nf.format(quiverArrows):"§cOpen Quiver";
             RenderUtil.renderItemStackOnScreen(new ItemStack(Items.arrow),0,0,12,12);
             GuiUtils.drawText(display,14,2, GuiUtils.TextStyle.DROP_SHADOW);
-
-            RenderUtil.renderItemStackOnScreen(Utils.GetMC().thePlayer.getHeldItem(),0,16,16,16);
         }
 
         @Override
