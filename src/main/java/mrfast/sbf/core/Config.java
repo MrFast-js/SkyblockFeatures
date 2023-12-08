@@ -552,6 +552,23 @@ public class Config extends Vigilant {
     )
     public boolean partyFinderJoinMessages = false;
 
+    @Property(
+            type = PropertyType.SWITCH,
+            name = "Hide Non-Starred Mobs",
+            description = "Prevents mobs that arent starred from rendering during the dungeon.",
+            category = "§1§rDungeons",
+            subcategory = "Miscellaneous"
+    )
+    public boolean hideNonStarredMobs = false;
+
+    @Property(
+            type = PropertyType.SWITCH,
+            name = "Highlight Starred Mobs",
+            description = "Draws a box around starred mobs in dungeons.",
+            category = "§1§rDungeons",
+            subcategory = "Miscellaneous"
+    )
+    public boolean boxStarredMobs = false;
 
     @Property(
             type = PropertyType.SWITCH,

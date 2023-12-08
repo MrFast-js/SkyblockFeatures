@@ -58,7 +58,7 @@ public class configCommand extends CommandBase {
             return;
         }
         String subcommand = args[0].toLowerCase(Locale.ENGLISH);
-        
+        String versionMessage = ChatFormatting.YELLOW + "Your using Skyblock Features v" + SkyblockFeatures.VERSION;
         switch (subcommand) {
             case "update":
                 if(args.length>1) {
@@ -72,10 +72,7 @@ public class configCommand extends CommandBase {
                 }
                 break;
             case "version":
-                Utils.sendMessage(ChatFormatting.YELLOW+"Your using Skyblock Features v"+SkyblockFeatures.VERSION);
-                break;
-            case "loc":
-                Utils.sendMessage(ChatFormatting.GRAY+"Local:'"+SkyblockInfo.localLocation+"' Map:"+SkyblockInfo.map+" Location:'"+SkyblockInfo.location+"'");
+                Utils.sendMessage(versionMessage);
                 break;
             case "resetgui":
                 GuiManager.GuiPositions.forEach((name,point)->{
@@ -88,22 +85,22 @@ public class configCommand extends CommandBase {
                 GuiUtils.openGui(new ConfigGui(true));
                 break;
             case "help":
-                player.addChatMessage(new ChatComponentText("§9➜ Skyblock Features Commands and Info" + "\n" +
-                " §2§l ❣ §7§oThe current mod version is §f§o" + SkyblockFeatures.VERSION + "§7§o." + "\n" +
-                "§9§l➜ Setup:" + "\n" +
-                " §3/sbf §l➡ §bOpens the configuration GUI." + "\n" +
-                " §3/sbf help §l➡ §bShows this help menu." + "\n" +
-                " §3/sbf edit §l➡ §bOpens the location editing GUI." + "\n" +
-                "§9§l➜ Miscellaneous:" + "\n" +
-                " §3/terminal §l➡ §bDisplays a gui with a f7 terminal for practice." + "\n" +
-                " §3/vm §l➡ §bDisplays a gui with item position offsets." + "\n" +
-                " §3/shrug §l➡ §bSends a chat message with '¯\\_(ツ)_/¯'" + "\n" +
-                " §3/inventory §l➡ §bOpens a gui displaying the specified players inventory & armor." + "\n"+
-                " §3/accessories §l➡ §bOpens a gui displaying the specified players accessory bag." + "\n"+
-                " §3/bank §l➡ §bDisplays in chat the specified players bank and purse balance." + "\n"+
-                " §3/armor §l➡ §bDisplays in chat the specified players armor." + "\n"+
-                " §3/skills §l➡ §bDisplays in chat the specified players skills." + "\n"+
-                " §3/sky §l➡ §bGives the link to the specified players Skycrypt profile."));
+                String helpMessage = "§eSkyblock Features Commands and Info\n"
+                        + " §7Current mod version: " + SkyblockFeatures.VERSION + "\n"
+                        + "\n§e§l General Commands:\n"
+                        + "  §3/jd <floor level> §l➡ §bJoins a dungeon floor.\n"
+                        + "  §3/flips <name> §l➡ §bOpens coFLIPnet website of the person's auction flips.\n"
+                        + "  §3/ping §l➡ §bMeasure ping.\n"
+                        + "  §3/terminal §l➡ §bOpens a terminal GUI.\n"
+                        + "  §3/pv, /sfpv <name> §l➡ §bOpens the SBF profile viewer.\n"
+                        + "  §3/reparty §l➡ §bReparty.\n"
+                        + "\n §e§lClient Commands:\n"
+                        + "  §3/debug mobs,sidebar,tab,item,location §l➡ §bGives debug info for mobs, sidebar, tab, item, and location.\n"
+                        + "  §3/sbf edit §l➡ §bOpens the location editing GUI.\n"
+                        + "  §3/sbf version §l➡ §bDisplays the Skyblock Features version.\n"
+                        + "  §3/sbf update §l➡ §bChecks and updates Skyblock Features.\n";
+
+                player.addChatMessage(new ChatComponentText(helpMessage));
                 break;
             case "edit":
                 GuiUtils.openGui(new EditLocationsGui());

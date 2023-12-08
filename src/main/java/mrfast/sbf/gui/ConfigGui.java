@@ -407,47 +407,74 @@ public class ConfigGui extends WindowScreen {
         }
     }
     public static class ExpandableComponent {
+        public Property parent;
         Boolean enabled = false;
         List<UIComponent> children = new ArrayList<>();
 
         public ExpandableComponent() {}
     }
-    HashMap<String,ExpandableComponent> parentStuff = new HashMap<>();
+    HashMap<String,ExpandableComponent> parentElements = new HashMap<>();
+
+    public boolean shouldHideFeature(Property feature) {
+        boolean ignoreFeature = true;
+
+        // Check if the feature has search tags
+        if (feature.searchTags().length != 0) {
+            String tag = feature.searchTags()[0];
+
+            // Check if the parent element exists
+            if (parentElements.containsKey(tag)) {
+                Property parent = parentElements.get(tag).parent;
+
+                // Recursively check parent elements
+                if (parent != null) {
+                    ignoreFeature = shouldHideFeature(parent);
+                }
+            }
+        }
+
+        // Check feature properties for search query
+        if (containsIgnoreCase(feature.name(), searchQuery) ||
+                containsIgnoreCase(feature.description(), searchQuery) ||
+                containsIgnoreCase(feature.subcategory(), searchQuery)) {
+            ignoreFeature = false;
+        }
+
+        // Check if the feature is explicitly marked as hidden
+        if (feature.hidden()) {
+            ignoreFeature = true;
+        }
+
+        return ignoreFeature;
+    }
+
+    private boolean containsIgnoreCase(String source, String target) {
+        return source.toLowerCase().contains(target.toLowerCase());
+    }
+
     public void reloadFeatures(UIComponent loadedFeaturesList, float guiHeight, float guiWidth, double fontScale) {
         float Margin = 6f;
         // Default category
+        // Draw Categories on left
         for(String categoryName:categories.keySet()) {
+            int visibleSubcategories = 0;
             if(searchQuery.isEmpty()) {
                 if(!categoryName.equals(selectedCategory)) {
                     continue;
                 }
             }
-
+            // Load categorie's subcategories
             for(String subcategoryName:categories.get(categoryName).keySet()) {
                 List<Property> subcategory = categories.get(categoryName).get(subcategoryName);
                 int featuresVisible = 0;
                 for(Property feature:subcategory) {
-                    boolean ignoreFeature = true;
-                    if(feature.name().toLowerCase().contains(searchQuery)) ignoreFeature = false;
-                    if(feature.description().toLowerCase().contains(searchQuery)) ignoreFeature =false;
-                    if(feature.subcategory().toLowerCase().contains(searchQuery)) ignoreFeature = false;
-                    if(feature.hidden()) ignoreFeature = true;
-
-                    if(feature.searchTags().length>0) {
-                        String tag = feature.searchTags()[0];
-                        if(parentStuff.get(tag)!=null) {
-                            Boolean enabled = parentStuff.get(tag).enabled;
-                            if(!enabled) {
-                                ignoreFeature = true;
-                            }
-                        }
-                    }
-
+                    boolean ignoreFeature = shouldHideFeature(feature);
                     if(ignoreFeature) continue;
                     featuresVisible++;
                 }
                 // Dont show subcategory names if no elements of it are visible
                 if(featuresVisible==0) continue;
+                visibleSubcategories++;
                 // Render subcategory name
 
                 UIComponent container = new UIBlock(clear).setChildOf(loadedFeaturesList)
@@ -462,23 +489,12 @@ public class ConfigGui extends WindowScreen {
                     .setX(new CenterConstraint())
                     .setTextScale(new PixelConstraint((float) fontScale*3));
 
-                // yOffset += container.getHeight() + Margin;
                 for(Property feature:subcategory) {
                     if(feature.hidden()) continue;
 
                     if(!feature.name().toLowerCase().contains(searchQuery) && !feature.description().toLowerCase().contains(searchQuery)) {
-                        boolean shouldShow = false;
-                        if(feature.subcategory().toLowerCase().contains(searchQuery)) shouldShow = true;
-                        if(feature.searchTags().length>0) {
-                            String tag = feature.searchTags()[0];
-                            if(parentStuff.get(tag)!=null) {
-                                Boolean enabled = parentStuff.get(tag).enabled;
-                                if(enabled) {
-                                    shouldShow = true;
-                                }
-                            }
-                        }
-                        if(!shouldShow) continue;
+                        boolean shouldHide = shouldHideFeature(feature);
+                        if(shouldHide) continue;
                     }
 
                     String outlinePath = furfSkyThemed?"/assets/skyblockfeatures/gui/outlineFurf.png":"/assets/skyblockfeatures/gui/outline.png";
@@ -560,7 +576,7 @@ public class ConfigGui extends WindowScreen {
                             if(feature.searchTags().length>0) {
                                 String tag = feature.searchTags()[0];
                                 if(tag.equals("parent")) {
-                                    ExpandableComponent parent = parentStuff.get(feature.name());
+                                    ExpandableComponent parent = parentElements.get(feature.name());
                                     parent.enabled = !val;
                                     for(UIComponent child : parent.children) {
                                         if(parent.enabled) {
@@ -585,14 +601,7 @@ public class ConfigGui extends WindowScreen {
                             border.animateTo(anim);
                             return Unit.INSTANCE;
                         });
-                        // comp.onMouseLeave((event)->{
-                        //     AnimatingConstraints anim = border.makeAnimation();
-                        //     anim.setHeightAnimation(Animations.IN_EXP, 0.5f, new RelativeConstraint(0.16f));
-                        //     border.animateTo(anim);
-                        //     ((ColorComponent) comp).closePopups(false);
-                        //      ((ColorComponent) comp).
-                        //     return Unit.INSTANCE;
-                        // });
+
                         ((ColorComponent) comp).onValueChange((value)->{
                             setVariable(feature.name(),value);
                             finalColorPreview.setColor(((Color)value));
@@ -692,24 +701,22 @@ public class ConfigGui extends WindowScreen {
                             Boolean enabled = (Boolean) getVariable(feature.name());
                             ExpandableComponent comp = new ExpandableComponent();
                             comp.enabled = enabled;
-                            parentStuff.put(feature.name(),comp);
+                            comp.parent = feature;
+                            parentElements.put(feature.name(),comp);
                         } else {
-                            if(parentStuff.get(tag)!=null) {
-                                Boolean enabled = parentStuff.get(tag).enabled;
+                            if(parentElements.get(tag)!=null) {
+                                Boolean enabled = parentElements.get(tag).enabled;
                                 border.setWidth(new RelativeConstraint(.85f));  
                                 exampleFeature.setWidth(new RelativeConstraint(1f));
-                                parentStuff.get(tag).children.add(border);
+                                parentElements.get(tag).children.add(border);
 
                                 if(!enabled) {
                                     border.hide();
-                                    // exampleFeature.hide();
                                     continue;
                                 };
                             }
                         }
                     }
-
-                    // yOffset += exampleFeature.getHeight() + Margin;
                 }
             }
         }

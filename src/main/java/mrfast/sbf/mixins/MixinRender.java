@@ -27,7 +27,7 @@ public abstract class MixinRender<T extends Entity> {
         }
         
         try {
-            if (MinecraftForge.EVENT_BUS.post(new CheckRenderEntityEvent<T>(livingEntity, camera, camX, camY, camZ))) cir.setReturnValue(false);
+            if (MinecraftForge.EVENT_BUS.post(new CheckRenderEntityEvent<>(livingEntity, camera, camX, camY, camZ))) cir.setReturnValue(false);
         } catch (Throwable e) {
             e.printStackTrace();
         }

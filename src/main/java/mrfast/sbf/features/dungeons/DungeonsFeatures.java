@@ -1,13 +1,12 @@
 package mrfast.sbf.features.dungeons;
 
 import java.awt.Color;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.regex.Pattern;
+import java.util.*;
 
-import mrfast.sbf.utils.GuiUtils;
+import mrfast.sbf.core.SkyblockMobDetector;
+import mrfast.sbf.events.CheckRenderEntityEvent;
+import mrfast.sbf.utils.*;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
 import org.lwjgl.input.Mouse;
 
 import com.mojang.realmsclient.gui.ChatFormatting;
@@ -17,9 +16,6 @@ import mrfast.sbf.events.GuiContainerEvent;
 import mrfast.sbf.events.PacketEvent;
 import mrfast.sbf.gui.components.Point;
 import mrfast.sbf.gui.components.UIElement;
-import mrfast.sbf.utils.ItemUtils;
-import mrfast.sbf.utils.RenderUtil;
-import mrfast.sbf.utils.Utils;
 import net.minecraft.block.BlockSkull;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
@@ -32,7 +28,6 @@ import net.minecraft.entity.passive.EntityBat;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.event.ClickEvent;
 import net.minecraft.event.HoverEvent;
-import net.minecraft.inventory.Container;
 import net.minecraft.inventory.ContainerChest;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -55,10 +50,51 @@ public class DungeonsFeatures {
     private static final Minecraft mc = Minecraft.getMinecraft();
     public static Entity livid = null;
     public static boolean dungeonStarted = false;
+    int ticks = 0;
+    boolean inSpecialRoom = false;
+    HashMap<SkyblockMobDetector.SkyblockMob, Boolean> starredMobs = new HashMap<>();
+    @SubscribeEvent
+    public void onTick(TickEvent.ClientTickEvent event) {
+        if((!Utils.inDungeons || !dungeonStarted) && (!SkyblockFeatures.config.boxStarredMobs && !SkyblockFeatures.config.hideNonStarredMobs)) return;
+
+        ticks++;
+        if(ticks%20==0) {
+            ticks = 0;
+            int id = getDungeonRoomId();
+            inSpecialRoom = id==138||id==210;
+            starredMobs.entrySet().removeIf((sbMob)-> !sbMob.getKey().getSkyblockMob().isEntityAlive());
+            for(SkyblockMobDetector.SkyblockMob sbMob:SkyblockMobDetector.getLoadedSkyblockMobs()) {
+                if(sbMob.skyblockMob.isInvisible()) continue;
+                starredMobs.put(sbMob,sbMob.mobNameEntity.getDisplayName().getUnformattedText().contains("✯"));
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public void checkRender(CheckRenderEntityEvent event) {
+        if(!SkyblockFeatures.config.hideNonStarredMobs) return;
+
+        if(Utils.inDungeons && dungeonStarted && !inSpecialRoom) {
+            SkyblockMobDetector.SkyblockMob sbMob = SkyblockMobDetector.getSkyblockMob(event.entity);
+            if(sbMob==null) return;
+            if(!starredMobs.containsKey(sbMob)) {
+                event.setCanceled(true);
+            }
+        }
+    }
 
     @SubscribeEvent
     public void onRender3D(RenderWorldLastEvent event) {
         if(!Utils.inDungeons) return;
+
+        if(dungeonStarted && !inSpecialRoom && SkyblockFeatures.config.boxStarredMobs) {
+            starredMobs.forEach((sbMob,starred)->{
+                if(starred) {
+                    RenderUtil.drawOutlinedFilledBoundingBox(sbMob.getSkyblockMob().getEntityBoundingBox(), Color.RED,event.partialTicks);
+                }
+            });
+        }
+
         if(SkyblockFeatures.config.highlightBats) {
             for(Entity entity:mc.theWorld.loadedEntityList) {
                 if(entity instanceof EntityBat && !entity.isInvisible()) {
@@ -119,6 +155,7 @@ public class DungeonsFeatures {
         String text = event.message.getUnformattedText();
         if(text.startsWith("Starting in 1 second.")) {
             dungeonStarted = true;
+
         }
         if(text.startsWith("[BOSS] ") && !text.contains("The Watcher")) {
             dungeonStarted = false;
@@ -294,5 +331,19 @@ public class DungeonsFeatures {
 
             Minecraft.getMinecraft().thePlayer.closeScreen();
         }
+    }
+
+    public static int getDungeonRoomId() {
+        int output = 0;
+        try {
+            if(!Utils.inDungeons) return 0;
+            String line = ScoreboardUtil.getSidebarLines(true).get(1);
+            String roomInfo = line.split(" ")[2];
+            String roomIdString = roomInfo.split(",")[0];
+            output = Integer.parseInt(roomIdString);
+        } catch (Exception e) {
+//            e.printStackTrace();
+        }
+        return output;
     }
 }

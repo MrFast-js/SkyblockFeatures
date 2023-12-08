@@ -162,6 +162,19 @@ public class SkyblockMobDetector {
                 .collect(Collectors.toList());
     }
 
+    public static SkyblockMob getSkyblockMob(Entity entity) {
+        if (entity == null) {
+            return null;
+        }
+
+        return getLoadedSkyblockMobs()
+                .stream()
+                .filter(mob -> mob.getSkyblockMob().equals(entity) || mob.mobNameEntity.equals(entity))
+                .findFirst()
+                .orElseGet(() -> null);
+    }
+
+
     public static String getEntityId(Entity entity) {
         SkyblockMob sbMob = getLoadedSkyblockMobs()
                 .stream()
