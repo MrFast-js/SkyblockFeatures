@@ -75,7 +75,6 @@ public class ConfigGui extends WindowScreen {
     Color defaultCategory = SkyblockFeatures.config.defaultCategory;
     Color versionText = SkyblockFeatures.config.versionColor;//new Color(0xFFFFFF);
     Color editGuiText = SkyblockFeatures.config.editGuiText;
-    Color featureBoxOutline = SkyblockFeatures.config.featureBoxOutline;
     Color featureDescription = SkyblockFeatures.config.featureDescription;
 
     // Background colors
@@ -170,7 +169,7 @@ public class ConfigGui extends WindowScreen {
             .setColor(guiLines);
 
         // Area of where the currently selected categorie's feature will be displayed
-        UIComponent loadedFeaturesList = new ScrollComponent("No Matching Settings Found", 10f, featureBoxOutline, false, true, false, false, 25f, 1f, null)
+        UIComponent loadedFeaturesList = new ScrollComponent("No Matching Settings Found", 10f, searchBoxBackground, false, true, false, false, 25f, 1f, null)
             .setX(new PixelConstraint(0.25f*guiWidth))
             .setY(new PixelConstraint(titleArea.getHeight()))
             .enableEffect(new ScissorEffect())
@@ -196,7 +195,7 @@ public class ConfigGui extends WindowScreen {
             .setColor(clear)
             .enableEffect(new ScissorEffect());
 
-        UIComponent sidebarAreaScroll = new ScrollComponent("No Matching Settings Found", 10f, featureBoxOutline, false, true, false, false, 25f, 1f, null)
+        UIComponent sidebarAreaScroll = new ScrollComponent("No Matching Settings Found", 10f, searchBoxBackground, false, true, false, false, 25f, 1f, null)
             .setX(new PixelConstraint(0f))
             .setY(new PixelConstraint(0f))
             .setWidth(new RelativeConstraint(1f))
@@ -360,7 +359,6 @@ public class ConfigGui extends WindowScreen {
                 SkyblockFeatures.config.selectedCategory = new Color(0x02A9EA);
                 SkyblockFeatures.config.hoveredCategory = new Color(0x2CC8F7);
                 SkyblockFeatures.config.defaultCategory = new Color(0xFFFFFF);
-                SkyblockFeatures.config.featureBoxOutline = new Color(0xa9a9a9);
                 SkyblockFeatures.config.featureDescription = new Color(0xbbbbbb);
                 SkyblockFeatures.config.mainBackground = new Color(25,25,25,200);
                 SkyblockFeatures.config.searchBoxBackground = new Color(120,120,120,60);

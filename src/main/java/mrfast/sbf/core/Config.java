@@ -865,9 +865,6 @@ public class Config extends Vigilant {
     @Property(type = PropertyType.COLOR, name = "Default Category Text", description = "", category = "§2§rCustomization", subcategory = "§1§rGui")
     public Color defaultCategory = new Color(0xFFFFFF);
 
-    @Property(type = PropertyType.COLOR, name = "Feature Box Outline", description = "", category = "§2§rCustomization", subcategory = "§1§rGui")
-    public Color featureBoxOutline = new Color(0xa9a9a9);
-
     @Property(type = PropertyType.COLOR, name = "Feature Description Text", description = "", category = "§2§rCustomization", subcategory = "§1§rGui")
     public Color featureDescription = new Color(0xbbbbbb);
 

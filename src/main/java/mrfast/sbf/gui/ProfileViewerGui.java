@@ -182,7 +182,6 @@ public class ProfileViewerGui extends WindowScreen {
     // Text/Lines colors
     Color titleColor = SkyblockFeatures.config.titleColor;//new Color(0x00FFFF);
     Color guiLines = SkyblockFeatures.config.guiLines;
-    Color featureBoxOutline = SkyblockFeatures.config.featureBoxOutline;
     NumberFormat nf = NumberFormat.getInstance();
     String bold = ChatFormatting.WHITE+""+ChatFormatting.BOLD;
     String g = ChatFormatting.GRAY+"";
@@ -532,7 +531,7 @@ public class ProfileViewerGui extends WindowScreen {
         new UIBlock().setChildOf(titleArea).setWidth(new PixelConstraint(guiWidth-2)).setHeight(new PixelConstraint(1f)).setX(new CenterConstraint()).setY(new PixelConstraint(titleArea.getHeight()-1)).setColor(guiLines);
 
         // Area of where the stats are all contained
-        statsAreaContainer = new ScrollComponent("", 10f, featureBoxOutline, false, true, false, false, 25f, 1f, null)
+        statsAreaContainer = new ScrollComponent("", 10f, mainBackground, false, true, false, false, 25f, 1f, null)
             .setX(new PixelConstraint(0.25f*guiWidth))
             .setY(new PixelConstraint(titleArea.getHeight()))
             .setWidth(new PixelConstraint(0.75f*guiWidth))
