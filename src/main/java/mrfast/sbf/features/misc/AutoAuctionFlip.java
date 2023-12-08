@@ -382,11 +382,11 @@ public class AutoAuctionFlip {
 
                         if(auctionData!=null) {
                             Auction auction = new Auction(auctionId, itemData, profit);
-                            String currentProfit = Utils.formatNumber(profit.longValue());
-                            String currentPrice = Utils.formatNumber(binPrice.longValue());
-                            String itemValue = Utils.formatNumber(valueOfTheItem.longValue());
-                            String ePrice = Utils.formatNumber(enchantValue);
-                            String sPrice = Utils.formatNumber(starValue);
+                            String currentProfit = Utils.shortenNumber(profit.longValue());
+                            String currentPrice = Utils.shortenNumber(binPrice.longValue());
+                            String itemValue = Utils.shortenNumber(valueOfTheItem.longValue());
+                            String ePrice = Utils.shortenNumber(enchantValue);
+                            String sPrice = Utils.shortenNumber(starValue);
                             boolean dupe = auctionFlips.stream().anyMatch(auc -> Objects.equals(auc.auctionId, auctionId));
                             if (dupe||valueOfTheItem<binPrice) continue;
 
@@ -468,11 +468,11 @@ public class AutoAuctionFlip {
 
                         if(auctionData!=null) {
                             Auction auction = new Auction(auctionId, itemData, profit);
-                            String currentProfit = Utils.formatNumber(profit.longValue());
-                            String currentPrice = Utils.formatNumber(bidPrice.longValue());
-                            String itemValue = Utils.formatNumber(valueOfTheItem.longValue());
-                            String ePrice = Utils.formatNumber(enchantValue.longValue());
-                            String sPrice = Utils.formatNumber(starValue.longValue());
+                            String currentProfit = Utils.shortenNumber(profit.longValue());
+                            String currentPrice = Utils.shortenNumber(bidPrice.longValue());
+                            String itemValue = Utils.shortenNumber(valueOfTheItem.longValue());
+                            String ePrice = Utils.shortenNumber(enchantValue.longValue());
+                            String sPrice = Utils.shortenNumber(starValue.longValue());
 
                             // Filter out any auctions with duplicate ids
                             boolean dupe = auctionFlips.stream().anyMatch(auc -> Objects.equals(auc.auctionId, auctionId));

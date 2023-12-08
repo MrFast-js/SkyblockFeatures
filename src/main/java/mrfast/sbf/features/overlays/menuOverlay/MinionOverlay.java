@@ -107,7 +107,7 @@ public class MinionOverlay {
                                     ChatFormatting.WHITE + " • Time Between Actions: " + ChatFormatting.GREEN + secondsPerAction + "s",
                                     ChatFormatting.WHITE + " • Fuel Duration: " + ChatFormatting.YELLOW + fuelRunsOut,
                                     ChatFormatting.WHITE + " • Coins Per Hour: " + ChatFormatting.GOLD + Utils.nf.format(perHour),
-                                    ChatFormatting.WHITE + " • Total Value: " + ChatFormatting.GOLD + Utils.formatNumber(totalValue),
+                                    ChatFormatting.WHITE + " • Total Value: " + ChatFormatting.GOLD + Utils.shortenNumber(totalValue),
                                     ChatFormatting.WHITE + " • Last Collected: " + ChatFormatting.AQUA + duration
                             };
                         } else {

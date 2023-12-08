@@ -95,21 +95,21 @@ public class TradingOverlay {
     }
 
     public void drawOtherPersonValue(Double total,HashMap<String,Double> items) {
-        List<String> lines = new ArrayList<>(Arrays.asList(ChatFormatting.WHITE+"Total Value: "+ChatFormatting.GOLD+Utils.formatNumber(total),""));
+        List<String> lines = new ArrayList<>(Arrays.asList(ChatFormatting.WHITE+"Total Value: "+ChatFormatting.GOLD+Utils.shortenNumber(total),""));
         for(String itemName:items.keySet()) {
             String name = itemName;
             if(itemName.length()>21) name = itemName.substring(0, 20)+"..";
-            lines.add(name+" "+ChatFormatting.DARK_GRAY+ChatFormatting.ITALIC+"("+Utils.formatNumber(items.get(itemName))+")");
+            lines.add(name+" "+ChatFormatting.DARK_GRAY+ChatFormatting.ITALIC+"("+Utils.shortenNumber(items.get(itemName))+")");
         }
         GuiUtils.drawSideMenu(lines, GuiUtils.TextStyle.DROP_SHADOW);
     }
 
     public void drawSelfPersonValue(Double total,HashMap<String,Double> items) {
-        List<String> lines = new ArrayList<>(Arrays.asList(ChatFormatting.WHITE+"Total Value: "+ChatFormatting.GOLD+Utils.formatNumber(total),""));
+        List<String> lines = new ArrayList<>(Arrays.asList(ChatFormatting.WHITE+"Total Value: "+ChatFormatting.GOLD+Utils.shortenNumber(total),""));
         for(String itemName:items.keySet()) {
             String name = itemName;
             if(itemName.length()>21) name = itemName.substring(0, 20)+"..";
-            lines.add(name+" "+ChatFormatting.DARK_GRAY+ChatFormatting.ITALIC+"("+Utils.formatNumber(items.get(itemName))+")");
+            lines.add(name+" "+ChatFormatting.DARK_GRAY+ChatFormatting.ITALIC+"("+Utils.shortenNumber(items.get(itemName))+")");
         }
         GuiUtils.drawSideMenu(lines, GuiUtils.TextStyle.DROP_SHADOW,true);
     }
