@@ -572,7 +572,7 @@ public class Config extends Vigilant {
     public boolean boxStarredMobs = false;
     @Property(
             type = PropertyType.COLOR,
-            name = "Starred Mobs Highlight Color",
+            name = "Starred Mobs Color",
             description = "",
             category = "§1§rDungeons",
             subcategory = "Miscellaneous",
