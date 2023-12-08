@@ -545,21 +545,21 @@ public class ConfigGui extends WindowScreen {
                             .setWidth(new RelativeConstraint(0.5f))
                             .setColor(featureDescription)
                             .setY(new PixelConstraint(23f*(float) fontScale))
-                            .setTextScale(new PixelConstraint((float) fontScale*1f));
+                            .setTextScale(new PixelConstraint((float) fontScale));
                     } else if(feature.type() == PropertyType.TEXT) {
                         new UIWrappedText(feature.description()).setChildOf(exampleFeature)
                             .setX(new PixelConstraint(4f))
                             .setWidth(new RelativeConstraint(0.75f))
                             .setColor(featureDescription)
                             .setY(new PixelConstraint(23f*(float) fontScale))
-                            .setTextScale(new PixelConstraint((float) fontScale*1f));
+                            .setTextScale(new PixelConstraint((float) fontScale));
                     } else {
                         UIComponent text =  new UIWrappedText(feature.description()).setChildOf(exampleFeature)
                             .setX(new PixelConstraint(4f))
                             .setWidth(new RelativeConstraint(0.75f))
                             .setColor(featureDescription)
                             .setY(new PixelConstraint(23f*(float) fontScale))
-                            .setTextScale(new PixelConstraint((float) fontScale*1f));
+                            .setTextScale(new PixelConstraint((float) fontScale));
                         text.setHeight(new PixelConstraint(text.getHeight()+6));
                     }
                     

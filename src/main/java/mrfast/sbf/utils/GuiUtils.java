@@ -131,7 +131,7 @@ public class GuiUtils {
 
         Vector2f vec = new Vector2f(x2 - x1, y2 - y1);
         vec.normalise(vec);
-        Vector2f side = new Vector2f(vec.y, -vec.x);
+        Vector2f side = new Vector2f(vec.x, -vec.y);
 
         GL11.glLineWidth(width);
         GL11.glEnable(GL11.GL_LINE_SMOOTH);

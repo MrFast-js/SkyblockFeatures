@@ -378,7 +378,7 @@ public class ProfileViewerUtils {
                         "§7Level " + ProfileViewerGui.mole + "§8/190",
                         "",
                         "§7When mining hard stone, you have",
-                        "§7a §a" + ProfileViewerGui.finalOutput + "% §7chance to mine §a" + +Math.round(ProfileViewerGui.moleStat),
+                        "§7a §a" + ProfileViewerGui.finalOutput + "% §7chance to mine §a" + Math.round(ProfileViewerGui.moleStat),
                         "§7adjacent ores."), new Vector2f(3f, 1f), ProfileViewerGui.mole > 0),
 
                 newHotmUpgrade(Lists.newArrayList(EnumChatFormatting.RED + "Powder Buff",

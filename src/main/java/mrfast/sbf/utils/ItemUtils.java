@@ -282,7 +282,7 @@ public class ItemUtils {
 
         String id = PricingData.getIdentifier(stack);
         NBTTagCompound ExtraAttributes = getExtraAttributes(stack);
-        Long total = 0l;
+        Long total = 0L;
 
         try {
             // Add lowest bin as a base price
@@ -341,10 +341,10 @@ public class ItemUtils {
         if (ExtraAttributes.hasKey("hot_potato_count")) {
             int hpb = ExtraAttributes.getInteger("hot_potato_count");
             if (hpb > 10) {
-            if(PricingData.bazaarPrices.get("FUMING_POTATO_BOOK")!=null) total+= (PricingData.bazaarPrices.get("FUMING_POTATO_BOOK")*0.6);
+            if(PricingData.bazaarPrices.get("FUMING_POTATO_BOOK")!=null) total+= (long) (PricingData.bazaarPrices.get("FUMING_POTATO_BOOK")*0.6);
             }
             if(PricingData.bazaarPrices.get("HOT_POTATO_BOOK")!=null) {
-                total+= (PricingData.bazaarPrices.get("HOT_POTATO_BOOK")*Math.min(hpb, 10));
+                total+= (long) (PricingData.bazaarPrices.get("HOT_POTATO_BOOK")*Math.min(hpb, 10));
             }
         }
 
@@ -377,7 +377,7 @@ public class ItemUtils {
                     stars = 5;
                 }
             } else {
-                return 0l;
+                return 0L;
             }
             JsonArray upgradeCosts = skyhelperItemMap.get(id).get("upgrade_costs").getAsJsonArray();
             for(int i=0;i<stars;i++) {
@@ -434,7 +434,7 @@ public class ItemUtils {
     }
 
     public static Long getEnchantsWorth(NBTTagCompound extraAttributes) {
-        if(!extraAttributes.hasKey("enchantments")) return 0l;
+        if(!extraAttributes.hasKey("enchantments")) return 0L;
         NBTTagCompound nbt = extraAttributes.getCompoundTag("enchantments");
         long total = 0;
         for(String enchant:nbt.getKeySet()) {

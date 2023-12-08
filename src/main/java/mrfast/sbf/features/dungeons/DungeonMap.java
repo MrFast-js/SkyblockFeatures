@@ -266,7 +266,7 @@ public class DungeonMap {
                     // Raw icon number
                     Integer playerId = Integer.parseInt(mapEntry.getKey().replaceAll("[^0-9]", ""));
                     // Draw self head
-                    if (!self.equals("") && playerId == Integer.parseInt(self.replaceAll("[^0-9]", ""))) {
+                    if (!self.isEmpty() && playerId == Integer.parseInt(self.replaceAll("[^0-9]", ""))) {
                         AbstractClientPlayer player = Utils.GetMC().thePlayer;
                         if (player != null) {
                             double x = (player.posX) / (mapData.scale * 0.8);

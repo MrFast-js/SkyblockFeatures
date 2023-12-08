@@ -112,8 +112,8 @@ public class DungeonsFeatures {
                     if(Utils.GetMC().thePlayer.getDistanceSq(pos)>30*30) continue;
                     NBTTagCompound entityData = new NBTTagCompound();
                     skull.writeToNBT(entityData);
-                    Boolean witherSkull = entityData.toString().contains("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvM2JjYmJmOTRkNjAzNzQzYTFlNzE0NzAyNmUxYzEyNDBiZDk4ZmU4N2NjNGVmMDRkY2FiNTFhMzFjMzA5MTRmZCJ9fX0");
-                    Boolean bloodSkull = entityData.toString().contains("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvOWQ5ZDgwYjc5NDQyY2YxYTNhZmVhYTIzN2JkNmFkYWFhY2FiMGMyODgzMGZiMzZiNTcwNGNmNGQ5ZjU5MzdjNCJ9fX0");
+                    boolean witherSkull = entityData.toString().contains("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvM2JjYmJmOTRkNjAzNzQzYTFlNzE0NzAyNmUxYzEyNDBiZDk4ZmU4N2NjNGVmMDRkY2FiNTFhMzFjMzA5MTRmZCJ9fX0");
+                    boolean bloodSkull = entityData.toString().contains("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvOWQ5ZDgwYjc5NDQyY2YxYTNhZmVhYTIzN2JkNmFkYWFhY2FiMGMyODgzMGZiMzZiNTcwNGNmNGQ5ZjU5MzdjNCJ9fX0");
                     if(!witherSkull && !bloodSkull) continue;
                     
                     if(mc.theWorld.getBlockState(pos.add(4, 0, 4)).getBlock() instanceof BlockSkull) {
@@ -285,7 +285,7 @@ public class DungeonsFeatures {
         @Override
         public void drawElementExample() {
             GuiUtils.drawText("§d§lBlessings",0,0);
-            GuiUtils.drawText("§dBlessing of Power XI", 0, 1 * Utils.GetMC().fontRendererObj.FONT_HEIGHT);
+            GuiUtils.drawText("§dBlessing of Power XI", 0, Utils.GetMC().fontRendererObj.FONT_HEIGHT);
             GuiUtils.drawText("§dBlessing of Life XIII", 0, 2 * Utils.GetMC().fontRendererObj.FONT_HEIGHT);
             GuiUtils.drawText("§dBlessing of Wisdom V", 0, 3 * Utils.GetMC().fontRendererObj.FONT_HEIGHT);
             GuiUtils.drawText("§dBlessing of Stone VII", 0, 4 * Utils.GetMC().fontRendererObj.FONT_HEIGHT);
