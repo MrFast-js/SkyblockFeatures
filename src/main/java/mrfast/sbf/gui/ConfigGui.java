@@ -453,9 +453,10 @@ public class ConfigGui extends WindowScreen {
     public void reloadFeatures(UIComponent loadedFeaturesList, float guiHeight, float guiWidth, double fontScale) {
         float Margin = 6f;
         // Default category
-        // Draw Categories on left
+        // Loop through main categories
         for(String categoryName:categories.keySet()) {
-            int visibleSubcategories = 0;
+            if(categoryName.contains("Developer") && !Utils.isDeveloper()) continue;
+
             if(searchQuery.isEmpty()) {
                 if(!categoryName.equals(selectedCategory)) {
                     continue;
@@ -472,7 +473,6 @@ public class ConfigGui extends WindowScreen {
                 }
                 // Dont show subcategory names if no elements of it are visible
                 if(featuresVisible==0) continue;
-                visibleSubcategories++;
                 // Render subcategory name
 
                 UIComponent container = new UIBlock(clear).setChildOf(loadedFeaturesList)
