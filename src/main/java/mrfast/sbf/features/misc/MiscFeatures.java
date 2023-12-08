@@ -208,7 +208,6 @@ public class MiscFeatures {
                         apiOff = true;
                         return;
                     }
-                    ;
 
                     String profileURL = "https://sky.shiiyu.moe/api/v2/profile/" + username + "#extraProfileInfo";
                     JsonObject profileResponse = APIUtils.getJSONResponse(profileURL);

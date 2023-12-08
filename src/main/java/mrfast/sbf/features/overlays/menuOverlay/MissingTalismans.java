@@ -54,8 +54,8 @@ public class MissingTalismans {
                     String latestProfile = APIUtils.getLatestProfileID(uuid);
                     if (latestProfile == null) {
                         return;
-                    };
-                    
+                    }
+
                     String profileURL = "https://sky.shiiyu.moe/api/v2/profile/"+username;
                     JsonObject profileResponse = APIUtils.getJSONResponse(profileURL);
                     profileResponse = profileResponse.get("profiles").getAsJsonObject();

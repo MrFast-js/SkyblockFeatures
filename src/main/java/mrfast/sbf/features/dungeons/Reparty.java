@@ -14,7 +14,7 @@ import net.minecraftforge.fml.common.gameevent.TickEvent;
 
 public class Reparty {
     private boolean waitingForInvite = false;
-    private String partyLeader= null;;
+    private String partyLeader= null;
     private long startTime = 0;
 
     private boolean isPartyLeader = false;

@@ -1615,7 +1615,6 @@ public class ProfileViewerGui extends WindowScreen {
                         petHoverables.put(petComponent, tooltip);
                         continue;
                     }
-                    ;
                     float x = (float) ((index - (Math.floor(index / 16f) * 16)) * 30f);
                     float y = (float) (Math.floor(index / 16f) * 35f) + 63;
                     UIComponent petComponent = ProfileViewerUtils.createPet(imageFuture, lvl, ProfileViewerUtils.getPetColor(tier)).setChildOf(otherPetsContainer).setX(new PixelConstraint(x)).setY(new PixelConstraint(y));

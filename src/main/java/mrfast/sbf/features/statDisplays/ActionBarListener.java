@@ -33,9 +33,9 @@ public class ActionBarListener {
 			String[] actionBarSplit = actionBar.split(" ");
 			for (String piece : actionBarSplit) {
 				String trimmed = piece.trim();
-				String colorsStripped = Utils.cleanColor(trimmed).replaceAll(",", "");;
+				String colorsStripped = Utils.cleanColor(trimmed).replaceAll(",", "");
 
-				if(trimmed.isEmpty()) continue;
+                if(trimmed.isEmpty()) continue;
 				String shortString = colorsStripped.substring(0, colorsStripped.length() - 1).replaceAll(",", "");
 				if(trimmed.endsWith("❤")) {
 					parseAndSetHealth(shortString);

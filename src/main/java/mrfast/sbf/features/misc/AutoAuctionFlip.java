@@ -437,7 +437,6 @@ public class AutoAuctionFlip {
                         JsonObject auctionData = PricingData.getItemAuctionInfo(id);
                         String auctionId = itemData.get("uuid").toString().replaceAll("\"", "");
                         Long enchantValue = ItemUtils.getEnchantsWorth(extraAttributes);
-                        ;
                         Long starValue = ItemUtils.getStarCost(extraAttributes);
                         int volume = 20;
 

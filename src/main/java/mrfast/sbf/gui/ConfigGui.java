@@ -157,7 +157,7 @@ public class ConfigGui extends WindowScreen {
             .setY(new PixelConstraint(3f));
         
         titleArea.onMouseClickConsumer((event)->{
-            input.grabWindowFocus();;
+            input.grabWindowFocus();
         });
         
         // Gray horizontal line 1px from bottom of the title area
@@ -652,7 +652,7 @@ public class ConfigGui extends WindowScreen {
                             .setY(new PixelConstraint(4f));
 
                         newcomp.onMouseClickConsumer((event)->{
-                            newcomp.grabWindowFocus();;
+                            newcomp.grabWindowFocus();
                         });
                         newcomp.setText(valueMap.get(feature)+"");
                         
@@ -711,7 +711,7 @@ public class ConfigGui extends WindowScreen {
                                 if(!enabled) {
                                     border.hide();
                                     continue;
-                                };
+                                }
                             }
                         }
                     }

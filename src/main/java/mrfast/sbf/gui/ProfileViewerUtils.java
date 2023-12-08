@@ -193,10 +193,8 @@ public class ProfileViewerUtils {
         }
 
         if (type.equals("Social")) skillXpList = Arrays.stream(socialXpPerLevel).collect(Collectors.toList());
-        ;
         if (type.equals("Runecrafting"))
             skillXpList = Arrays.stream(runecraftingXpPerLevel).collect(Collectors.toList());
-        ;
 
         return skillXpList.toArray(new Integer[0]);
     }
@@ -249,7 +247,6 @@ public class ProfileViewerUtils {
 
     public static UIComponent createPet(CompletableFuture<BufferedImage> texture, int lvl, Color color) {
         UIComponent background = new UIRoundedRectangle(5f).setColor(color).setWidth(new PixelConstraint(128f / 5)).setHeight(new PixelConstraint(128f / 5));
-        ;
         new UIImage(texture).setChildOf(background).setX(new CenterConstraint()).setY(new CenterConstraint()).setWidth(new PixelConstraint(128f / 5)).setHeight(new PixelConstraint(120f / 5));
         new UIText("LVL " + lvl).setChildOf(background).setY(new SiblingConstraint(2f)).setX(new CenterConstraint()).setTextScale(new PixelConstraint(0.5f));
         return background;

@@ -187,8 +187,6 @@ public class DungeonMap {
         GlStateManager.popMatrix();
     }
 
-    ;
-
 
     // Draw head on map
     public static void DrawHead(Double x, Double z, ResourceLocation skin, Float rotation, String name) {
@@ -376,7 +374,6 @@ public class DungeonMap {
                                 double x = Math.round((mapEntry.getValue().func_176112_b() / 2) + 64);
                                 double z = Math.round((mapEntry.getValue().func_176113_c() / 2) + 64);
                                 double rotation = mapEntry.getValue().func_176111_d() * 360F;
-                                ;
                                 if (farPlayerPosition.containsKey(shortName)) {
                                     x = farPlayerPosition.get(shortName).x;
                                     z = farPlayerPosition.get(shortName).y;

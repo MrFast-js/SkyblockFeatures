@@ -60,7 +60,7 @@ public class CooldownTracker {
 
         activeCooldowns.clear();
         for (int i = 0; i < 8; i++) {
-            if(Utils.GetMC().thePlayer.inventory.mainInventory[i]==null) continue;;
+            if(Utils.GetMC().thePlayer.inventory.mainInventory[i]==null) continue;
             ItemStack stack = Utils.GetMC().thePlayer.inventory.mainInventory[i];
             setStackCooldown(stack);
             String skyblockId = ItemUtils.getSkyBlockItemID(stack);
@@ -191,7 +191,7 @@ public class CooldownTracker {
             ItemStack heldItem = Utils.GetMC().thePlayer.getHeldItem();
             if(heldItem==null) return;
             String skyblockId = ItemUtils.getSkyBlockItemID(heldItem);
-            if(!justUsedAbility.itemId.equals(skyblockId)) return;;
+            if(!justUsedAbility.itemId.equals(skyblockId)) return;
 
             if(clean.startsWith("This ability is on cooldown for")) {
                 if(System.currentTimeMillis()-justUsedAbility.usedAt>300) {
@@ -247,7 +247,7 @@ public class CooldownTracker {
     }
 
     private void updateCooldown(ItemAbility cooldownInfo) {
-        if(cooldownInfo == null) return;;
+        if(cooldownInfo == null) return;
         if (cooldownInfo.counting) {
             cooldownInfo.currentCount++;
             if (cooldownInfo.currentCount >= cooldownInfo.cooldownSeconds) {

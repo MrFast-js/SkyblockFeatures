@@ -73,7 +73,7 @@ public class MixinGuiIngame {
             String s1 = ScorePlayerTeam.formatPlayerName(scoreplayerteam1, score1.getPlayerName());
             if(SkyblockFeatures.config.hideHypixelSidebar && s1.contains("www.hypixel") && score1.getScorePoints()==1) {
                 hypixelLine = score1;
-            };
+            }
         }
         if(hypixelLine!=null) {
             collection.remove(hypixelLine);
