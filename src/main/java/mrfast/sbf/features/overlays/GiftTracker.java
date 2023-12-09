@@ -192,7 +192,8 @@ public class GiftTracker {
     public void onRender(RenderWorldLastEvent event) {
         Minecraft mc = Minecraft.getMinecraft();
         if (mc.theWorld == null || Utils.inDungeons || !Utils.inSkyblock) return;
-        boolean inGlacialCave = SkyblockInfo.localLocation.contains("Glacial");
+        AxisAlignedBB glacialCaveBounds = new AxisAlignedBB(105, 72, 113, 33, 85, 19);
+        boolean inGlacialCave = glacialCaveBounds.isVecInside(Utils.GetMC().thePlayer.getPositionVector());
 
         if (SkyblockFeatures.config.highlightSelfGifts) {
             for (Gift gift : gifts.values()) {
@@ -200,6 +201,7 @@ public class GiftTracker {
                 highlightBlock(SkyblockFeatures.config.selfGiftHighlightColor, gift.entity.posX - 0.5, gift.entity.posY + 1.5, gift.entity.posZ - 0.5, 1.0D, event.partialTicks);
             }
         }
+
         if(!(SkyblockFeatures.config.icecaveHighlightWalls || SkyblockFeatures.config.presentWaypoints)) return;
 
         if(SkyblockFeatures.config.icecaveHighlightWalls) GlStateManager.disableDepth();
