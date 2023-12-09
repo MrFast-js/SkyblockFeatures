@@ -154,9 +154,10 @@ public class DungeonsFeatures {
     public void onChatMesaage(ClientChatReceivedEvent event) {
         if (!Utils.inDungeons || event.type == 2) return;
         String text = event.message.getUnformattedText();
-        if(text.startsWith("Starting in 1 second.")) {
-            dungeonStarted = true;
-
+        for(String line:ScoreboardUtil.getSidebarLines()) {
+            if(line.startsWith("Keys: ")) {
+                dungeonStarted = true;
+            }
         }
         if(text.startsWith("[BOSS] ") && !text.contains("The Watcher")) {
             dungeonStarted = false;
