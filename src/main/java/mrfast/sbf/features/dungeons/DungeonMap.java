@@ -71,6 +71,7 @@ public class DungeonMap {
         if (SkyblockFeatures.config.dungeonMapCenter) {
             GlStateManager.translate(128 - selfHeadPositionX - 64, 128 - selfHeadPositionY - 64, 0);
         }
+        GlStateManager.scale(1f,1f,0f);
         Minecraft.getMinecraft().entityRenderer.getMapItemRenderer().renderMap(mapData, true);
 
         if (DungeonsFeatures.dungeonStarted) {

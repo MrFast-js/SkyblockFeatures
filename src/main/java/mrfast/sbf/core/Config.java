@@ -564,7 +564,7 @@ public class Config extends Vigilant {
     @Property(
             type = PropertyType.SWITCH,
             name = "Highlight Starred Mobs",
-            description = "Draws a box around starred mobs in dungeons.",
+            description = "Highlights starred mobs in dungeons by making them glowing.",
             category = "§1§rDungeons",
             subcategory = "Miscellaneous",
             searchTags = {"parent"}
@@ -578,7 +578,7 @@ public class Config extends Vigilant {
             subcategory = "Miscellaneous",
             searchTags = {"Highlight Starred Mobs"}
     )
-    public Color boxStarredMobsColor = Color.CYAN;
+    public Color boxStarredMobsColor = new Color(0xFFAA00);
 
     @Property(
             type = PropertyType.SWITCH,
@@ -1117,15 +1117,6 @@ public class Config extends Vigilant {
 
     @Property(
             type = PropertyType.SWITCH,
-            name = "Glowing Players",
-            description = "Make visible players anywhere glow. §cSignificant performance impact.",
-            category = "Render",
-            subcategory = "1.9 Glow Effect"
-    )
-    public boolean glowingPlayers = false;
-
-    @Property(
-            type = PropertyType.SWITCH,
             name = "Glowing Items!",
             description = "Make items glow depending on rarity. (Requires Fast render to be off) §cSignificant performance impact.",
             category = "Render",
@@ -1396,9 +1387,20 @@ public class Config extends Vigilant {
             name = "Make Zealots Glow",
             description = "Applys the 1.9 glow effect to zealots to make them glow and shiny. §cSignificant performance impact.",
             category = "§1§rThe End",
-            subcategory = "Zealots"
+            subcategory = "Zealots",
+            searchTags = {"parent"}
     )
     public boolean glowingZealots = false;
+
+    @Property(
+            type = PropertyType.COLOR,
+            name = "Zealot Color",
+            description = "",
+            category = "§1§rThe End",
+            subcategory = "Zealots",
+            searchTags = {"Make Zealots Glow"}
+    )
+    public Color glowingZealotsColor = Color.MAGENTA;
 
     @Property(
             type = PropertyType.SWITCH,

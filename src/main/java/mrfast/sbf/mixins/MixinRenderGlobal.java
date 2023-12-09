@@ -1,8 +1,10 @@
 package mrfast.sbf.mixins;
 
+import java.awt.*;
 import java.nio.FloatBuffer;
 import java.util.List;
 
+import mrfast.sbf.utils.OutlineUtils;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
@@ -17,14 +19,11 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 import mrfast.sbf.SkyblockFeatures;
 import mrfast.sbf.core.SkyblockInfo;
-import mrfast.sbf.features.dungeons.DungeonsFeatures;
-import mrfast.sbf.features.dungeons.Nametags;
 import mrfast.sbf.utils.ItemRarity;
 import mrfast.sbf.utils.ItemUtils;
 import mrfast.sbf.utils.Utils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
-import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderGlobal;
 import net.minecraft.client.renderer.RenderHelper;
@@ -32,7 +31,6 @@ import net.minecraft.client.renderer.culling.ICamera;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.client.shader.Framebuffer;
-import net.minecraft.client.shader.ShaderGroup;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
@@ -69,9 +67,8 @@ public abstract class MixinRenderGlobal {
     private boolean isKeyDownDisableCheck(KeyBinding keyBinding) {
         boolean items = SkyblockFeatures.config.glowingItems && Utils.inSkyblock;
         boolean players = SkyblockFeatures.config.glowingDungeonPlayers && Utils.inDungeons;
-        boolean allPlayers = SkyblockFeatures.config.glowingPlayers && Utils.inSkyblock;
         boolean zealots = SkyblockFeatures.config.glowingZealots && SkyblockInfo.map.equals("The End");
-        return items || players || allPlayers | zealots;
+        return items || players | zealots;
     }
 
     @Inject(method = "renderEntities", at = @At(value = "INVOKE_STRING", target = "Lnet/minecraft/profiler/Profiler;endStartSection(Ljava/lang/String;)V", shift = At.Shift.BEFORE, ordinal = 2, args = {"ldc=entities"}), locals = LocalCapture.CAPTURE_FAILSOFT) // Optifine version
@@ -114,11 +111,10 @@ public abstract class MixinRenderGlobal {
             rg.entityOutlineShader.createBindFramebuffers(width, height);
         }
     }
-
-    
     private void displayOutlines(List<Entity> entities, double x, double y, double z, ICamera camera, float partialTicks) {
-
         if (isRenderEntityOutlines()) {
+            GlStateManager.pushMatrix();
+
             Minecraft mc = Minecraft.getMinecraft();
             RenderGlobal renderGlobal = mc.renderGlobal;
 
@@ -140,37 +136,39 @@ public abstract class MixinRenderGlobal {
             GL11.glTexEnvi(GL11.GL_TEXTURE_ENV, GL13.GL_COMBINE_ALPHA, GL11.GL_REPLACE);
             GL11.glTexEnvi(GL11.GL_TEXTURE_ENV, GL13.GL_SOURCE0_ALPHA, GL11.GL_TEXTURE);
             GL11.glTexEnvi(GL11.GL_TEXTURE_ENV, GL13.GL_OPERAND0_ALPHA, GL11.GL_SRC_ALPHA);
+            GL11.glColor4d(1f,1f,1f,1f);
 
             GlStateManager.depthFunc(GL11.GL_ALWAYS);
             try {
                 for (Entity entity : entities) {
-                    if(entity != DungeonsFeatures.livid && entity.getName().contains(" Livid")) continue;
-                    
-                    boolean flag = (mc.getRenderViewEntity() instanceof EntityLivingBase && ((EntityLivingBase)mc.getRenderViewEntity()).isPlayerSleeping());
-                    boolean flag1 = (entity.isInRangeToRender3d(x, y, z) && (entity.ignoreFrustumCheck || camera.isBoundingBoxInFrustum(entity.getEntityBoundingBox())) && entity instanceof EntityPlayer && !Utils.isNPC(entity));
-                    // Dungeon Player Glowing
-                    if ((entity != mc.getRenderViewEntity() || mc.gameSettings.thirdPersonView != 0 || flag) && flag1 && Nametags.players.containsKey(entity) && SkyblockFeatures.config.glowingDungeonPlayers && Utils.inDungeons) {
-                        outlineColor(entity, Nametags.players.get(entity));
-                        entity.setInvisible(false);
-                        renderManager.renderEntitySimple(entity, partialTicks);
+                    boolean inRange = entity.isInRangeToRender3d(x, y, z) && (entity.ignoreFrustumCheck || camera.isBoundingBoxInFrustum(entity.getEntityBoundingBox()));
+
+                    OutlineUtils.EntityOutline outline = OutlineUtils.getOutline(entity);
+
+                    if(outline!=null && inRange) {
+                        if(!outline.renderNow || outline.entity==null) continue;
+                        outline.renderCount+=1;
+                        if(outline.renderCount>25) {
+                            outline.renderCount=0;
+                            outline.renderNow=false;
+                        }
+                        if(!outline.throughWalls) {
+                            if(!Utils.GetMC().thePlayer.canEntityBeSeen(outline.entity)) continue;
+                        }
+                        if(outline.outlineColor!=null) setColor(outline.outlineColor);
+                        renderManager.renderEntityStatic(entity,partialTicks,true);
                     }
-                    // General Player Glowing
-                    if ((entity != mc.getRenderViewEntity() || mc.gameSettings.thirdPersonView != 0 || flag) && flag1 && SkyblockFeatures.config.glowingPlayers && mc.thePlayer.canEntityBeSeen(entity)) {
-                        renderManager.renderEntitySimple(entity, partialTicks);
-                    }
+
                     // Item Glowing
-                    boolean flag2 = (mc.thePlayer.getDistanceToEntity(entity) < 15.0F && entity instanceof EntityItem);
-                    if (flag2 && SkyblockFeatures.config.glowingItems) {
+                    boolean inItemRange = (mc.thePlayer.getDistanceToEntity(entity) < 15.0F && entity instanceof EntityItem);
+                    if (inItemRange && SkyblockFeatures.config.glowingItems) {
                         ItemRarity itemRarity = ItemUtils.getRarity(((EntityItem)entity).getEntityItem());
                         outlineColor(itemRarity.getColor().getRGB());
-                        renderManager.renderEntitySimple(entity, partialTicks);
-                    } 
-                    if(entity instanceof EntityEnderman && mc.thePlayer.canEntityBeSeen(entity) && SkyblockInfo.localLocation.contains("Dragons Nest") && SkyblockFeatures.config.glowingZealots) {
-                        renderManager.renderEntitySimple(entity, partialTicks);
+                        renderManager.renderEntityStatic(entity, partialTicks,true);
                     }
                 }
-            } catch (NullPointerException ignored) {
-                
+            } catch (Exception e) {
+                e.printStackTrace();
             }
             GlStateManager.depthFunc(GL11.GL_LEQUAL);
 
@@ -199,7 +197,11 @@ public abstract class MixinRenderGlobal {
             GlStateManager.enableColorMaterial();
             GlStateManager.enableDepth();
             GlStateManager.enableAlpha();
+
+            GlStateManager.popMatrix();
+
         }
+
     }
 
 
@@ -210,6 +212,15 @@ public abstract class MixinRenderGlobal {
         BUF_FLOAT_4.put(3, 1);
 
         GL11.glTexEnv(GL11.GL_TEXTURE_ENV, GL11.GL_TEXTURE_ENV_COLOR, BUF_FLOAT_4);
+    }
+
+    private void setColor(Color color) {
+        GL11.glColor4d(
+                (color.getRed()/255f),
+                (color.getGreen()/255f),
+                (color.getBlue()/255f),
+                (color.getAlpha()/255f)
+        );
     }
 
     private void outlineColor(Entity entity, String string) {

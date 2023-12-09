@@ -10,6 +10,9 @@ import com.mojang.realmsclient.gui.ChatFormatting;
 import mrfast.sbf.core.*;
 import mrfast.sbf.features.dungeons.*;
 import mrfast.sbf.features.items.CooldownTracker;
+import mrfast.sbf.utils.OutlineUtils;
+import net.minecraft.entity.Entity;
+import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.ModContainer;
 import org.lwjgl.input.Keyboard;
 
@@ -252,6 +255,11 @@ public class SkyblockFeatures {
         ClientRegistry.registerKeyBinding(openBestFlipKeybind);
         ClientRegistry.registerKeyBinding(reloadPartyFinder);
         ClientRegistry.registerKeyBinding(toggleSprint);
+    }
+
+    @SubscribeEvent
+    public void onWorldLoad(WorldEvent.Load event) {
+        OutlineUtils.entityOutlines.clear();
     }
 
     @SubscribeEvent

@@ -91,7 +91,7 @@ public class DungeonsFeatures {
         if(dungeonStarted && !inSpecialRoom && SkyblockFeatures.config.boxStarredMobs) {
             starredMobs.forEach((sbMob,starred)->{
                 if(starred) {
-                    RenderUtil.drawOutlinedFilledBoundingBox(sbMob.getSkyblockMob().getEntityBoundingBox(), SkyblockFeatures.config.boxStarredMobsColor, event.partialTicks);
+                    OutlineUtils.renderOutline(sbMob.skyblockMob,SkyblockFeatures.config.boxStarredMobsColor,false);
                 }
             });
         }
@@ -162,9 +162,9 @@ public class DungeonsFeatures {
             dungeonStarted = false;
         }
         if(text.endsWith("has obtained Blood Key!")) {
-            for (Map.Entry<EntityPlayer,String> entry : Nametags.players.entrySet()) {
-                if(text.contains(entry.getKey().getName())) {
-                    bloodguy = entry.getKey();
+            for (EntityPlayer entry : Nametags.players) {
+                if(text.contains(entry.getName())) {
+                    bloodguy = entry;
                 }
             }
             if(bloodguy==null) {
