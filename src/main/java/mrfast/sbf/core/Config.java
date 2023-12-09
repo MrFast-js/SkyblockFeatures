@@ -77,6 +77,15 @@ public class Config extends Vigilant {
 
     @Property(
             type = PropertyType.SWITCH,
+            name = "Floor 3 Fire Freeze Timer",
+            description = "Shows a timer of when to use the §5Fire Freeze Staff",
+            category = "§1§rDungeons",
+            subcategory = "Items"
+    )
+    public boolean fireFreezeTimer = false;
+
+    @Property(
+            type = PropertyType.SWITCH,
             name = "Box Shadow Assasins",
             description = "Draws a box around invisible shadow assasins when their sword is visible.",
             category = "§1§rDungeons",
@@ -1562,9 +1571,20 @@ public class Config extends Vigilant {
             name = "Quiver Overlay",
             description = "Shows the arrows in currently your quiver. §cThis will also estimate the count after arrows are shot",
             category = "Miscellaneous",
-            subcategory = "Overlay"
+            subcategory = "Overlay",
+            searchTags = {"parent"}
     )
     public boolean quiverOverlay = false;
+
+    @Property(
+            type = PropertyType.SWITCH,
+            name = "Only show when holding bow",
+            description = "",
+            category = "Miscellaneous",
+            subcategory = "Overlay",
+            searchTags = {"Quiver Overlay"}
+    )
+    public boolean quiverOverlayOnlyBow = false;
 
     @Property(
             type = PropertyType.SLIDER,

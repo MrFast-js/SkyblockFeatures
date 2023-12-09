@@ -65,7 +65,6 @@ public class SkyblockFeatures {
     public static boolean usingNEU = false;
     public static File modDir = new File(new File(mc.mcDataDir, "config"), "skyblockfeatures");
 
-
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event) {
         if (!modDir.exists()) modDir.mkdirs();
@@ -180,6 +179,11 @@ public class SkyblockFeatures {
 
         SkyblockFeatures.config.forceSave();
         System.out.println("You have started Skyblock Features up " + SkyblockFeatures.config.timeStartedUp + " times!");
+
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            SkyblockFeatures.config.forceSave();
+            System.out.println("Saving Skyblock Features Config...");
+        }));
     }
 
     /*

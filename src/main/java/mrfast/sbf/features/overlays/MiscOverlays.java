@@ -176,6 +176,12 @@ public class MiscOverlays {
         @Override
         public void drawElement() {
             if(mc.thePlayer == null || !Utils.inSkyblock || Utils.GetMC().theWorld==null) return;
+            if(SkyblockFeatures.config.quiverOverlayOnlyBow) {
+                ItemStack held = Utils.GetMC().thePlayer.getHeldItem();
+                if(held==null || !(held.getItem() instanceof ItemBow)) {
+                    return;
+                }
+            }
             String display = quiverArrows!=0?"§r§7x"+Utils.nf.format(quiverArrows):"§cOpen Quiver";
             RenderUtil.renderItemStackOnScreen(new ItemStack(Items.arrow),0,0,12,12);
             GuiUtils.drawText(display,14,2, GuiUtils.TextStyle.DROP_SHADOW);

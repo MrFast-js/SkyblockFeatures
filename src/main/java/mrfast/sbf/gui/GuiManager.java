@@ -134,7 +134,11 @@ public class GuiManager {
     }
 
     public static void createTitle(String title, int ticks) {
-        Utils.playSound("random.orb", 0.5);
+        createTitle(title,ticks,true);
+    }
+
+    public static void createTitle(String title, int ticks,boolean playSound) {
+        if(playSound) Utils.playSound("random.orb", 0.5);
         GuiManager.title = title;
         GuiManager.titleDisplayTicks = ticks;
     }

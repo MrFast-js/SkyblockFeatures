@@ -5,6 +5,7 @@ import java.util.*;
 
 import mrfast.sbf.core.SkyblockMobDetector;
 import mrfast.sbf.events.CheckRenderEntityEvent;
+import mrfast.sbf.gui.GuiManager;
 import mrfast.sbf.utils.*;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import org.lwjgl.input.Mouse;
@@ -162,6 +163,22 @@ public class DungeonsFeatures {
         if(text.startsWith("[BOSS] ") && !text.contains("The Watcher")) {
             dungeonStarted = false;
         }
+        if(text.startsWith("[BOSS] The Professor: Even if you took my barrier down, I can still fight.") && SkyblockFeatures.config.fireFreezeTimer) {
+            GuiManager.createTitle(ChatFormatting.RED+"3",20,false);
+
+            Utils.setTimeout(()->{
+                GuiManager.createTitle(ChatFormatting.RED+"2",20,false);
+
+                Utils.setTimeout(()->{
+                    GuiManager.createTitle(ChatFormatting.RED+"1",20,false);
+
+                    Utils.setTimeout(()->{
+                        GuiManager.createTitle(ChatFormatting.GREEN+"Fire Freeze Now!",20);
+                    },700);
+                },700);
+            },700);
+        }
+
         if(text.endsWith("has obtained Blood Key!")) {
             for (EntityPlayer entry : Nametags.players) {
                 if(text.contains(entry.getName())) {
