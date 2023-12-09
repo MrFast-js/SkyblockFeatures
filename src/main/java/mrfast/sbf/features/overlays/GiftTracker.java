@@ -283,13 +283,6 @@ public class GiftTracker {
         RenderUtil.drawOutlinedFilledBoundingBox(new AxisAlignedBB(d, d1, d2, d + size, d1 + size, d2 + size), c, ticks);
     }
 
-    private static boolean isInMonthRange() {
-        Month start= Month.NOVEMBER;
-        Month event= Month.DECEMBER;
-        Month end=Month.FEBRUARY;
-        Month currentMonth = LocalDate.now().getMonth();
-        return currentMonth.equals(start) || currentMonth.equals(end) || currentMonth.equals(event);
-    }
     static {
         new giftingOverlay();
     }
