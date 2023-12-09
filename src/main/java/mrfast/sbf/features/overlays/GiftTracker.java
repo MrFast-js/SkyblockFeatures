@@ -295,11 +295,10 @@ public class GiftTracker {
         } else if (gifts <= 350) {
             gifts-=200;
             return 15 + (gifts / 30);
-        } else if (gifts > 350) {
+        } else {
             gifts-=350;
             return 20 + (gifts / 50);
         }
-        return -1;
     }
     public static class giftingOverlay extends UIElement {
         public giftingOverlay() {
