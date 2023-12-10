@@ -49,14 +49,12 @@ import gg.essential.vigilance.gui.settings.DropDownComponent;
 import gg.essential.vigilance.utils.ResourceImageFactory;
 import kotlin.Unit;
 import mrfast.sbf.SkyblockFeatures;
-import mrfast.sbf.utils.ItemUtils;
+import mrfast.sbf.commands.debugCommand;
+import mrfast.sbf.utils.*;
 import mrfast.sbf.utils.ItemUtils.Inventory;
 import mrfast.sbf.core.PricingData;
 import mrfast.sbf.gui.components.InventoryComponent;
 import mrfast.sbf.gui.components.ItemStackComponent;
-import mrfast.sbf.utils.APIUtils;
-import mrfast.sbf.utils.ItemRarity;
-import mrfast.sbf.utils.Utils;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.InventoryBasic;
@@ -673,7 +671,6 @@ public class ProfileViewerGui extends WindowScreen {
                 .setY(new RelativeConstraint(0.005f))
                 .setWidth(new PixelConstraint(4 * 21f))
                 .setHeight(new PixelConstraint(20f));
-
         if (ProfilePlayerResponse.has("inv_armor")) {
             String inventoryBase64 = ProfilePlayerResponse.get("inv_armor").getAsJsonObject().get("data").getAsString();
             Inventory items = new Inventory(inventoryBase64);
@@ -777,27 +774,14 @@ public class ProfileViewerGui extends WindowScreen {
         if (Utils.isDeveloper()) System.out.println("Getting networth");
 
         Thread networthThread = new Thread(() -> {
-            JsonObject profiles = APIUtils.getJSONResponse("https://sky.shiiyu.moe/api/v2/profile/" + playerUuid + "#skycryptForNw").get("profiles").getAsJsonObject();
 
             List<String> networthTooltip;
             String networth;
 
-            while (profiles.entrySet().isEmpty()) {
-                try {Thread.sleep(100);} catch (InterruptedException ignored) {}
-            }
-
-            if (profiles.has(profileUUID) && profiles.get(profileUUID).isJsonObject()) {
-                JsonObject profileObject = profiles.getAsJsonObject(profileUUID);
-                if (profileObject.has("data") && profileObject.get("data").isJsonObject()) {
-                    JsonObject dataObject = profileObject.getAsJsonObject("data");
-                    if (dataObject.has("networth") && dataObject.get("networth").isJsonObject()) {
-                        networthResponse = dataObject.getAsJsonObject("networth");
-                    }
-                }
-            }
-
             JsonObject museumResponse = APIUtils.getJSONResponse("https://api.hypixel.net/skyblock/museum?profile=" + profileUUID);
+            JsonObject networthResponse = APIUtils.getNetworth(playerUuid,selectedProfileUUID);
 
+            debugCommand.uploadData(networthResponse.toString());
             JsonObject networthCategories = networthResponse.get("types").getAsJsonObject();
 
             if (museumResponse.get("success").getAsBoolean()) {
@@ -811,7 +795,7 @@ public class ProfileViewerGui extends WindowScreen {
             }
             long irl = 0;
 
-            long pets = Utils.safeGetLong(networthCategories.get("storage").getAsJsonObject(), "total");
+            long pets = Utils.safeGetLong(networthCategories.get("pets").getAsJsonObject(), "total");
             long total = Utils.safeGetLong(networthResponse, "networth");
             long Armor = Utils.safeGetLong(networthCategories.get("armor").getAsJsonObject(), "total");
             long Sacks = Utils.safeGetLong(networthCategories.get("sacks").getAsJsonObject(), "total");
@@ -829,7 +813,7 @@ public class ProfileViewerGui extends WindowScreen {
 
             networthTooltip = new ArrayList<>(Arrays.asList(
                     ChatFormatting.AQUA + "Networth",
-                    ChatFormatting.ITALIC + "" + ChatFormatting.DARK_GRAY + "Networth calculations by SkyHelper",
+                    ChatFormatting.ITALIC + "" + ChatFormatting.DARK_GRAY + "Networth calculations by"+ChatFormatting.GOLD+" Soopy API",
                     "",
                     ChatFormatting.GREEN + "Total Networth: " + ChatFormatting.GOLD + networth,
                     ChatFormatting.GREEN + "IRL Worth: " + ChatFormatting.DARK_GREEN + "$" + nf.format(irl),

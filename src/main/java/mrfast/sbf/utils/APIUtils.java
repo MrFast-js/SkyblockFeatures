@@ -68,6 +68,16 @@ public class APIUtils {
         return getJSONResponse(urlString, new String[]{});
     }
 
+
+    public static JsonObject getNetworth(String playerId, String selectedProfileUUID) {
+        JsonObject response =  getJSONResponse("https://soopy.dev/api/v2/player_skyblock/"+playerId+ "?networth=true");;
+        JsonObject data =  response.get("data").getAsJsonObject();
+        JsonObject profiles =  data.get("profiles").getAsJsonObject();
+        JsonObject specificProfile = profiles.get(selectedProfileUUID.replace("-","")).getAsJsonObject();
+        JsonObject player = specificProfile.get("members").getAsJsonObject().get(playerId).getAsJsonObject();
+        return player.get("nwDetailed").getAsJsonObject();
+    }
+
     public static JsonObject getJSONResponse(String urlString,String[] headers) {
         if(Utils.isDeveloper()) {
             if (urlString.contains("#")) {

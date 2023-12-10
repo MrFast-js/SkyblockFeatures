@@ -40,7 +40,7 @@ public class MythologicalEvent {
 
     @SubscribeEvent
     public void onReceivePacket(ReceiveEvent event) {
-        if (!Utils.inSkyblock || Utils.GetMC().theWorld == null || !Utils.GetMC().inGameHasFocus || !SkyblockFeatures.config.MythologicalHelper) {
+        if (!Utils.inSkyblock || Utils.GetMC().theWorld == null || !Utils.GetMC().inGameHasFocus) {
             return;
         }
 
@@ -52,7 +52,7 @@ public class MythologicalEvent {
     private void processParticles(S2APacketParticles packet, ReceiveEvent event) {
         EnumParticleTypes type = packet.getParticleType();
 
-        if (type == EnumParticleTypes.FOOTSTEP) {
+        if (type == EnumParticleTypes.FOOTSTEP && SkyblockFeatures.config.MythologicalHelper) {
             handleBurrowParticles(packet);
         } else if (SkyblockInfo.localLocation.contains("Volcano")) {
             handleVolcanoParticles(packet, event);
