@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.util.HashMap;
 import java.util.Map;
 
+import net.minecraft.client.Minecraft;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 
@@ -48,8 +49,11 @@ public class EditLocationsGui extends GuiScreen {
             if (button instanceof MoveableFeature) {
                 if (((MoveableFeature) button).element.getToggled()) {
                     MoveableFeature moveableFeature = (MoveableFeature) button;
-                    GlStateManager.pushMatrix();
+                    ScaledResolution scaledResolution = new ScaledResolution(Minecraft.getMinecraft());
+                    float guiScaleFactor = (1f/scaledResolution.getScaleFactor())*2;
 
+                    GlStateManager.pushMatrix();
+                    GlStateManager.scale(guiScaleFactor, guiScaleFactor, 1.0f); // Apply the GUI scale factor
                     GlStateManager.translate(moveableFeature.x * screenWidth, moveableFeature.y * screenHeight, 0);
 
                     button.drawButton(this.mc, mouseX, mouseY);
@@ -68,10 +72,8 @@ public class EditLocationsGui extends GuiScreen {
             MoveableFeature lb = (MoveableFeature) button;
             dragging = lb.getElement();
 
-            ScaledResolution sr = new ScaledResolution(mc);
-            float minecraftScale = sr.getScaleFactor();
-            float floatMouseX = Mouse.getX() / minecraftScale;
-            float floatMouseY = (mc.displayHeight - Mouse.getY()) / minecraftScale;
+            float floatMouseX = Mouse.getX() * 0.5f;
+            float floatMouseY = (mc.displayHeight - Mouse.getY()) * 0.5f;
 
             xOffset = floatMouseX - dragging.getX() * screenWidth;
             yOffset = floatMouseY - dragging.getY() * screenHeight;
@@ -79,10 +81,8 @@ public class EditLocationsGui extends GuiScreen {
     }
 
     protected void onMouseMove() {
-        ScaledResolution sr = new ScaledResolution(mc);
-        float minecraftScale = sr.getScaleFactor();
-        float floatMouseX = Mouse.getX() / minecraftScale;
-        float floatMouseY = (mc.displayHeight - Mouse.getY()) / minecraftScale;
+        float floatMouseX = Mouse.getX() * 0.5f;
+        float floatMouseY = (mc.displayHeight - Mouse.getY()) * 0.5f;
         
         if (dragging != null) {
             MoveableFeature lb = MoveableFeatures.get(dragging);
@@ -93,10 +93,11 @@ public class EditLocationsGui extends GuiScreen {
             float y = floatMouseY-yOffset;
             float x2 = (floatMouseX - xOffset+dragging.getWidth());
             float y2 = (floatMouseY - yOffset+dragging.getHeight());
+
             if(x<2) x = 2;
             if(y<2) y = 2;
-            if(x2+2>sr.getScaledWidth()) x = sr.getScaledWidth()-dragging.getWidth()-2;
-            if(y2+2>sr.getScaledHeight()) y = sr.getScaledHeight()-dragging.getHeight()-2;
+            if(x2+2>screenWidth) x = screenWidth-dragging.getWidth()-2;
+            if(y2+2>screenHeight) y = screenHeight-dragging.getHeight()-2;
 
             dragging.setPos(x/screenWidth, y/screenHeight);
         }

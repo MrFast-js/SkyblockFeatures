@@ -98,11 +98,14 @@ public class GuiManager {
     public void renderPlayerInfo(RenderGameOverlayEvent.Post event) {
         if (event.type != RenderGameOverlayEvent.ElementType.EXPERIENCE && event.type != RenderGameOverlayEvent.ElementType.JUMPBAR) return;
         if (Minecraft.getMinecraft().currentScreen instanceof EditLocationsGui || Minecraft.getMinecraft().theWorld == null) return;
+        ScaledResolution scaledResolution = new ScaledResolution(Minecraft.getMinecraft());
+        float guiScaleFactor = (1f/scaledResolution.getScaleFactor())*2;
         for(Map.Entry<Integer, UIElement> e : elements.entrySet()) {
             try {
                 UIElement element = e.getValue();
-                if(element.getToggled()) {
+                if (element.getToggled()) {
                     GlStateManager.pushMatrix();
+                    GlStateManager.scale(guiScaleFactor, guiScaleFactor, 1.0f); // Apply the GUI scale factor
                     GlStateManager.translate((element.getX() * (Utils.GetMC().displayWidth / 2)), (element.getY() * (Utils.GetMC().displayHeight / 2)), 0);
                     element.drawElement();
                     GlStateManager.popMatrix();

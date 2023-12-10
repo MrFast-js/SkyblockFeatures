@@ -29,16 +29,20 @@ public class MoveableFeature extends GuiButton {
     public void drawButton(Minecraft mc, int mouseX, int mouseY) {
         updateLocations();
         ScaledResolution sr = new ScaledResolution(mc);
-
+        ScaledResolution scaledResolution = new ScaledResolution(Minecraft.getMinecraft());
+        float guiScaleFactor = (1f/scaledResolution.getScaleFactor())*2;
         int screenWidth = sr.getScaledWidth();
         int screenHeight = sr.getScaledHeight();
         float actualX = (screenWidth*x)-2;
         float actualY = (screenHeight*y)-2;
-        float xWidth = actualX+element.getWidth()+4;
-        float yHeight = actualY+element.getHeight()+4;
+        float elementWidth = element.getWidth()*guiScaleFactor;
+        float elementHeight = element.getHeight()*guiScaleFactor;
+
+        float xWidth = actualX+elementWidth+4;
+        float yHeight = actualY+elementHeight+4;
 
         hovered = mouseX >= actualX && mouseY >= actualY && mouseX < xWidth && mouseY < yHeight;
-        GuiUtils.drawGraySquare(-2, -2, element.getWidth() + 4, element.getHeight() + 4, hovered);
+        GuiUtils.drawGraySquare(-2, -2, (int) ((elementWidth + 4)/2)*scaledResolution.getScaleFactor(), (int) ((elementHeight + 4)/2)*scaledResolution.getScaleFactor(), hovered);
 
         GlStateManager.pushMatrix();
         element.drawElementExample();
