@@ -781,7 +781,6 @@ public class ProfileViewerGui extends WindowScreen {
             JsonObject museumResponse = APIUtils.getJSONResponse("https://api.hypixel.net/skyblock/museum?profile=" + profileUUID);
             JsonObject networthResponse = APIUtils.getNetworth(playerUuid,selectedProfileUUID);
 
-            debugCommand.uploadData(networthResponse.toString());
             JsonObject networthCategories = networthResponse.get("types").getAsJsonObject();
 
             if (museumResponse.get("success").getAsBoolean()) {
