@@ -26,13 +26,15 @@ public class IceTreasureTracker {
     static int greenGift = 0;
     static int talisman = 0;
     static int fragment = 0;
+    static int hoodie = 0;
 
     static double totalMoney = 0;
     static double redGiftTotal = 0;
     static double whiteGiftTotal = 0;
     static double greenGiftTotal = 0;
-    static double fragmentTotal = 0;
     static double talismanTotal = 0;
+    static double fragmentTotal = 0;
+    static double hoodieTotal = 0;
 
     static boolean hidden = true;
     static int seconds = 0;
@@ -47,6 +49,7 @@ public class IceTreasureTracker {
         greenGift = 0;
         talisman = 0;
         fragment = 0;
+        hoodie = 0;
     }
 
     @SubscribeEvent
@@ -60,6 +63,7 @@ public class IceTreasureTracker {
             if(raw.contains("White Gift")) whiteGift++;
             if(raw.contains("Fragment")) fragment++;
             if(raw.contains("Talisman")) talisman++;
+            if(raw.contains("Einary's Red Hoodie")) hoodie++;
             iceTreasuresMined++;
         }
     }
@@ -87,14 +91,16 @@ public class IceTreasureTracker {
             double whiteGiftValue = Math.floor(PricingData.bazaarPrices.get("WHITE_GIFT"));
             double fragmentValue = Math.floor(PricingData.bazaarPrices.get("GLACIAL_FRAGMENT"));
             double talismanValue = Math.floor(PricingData.lowestBINs.get("GLACIAL_TALISMAN"));
+            double hoodieValue = Math.floor(PricingData.lowestBINs.get("EINARY_RED_HOODIE"));
             
             if(redGiftValue != 0) redGiftTotal = redGift*redGiftValue;
             if(greenGiftValue != 0) greenGiftTotal = greenGift*greenGiftValue;
             if(whiteGiftValue != 0) whiteGiftTotal = whiteGift*whiteGiftValue;
             if(fragmentValue != 0) fragmentTotal = fragment*fragmentValue;
             if(talismanValue != 0) talismanTotal = talisman*talismanValue;
+            if(hoodieValue != 0) hoodieTotal = hoodie*hoodieValue;
 
-            totalMoney = (redGiftTotal+greenGiftTotal+whiteGiftTotal+fragmentTotal+talismanTotal);
+            totalMoney = (redGiftTotal+greenGiftTotal+whiteGiftTotal+fragmentTotal+talismanTotal+hoodieTotal);
         } catch (Exception e) {
             //TODO: handle exception
         }
@@ -122,7 +128,8 @@ public class IceTreasureTracker {
                     ChatFormatting.GREEN+"  • Green Gift: §r"+greenGift+" §7("+Utils.nf.format(greenGiftTotal)+")",
                     ChatFormatting.WHITE+"  • White Gift: §r"+whiteGift+" §7("+Utils.nf.format(whiteGiftTotal)+")",
                     ChatFormatting.LIGHT_PURPLE+"  • Fragment: §r"+fragment+" §7("+Utils.nf.format(fragmentTotal)+")",
-                    ChatFormatting.GOLD+"  • Talisman: §r"+talisman+" §7("+Utils.nf.format(talismanTotal)+")"
+                    ChatFormatting.GOLD+"  • Talisman: §r"+talisman+" §7("+Utils.nf.format(talismanTotal)+")",
+                    ChatFormatting.DARK_RED+"  • Einary's Red Hoodie: §r"+hoodie+" §7("+Utils.nf.format(hoodieTotal)+")"
                 };
                 int lineCount = 0;
                 for(String line:lines) {
@@ -144,7 +151,8 @@ public class IceTreasureTracker {
                 ChatFormatting.GREEN+"  • Green Gift: §r"+19,
                 ChatFormatting.WHITE+"  • White Gift: §r"+67,
                 ChatFormatting.LIGHT_PURPLE+"  • Fragment: §r"+4,
-                ChatFormatting.GOLD+"  • Talisman: §r"+1
+                ChatFormatting.GOLD+"  • Talisman: §r"+1,
+                ChatFormatting.DARK_RED+"  • Einary's Red Hoodie: §r"+0
             };
             int lineCount = 0;
             for(String line:lines) {
