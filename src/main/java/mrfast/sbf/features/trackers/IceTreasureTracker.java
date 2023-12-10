@@ -128,7 +128,7 @@ public class IceTreasureTracker {
                     ChatFormatting.GREEN+"  • Green Gift: §r"+greenGift+" §7("+Utils.nf.format(greenGiftTotal)+")",
                     ChatFormatting.WHITE+"  • White Gift: §r"+whiteGift+" §7("+Utils.nf.format(whiteGiftTotal)+")",
                     ChatFormatting.LIGHT_PURPLE+"  • Fragment: §r"+fragment+" §7("+Utils.nf.format(fragmentTotal)+")",
-                    ChatFormatting.GOLD+"  • Talisman: §r"+talisman+" §7("+Utils.nf.format(talismanTotal)+")"
+                    ChatFormatting.GOLD+"  • Talisman: §r"+talisman+" §7("+Utils.nf.format(talismanTotal)+")",
                     ChatFormatting.DARK_RED+"  • Einary's Red Hoodie: §r"+hoodie+" §7("+Utils.nf.format(hoodieTotal)+")"
                 };
                 int lineCount = 0;
@@ -151,7 +151,7 @@ public class IceTreasureTracker {
                 ChatFormatting.GREEN+"  • Green Gift: §r"+19,
                 ChatFormatting.WHITE+"  • White Gift: §r"+67,
                 ChatFormatting.LIGHT_PURPLE+"  • Fragment: §r"+4,
-                ChatFormatting.GOLD+"  • Talisman: §r"+1
+                ChatFormatting.GOLD+"  • Talisman: §r"+1,
                 ChatFormatting.DARK_RED+"  • Einary's Red Hoodie: §r"+0
             };
             int lineCount = 0;
