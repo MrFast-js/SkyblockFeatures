@@ -272,6 +272,8 @@ public class ItemUtils {
     public static HashMap<String,JsonObject> skyhelperItemMap = new HashMap<>();
     
     public static long getEstimatedItemValue(ItemStack stack) {
+        if(stack==null) return 0L;
+
         if(skyhelperItemMap.isEmpty()) {
             JsonArray items = APIUtils.getArrayResponse("https://raw.githubusercontent.com/Altpapier/SkyHelper-Networth/abb278d6be1e13b3204ccb05f47c5e8aaf614733/constants/items.json");
             for(int i=0;i<items.size();i++) {
@@ -286,7 +288,11 @@ public class ItemUtils {
 
         try {
             // Add lowest bin as a base price
-            total+=PricingData.lowestBINs.get(id).longValue();
+            if(PricingData.lowestBINs.containsKey(id)) {
+                total += PricingData.lowestBINs.get(id).longValue();
+            } else if(PricingData.averageLowestBINs.containsKey(id)) {
+                total += PricingData.averageLowestBINs.get(id).longValue();
+            }
             // Add wither essence value
             total+=getStarCost(ExtraAttributes);
             // Add enchants
@@ -297,9 +303,11 @@ public class ItemUtils {
             total+=getGemstoneWorth(ExtraAttributes);   
 
         } catch (Exception e) {
+            e.printStackTrace();
             // TODO: handle exception
+            return -1L;
         }
-        
+        System.out.println(stack.getDisplayName()+" "+total);
         return total;
     }
 
