@@ -267,6 +267,11 @@ public class GiftTracker {
                         highlightBlock(new Color(0x44ad86), entity.posX - 0.5, entity.posY + 1.5, entity.posZ - 0.5, 1.0D, event.partialTicks);
                         RenderUtil.draw3DString(StringPos, ChatFormatting.DARK_AQUA + "Glowy Chum Bait", event.partialTicks);
                     }
+                    // Einary' Red Hoodie
+                    else if (itemName.contains("Einary's Red Hoodie")) {
+                        highlightBlock(new Color(0x9c0000), entity.posX - 0.5, entity.posY + 1.5, entity.posZ - 0.5, 1.0D, event.partialTicks);
+                        RenderUtil.draw3DString(StringPos, ChatFormatting.DARK_RED + "Einary's Red Hoodie", event.partialTicks);
+                    }
                     // Highlight everything else gray
                     else {
                         highlightBlock(Color.lightGray, entity.posX - 0.5, entity.posY + 1.5, entity.posZ - 0.5, 1.0D, event.partialTicks);
