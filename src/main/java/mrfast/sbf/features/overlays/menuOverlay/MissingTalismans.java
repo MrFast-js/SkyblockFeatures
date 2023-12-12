@@ -56,7 +56,7 @@ public class MissingTalismans {
                         return;
                     }
 
-                    String profileURL = "https://sky.shiiyu.moe/api/v2/profile/"+username;
+                    String profileURL = "https://sky.shiiyu.moe/api/v2/profile/"+username+"#accessoriesOverlay";
                     JsonObject profileResponse = APIUtils.getJSONResponse(profileURL);
                     profileResponse = profileResponse.get("profiles").getAsJsonObject();
                     MissingTalismans = profileResponse.get(latestProfile).getAsJsonObject().get("data").getAsJsonObject().get("missingAccessories").getAsJsonObject().get("missing").getAsJsonArray();

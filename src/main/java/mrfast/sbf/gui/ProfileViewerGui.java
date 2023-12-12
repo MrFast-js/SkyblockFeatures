@@ -1739,7 +1739,7 @@ public class ProfileViewerGui extends WindowScreen {
                                 enderChest.setInventorySlotContents(index, item);
                             } else {
                                 int newIndex = index-45;
-                                enderChest.setInventorySlotContents(newIndex, item);
+                                enderChest2.setInventorySlotContents(newIndex, item);
                             }
                             index++;
                         }
@@ -2403,7 +2403,7 @@ public class ProfileViewerGui extends WindowScreen {
         miningSpeedBoost = 0;
         frontLoaded = 0;
 
-        UIComponent container = new UIBlock(clear).setWidth(new PixelConstraint(140f)).setHeight(new PixelConstraint(140f)).setX(new RelativeConstraint(0.5f)).setY(new CenterConstraint()).enableEffect(new OutlineEffect(Color.white, 3f)).setChildOf(miningContainer);
+        UIComponent container = new UIBlock(clear).setWidth(new PixelConstraint(140f)).setHeight(new PixelConstraint(140f)).setX(new RelativeConstraint(0.5f)).setY(new CenterConstraint()).setChildOf(miningContainer);
         ProfileViewerUtils.createHotmTree(container);
     }
 

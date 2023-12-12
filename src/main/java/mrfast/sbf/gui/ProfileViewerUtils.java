@@ -70,8 +70,12 @@ public class ProfileViewerUtils {
         }
 
         int level = 0;
-        while (level < 9 && xp >= slayerXP.get(level + 1)) {
-            level++;
+        try {
+            while (level < 9 && xp >= slayerXP.get(level + 1)) {
+                level++;
+            }
+        } catch (Exception ignored) {
+
         }
 
         return level;
@@ -445,7 +449,7 @@ public class ProfileViewerUtils {
                         "§7Level " + ProfileViewerGui.orbit + "§8/80",
                         "",
                         "§7When mining ores, you have a",
-                        EnumChatFormatting.GREEN + "" + (ProfileViewerGui.orbit * 0.1 + 0.2) + "%" + EnumChatFormatting.GRAY + " chance to get a random",
+                        EnumChatFormatting.GREEN + Utils.round(ProfileViewerGui.orbit * 0.1 + 0.2, 1) + "%" + EnumChatFormatting.GRAY + " chance to get a random",
                         "§7amount of experience orbs."), new Vector2f(4f, 3f), ProfileViewerGui.orbit > 0),
 
                 newHotmUpgrade3(Lists.newArrayList(EnumChatFormatting.RED + "Front Loaded",
@@ -611,7 +615,10 @@ public class ProfileViewerUtils {
 
 
     public static void createHotmTree(UIComponent container) {
-        JsonObject hotmNodes = ProfileViewerGui.ProfilePlayerResponse.get("mining_core").getAsJsonObject().get("nodes").getAsJsonObject();
+        JsonObject hotmNodes = new JsonObject();
+        if (ProfileViewerGui.ProfilePlayerResponse.get("mining_core").getAsJsonObject().has("nodes")) {
+            hotmNodes = ProfileViewerGui.ProfilePlayerResponse.get("mining_core").getAsJsonObject().get("nodes").getAsJsonObject();
+        }
         if (hotmNodes.has("mining_speed")) ProfileViewerGui.miningSpeed = hotmNodes.get("mining_speed").getAsInt();
         if (hotmNodes.has("mining_fortune"))
             ProfileViewerGui.miningFortune = hotmNodes.get("mining_fortune").getAsInt();
@@ -689,6 +696,7 @@ public class ProfileViewerUtils {
                         ProfileViewerGui.HOTMHoverables.put(background, ProfileViewerUtils.getLoreFromPos(vec));
                     }
                 } catch (Exception e) {
+                    e.printStackTrace();
                     // TODO: handle exception
                 }
             }
@@ -900,6 +908,7 @@ public class ProfileViewerUtils {
                 ProfileViewerGui.vampireSlayer = new SkillInfo(level, nextXp, xp, hover);
             }
         } catch (Exception ignored) {
+            ignored.printStackTrace();
         }
         System.out.println("set slayer experience");
     }
@@ -963,7 +972,7 @@ public class ProfileViewerUtils {
         List<String> hover = new ArrayList<>(Arrays.asList(
                 unlockedName,
                 ChatFormatting.YELLOW + "Unlocked: " + (unlocked ? ChatFormatting.GREEN + "✔" : ChatFormatting.RED + "✘")));
-        if(obtainedDate!=0) {
+        if (obtainedDate != 0) {
             hover.add(ChatFormatting.GREEN + "Obtained on " + joinedString);
         }
 
@@ -972,7 +981,7 @@ public class ProfileViewerUtils {
     }
 
     public static JsonObject getTimecharm(String id, JsonArray array) {
-        if(array==null) return null;
+        if (array == null) return null;
         for (JsonElement jsonElement : array) {
             JsonObject timecharmObj = jsonElement.getAsJsonObject();
 

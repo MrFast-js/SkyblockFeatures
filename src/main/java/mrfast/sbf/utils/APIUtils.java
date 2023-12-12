@@ -170,7 +170,12 @@ public class APIUtils {
             // Will typically happen if the server is offline so will return '502 Bad Gateway'
             System.out.println(urlString);
             ex.printStackTrace();
-            player.addChatMessage(new ChatComponentText(EnumChatFormatting.RED + "The Skyblock Features API service seems to be down. Try again later."));
+            if(urlString.contains(SkyblockFeatures.config.modAPIURL)) {
+                Utils.sendMessage(new ChatComponentText(EnumChatFormatting.RED + "The Skyblock Features API service seems to be down. Try again later."));
+            } else {
+                String baseUrl = urlString.split("/")[2];
+                Utils.sendMessage(new ChatComponentText(EnumChatFormatting.RED + "The "+baseUrl+" service seems to be down. Try again later."));
+            }
         } catch (Exception ex) {
             ex.printStackTrace();
         }
