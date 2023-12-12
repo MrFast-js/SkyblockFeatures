@@ -59,6 +59,8 @@
     <h3>Dungeons</h3>
     <ul>
         <li>Crypt Display</li>
+        <li>Hide Non-Starred Mobs</li>
+        <li>Glowing Starred Mobs</li>
         <li>Highlight Dungeon Bats</li>
         <li>Dungeon Party Display</li>
         <li>Better Dungeon Nametags</li>
@@ -98,7 +100,6 @@
     <h3>Visual</h3>
     <ul>
         <li>Small Items</li>
-        <li>Glowing Players!</li>
         <li>Glowing Items based on rarity</li>
         <li>Glowing Zealots</li>
         <li>Ad Blocker (Hides people advertising in chat)</li>
