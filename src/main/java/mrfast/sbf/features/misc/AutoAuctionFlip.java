@@ -238,12 +238,7 @@ public class AutoAuctionFlip {
                         if (!currentUUID.equals(startingUUID) && !apiUpdated) {
                             System.out.println("Detected API Update "+seconds);
                             apiUpdated = true;
-                            int pages = 1;//data.get("totalPages").getAsInt();
-
-                            // Auction flips dont appear past the first 5 pages due to it filtering out < 5 minutes
-//                            if (SkyblockFeatures.config.aucFlipperBins && SkyblockFeatures.config.autoFlipAddEnchAndStar) {
-//                                pages = 7;
-//                            }
+                            int pages = 1;
 
                             // Check pages for auctions
                             for (int b = 0; b < pages; b++) {
