@@ -307,7 +307,6 @@ public class ItemUtils {
             // TODO: handle exception
             return -1L;
         }
-        System.out.println(stack.getDisplayName()+" "+total);
         return total;
     }
 
