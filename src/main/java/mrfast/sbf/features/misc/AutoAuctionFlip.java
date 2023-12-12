@@ -219,7 +219,7 @@ public class AutoAuctionFlip {
                 apiUpdated = false;
                 // The difference between two api updates to see how much of a margin of error there is to work with
                 int lengthOfSearch = MathHelper.clamp_int(latestApiUpdateTime - earliestApiUpdateTime, 8, 12);
-                JsonObject startingData = APIUtils.getJSONResponse("https://api.hypixel.net/skyblock/auctions?page=0");
+                JsonObject startingData = APIUtils.getJSONResponse("https://api.hypixel.net/skyblock/auctions?page=0",false);
                 JsonArray startingProducts = startingData.get("auctions").getAsJsonArray();
                 String startingUUID = startingProducts.get(0).getAsJsonObject().get("uuid").getAsString();
 
@@ -231,12 +231,12 @@ public class AutoAuctionFlip {
                     Utils.setTimeout(() -> {
                         if (apiUpdated) return;
 
-                        JsonObject data = APIUtils.getJSONResponse("https://api.hypixel.net/skyblock/auctions?page=0");
+                        JsonObject data = APIUtils.getJSONResponse("https://api.hypixel.net/skyblock/auctions?page=0",false);
                         JsonArray products = data.get("auctions").getAsJsonArray();
                         String currentUUID = products.get(0).getAsJsonObject().get("uuid").getAsString();
 
                         if (!currentUUID.equals(startingUUID) && !apiUpdated) {
-                            System.out.println("Detected API Update");
+                            System.out.println("Detected API Update "+seconds);
                             apiUpdated = true;
                             int pages = 1;//data.get("totalPages").getAsInt();
 
@@ -247,7 +247,7 @@ public class AutoAuctionFlip {
 
                             // Check pages for auctions
                             for (int b = 0; b < pages; b++) {
-                                JsonObject data2 = APIUtils.getJSONResponse("https://api.hypixel.net/skyblock/auctions?page=" + b);
+                                JsonObject data2 = APIUtils.getJSONResponse("https://api.hypixel.net/skyblock/auctions?page=" + b,false);
 
                                 JsonArray products2 = data2.get("auctions").getAsJsonArray();
                                 filterAndNotifyProfitableAuctions(products2);

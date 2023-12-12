@@ -64,11 +64,6 @@ public class APIUtils {
         System.out.println("CREATED CUSTOM CLIENT");
     }
 
-    public static JsonObject getJSONResponse(String urlString) {
-        return getJSONResponse(urlString, new String[]{});
-    }
-
-
     public static JsonObject getNetworth(String playerId, String selectedProfileUUID) {
         JsonObject response =  getJSONResponse("https://soopy.dev/api/v2/player_skyblock/"+playerId+ "?networth=true");;
         JsonObject data =  response.get("data").getAsJsonObject();
@@ -77,8 +72,31 @@ public class APIUtils {
         JsonObject player = specificProfile.get("members").getAsJsonObject().get(playerId).getAsJsonObject();
         return player.get("nwDetailed").getAsJsonObject();
     }
+    public static class CacheObject {
+        Long createdAt;
+        String url;
+        JsonObject response;
+        public CacheObject(String url,JsonObject res) {
+            this.response=res;
+            this.url=url;
+            this.createdAt=System.currentTimeMillis();
+        }
+    }
+    public static JsonObject getJSONResponse(String urlString) {
+        return getJSONResponse(urlString, new String[]{});
+    }
+    public static JsonObject getJSONResponse(String urlString,boolean caching) {
+        return getJSONResponse(urlString, new String[]{},caching);
+    }
+    static HashMap<String,CacheObject> jsonCache = new HashMap<>();
+    public static JsonObject getJSONResponse(String urlString, String[] headers) {
+        return getJSONResponse(urlString,headers,true);
+    }
+    public static JsonObject getJSONResponse(String urlString, String[] headers, boolean caching) {
+        if(urlString.contains("api.hypixel.net")) {
+            urlString = urlString.replace("https://api.hypixel.net", SkyblockFeatures.config.modAPIURL+"аpi");
+        }
 
-    public static JsonObject getJSONResponse(String urlString,String[] headers) {
         if(Utils.isDeveloper()) {
             if (urlString.contains("#")) {
                 String url = urlString.split("#")[0];
@@ -89,8 +107,13 @@ public class APIUtils {
             }
         }
 
-        if(urlString.contains("api.hypixel.net")) {
-            urlString = urlString.replace("https://api.hypixel.net", SkyblockFeatures.config.modAPIURL+"аpi");
+        // 5 Minute Local Cache
+        if(jsonCache.containsKey(urlString) && caching) {
+            CacheObject obj = jsonCache.get(urlString);
+            if(System.currentTimeMillis()-obj.createdAt<1000*60*5) {
+                if(Utils.isDeveloper()) System.out.println("Using Cache For: "+urlString);
+                return obj.response;
+            }
         }
 
         EntityPlayer player = Minecraft.getMinecraft().thePlayer;
@@ -132,6 +155,9 @@ public class APIUtils {
                             return null;
                         }
                     }
+                    CacheObject cache = new CacheObject(urlString,out);
+                    jsonCache.put(urlString,cache);
+
                     return out;
                 }
             }
@@ -149,38 +175,6 @@ public class APIUtils {
             ex.printStackTrace();
         }
         return new JsonObject();
-    }
-
-    public static HashMap<String,String> rankCache = new HashMap<>();
-
-    public static String getHypixelRank(String uuid) {
-        if(rankCache.containsKey(uuid)) return rankCache.get(uuid);
-
-        JsonObject json = APIUtils.getJSONResponse("https://api.hypixel.net/player?uuid="+uuid+"#getHypixelRank").get("player").getAsJsonObject();
-        String rank = "§7";
-
-        if(json.has("mostRecentMonthlyPackageRank")) rank = json.get("mostRecentMonthlyPackageRank").getAsString();
-        else if(json.has("newPackageRank")) rank = json.get("newPackageRank").getAsString();
-
-        rankCache.put(uuid, convertRank(rank)+json.get("displayname").getAsString());
-        return convertRank(rank)+json.get("displayname").getAsString();
-    }
-
-    public static String convertRank(String rank) {
-        switch (rank) {
-            case "VIP":
-                return "§a[VIP] ";
-            case "VIP_PLUS":
-                return "§a[VIP§6+§a] ";
-            case "MVP":
-                return "§b[MVP] ";
-            case "MVP_PLUS":
-                return "§b[MVP§c+§b] ";
-            case "SUPERSTAR":
-                return "§6[MVP§c++§6] ";
-            default:
-                return "§7";
-        }
     }
 
     public static int getPetRarity(String tier) {

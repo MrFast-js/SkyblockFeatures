@@ -766,7 +766,6 @@ public class ProfileViewerGui extends WindowScreen {
         titleText.setTextScale(new PixelConstraint((float) (3.0 * fontScale)));
         loadCollectionsCategories();
 
-
         loadNetworth(profileUUID, playerUuid, Purse, Bank, networthComponent);
     }
 
@@ -812,7 +811,7 @@ public class ProfileViewerGui extends WindowScreen {
 
             networthTooltip = new ArrayList<>(Arrays.asList(
                     ChatFormatting.AQUA + "Networth",
-                    ChatFormatting.ITALIC + "" + ChatFormatting.DARK_GRAY + "Networth calculations by"+ChatFormatting.GOLD+" Soopy API",
+                    ChatFormatting.ITALIC + "" + ChatFormatting.DARK_GRAY + "Networth calculations by"+ChatFormatting.LIGHT_PURPLE+" Soopy v2",
                     "",
                     ChatFormatting.GREEN + "Total Networth: " + ChatFormatting.GOLD + networth,
                     ChatFormatting.GREEN + "IRL Worth: " + ChatFormatting.DARK_GREEN + "$" + nf.format(irl),
