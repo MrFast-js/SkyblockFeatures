@@ -128,6 +128,7 @@ public class MythologicalEvent {
         if (unformatted.contains("You dug out a Griffin Burrow") || unformatted.contains("You finished the Griffin burrow chain")) {
             endPos = null;
             startPos = null;
+            particles.clear();
             Utils.setTimeout(() -> {
                 prevBurrow = burrow;
                 burrow = null;
