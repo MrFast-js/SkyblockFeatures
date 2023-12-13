@@ -168,7 +168,7 @@ public class IceTreasureTracker {
 
         @Override
         public int getHeight() {
-            return Utils.GetMC().fontRendererObj.FONT_HEIGHT*10;
+            return (Utils.GetMC().fontRendererObj.FONT_HEIGHT+1)*11;
         }
 
         @Override
