@@ -24,7 +24,7 @@ public class OutlineUtils {
     }
 
     public static void renderOutline(Entity entity, Color outlineColor, boolean throughWalls) {
-        entityOutlines.putIfAbsent(entity,new EntityOutline(entity,outlineColor,throughWalls));
+        entityOutlines.put(entity,new EntityOutline(entity,outlineColor,throughWalls));
 
         entityOutlines.get(entity).renderNow = true;
         entityOutlines.get(entity).renderCount = 0;

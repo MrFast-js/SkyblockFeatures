@@ -40,17 +40,34 @@ public class SlayerFeatures {
         if(Utils.GetMC().theWorld == null || Utils.GetMC().thePlayer == null || SkyblockInfo.getLocation()==null) return;
 
         if(SkyblockFeatures.config.highlightSlayers) {
-            if (spawnedSlayer!=null && spawnedSlayer.getSkyblockMobId()!=null) {
-                OutlineUtils.renderOutline(spawnedSlayer.skyblockMob, SkyblockFeatures.config.highlightSlayerColor, false);
-            }
-            if(SkyblockFeatures.config.highlightSlayerMiniboss) {
-                for (Entity entity : Utils.GetMC().theWorld.loadedEntityList) {
-                    SkyblockMobDetector.SkyblockMob sbMob = SkyblockMobDetector.getSkyblockMob(entity);
-                    if (sbMob == null) continue;
+            for (Entity entity : Utils.GetMC().theWorld.loadedEntityList) {
+                SkyblockMobDetector.SkyblockMob sbMob = SkyblockMobDetector.getSkyblockMob(entity);
+                if (sbMob == null) continue;
 
-                    if (sbMob.skyblockMob == entity && sbMob.getSkyblockMobId() != null) {
+                if (sbMob.skyblockMob == entity && sbMob.getSkyblockMobId() != null) {
+                    if(SkyblockFeatures.config.highlightSlayerMiniboss) {
                         if (isMiniboss(sbMob)) {
                             OutlineUtils.renderOutline(sbMob.skyblockMob, SkyblockFeatures.config.highlightSlayerMinibossColor, false);
+                        }
+                    }
+                    if(SkyblockFeatures.config.highlightSlayers && sbMob.getSkyblockMobId().endsWith("Slayer")) {
+                        if (sbMob.getSkyblockMobId().contains("Voidgloom") && SkyblockFeatures.config.highlightVoidgloomColors) {
+                            boolean hitPhase = sbMob.mobNameEntity.getCustomNameTag().contains("Hits");
+                            boolean laserPhase = sbMob.skyblockMob.isRiding();
+
+                            if (laserPhase) {
+                                // Laser Phase
+                                OutlineUtils.renderOutline(sbMob.skyblockMob, SkyblockFeatures.config.highlightVoidgloomLaserPhase, false);
+                            } else if (hitPhase) {
+                                // Hit Phase
+                                OutlineUtils.renderOutline(sbMob.skyblockMob, SkyblockFeatures.config.highlightVoidgloomHitPhase, false);
+                            } else {
+                                // Default render
+                                OutlineUtils.renderOutline(sbMob.skyblockMob, SkyblockFeatures.config.highlightSlayerColor, false);
+                            }
+                        } else {
+                            // Default render
+                            OutlineUtils.renderOutline(sbMob.skyblockMob, SkyblockFeatures.config.highlightSlayerColor, false);
                         }
                     }
                 }

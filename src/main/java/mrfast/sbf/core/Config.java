@@ -332,7 +332,7 @@ public class Config extends Vigilant {
             name = "Highlight Slayers",
             description = "Shows a glow effect on summoned slayers.",
             category = "Slayers",
-            subcategory = "Slayer Timer",
+            subcategory = "Highlight Slayers",
             searchTags = {"parent"}
     )
     public boolean highlightSlayers = false;
@@ -341,16 +341,16 @@ public class Config extends Vigilant {
             name = "Slayer Color",
             description = "",
             category = "Slayers",
-            subcategory = "Slayer Timer",
+            subcategory = "Highlight Slayers",
             searchTags = {"Highlight Slayers"}
     )
     public Color highlightSlayerColor = Color.orange;
     @Property(
             type = PropertyType.SWITCH,
             name = "Highlight Mini-bosses",
-            description = "",
+            description = "Highlights spawned mini-bosses with a glowing effect",
             category = "Slayers",
-            subcategory = "Slayer Timer",
+            subcategory = "Highlight Slayers",
             searchTags = {"Highlight Slayers"}
     )
     public boolean highlightSlayerMiniboss = false;
@@ -359,10 +359,40 @@ public class Config extends Vigilant {
             name = "Miniboss Color",
             description = "",
             category = "Slayers",
-            subcategory = "Slayer Timer",
+            subcategory = "Highlight Slayers",
             searchTags = {"Highlight Slayers"}
     )
     public Color highlightSlayerMinibossColor = Color.green;
+
+    @Property(
+            type = PropertyType.SWITCH,
+            name = "Highlight Voidgloom Stage Colors",
+            description = "Changes the glow effect depending the stage of the voidgloom. §cRequires Highlight Slayers to be enabled!",
+            category = "Slayers",
+            subcategory = "Highlight Slayers",
+            searchTags = {"parent"}
+    )
+    public boolean highlightVoidgloomColors = false;
+
+    @Property(
+            type = PropertyType.COLOR,
+            name = "Hit Phase Color",
+            description = "",
+            category = "Slayers",
+            subcategory = "Highlight Slayers",
+            searchTags = {"Highlight Voidgloom Stage Colors"}
+    )
+    public Color highlightVoidgloomHitPhase = Color.MAGENTA;
+
+    @Property(
+            type = PropertyType.COLOR,
+            name = "Laser Phase Color",
+            description = "",
+            category = "Slayers",
+            subcategory = "Highlight Slayers",
+            searchTags = {"Highlight Voidgloom Stage Colors"}
+    )
+    public Color highlightVoidgloomLaserPhase = Color.cyan;
 
     @Property(
             type = PropertyType.SWITCH,

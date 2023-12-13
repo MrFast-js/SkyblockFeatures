@@ -49,7 +49,7 @@ public class SkyblockMobDetector {
         if(Utils.GetMC().theWorld==null || !Utils.inSkyblock) return;
 
         for(Entity entity:Utils.GetMC().theWorld.loadedEntityList) {
-            if(entity instanceof EntityArmorStand && !skyblockMobHashMap.containsKey(entity) && entity.hasCustomName() && entity.getDisplayName().getUnformattedText().contains("❤")) {
+            if(entity instanceof EntityArmorStand && !skyblockMobHashMap.containsKey(entity) && entity.hasCustomName()) {
                 if(Utils.GetMC().thePlayer.getDistanceToEntity(entity)>30) continue;
                 Entity potentialMob = Utils.GetMC().theWorld.getEntityByID(entity.getEntityId()-1);
                 if(potentialMob==null || !potentialMob.isEntityAlive()) continue;
