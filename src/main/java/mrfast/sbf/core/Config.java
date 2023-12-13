@@ -329,6 +329,43 @@ public class Config extends Vigilant {
 
     @Property(
             type = PropertyType.SWITCH,
+            name = "Highlight Slayers",
+            description = "Shows a glow effect on summoned slayers.",
+            category = "Slayers",
+            subcategory = "Slayer Timer",
+            searchTags = {"parent"}
+    )
+    public boolean highlightSlayers = false;
+    @Property(
+            type = PropertyType.COLOR,
+            name = "Slayer Color",
+            description = "",
+            category = "Slayers",
+            subcategory = "Slayer Timer",
+            searchTags = {"Highlight Slayers"}
+    )
+    public Color highlightSlayerColor = Color.orange;
+    @Property(
+            type = PropertyType.SWITCH,
+            name = "Highlight Mini-bosses",
+            description = "",
+            category = "Slayers",
+            subcategory = "Slayer Timer",
+            searchTags = {"Highlight Slayers"}
+    )
+    public boolean highlightSlayerMiniboss = false;
+    @Property(
+            type = PropertyType.COLOR,
+            name = "Miniboss Color",
+            description = "",
+            category = "Slayers",
+            subcategory = "Slayer Timer",
+            searchTags = {"Highlight Slayers"}
+    )
+    public Color highlightSlayerMinibossColor = Color.green;
+
+    @Property(
+            type = PropertyType.SWITCH,
             name = "Slayer Timer",
             description = "Shows different timers for slayers including time to spawn and kill.",
             category = "Slayers",

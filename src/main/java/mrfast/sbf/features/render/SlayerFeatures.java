@@ -1,13 +1,18 @@
 package mrfast.sbf.features.render;
 
+import com.google.common.collect.Lists;
 import com.mojang.realmsclient.gui.ChatFormatting;
 import mrfast.sbf.SkyblockFeatures;
 import mrfast.sbf.core.SkyblockInfo;
+import mrfast.sbf.core.SkyblockMobDetector;
 import mrfast.sbf.events.SkyblockMobEvent;
+import mrfast.sbf.utils.OutlineUtils;
 import mrfast.sbf.utils.RenderUtil;
 import mrfast.sbf.utils.ScoreboardUtil;
 import mrfast.sbf.utils.Utils;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.monster.EntityEnderman;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityBeacon;
 import net.minecraft.util.AxisAlignedBB;
@@ -16,12 +21,43 @@ import net.minecraftforge.client.event.ClientChatReceivedEvent;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
 public class SlayerFeatures {
+    SkyblockMobDetector.SkyblockMob spawnedSlayer = null;
+
+    public boolean isMiniboss(SkyblockMobDetector.SkyblockMob sbMob) {
+        if(sbMob==null) return false;
+        List<String> miniboss = new ArrayList<>(Arrays.asList("Revenant Sycophant","Revenant Champion","Deformed Revenant","Atoned Champion","Atoned Revenant","Tarantula Vermin", "Tarantula Beast", "Mutant Tarantula","Pack Enforcer","Sven Follower", "Sven Alpha", "Voidling Devotee", "Voidling Radical", "Voidcrazed Maniac","Flare Demon","Kindleheart Demon","Burningsoul Demon"));
+        return miniboss.contains(sbMob.skyblockMobId);
+    }
+
     @SubscribeEvent
     public void onRenderWorld(RenderWorldLastEvent event) {
         if(Utils.GetMC().theWorld == null || Utils.GetMC().thePlayer == null || SkyblockInfo.getLocation()==null) return;
-        if(!SkyblockFeatures.config.highlightBeacons || !SkyblockInfo.map.equals("The End")) return;
 
+        if(SkyblockFeatures.config.highlightSlayers) {
+            if (spawnedSlayer!=null && spawnedSlayer.getSkyblockMobId()!=null) {
+                OutlineUtils.renderOutline(spawnedSlayer.skyblockMob, SkyblockFeatures.config.highlightSlayerColor, false);
+            }
+            if(SkyblockFeatures.config.highlightSlayerMiniboss) {
+                for (Entity entity : Utils.GetMC().theWorld.loadedEntityList) {
+                    SkyblockMobDetector.SkyblockMob sbMob = SkyblockMobDetector.getSkyblockMob(entity);
+                    if (sbMob == null) continue;
+
+                    if (sbMob.skyblockMob == entity && sbMob.getSkyblockMobId() != null) {
+                        if (isMiniboss(sbMob)) {
+                            OutlineUtils.renderOutline(sbMob.skyblockMob, SkyblockFeatures.config.highlightSlayerMinibossColor, false);
+                        }
+                    }
+                }
+            }
+        }
+
+        if(!SkyblockFeatures.config.highlightBeacons || !SkyblockInfo.map.equals("The End")) return;
         for(TileEntity e:Utils.GetMC().theWorld.loadedTileEntityList) {
             if(e instanceof TileEntityBeacon) {
                 BlockPos p = e.getPos();
@@ -38,24 +74,28 @@ public class SlayerFeatures {
 
     @SubscribeEvent
     public void onChat(ClientChatReceivedEvent event) {
-        if(!SkyblockFeatures.config.slayerTimer) return;
         String msg = event.message.getUnformattedText();
         if(msg.trim().startsWith("SLAYER QUEST STARTED!")) {
             slayerStarted = System.currentTimeMillis();
         }
         if(msg.trim().startsWith("NICE! SLAYER BOSS SLAIN!")) {
-            double spawn = System.currentTimeMillis()-slayerStarted;
-            double spawnTime = Math.ceil(spawn / 1000);
-            double kill = System.currentTimeMillis()-slayerSpawned;
-            double killTime = Math.ceil(kill / 1000);
-            String totalTime = Utils.secondsToTime((long) Math.ceil(spawnTime + killTime));
+            if(SkyblockFeatures.config.slayerTimer) {
 
-            Utils.setTimeout(()-> {
-                    Utils.sendMessage(ChatFormatting.GOLD+ChatFormatting.BOLD.toString() + "Slayer Timer\n" +
+                double spawn = System.currentTimeMillis() - slayerStarted;
+                double spawnTime = Math.ceil(spawn / 1000);
+                double kill = System.currentTimeMillis() - slayerSpawned;
+                double killTime = Math.ceil(kill / 1000);
+                String totalTime = Utils.secondsToTime((long) Math.ceil(spawnTime + killTime));
+
+                Utils.setTimeout(() -> {
+                    Utils.sendMessage(ChatFormatting.GOLD + ChatFormatting.BOLD.toString() + "Slayer Timer\n" +
                             ChatFormatting.AQUA + "        • Total Time: " + totalTime + "\n" +
                             ChatFormatting.YELLOW + "        • Spawn: " + Utils.secondsToTime((long) spawnTime) + "\n" +
                             ChatFormatting.YELLOW + "        • Kill: " + Utils.secondsToTime((long) killTime));
-            },10);
+                }, 10);
+            }
+            slayerSpawned = 0;
+            slayerStarted = 0;
         }
     }
 
@@ -82,6 +122,8 @@ public class SlayerFeatures {
             }
             if(event.getSbMob().getSkyblockMobId().startsWith(slayerName) && hasSlayerSpawned) {
                 slayerSpawned = System.currentTimeMillis();
+                spawnedSlayer = event.getSbMob();
+                Utils.sendMessage("Slayer Spawned");
             }
         }
     }
