@@ -46,6 +46,8 @@ public class PricingData {
 
     public static String getIdentifier(ItemStack item) {
         NBTTagCompound extraAttr = ItemUtils.getExtraAttributes(item);
+	if(extraAttr==null) return null;
+	
         String id = ItemUtils.getSkyBlockItemID(extraAttr);
         if (id == null) return null;
         switch (id) {
