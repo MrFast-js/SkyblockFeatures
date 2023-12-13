@@ -1075,7 +1075,7 @@ public class ProfileViewerGui extends WindowScreen {
 
     public void loadCategory(String categoryName) {
         categoryName = Utils.cleanColor(categoryName);
-        statsAreaContainer.clearChildren();
+        if(statsAreaContainer!=null)  statsAreaContainer.clearChildren();
 
         selectedCategory = categoryName;
 
