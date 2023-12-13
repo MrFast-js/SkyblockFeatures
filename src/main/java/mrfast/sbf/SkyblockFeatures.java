@@ -105,6 +105,7 @@ public class SkyblockFeatures {
                 new Nametags(),
                 new SkyblockMobDetector(),
                 new CooldownTracker(),
+                new FireVeilTimer(),
                 new SpeedDisplay(),
                 new EffectiveHealthDisplay(),
                 new ManaDisplay(),

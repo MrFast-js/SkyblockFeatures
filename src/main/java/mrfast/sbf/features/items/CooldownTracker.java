@@ -3,6 +3,8 @@ package mrfast.sbf.features.items;
 import com.mojang.realmsclient.gui.ChatFormatting;
 import mrfast.sbf.SkyblockFeatures;
 import mrfast.sbf.events.SecondPassedEvent;
+import mrfast.sbf.events.SkyblockMobEvent;
+import mrfast.sbf.events.UseItemAbilityEvent;
 import mrfast.sbf.gui.components.Point;
 import mrfast.sbf.gui.components.UIElement;
 import mrfast.sbf.utils.GuiUtils;
@@ -11,6 +13,7 @@ import mrfast.sbf.utils.Utils;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
 import net.minecraftforge.client.event.MouseEvent;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
@@ -49,6 +52,7 @@ public class CooldownTracker {
         public void reset() {
             if(this.cooldownSeconds-this.currentCount==0) {
                 this.currentCount=0;
+                MinecraftForge.EVENT_BUS.post(new UseItemAbilityEvent(this));
             }
             this.counting = true;
             this.usedAt=System.currentTimeMillis();
@@ -56,7 +60,7 @@ public class CooldownTracker {
     }
     @SubscribeEvent
     public void onTick(TickEvent.ClientTickEvent event) {
-        if(!Utils.inSkyblock || Utils.GetMC().theWorld==null || !SkyblockFeatures.config.cooldownDisplay) return;
+        if(!Utils.inSkyblock || Utils.GetMC().theWorld==null) return;
 
         activeCooldowns.clear();
         for (int i = 0; i < 8; i++) {
@@ -77,7 +81,7 @@ public class CooldownTracker {
     }
 
     public void setStackCooldown(ItemStack item) {
-        if(!Utils.inSkyblock || Utils.GetMC().theWorld==null || !SkyblockFeatures.config.cooldownDisplay) return;
+        if(!Utils.inSkyblock || Utils.GetMC().theWorld==null) return;
 
         String skyblockId = ItemUtils.getSkyBlockItemID(item);
         if(skyblockId==null) return;
@@ -145,7 +149,7 @@ public class CooldownTracker {
 
     @SubscribeEvent
     public void onMouseClick(MouseEvent event) {
-        if(!Utils.inSkyblock || Utils.GetMC().theWorld==null || !SkyblockFeatures.config.cooldownDisplay) return;
+        if(!Utils.inSkyblock || Utils.GetMC().theWorld==null) return;
 
         ItemStack heldItem = Utils.GetMC().thePlayer.getHeldItem();
         if(heldItem==null) return;
@@ -213,7 +217,7 @@ public class CooldownTracker {
     }
     @SubscribeEvent
     public void onSecond(SecondPassedEvent event) {
-        if(!Utils.inSkyblock || Utils.GetMC().theWorld==null || !SkyblockFeatures.config.cooldownDisplay) return;
+        if(!Utils.inSkyblock || Utils.GetMC().theWorld==null) return;
 
         for (CooldownItem cdItem:activeCooldowns.values()) {
             updateCooldown(cdItem.rightClick);

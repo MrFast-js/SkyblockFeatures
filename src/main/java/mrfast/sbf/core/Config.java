@@ -1329,6 +1329,15 @@ public class Config extends Vigilant {
 
     @Property(
             type = PropertyType.SWITCH,
+            name = "Fire Veil Timer",
+            description = "Shows the time until the fire viel ability ends.",
+            category = "Miscellaneous",
+            subcategory = "Items"
+    )
+    public boolean fireVeilTimer = false;
+
+    @Property(
+            type = PropertyType.SWITCH,
             name = "Show Prehistoric Egg Distance Counter",
             description = "Shows the blocks walked on the prehistoric egg item",
             category = "Miscellaneous",
