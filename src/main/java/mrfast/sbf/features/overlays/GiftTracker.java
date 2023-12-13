@@ -222,7 +222,7 @@ public class GiftTracker {
                 }
             }
             if (inGlacialCave && SkyblockFeatures.config.icecaveHighlight) {
-                Block blockState = mc.theWorld.getBlockState(entity.getPosition()).getBlock();
+                Block blockState = mc.theWorld.getBlockState(entity.getPosition().up()).getBlock();
                 if (SkyblockFeatures.config.icecaveHighlight && (blockState instanceof BlockIce || blockState instanceof BlockPackedIce) && entity instanceof EntityArmorStand && ((EntityArmorStand) entity).getCurrentArmor(3) != null) {
                     String itemName = ((EntityArmorStand) entity).getCurrentArmor(3).serializeNBT().getCompoundTag("tag").getCompoundTag("display").getString("Name");
                     Vec3 StringPos = new Vec3(entity.posX, entity.posY + 3, entity.posZ);
