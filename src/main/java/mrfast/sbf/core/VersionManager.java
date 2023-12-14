@@ -102,7 +102,7 @@ public class VersionManager {
         Utils.sendMessage(ChatFormatting.GREEN + "Latest version available: " + ChatFormatting.AQUA + updateVersionName);
 
         if (currentVersionValue > updateVersionValue) {
-            Utils.sendMessage(ChatFormatting.GREEN + "You are using an more re version. No update needed.");
+            Utils.sendMessage(ChatFormatting.GREEN + "You are using an more recent version. No update needed.");
         } else if (currentVersionValue == updateVersionValue) {
             Utils.sendMessage(ChatFormatting.GREEN + "You are already using the latest version.");
         } else {
