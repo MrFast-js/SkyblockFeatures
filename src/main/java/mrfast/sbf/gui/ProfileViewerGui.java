@@ -782,15 +782,18 @@ public class ProfileViewerGui extends WindowScreen {
 
             JsonObject networthCategories = networthResponse.get("types").getAsJsonObject();
 
-            if (museumResponse.get("success").getAsBoolean()) {
-                boolean museumApiEnabled = !museumResponse.get("members").getAsJsonObject().entrySet().isEmpty();
-                if (museumApiEnabled) {
-                    JsonObject members = museumResponse.get("members").getAsJsonObject();
-                    JsonObject member = members.get(playerUuid).getAsJsonObject();
-                    Long value = member.get("value").getAsLong();
-                    networthCategories.addProperty("museum", value);
+            try {
+                if (museumResponse.get("success").getAsBoolean()) {
+                    boolean museumApiEnabled = !museumResponse.get("members").getAsJsonObject().entrySet().isEmpty();
+                    if (museumApiEnabled) {
+                        JsonObject members = museumResponse.get("members").getAsJsonObject();
+                        JsonObject member = members.get(playerUuid).getAsJsonObject();
+                        Long value = member.get("value").getAsLong();
+                        networthCategories.addProperty("museum", value);
+                    }
                 }
-            }
+            } catch (Exception ignored) {}
+
             long irl = 0;
 
             long pets = Utils.safeGetLong(networthCategories.get("pets").getAsJsonObject(), "total");
