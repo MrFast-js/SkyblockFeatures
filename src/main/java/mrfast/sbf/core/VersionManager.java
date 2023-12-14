@@ -130,7 +130,7 @@ public class VersionManager {
                         ChatFormatting.GREEN + "Update downloaded successfully! Skyblock Features will update when you close the game. ");
 
                 IChatComponent closeGame = new ChatComponentText(
-                        ChatFormatting.RED.toString() + ChatFormatting.BOLD + " [CLOSE GAME]")
+                        ChatFormatting.RED.toString() + ChatFormatting.BOLD + "[CLOSE GAME]")
                         .setChatStyle(new ChatStyle()
                                 .setChatClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/sf update close"))
                                 .setChatHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
