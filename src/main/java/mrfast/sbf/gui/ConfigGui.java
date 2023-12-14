@@ -178,14 +178,9 @@ public class ConfigGui extends WindowScreen {
         reloadFeatures(loadedFeaturesList,guiHeight,guiWidth,fontScale);
 
         input.onKeyType((component, character, integer) -> {
-            if(typingSearch) return Unit.INSTANCE;
-            typingSearch = true;
             searchQuery = ((UITextInput) component).getText().toLowerCase();
             loadedFeaturesList.clearChildren();
             reloadFeatures(loadedFeaturesList,guiHeight,guiWidth,fontScale);
-            Utils.setTimeout(()->{
-                typingSearch=false;
-            },50);
             return Unit.INSTANCE;
         });
         
@@ -452,8 +447,6 @@ public class ConfigGui extends WindowScreen {
     private boolean containsIgnoreCase(String source, String target) {
         return source.toLowerCase().contains(target.toLowerCase());
     }
-    private static boolean expandingComponent = false;
-    private static boolean typingSearch = false;
 
     public void reloadFeatures(UIComponent loadedFeaturesList, float guiHeight, float guiWidth, double fontScale) {
         float Margin = 6f;
@@ -600,9 +593,6 @@ public class ConfigGui extends WindowScreen {
 
                                 // Sub subs
                                 settingsGear.onMouseClickConsumer((event)->{
-                                    if(expandingComponent) return;
-                                    // Use expanding component to stop directly spamming and causing crash
-                                    expandingComponent = true;
                                     Boolean val = !expandedFeatures.getOrDefault(feature.name(),false);
 
                                     expandedFeatures.put(feature.name(),val);
@@ -615,10 +605,6 @@ public class ConfigGui extends WindowScreen {
                                             child.hide();
                                         }
                                     }
-
-                                    Utils.setTimeout(()->{
-                                        expandingComponent=false;
-                                    },500);
                                 });
                                 exampleFeature.setHeight(new PixelConstraint(exampleFeature.getHeight()-16f));
                             }
