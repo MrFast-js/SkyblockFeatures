@@ -980,7 +980,7 @@ public class Config extends Vigilant {
             category = "§2§rCustomization",
             subcategory = "Player",
             options = {"Cow", "Pig", "Sheep", "Zombie", "Jerry", "Enderman", "Giant", "Baby Player", "Monki"},
-            searchTags = {"Disguise Players As"}
+            searchTags = {"Player Disguiser"}
     )
     public int DisguisePlayersAs = 0;
 

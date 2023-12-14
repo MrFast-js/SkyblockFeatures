@@ -13,9 +13,7 @@ import com.google.gson.JsonObject;
 
 import mrfast.sbf.core.PricingData;
 import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemSkull;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.*;
 import net.minecraft.util.EnumChatFormatting;
@@ -300,8 +298,9 @@ public class ItemUtils {
             // Hbp, recombs
             total+=getUpgradeCost(ExtraAttributes);
             // gemstones
-            total+=getGemstoneWorth(ExtraAttributes);   
-
+            total+=getGemstoneWorth(ExtraAttributes);
+            // drill parts
+            total+=getDrillParts(ExtraAttributes);
         } catch (Exception e) {
             e.printStackTrace();
             // TODO: handle exception
@@ -310,6 +309,7 @@ public class ItemUtils {
         return total;
     }
 
+    // Used for Auction flipper
     public static Integer getEstimatedItemValue(NBTTagCompound ExtraAttributes) {
         if(skyhelperItemMap.isEmpty()) {
             new Thread(()->{
@@ -334,7 +334,9 @@ public class ItemUtils {
             // Hbp, recombs
             total+=getUpgradeCost(ExtraAttributes);   
             // gemstones
-            total+=getGemstoneWorth(ExtraAttributes);   
+            total+=getGemstoneWorth(ExtraAttributes);
+            // drill parts
+            total+=getDrillParts(ExtraAttributes);
         } catch (Exception e) {
             // TODO: handle exception
         }
@@ -358,6 +360,30 @@ public class ItemUtils {
         if (ExtraAttributes.hasKey("rarity_upgrades") && !ExtraAttributes.hasKey("item_tier")) {
             if(PricingData.bazaarPrices.get("RECOMBOBULATOR_3000")!=null) {
                 total+= PricingData.bazaarPrices.get("RECOMBOBULATOR_3000");
+            }
+        }
+        return total;
+    }
+    public static Long getDrillParts(NBTTagCompound ExtraAttributes) {
+        long total = 0;
+
+        if (ExtraAttributes.hasKey("drill_part_upgrade_module")) {
+            String upgrade = ExtraAttributes.getString("drill_part_upgrade_module").toUpperCase();
+            if(PricingData.lowestBINs.containsKey(upgrade)) {
+                total+= PricingData.lowestBINs.get(upgrade).longValue();
+            }
+        }
+
+        if (ExtraAttributes.hasKey("drill_part_engine")) {
+            String upgrade = ExtraAttributes.getString("drill_part_engine").toUpperCase();
+            if(PricingData.lowestBINs.containsKey(upgrade)) {
+                total+= PricingData.lowestBINs.get(upgrade).longValue();
+            }
+        }
+        if (ExtraAttributes.hasKey("drill_part_fuel_tank")) {
+            String upgrade = ExtraAttributes.getString("drill_part_fuel_tank").toUpperCase();
+            if(PricingData.lowestBINs.containsKey(upgrade)) {
+                total+= PricingData.lowestBINs.get(upgrade).longValue();
             }
         }
         return total;

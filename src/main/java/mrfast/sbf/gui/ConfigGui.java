@@ -615,6 +615,7 @@ public class ConfigGui extends WindowScreen {
                                             child.hide();
                                         }
                                     }
+
                                     Utils.setTimeout(()->{
                                         expandingComponent=false;
                                     },500);
