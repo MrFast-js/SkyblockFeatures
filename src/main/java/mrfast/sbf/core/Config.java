@@ -399,8 +399,7 @@ public class Config extends Vigilant {
             name = "Slayer Timer",
             description = "Shows different timers for slayers including time to spawn and kill.",
             category = "Slayers",
-            subcategory = "Slayer Timer",
-            searchTags = {"parent"}
+            subcategory = "Slayer Timer"
     )
     public boolean slayerTimer = false;
 
@@ -2072,6 +2071,15 @@ public class Config extends Vigilant {
             subcategory = "Settings"
     )
     public boolean showMobIds = false;
+
+    @Property(
+            type = PropertyType.SWITCH,
+            name = "Show Inspector in Guis",
+            category = "§eDeveloper",
+            description = "",
+            subcategory = "Settings"
+    )
+    public boolean showInspector = false;
 
     public static File file = new File("./config/skyblockfeatures/config.toml");
 
