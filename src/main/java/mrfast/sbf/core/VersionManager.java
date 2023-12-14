@@ -73,6 +73,7 @@ public class VersionManager {
             }
         });
     }
+
     private static double getVersionValue(String version) {
         String part1 = version.split("-")[0];
         int num1 = Integer.parseInt(part1.replaceAll("[^0-9]", ""));
@@ -124,18 +125,31 @@ public class VersionManager {
             try {
                 Utils.sendMessage(ChatFormatting.GREEN + "Downloading update: " + ChatFormatting.AQUA + potentialUpdate.getUpdate().getVersionName());
                 potentialUpdate.executeUpdate();
-                Utils.sendMessage(ChatFormatting.GREEN + "Update downloaded successfully! Your game will now restart.");
 
-                // Close Minecraft
-                Utils.setTimeout(() -> {
-                    FMLCommonHandler.instance().handleExit(-1);
-                    FMLCommonHandler.instance().expectServerStopped();
-                }, 2000);
+                IChatComponent notificationText = new ChatComponentText(
+                        ChatFormatting.GREEN + "Update downloaded successfully! Skyblock Features will update when you close the game. ");
 
+                IChatComponent closeGame = new ChatComponentText(
+                        ChatFormatting.RED.toString() + ChatFormatting.BOLD + " [CLOSE GAME]")
+                        .setChatStyle(new ChatStyle()
+                                .setChatClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/sf update close"))
+                                .setChatHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
+                                        new ChatComponentText(ChatFormatting.RED + "Click to close the game"))));
+
+                notificationText.appendSibling(closeGame);
+                Utils.sendMessage(notificationText);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         });
+    }
+
+    public static void closeMinecraft() {
+        Utils.sendMessage(ChatFormatting.RED + "Closing Minecraft..");
+        Utils.setTimeout(() -> {
+            FMLCommonHandler.instance().handleExit(-1);
+            FMLCommonHandler.instance().expectServerStopped();
+        }, 2000);
     }
 
 }

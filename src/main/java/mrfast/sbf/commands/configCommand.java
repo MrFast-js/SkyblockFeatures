@@ -62,6 +62,10 @@ public class configCommand extends CommandBase {
         switch (subcommand) {
             case "update":
                 if(args.length>1) {
+                    if(args[1].equals("close")) {
+                        VersionManager.closeMinecraft();
+                        return;
+                    }
                     if(!args[1].equals("pre") && !args[1].equals("full")) {
                         Utils.sendMessage(ChatFormatting.RED + "Invalid Usage! " + ChatFormatting.YELLOW + "/update pre, full");
                     } else {
