@@ -153,7 +153,7 @@ public class MiscOverlays {
 
     @SubscribeEvent
     public void onPacket(PacketEvent.ReceiveEvent event) {
-        if(!SkyblockFeatures.config.quiverOverlay) return;
+        if(!SkyblockFeatures.config.quiverOverlay||Utils.GetMC().thePlayer==null) return;
 
         if(event.packet instanceof S29PacketSoundEffect) {
             S29PacketSoundEffect packet = (S29PacketSoundEffect) event.packet;
