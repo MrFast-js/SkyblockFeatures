@@ -1121,6 +1121,18 @@ public class Config extends Vigilant {
     public boolean dungeonMap = false;
 
     @Property(
+            type = PropertyType.SLIDER,
+            name = "Player Head Scale",
+            description = "Scale the size of the heads on the dungeon map §3(Percent)",
+            category = "§1§rDungeons",
+            subcategory = "Dungeon Map",
+            min = 50,
+            max = 150,
+            searchTags = {"Dungeon Map"}
+    )
+    public int dungeonMapHeadScale = 100;
+
+    @Property(
             type = PropertyType.SWITCH,
             name = "Center Player on Dungeon Map",
             description = "Locks your player to the center of the dungeon map",
@@ -1159,18 +1171,6 @@ public class Config extends Vigilant {
             searchTags = {"Dungeon Map"}
     )
     public boolean dungeonMapHeads = true;
-
-    @Property(
-            type = PropertyType.SLIDER,
-            name = "Player Head Scale",
-            description = "Scale the size of the heads on the dungeon map §3(Percent)",
-            category = "§1§rDungeons",
-            subcategory = "Dungeon Map",
-            min = 50,
-            max = 150,
-            searchTags = {"Dungeon Map"}
-    )
-    public int dungeonMapHeadScale = 100;
 
     @Property(
             type = PropertyType.SWITCH,

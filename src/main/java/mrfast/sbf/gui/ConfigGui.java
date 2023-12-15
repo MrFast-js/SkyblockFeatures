@@ -81,7 +81,7 @@ public class ConfigGui extends WindowScreen {
 
     Color editGuiUnhovered = SkyblockFeatures.config.editGuiUnhovered;
     Color editGuiHovered = SkyblockFeatures.config.editGuiHovered;
-    
+
     Color clear = new Color(0,0,0,0);
     public ConfigGui(Boolean doAnimation) {
         super(ElementaVersion.V2);
@@ -102,7 +102,7 @@ public class ConfigGui extends WindowScreen {
             .setChildOf(getWindow())
             .setColor(mainBackground)
             .enableEffect(new ScissorEffect());
-        
+
         String outlinePath = furfSkyThemed?"/assets/skyblockfeatures/gui/largeOutlineFurf.png":"/assets/skyblockfeatures/gui/largeOutline.png";
         UIImage.ofResourceCached(outlinePath).setChildOf(box)
             .setX(new PixelConstraint(0f))
@@ -112,7 +112,7 @@ public class ConfigGui extends WindowScreen {
         float guiWidth = box.getWidth();
         float guiHeight = box.getHeight();
         double fontScale = screenHeight/540d;
-        
+
         UIComponent titleArea = new UIBlock().setColor(clear).setChildOf(box)
             .setX(new CenterConstraint())
             .setWidth(new PixelConstraint(guiWidth))
@@ -126,7 +126,7 @@ public class ConfigGui extends WindowScreen {
             .setY(new CenterConstraint())
             .enableEffect(new ScissorEffect())
             .setTextScale(new PixelConstraint((float) (doAnimation?1*fontScale:4*fontScale)));
-        
+
         new UIText("v"+SkyblockFeatures.VERSION)
             .setColor(versionText)
             .setChildOf(titleArea)
@@ -138,7 +138,7 @@ public class ConfigGui extends WindowScreen {
         if(Utils.isDeveloper() && SkyblockFeatures.config.showInspector) {
              new Inspector(getWindow()).setChildOf(getWindow());
         }
-        
+
         UIComponent searchBox = new UIRoundedRectangle(5f)
             .setChildOf(titleArea)
             .setX(new PixelConstraint(guiWidth-90))
@@ -153,11 +153,11 @@ public class ConfigGui extends WindowScreen {
             .setWidth(new PixelConstraint(80))
             .setHeight(new PixelConstraint(15f))
             .setY(new PixelConstraint(3f));
-        
+
         titleArea.onMouseClickConsumer((event)->{
             input.grabWindowFocus();
         });
-        
+
         // Gray horizontal line 1px from bottom of the title area
         new UIBlock().setChildOf(titleArea)
             .setWidth(new PixelConstraint(guiWidth-2))
@@ -177,13 +177,17 @@ public class ConfigGui extends WindowScreen {
         loadedFeaturesList.clearChildren();
         reloadFeatures(loadedFeaturesList,guiHeight,guiWidth,fontScale);
 
+        // Search box typing
         input.onKeyType((component, character, integer) -> {
+            // Set the search query
             searchQuery = ((UITextInput) component).getText().toLowerCase();
+            // Clear all features and children
             loadedFeaturesList.clearChildren();
+            // Reload features
             reloadFeatures(loadedFeaturesList,guiHeight,guiWidth,fontScale);
             return Unit.INSTANCE;
         });
-        
+
         // Side bar on the left that holds the categories
         UIComponent sidebarArea = new UIBlock()
             .setX(new PixelConstraint(-5f))
@@ -220,18 +224,24 @@ public class ConfigGui extends WindowScreen {
                 .setY(new SiblingConstraint((float) (2.5f*fontScale)))
                 .enableEffect(new RecursiveFadeEffect())
                 .setTextScale(new PixelConstraint((float) fontScale*1.5f));
-                
+
             // Set color of selected category
             if(categoryName.equals(selectedCategory)) {
                 ExampleCategory.setColor(selectedCategoryColor);
             }
             ExampleCategory.onMouseEnterRunnable(()->{
                 if(!categoryName.equals(selectedCategory)) {
-                    ExampleCategory.setColor(hoveredCategory);
+                    AnimatingConstraints anim = ExampleCategory.makeAnimation();
+                    anim.setColorAnimation(Animations.OUT_EXP,0.5f,new ConstantColorConstraint(hoveredCategory));
+                    ExampleCategory.animateTo(anim);
                 }
             });
             ExampleCategory.onMouseLeaveRunnable(()->{
-                if(!categoryName.equals(selectedCategory)) ExampleCategory.setColor(defaultCategory);
+                if(!categoryName.equals(selectedCategory)) {
+                    AnimatingConstraints anim = ExampleCategory.makeAnimation();
+                    anim.setColorAnimation(Animations.OUT_EXP,0.5f,new ConstantColorConstraint(defaultCategory));
+                    ExampleCategory.animateTo(anim);
+                }
             });
             ExampleCategory.onMouseClickConsumer((event)->{
                 if(selectedCategory.equals(categoryName)) return;
@@ -257,17 +267,21 @@ public class ConfigGui extends WindowScreen {
                     .setHeight(new PixelConstraint(32f))
                     .setY(new RelativeConstraint(0.88f));
         }
-        
+
         new UIText("Edit Gui Locations").setColor(editGuiText).setChildOf(editGuiButton)
             .setTextScale(new PixelConstraint((float) fontScale))
             .setX(new CenterConstraint())
             .setY(new CenterConstraint());
 
         editGuiButton.onMouseEnterRunnable(()->{
-            editGuiButton.setColor(editGuiHovered);
+            AnimatingConstraints anim = editGuiButton.makeAnimation();
+            anim.setColorAnimation(Animations.OUT_EXP,0.5f,new ConstantColorConstraint(editGuiHovered));
+            editGuiButton.animateTo(anim);
         });
         editGuiButton.onMouseLeaveRunnable(()->{
-            editGuiButton.setColor(editGuiUnhovered);
+            AnimatingConstraints anim = editGuiButton.makeAnimation();
+            anim.setColorAnimation(Animations.OUT_EXP,0.5f,new ConstantColorConstraint(editGuiUnhovered));
+            editGuiButton.animateTo(anim);
         });
         // Open gui locations gui when clicked
         editGuiButton.onMouseClickConsumer((event)->{
@@ -321,7 +335,7 @@ public class ConfigGui extends WindowScreen {
                 .setHeight(new RelativeConstraint(1f));
 
         ((ScrollComponent) loadedFeaturesList).setVerticalScrollBarComponent(scrollbar,true);
-        
+
         if(doAnimation) {
             box.setWidth(new PixelConstraint(0f));
 
@@ -391,7 +405,7 @@ public class ConfigGui extends WindowScreen {
                         category.put(feature.subcategory(), new ArrayList<>());
                     }
                     List<Property> subcategory = category.get(feature.subcategory());
-            
+
                     if(!subcategory.contains(feature)) {
                         valueMap.put(feature, value);
                         subcategory.add(feature);
@@ -405,12 +419,13 @@ public class ConfigGui extends WindowScreen {
     public static class ExpandableComponent {
         public Property parent;
         Boolean enabled = false;
-        List<UIComponent> children = new ArrayList<>();
+        HashMap<String,UIComponent> children = new HashMap<>();
 
         public ExpandableComponent() {}
     }
     HashMap<String,ExpandableComponent> parentElements = new HashMap<>();
 
+    // Returns true to hide the feature if, its parent is hidden or name, description, subcategory dont contain the search query
     public boolean shouldHideFeature(Property feature) {
         boolean ignoreFeature = true;
 
@@ -448,6 +463,7 @@ public class ConfigGui extends WindowScreen {
         return source.toLowerCase().contains(target.toLowerCase());
     }
 
+    // Reloads the current visible features by clearing old and redoing all of them
     public void reloadFeatures(UIComponent loadedFeaturesList, float guiHeight, float guiWidth, double fontScale) {
         float Margin = 6f;
         // Default category
@@ -455,15 +471,19 @@ public class ConfigGui extends WindowScreen {
         for(String categoryName:categories.keySet()) {
             if(categoryName.contains("Developer") && !Utils.isDeveloper()) continue;
 
+            // Makes sure that if your not searching, it wont show all the features in every page
             if(searchQuery.isEmpty()) {
                 if(!categoryName.equals(selectedCategory)) {
                     continue;
                 }
             }
-            // Load categorie's subcategories
+            // Load each categorie's subcategories
             for(String subcategoryName:categories.get(categoryName).keySet()) {
                 List<Property> subcategory = categories.get(categoryName).get(subcategoryName);
+
                 int featuresVisible = 0;
+
+                // Checks if certain features should be hidden or not
                 for(Property feature:subcategory) {
                     boolean ignoreFeature = shouldHideFeature(feature);
                     if(ignoreFeature) continue;
@@ -485,31 +505,34 @@ public class ConfigGui extends WindowScreen {
                     .setX(new CenterConstraint())
                     .setTextScale(new PixelConstraint((float) fontScale*3));
 
+                // Loop through each config option inside of Config.java
                 for(Property feature:subcategory) {
-                    if(feature.hidden()) continue;
+                    // Cheks if should draw feature
+                    if(shouldHideFeature(feature)) continue;
 
-                    if(!feature.name().toLowerCase().contains(searchQuery) && !feature.description().toLowerCase().contains(searchQuery)) {
-                        boolean shouldHide = shouldHideFeature(feature);
-                        if(shouldHide) continue;
-                    }
-
+                    // Select texture for background of feature, outline or outline furf sky
                     String outlinePath = furfSkyThemed?"/assets/skyblockfeatures/gui/outlineFurf.png":"/assets/skyblockfeatures/gui/outline.png";
 
+                    // Create the 'border' which is just an image that is the parent
                     UIComponent border = UIImage.ofResourceCached(outlinePath).setChildOf(loadedFeaturesList)
                         .setX(new CenterConstraint())
                         .setWidth(new RelativeConstraint(0.92f))
                         .setY(new SiblingConstraint(Margin));
 
+                    // Example feature is the actual containing component that has the toggle switch, title, description
                     UIComponent exampleFeature = new UIBlock().setChildOf(border).setColor(clear)
                         .setX(new CenterConstraint())
                         .setY(new PixelConstraint(0f))
                         .setWidth(new PixelConstraint(0.90f*0.75f*guiWidth))
                         .setHeight(new ChildBasedSizeConstraint());
-                    
+
+                    // Set a special exception for sliders because they modify the height more than they should
                     if(feature.type() == PropertyType.SLIDER) {
                         border.setHeight(new RelativeConstraint(0.15f));
                         exampleFeature.setHeight(new RelativeConstraint(1f));
                     }
+
+                    // Render Color Settings different as it needs to expand
                     UIComponent colorPreview = null;
                     if(feature.type() == PropertyType.COLOR) {
                         // Color Title
@@ -524,34 +547,29 @@ public class ConfigGui extends WindowScreen {
                             .setWidth(new PixelConstraint(0.08f*0.75f*guiWidth))
                             .setHeight(new PixelConstraint(0.08f*0.75f*guiHeight))
                             .enableEffect(new OutlineEffect(Color.yellow, 1f));
-                            
+
                         border.setHeight(new RelativeConstraint(0.16f));
                         exampleFeature.setHeight(new RelativeConstraint(1f));
 
                     } else {
-                        // Feature Title
+                        // Draw Feature Title
                         new UIText(feature.name()).setChildOf(exampleFeature)
                             .setY(new PixelConstraint(4f))
                             .setX(new PixelConstraint(4f))
                             .setTextScale(new PixelConstraint((float) fontScale*2f));
                     }
-        
-                    // Feature description
+
+                    // Draw Feature description
                     if(feature.type() == PropertyType.PARAGRAPH) {
+                        // If its a paragraph only use ~50% for the description for as to not overlap
                         new UIWrappedText(feature.description()).setChildOf(exampleFeature)
                             .setX(new PixelConstraint(4f))
                             .setWidth(new RelativeConstraint(0.5f))
                             .setColor(featureDescription)
                             .setY(new PixelConstraint(23f*(float) fontScale))
                             .setTextScale(new PixelConstraint((float) fontScale));
-                    } else if(feature.type() == PropertyType.TEXT) {
-                        new UIWrappedText(feature.description()).setChildOf(exampleFeature)
-                            .setX(new PixelConstraint(4f))
-                            .setWidth(new RelativeConstraint(0.75f))
-                            .setColor(featureDescription)
-                            .setY(new PixelConstraint(23f*(float) fontScale))
-                            .setTextScale(new PixelConstraint((float) fontScale));
                     } else {
+                        // Draw a normal description
                         UIComponent text =  new UIWrappedText(feature.description()).setChildOf(exampleFeature)
                             .setX(new PixelConstraint(4f))
                             .setWidth(new RelativeConstraint(0.75f))
@@ -560,15 +578,20 @@ public class ConfigGui extends WindowScreen {
                             .setTextScale(new PixelConstraint((float) fontScale));
                         text.setHeight(new PixelConstraint(text.getHeight()+6));
                     }
-                    
-        
+
+                    // Handler for toggle features
                     if(feature.type() == PropertyType.SWITCH) {
+                        // Add the switch component
                         UIComponent comp = new SwitchComponent((Boolean) valueMap.get(feature))
                                 .setChildOf(exampleFeature);
 
+                        // Search tags are used because custom properties cannot be added onto one feature easily,
+                        // So im using the first search tag to set it either as a 'parent' or the name of a feature that has 'parent'
                         if(feature.searchTags().length>0) {
                             String tag = feature.searchTags()[0];
+
                             if (tag.equals("parent")) {
+                                // Create settings gear
                                 ConstantColorConstraint unhovered = new ConstantColorConstraint(new Color(200,200,200));
                                 ConstantColorConstraint hovered = new ConstantColorConstraint(new Color(255,255,255));
 
@@ -591,25 +614,31 @@ public class ConfigGui extends WindowScreen {
                                     settingsGear.animateTo(anim);
                                 });
 
-                                // Sub subs
+                                // When the gear is clicked -> go through its set children from 'parentElements' and hide/unhide them
                                 settingsGear.onMouseClickConsumer((event)->{
                                     Boolean val = !expandedFeatures.getOrDefault(feature.name(),false);
 
                                     expandedFeatures.put(feature.name(),val);
                                     ExpandableComponent parent = parentElements.get(feature.name());
 
-                                    for(UIComponent child : parent.children) {
+                                    for(UIComponent child : parent.children.values()) {
                                         if(val) {
+                                            child.setWidth(new RelativeConstraint(1f));
+                                            UIComponent child1 = child.getChildren().get(0);
                                             child.unhide(true);
+                                            child.setHeight(new PixelConstraint(child1.getHeight()));
                                         } else {
+                                            child.setWidth(new PixelConstraint(0f));
                                             child.hide();
+                                            child.setHeight(new PixelConstraint(0f));
                                         }
                                     }
                                 });
+                                // Set height -16 because the gear icon messes up the heigh when using ChildBasedConstraint
                                 exampleFeature.setHeight(new PixelConstraint(exampleFeature.getHeight()-16f));
                             }
                         }
-
+                        // Set the variable when the toggle switch is used
                         comp.onMouseClickConsumer((event)->{
                             Boolean val = (Boolean) getVariable(feature.name());
                             setVariable(feature.name(),!val);
@@ -618,7 +647,7 @@ public class ConfigGui extends WindowScreen {
 
                     if(feature.type() == PropertyType.COLOR) {
                         UIComponent comp = new ColorComponent((Color) valueMap.get(feature),false).setChildOf(exampleFeature);
-                        
+
                         final UIComponent finalColorPreview = colorPreview;
 
                         comp.onMouseClick((event,a)->{
@@ -634,7 +663,7 @@ public class ConfigGui extends WindowScreen {
                             return Unit.INSTANCE;
                         });
                     }
-        
+
                     if(feature.type() == PropertyType.CHECKBOX) {
                         UIComponent comp = new CheckboxComponent((Boolean) valueMap.get(feature)).setChildOf(exampleFeature);
                         comp.onMouseClickConsumer((event)->{
@@ -642,7 +671,7 @@ public class ConfigGui extends WindowScreen {
                             setVariable(feature.name(),!val);
                         });
                     }
-        
+
                     if(feature.type() == PropertyType.SELECTOR) {
                         UIComponent comp = new SelectorComponent((int) valueMap.get(feature),getOptions(feature.name())).setChildOf(exampleFeature);
                         ((SelectorComponent) comp).onValueChange((value)->{
@@ -662,6 +691,7 @@ public class ConfigGui extends WindowScreen {
                         });
                     }
 
+                    // Custom number input, numbers only, red if nothing input
                     if(feature.type() == PropertyType.NUMBER) {
                         UIComponent comp = new UIBlock(new Color(0x232323))
                             .enableEffect(new OutlineEffect(VigilancePalette.INSTANCE.getComponentBorder(),1f))
@@ -683,7 +713,7 @@ public class ConfigGui extends WindowScreen {
                             newcomp.grabWindowFocus();
                         });
                         newcomp.setText(valueMap.get(feature)+"");
-                        
+
                         newcomp.onKeyType((component, character, integer) -> {
 
                             String cleanNumber = newcomp.getText().replaceAll("[^0-9]", "");
@@ -722,6 +752,7 @@ public class ConfigGui extends WindowScreen {
                     }
                     border.setHeight(new PixelConstraint(exampleFeature.getHeight()));
 
+                    // Adds components to 'parentElements' accordingly
                     if(feature.searchTags().length>0) {
                         String tag = feature.searchTags()[0];
                         if(tag.equals("parent")) {
@@ -733,11 +764,22 @@ public class ConfigGui extends WindowScreen {
                         } else {
                             border.setWidth(new RelativeConstraint(.85f));
                             exampleFeature.setWidth(new RelativeConstraint(1f));
-                            if(parentElements.containsKey(tag)) {
-                                parentElements.get(tag).children.add(border);
-                            }
 
-                            border.hide();
+                            UIComponent test = new UIBlock(clear)
+                                    .setChildOf(loadedFeaturesList)
+                                    .setWidth(new PixelConstraint(0f))
+                                    .setHeight(new PixelConstraint(0f))
+                                    .setY(new SiblingConstraint(Margin))
+                                    .enableEffect(new ScissorEffect());
+                            if(!searchQuery.isEmpty()) {
+                                test.setWidth(new RelativeConstraint(1f));
+                                test.setHeight(new PixelConstraint(border.getHeight()));
+                            }
+                            loadedFeaturesList.removeChild(border);
+                            test.addChild(border);
+                            if(parentElements.containsKey(tag)) {
+                                parentElements.get(tag).children.put(feature.name(),test);
+                            }
                         }
                     }
                 }

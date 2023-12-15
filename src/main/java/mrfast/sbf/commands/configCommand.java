@@ -9,9 +9,9 @@ import com.mojang.realmsclient.gui.ChatFormatting;
 import mrfast.sbf.SkyblockFeatures;
 import mrfast.sbf.core.SkyblockInfo;
 import mrfast.sbf.core.VersionManager;
+import mrfast.sbf.gui.ConfigGui;
 import mrfast.sbf.gui.EditLocationsGui;
 import mrfast.sbf.gui.GuiManager;
-import mrfast.sbf.gui.ConfigGui;
 import mrfast.sbf.gui.components.Point;
 import mrfast.sbf.utils.GuiUtils;
 import mrfast.sbf.utils.Utils;
@@ -86,7 +86,7 @@ public class configCommand extends CommandBase {
                 Utils.sendMessage("Gui Positions Reset!");
                 break;
             case "config":
-                GuiUtils.openGui(new ConfigGui(true));
+//                GuiUtils.openGui(new ConfigGui(true));
                 break;
             case "help":
                 String helpMessage = "§eSkyblock Features Commands and Info\n"
