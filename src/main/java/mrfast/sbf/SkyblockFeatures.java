@@ -112,7 +112,7 @@ public class SkyblockFeatures {
                 new HealthDisplay(),
                 new SecretDisplay(),
                 new CryptDisplay(),
-                new DefenceDisplay(),
+                new DefenseDisplay(),
                 new ActionBarListener(),
                 new CommisionsTracker(),
                 new FairySoulWaypoints(),

@@ -35,7 +35,7 @@ public class Utils {
     public static int Mana;
     public static int maxMana;
 
-    public static int Defence;
+    public static int Defense;
     public static final NumberFormat nf = NumberFormat.getInstance(Locale.US);
 
     private static final String[] steps = new String[] {"", "K", "M", "B","T"};

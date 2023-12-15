@@ -17,7 +17,7 @@ public class EffectiveHealthDisplay {
     }
 
     public static int getEffectiveHealth() {
-        return Math.round(Utils.Health * (1f+ (Utils.Defence / 100f) ));
+        return Math.round(Utils.Health * (1f+ (Utils.Defense / 100f) ));
     }
     public static class EffectiveHealthDisplayGUI extends UIElement {
         public EffectiveHealthDisplayGUI() {

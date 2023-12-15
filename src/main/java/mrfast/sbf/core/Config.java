@@ -502,12 +502,58 @@ public class Config extends Vigilant {
 
     @Property(
             type = PropertyType.SWITCH,
-            name = "Hide Health and Mana",
-            description = "Hides Health and Mana from action bar",
+            name = "Cleaner Action Bar",
+            description = "Hides Health, Mana and other attributes from action bar",
             category = "General",
-            subcategory = "Health & Mana Bars"
+            subcategory = "Health & Mana Bars",
+            searchTags = {"parent"}
     )
-    public boolean hideHealthAndMana = false;
+    public boolean cleanerActionBar = false;
+    @Property(
+            type = PropertyType.SWITCH,
+            name = "Hide Health",
+            description = "Hides health from action bar",
+            category = "General",
+            subcategory = "Health & Mana Bars",
+            searchTags = {"Cleaner Action Bar"}
+    )
+    public boolean hideHealthFromBar = true;
+    @Property(
+            type = PropertyType.SWITCH,
+            name = "Hide Mana",
+            description = "Hides mana from action bar",
+            category = "General",
+            subcategory = "Health & Mana Bars",
+            searchTags = {"Cleaner Action Bar"}
+    )
+    public boolean hideManaFromBar = true;
+    @Property(
+            type = PropertyType.SWITCH,
+            name = "Hide Overflow Mana",
+            description = "Hides overflow mana from action bar",
+            category = "General",
+            subcategory = "Health & Mana Bars",
+            searchTags = {"Cleaner Action Bar"}
+    )
+    public boolean hideOverflowManaFromBar = true;
+    @Property(
+            type = PropertyType.SWITCH,
+            name = "Hide Defense",
+            description = "Hides defense from action bar",
+            category = "General",
+            subcategory = "Health & Mana Bars",
+            searchTags = {"Cleaner Action Bar"}
+    )
+    public boolean hideDefenseFromBar = true;
+    @Property(
+            type = PropertyType.SWITCH,
+            name = "Hide Dungeon Secrets",
+            description = "Hides secrets from action bar",
+            category = "General",
+            subcategory = "Health & Mana Bars",
+            searchTags = {"Cleaner Action Bar"}
+    )
+    public boolean hideSecretsFromBar = true;
 
     @Property(
             type = PropertyType.SWITCH,
@@ -547,12 +593,12 @@ public class Config extends Vigilant {
 
     @Property(
             type = PropertyType.SWITCH,
-            name = "Defence Display",
-            description = "Movable defence display",
+            name = "Defense Display",
+            description = "Movable defense display",
             category = "General",
             subcategory = "Health & Mana Bars"
     )
-    public boolean DefenceDisplay = false;
+    public boolean DefenseDisplay = false;
 
     @Property(
             type = PropertyType.SWITCH,

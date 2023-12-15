@@ -40,7 +40,7 @@ public class ActionBarListener {
 				if(trimmed.endsWith("❤")) {
 					parseAndSetHealth(shortString);
 				} else if(trimmed.endsWith("❈")) {
-					parseAndSetDefence(shortString);
+					parseAndSetDefense(shortString);
 				} else if(trimmed.endsWith("✎")) {
 					parseAndSetMana(shortString);
 				}
@@ -52,20 +52,29 @@ public class ActionBarListener {
 
 			parseSecrets(actionBar);
 
-			if(SkyblockFeatures.config.hideHealthAndMana) {
+			if(SkyblockFeatures.config.cleanerActionBar) {
 				String[] arr = actionBar.split(" ");
+				// Remove Numbers wit
                 for (String s : arr) {
-                    if (s.contains("❤")) {
+                    if (s.contains("❤") && SkyblockFeatures.config.hideHealthFromBar) {
                         actionBar = actionBar.replace(s, "");
                     }
-                    if (s.contains("❈") || s.contains("Defense")) {
+                    if ((s.contains("❈") || s.contains("Defense")) && SkyblockFeatures.config.hideDefenseFromBar) {
                         actionBar = actionBar.replace(s, "");
                     }
-                    if (s.contains("✎") || s.contains("Mana")) {
+                    if ((s.contains("✎") || s.contains("Mana")) && SkyblockFeatures.config.hideManaFromBar)  {
                         actionBar = actionBar.replace(s, "");
                     }
+					if (s.contains("ʬ") && SkyblockFeatures.config.hideOverflowManaFromBar)  {
+						actionBar = actionBar.replace(s, "");
+					}
                 }
-				event.message = new ChatComponentText(actionBar.replaceAll("\247.\\d+.*Defense", "").trim().replaceAll("\247.\\d+/\\d+✎ Mana", "").trim().replace(secrets+"/"+maxSecrets+" Secrets", "").trim());
+
+				if (SkyblockFeatures.config.hideSecretsFromBar) {
+					actionBar = actionBar.replaceAll(secrets+"/"+maxSecrets+" Secrets", "");
+				}
+
+				event.message = new ChatComponentText(actionBar.trim());
             }
 		}
 	}
@@ -78,8 +87,8 @@ public class ActionBarListener {
 		Utils.maxHealth = maxHealth;
 	}
 
-	private void parseAndSetDefence(String actionBarSegment) throws NumberFormatException {
-        Utils.Defence = Integer.parseInt(actionBarSegment);
+	private void parseAndSetDefense(String actionBarSegment) throws NumberFormatException {
+        Utils.Defense = Integer.parseInt(actionBarSegment);
 	}
 
 	private void parseAndSetMana(String actionBarSegment) throws NumberFormatException {
