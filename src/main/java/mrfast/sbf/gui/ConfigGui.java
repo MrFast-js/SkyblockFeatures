@@ -584,7 +584,6 @@ public class ConfigGui extends WindowScreen {
                         // Add the switch component
                         UIComponent comp = new SwitchComponent((Boolean) valueMap.get(feature))
                                 .setChildOf(exampleFeature);
-
                         // Search tags are used because custom properties cannot be added onto one feature easily,
                         // So im using the first search tag to set it either as a 'parent' or the name of a feature that has 'parent'
                         if(feature.searchTags().length>0) {
@@ -651,8 +650,23 @@ public class ConfigGui extends WindowScreen {
                         final UIComponent finalColorPreview = colorPreview;
 
                         comp.onMouseClick((event,a)->{
+                            boolean featureOption = false;
+                            if(feature.searchTags().length>0) {
+                                String tag = feature.searchTags()[0];
+
+                                if (!tag.equals("parent")) {
+                                    featureOption = true;
+                                }
+                            }
                             AnimatingConstraints anim = border.makeAnimation();
-                            anim.setHeightAnimation(Animations.OUT_EXP, 0.5f, new RelativeConstraint(0.29f));
+                            if(featureOption) {
+                                if(feature.type() == PropertyType.COLOR) {
+                                    border.parent.setHeight(new PixelConstraint(80));
+                                    anim.setHeightAnimation(Animations.OUT_EXP, 0.5f, new PixelConstraint(border.parent.getHeight()));
+                                }
+                            } else {
+                                anim.setHeightAnimation(Animations.OUT_EXP, 0.5f, new RelativeConstraint(0.29f));
+                            }
                             border.animateTo(anim);
                             return Unit.INSTANCE;
                         });
@@ -771,6 +785,7 @@ public class ConfigGui extends WindowScreen {
                                     .setHeight(new PixelConstraint(0f))
                                     .setY(new SiblingConstraint(Margin))
                                     .enableEffect(new ScissorEffect());
+
                             if(!searchQuery.isEmpty()) {
                                 test.setWidth(new RelativeConstraint(1f));
                                 test.setHeight(new PixelConstraint(border.getHeight()));
