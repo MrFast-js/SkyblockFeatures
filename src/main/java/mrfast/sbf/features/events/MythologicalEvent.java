@@ -175,7 +175,7 @@ public class MythologicalEvent {
         }
 
         String unformatted = Utils.cleanColor(event.message.getUnformattedText());
-        if (unformatted.matches("^(Wow!|Uh oh!|Oh!|Oi!|Danger!|Woah!|Good Grief!)\\s+You\\sdug\\sout.*") ||
+        if (unformatted.matches("^(Wow!|Yikes!|Uh oh!|Oh!|Oi!|Danger!|Woah!|Good Grief!)\\s+You\\sdug\\sout.*") ||
                 unformatted.startsWith("You dug out a Griffin Burrow") ||
                 unformatted.startsWith("You finished the Griffin burrow chain")) {
             reset();
