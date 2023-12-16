@@ -1,6 +1,5 @@
 package mrfast.sbf.features.render;
 
-import com.google.common.collect.Lists;
 import com.mojang.realmsclient.gui.ChatFormatting;
 import mrfast.sbf.SkyblockFeatures;
 import mrfast.sbf.core.SkyblockInfo;
@@ -12,7 +11,6 @@ import mrfast.sbf.utils.ScoreboardUtil;
 import mrfast.sbf.utils.Utils;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.monster.EntityEnderman;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityBeacon;
 import net.minecraft.util.AxisAlignedBB;
@@ -21,10 +19,8 @@ import net.minecraftforge.client.event.ClientChatReceivedEvent;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class SlayerFeatures {
     SkyblockMobDetector.SkyblockMob spawnedSlayer = null;
@@ -76,7 +72,17 @@ public class SlayerFeatures {
 
         if(!SkyblockFeatures.config.highlightBeacons || !SkyblockInfo.map.equals("The End")) return;
         for(TileEntity e:Utils.GetMC().theWorld.loadedTileEntityList) {
-            if(e instanceof TileEntityBeacon) {
+            List<SkyblockMobDetector.SkyblockMob> nearbySlayers = SkyblockMobDetector.getLoadedSkyblockMobs().stream().filter((sbMob)->sbMob.skyblockMob.getDistanceToEntity(Utils.GetMC().thePlayer)<20).collect(Collectors.toList());
+            boolean slayerNearby = false;
+            for(SkyblockMobDetector.SkyblockMob sbMob:nearbySlayers) {
+                if(sbMob==null || sbMob.getSkyblockMobId()==null) continue;
+                if(sbMob.getSkyblockMobId().contains("Voidgloom")) {
+                    slayerNearby = true;
+                    break;
+                }
+            }
+
+            if(e instanceof TileEntityBeacon && Utils.GetMC().thePlayer.getDistanceSq(e.getPos())<400 && slayerNearby) {
                 BlockPos p = e.getPos();
                 AxisAlignedBB aabb = new AxisAlignedBB(p.getX(), p.getY(), p.getZ(), p.getX()+1, p.getY()+1, p.getZ()+1);
                 if(SkyblockFeatures.config.highlightBeaconsThroughWalls) GlStateManager.disableDepth();

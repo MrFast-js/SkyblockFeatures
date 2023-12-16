@@ -24,15 +24,6 @@ public class Config extends ConfigManager {
     )
     public boolean updateNotify = true;
     @Property(
-            type = PropertyType.TOGGLE,
-            name = "§eDeveloper Mode",
-            description = "§eDeveloper Mode§r causes more logs to happen, aswell as enabling certain debug features.",
-            category = "§2§rCustomization",
-            subcategory = "Mod"
-    )
-    public boolean developerMode = false;
-
-    @Property(
             type = PropertyType.DROPDOWN,
             name = "Update Check Type",
             description = "Choose between Full and Beta Releases for update checks",
@@ -41,6 +32,15 @@ public class Config extends ConfigManager {
             options = {"Full Releases", "Beta Releases"}
     )
     public int updateCheckType = 0;
+    @Property(
+            type = PropertyType.TOGGLE,
+            name = "§cDeveloper Mode",
+            description = "§eDeveloper Mode§r causes more logs to happen, aswell as enabling certain debug features.",
+            category = "§2§rCustomization",
+            subcategory = "Mod"
+    )
+    public boolean developerMode = false;
+
 
     @Property(
             type = PropertyType.TOGGLE,

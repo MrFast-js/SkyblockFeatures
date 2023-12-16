@@ -69,8 +69,6 @@ public class TrashHighlighter {
     }
 
     public static void refreshTrashList() {
-        Utils.sendMessage(ChatFormatting.GREEN+"Your Trash List has been updated!");
-        Utils.playSound("random.orb", 0.1);
         trashList.clear();
         try (BufferedReader reader = new BufferedReader(new FileReader(trashFile))) {
             String line;
@@ -96,6 +94,8 @@ public class TrashHighlighter {
                             if (event.kind() == StandardWatchEventKinds.ENTRY_MODIFY) {
                                 // File modified, refresh the array
                                 refreshTrashList();
+                                Utils.sendMessage(ChatFormatting.GREEN+"Your Trash List has been updated!");
+                                Utils.playSound("random.orb", 0.1);
                             }
                         }
                         key.reset();
