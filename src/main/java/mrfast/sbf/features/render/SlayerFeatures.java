@@ -101,9 +101,8 @@ public class SlayerFeatures {
         if(msg.trim().startsWith("SLAYER QUEST STARTED!")) {
             slayerStarted = System.currentTimeMillis();
         }
-        if(msg.trim().startsWith("NICE! SLAYER BOSS SLAIN!")) {
+        if(msg.trim().startsWith("NICE! SLAYER BOSS SLAIN!") || msg.trim().startsWith("SLAYER QUEST COMPLETE!")) {
             if(SkyblockFeatures.config.slayerTimer) {
-
                 double spawn = System.currentTimeMillis() - slayerStarted;
                 double spawnTime = Math.ceil(spawn / 1000);
                 double kill = System.currentTimeMillis() - slayerSpawned;
