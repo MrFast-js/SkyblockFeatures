@@ -135,7 +135,7 @@ public class MythologicalEvent {
 
                 if (dist > 2 && !particles.contains(new Vec3(pos))) {
                     if (closest != null) {
-                        if (Utils.GetMC().thePlayer.getDistanceSq(closest.pos) < 50) {
+                        if (Utils.GetMC().thePlayer.getDistance(closest.pos.getX(),closest.pos.getY(),closest.pos.getZ()) < 30) {
                             return;
                         }
                     }
