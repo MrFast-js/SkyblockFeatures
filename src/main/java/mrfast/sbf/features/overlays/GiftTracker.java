@@ -1,15 +1,8 @@
 package mrfast.sbf.features.overlays;
 
-import java.awt.Color;
-import java.time.LocalDate;
-import java.time.Month;
-import java.time.Year;
-import java.util.*;
-
 import com.mojang.realmsclient.gui.ChatFormatting;
-
 import mrfast.sbf.SkyblockFeatures;
-import mrfast.sbf.core.SkyblockInfo;
+import mrfast.sbf.core.ConfigManager;
 import mrfast.sbf.events.CheckRenderEntityEvent;
 import mrfast.sbf.events.GuiContainerEvent;
 import mrfast.sbf.events.PacketEvent;
@@ -26,7 +19,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityArmorStand;
-import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.play.server.S2APacketParticles;
 import net.minecraft.util.AxisAlignedBB;
@@ -37,6 +29,13 @@ import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
+
+import java.awt.*;
+import java.time.Year;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 public class GiftTracker {
     public static ArrayList<Entity> saintJerryGifts = new ArrayList<Entity>();
@@ -100,7 +99,7 @@ public class GiftTracker {
         String clean = Utils.cleanColor(event.message.getUnformattedText());
         if(clean.startsWith("+1 Unique Gift given!")) {
             SkyblockFeatures.config.uniqueGiftsGiven++;
-            SkyblockFeatures.config.forceSave();
+            ConfigManager.saveConfig(SkyblockFeatures.config);
         }
     }
 
@@ -116,7 +115,7 @@ public class GiftTracker {
                     if(line.startsWith("Unique Players Gifted:")) {
                         int gifts = Integer.parseInt(line.replaceAll("[^0-9]",""));
                         SkyblockFeatures.config.uniqueGiftsGiven = gifts;
-                        SkyblockFeatures.config.forceSave();
+                        ConfigManager.saveConfig(SkyblockFeatures.config);
                         break;
                     }
                 }

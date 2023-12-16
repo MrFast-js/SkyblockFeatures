@@ -1,5 +1,6 @@
 package mrfast.sbf.events;
 
+import mrfast.sbf.core.ConfigManager;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
@@ -45,7 +46,8 @@ public class ChatEventListener {
             Utils.sendMessage("§bThank You for downloading Skyblock Features!§e Do /sbf for config!");
 
             SkyblockFeatures.config.firstLaunch = false;
-            SkyblockFeatures.config.forceSave();
+            ConfigManager.saveConfig(SkyblockFeatures.config);
+
         }
     }
 }

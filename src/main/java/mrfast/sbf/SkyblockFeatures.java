@@ -1,40 +1,37 @@
 package mrfast.sbf;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.InputStreamReader;
-import java.net.URL;
-import java.util.*;
-
 import com.mojang.realmsclient.gui.ChatFormatting;
-import mrfast.sbf.core.*;
-import mrfast.sbf.features.dungeons.*;
-import mrfast.sbf.features.items.CooldownTracker;
-import mrfast.sbf.utils.OutlineUtils;
-import net.minecraft.entity.Entity;
-import net.minecraftforge.event.world.WorldEvent;
-import net.minecraftforge.fml.common.ModContainer;
-import org.lwjgl.input.Keyboard;
-
 import mrfast.sbf.commands.*;
+import mrfast.sbf.core.*;
 import mrfast.sbf.events.ChatEventListener;
 import mrfast.sbf.events.SecondPassedEvent;
-import mrfast.sbf.features.statDisplays.*;
+import mrfast.sbf.features.dungeons.*;
 import mrfast.sbf.features.dungeons.solvers.*;
-import mrfast.sbf.features.events.*;
-import mrfast.sbf.features.items.*;
-import mrfast.sbf.features.mining.*;
+import mrfast.sbf.features.events.JerryTimer;
+import mrfast.sbf.features.events.MayorJerry;
+import mrfast.sbf.features.events.MythologicalEvent;
+import mrfast.sbf.features.items.CooldownTracker;
+import mrfast.sbf.features.items.FireVeilTimer;
+import mrfast.sbf.features.items.HideGlass;
+import mrfast.sbf.features.items.ItemFeatures;
+import mrfast.sbf.features.mining.CommisionsTracker;
+import mrfast.sbf.features.mining.HighlightCobblestone;
+import mrfast.sbf.features.mining.MetalDetectorSolver;
+import mrfast.sbf.features.mining.MiningFeatures;
 import mrfast.sbf.features.misc.*;
-import mrfast.sbf.features.misc.UltrasequencerSolver;
 import mrfast.sbf.features.overlays.*;
-import mrfast.sbf.features.overlays.maps.*;
+import mrfast.sbf.features.overlays.maps.CrimsonMap;
+import mrfast.sbf.features.overlays.maps.CrystalHollowsMap;
+import mrfast.sbf.features.overlays.maps.DwarvenMap;
 import mrfast.sbf.features.overlays.menuOverlay.*;
 import mrfast.sbf.features.render.*;
+import mrfast.sbf.features.statDisplays.*;
 import mrfast.sbf.features.trackers.*;
 import mrfast.sbf.gui.GuiManager;
 import mrfast.sbf.gui.ProfileViewerUtils;
 import mrfast.sbf.utils.APIUtils;
 import mrfast.sbf.utils.CapeUtils;
+import mrfast.sbf.utils.OutlineUtils;
 import mrfast.sbf.utils.Utils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
@@ -42,15 +39,26 @@ import net.minecraft.command.ICommand;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.client.ClientCommandHandler;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
+import net.minecraftforge.fml.common.ModContainer;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
+import org.lwjgl.input.Keyboard;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.InputStreamReader;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 @Mod(modid = SkyblockFeatures.MODID, name = SkyblockFeatures.MOD_NAME, acceptedMinecraftVersions = "[1.8.9]", clientSideOnly = true)
 public class SkyblockFeatures {
@@ -68,6 +76,7 @@ public class SkyblockFeatures {
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event) {
         if (!modDir.exists()) modDir.mkdirs();
+        TrashHighlighter.initTrashFile();
         GUIMANAGER = new GuiManager();
     }
 
@@ -80,8 +89,13 @@ public class SkyblockFeatures {
         initBlacklist(playerUUID);
 
         // Save the config
-        config.preload();
-        SkyblockFeatures.config.forceSave();
+        try {
+            ConfigManager.loadConfiguration(config);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+        // Modify configurableClass properties manually or programmatically
 
         // Features to load
         List<Object> features = Arrays.asList(
@@ -106,6 +120,7 @@ public class SkyblockFeatures {
                 new SkyblockMobDetector(),
                 new CooldownTracker(),
                 new FireVeilTimer(),
+                new TrashHighlighter(),
                 new SpeedDisplay(),
                 new EffectiveHealthDisplay(),
                 new ManaDisplay(),
@@ -178,11 +193,11 @@ public class SkyblockFeatures {
         SkyblockFeatures.config.timeStartedUp++;
         SkyblockFeatures.config.aucFlipperEnabled = false;
 
-        SkyblockFeatures.config.forceSave();
+        ConfigManager.saveConfig(SkyblockFeatures.config);
         System.out.println("You have started Skyblock Features up " + SkyblockFeatures.config.timeStartedUp + " times!");
 
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-            SkyblockFeatures.config.forceSave();
+            ConfigManager.saveConfig(SkyblockFeatures.config);
             System.out.println("Saving Skyblock Features Config...");
         }));
     }

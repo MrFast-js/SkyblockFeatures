@@ -11,6 +11,9 @@ import java.util.List;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
+import mrfast.sbf.core.ConfigManager;
+import mrfast.sbf.core.ConfigManager.PropertyType;
+import mrfast.sbf.core.ConfigManager.Property;
 import com.mojang.realmsclient.gui.ChatFormatting;
 import gg.essential.elementa.ElementaVersion;
 import gg.essential.elementa.UIComponent;
@@ -28,17 +31,10 @@ import gg.essential.elementa.constraints.animation.Animations;
 import gg.essential.elementa.effects.OutlineEffect;
 import gg.essential.elementa.effects.RecursiveFadeEffect;
 import gg.essential.elementa.effects.ScissorEffect;
-import gg.essential.vigilance.data.Property;
-import gg.essential.vigilance.data.PropertyType;
 import gg.essential.vigilance.gui.VigilancePalette;
 import gg.essential.vigilance.gui.common.input.UITextInput;
 import gg.essential.vigilance.gui.common.shadow.ShadowIcon;
-import gg.essential.vigilance.gui.settings.CheckboxComponent;
-import gg.essential.vigilance.gui.settings.ColorComponent;
-import gg.essential.vigilance.gui.settings.SelectorComponent;
-import gg.essential.vigilance.gui.settings.SliderComponent;
-import gg.essential.vigilance.gui.settings.SwitchComponent;
-import gg.essential.vigilance.gui.settings.TextComponent;
+import gg.essential.vigilance.gui.settings.*;
 import gg.essential.vigilance.utils.ResourceImageFactory;
 import kotlin.Unit;
 import mrfast.sbf.SkyblockFeatures;
@@ -57,7 +53,7 @@ public class ConfigGui extends WindowScreen {
 
     @Override
 	public void onScreenClose() {
-		SkyblockFeatures.config.forceSave();
+        ConfigManager.saveConfig(SkyblockFeatures.config);
         if(quickSwapping) {
             quickSwapping = false;
         } else {
@@ -416,6 +412,24 @@ public class ConfigGui extends WindowScreen {
             }
         }
     }
+
+    private void processProperty(Property feature, Object value) {
+        // Create category if not exist already
+        if (!categories.containsKey(feature.category())) {
+            categories.put(feature.category(), new TreeMap<>());
+        }
+        SortedMap<String, List<Property>> category = categories.get(feature.category());
+
+        // Create subcategory if not exist already
+        if (!category.containsKey(feature.subcategory())) {
+            category.put(feature.subcategory(), new ArrayList<>());
+        }
+        List<Property> subcategory = category.get(feature.subcategory());
+
+        // You can add field or method information to your data structures without invoking methods
+        valueMap.put(feature, value);
+        subcategory.add(feature);
+    }
     public static class ExpandableComponent {
         public Property parent;
         Boolean enabled = false;
@@ -429,18 +443,15 @@ public class ConfigGui extends WindowScreen {
     public boolean shouldHideFeature(Property feature) {
         boolean ignoreFeature = true;
 
-        // Check if the feature has search tags
-        if (feature.searchTags().length != 0) {
-            String tag = feature.searchTags()[0];
+        String parentName = feature.parentName();
 
-            // Check if the parent element exists
-            if (parentElements.containsKey(tag)) {
-                Property parent = parentElements.get(tag).parent;
+        // Check if the parent element exists
+        if (parentElements.containsKey(parentName)) {
+            Property parent = parentElements.get(parentName).parent;
 
-                // Recursively check parent elements
-                if (parent != null) {
-                    ignoreFeature = shouldHideFeature(parent);
-                }
+            // Recursively check parent elements
+            if (parent != null) {
+                ignoreFeature = shouldHideFeature(parent);
             }
         }
 
@@ -560,7 +571,7 @@ public class ConfigGui extends WindowScreen {
                     }
 
                     // Draw Feature description
-                    if(feature.type() == PropertyType.PARAGRAPH) {
+                    if(feature.type() == PropertyType.TEXT) {
                         // If its a paragraph only use ~50% for the description for as to not overlap
                         new UIWrappedText(feature.description()).setChildOf(exampleFeature)
                             .setX(new PixelConstraint(4f))
@@ -579,63 +590,74 @@ public class ConfigGui extends WindowScreen {
                         text.setHeight(new PixelConstraint(text.getHeight()+6));
                     }
 
+                    if(feature.type() == PropertyType.BUTTON) {
+                        UIComponent button = new ShadowIcon(new ResourceImageFactory("/assets/skyblockfeatures/gui/default_button.png", true), false)
+                                .setHeight(new PixelConstraint(24f))
+                                .setWidth(new PixelConstraint(88.5f))
+                                .setY(new CenterConstraint())
+                                .setX(new PixelConstraint(15f,true))
+                                .setChildOf(exampleFeature);
+
+                        UIComponent text = new UIText(feature.placeholder()).setChildOf(button).setX(new CenterConstraint()).setY(new CenterConstraint());
+
+                        button.onMouseClickConsumer((event)->{
+                            ((Runnable) valueMap.get(feature)).run();
+                        });
+                    }
+
                     // Handler for toggle features
-                    if(feature.type() == PropertyType.SWITCH) {
+                    if(feature.type() == PropertyType.TOGGLE) {
                         // Add the switch component
                         UIComponent comp = new SwitchComponent((Boolean) valueMap.get(feature))
                                 .setChildOf(exampleFeature);
                         // Search tags are used because custom properties cannot be added onto one feature easily,
                         // So im using the first search tag to set it either as a 'parent' or the name of a feature that has 'parent'
-                        if(feature.searchTags().length>0) {
-                            String tag = feature.searchTags()[0];
+                        if (feature.hasOptions()) {
+                            // Create settings gear
+                            ConstantColorConstraint unhovered = new ConstantColorConstraint(new Color(200,200,200));
+                            ConstantColorConstraint hovered = new ConstantColorConstraint(new Color(255,255,255));
 
-                            if (tag.equals("parent")) {
-                                // Create settings gear
-                                ConstantColorConstraint unhovered = new ConstantColorConstraint(new Color(200,200,200));
-                                ConstantColorConstraint hovered = new ConstantColorConstraint(new Color(255,255,255));
+                            UIComponent settingsGear = UIImage.ofResourceCached("/assets/skyblockfeatures/gui/gear.png")
+                                    .setX(new PixelConstraint(50f,true))
+                                    .setY(new CenterConstraint())
+                                    .setHeight(new PixelConstraint(16f))
+                                    .setColor(unhovered)
+                                    .setWidth(new PixelConstraint(16f))
+                                    .setChildOf(exampleFeature);
 
-                                UIComponent settingsGear = UIImage.ofResourceCached("/assets/skyblockfeatures/gui/gear.png")
-                                        .setX(new PixelConstraint(50f,true))
-                                        .setY(new CenterConstraint())
-                                        .setHeight(new PixelConstraint(16f))
-                                        .setColor(unhovered)
-                                        .setWidth(new PixelConstraint(16f))
-                                        .setChildOf(exampleFeature);
+                            settingsGear.onMouseEnterRunnable(()->{
+                                AnimatingConstraints anim = settingsGear.makeAnimation();
+                                anim.setColorAnimation(Animations.OUT_EXP,0.5f,hovered);
+                                settingsGear.animateTo(anim);
+                            });
+                            settingsGear.onMouseLeaveRunnable(()-> {
+                                AnimatingConstraints anim = settingsGear.makeAnimation();
+                                anim.setColorAnimation(Animations.OUT_EXP,0.5f,unhovered);
+                                settingsGear.animateTo(anim);
+                            });
 
-                                settingsGear.onMouseEnterRunnable(()->{
-                                    AnimatingConstraints anim = settingsGear.makeAnimation();
-                                    anim.setColorAnimation(Animations.OUT_EXP,0.5f,hovered);
-                                    settingsGear.animateTo(anim);
-                                });
-                                settingsGear.onMouseLeaveRunnable(()-> {
-                                    AnimatingConstraints anim = settingsGear.makeAnimation();
-                                    anim.setColorAnimation(Animations.OUT_EXP,0.5f,unhovered);
-                                    settingsGear.animateTo(anim);
-                                });
+                            // When the gear is clicked -> go through its set children from 'parentElements' and hide/unhide them
+                            settingsGear.onMouseClickConsumer((event)->{
+                                Boolean val = !expandedFeatures.getOrDefault(feature.name(),false);
 
-                                // When the gear is clicked -> go through its set children from 'parentElements' and hide/unhide them
-                                settingsGear.onMouseClickConsumer((event)->{
-                                    Boolean val = !expandedFeatures.getOrDefault(feature.name(),false);
+                                expandedFeatures.put(feature.name(),val);
+                                ExpandableComponent parent = parentElements.get(feature.name());
 
-                                    expandedFeatures.put(feature.name(),val);
-                                    ExpandableComponent parent = parentElements.get(feature.name());
-
-                                    for(UIComponent child : parent.children.values()) {
-                                        if(val) {
-                                            child.setWidth(new RelativeConstraint(1f));
-                                            UIComponent child1 = child.getChildren().get(0);
-                                            child.unhide(true);
-                                            child.setHeight(new PixelConstraint(child1.getHeight()));
-                                        } else {
-                                            child.setWidth(new PixelConstraint(0f));
-                                            child.hide();
-                                            child.setHeight(new PixelConstraint(0f));
-                                        }
+                                for(UIComponent child : parent.children.values()) {
+                                    if(val) {
+                                        child.setWidth(new RelativeConstraint(1f));
+                                        UIComponent child1 = child.getChildren().get(0);
+                                        child.unhide(true);
+                                        child.setHeight(new PixelConstraint(child1.getHeight()));
+                                    } else {
+                                        child.setWidth(new PixelConstraint(0f));
+                                        child.hide();
+                                        child.setHeight(new PixelConstraint(0f));
                                     }
-                                });
-                                // Set height -16 because the gear icon messes up the heigh when using ChildBasedConstraint
-                                exampleFeature.setHeight(new PixelConstraint(exampleFeature.getHeight()-16f));
-                            }
+                                }
+                            });
+                            // Set height -16 because the gear icon messes up the heigh when using ChildBasedConstraint
+                            exampleFeature.setHeight(new PixelConstraint(exampleFeature.getHeight()-16f));
                         }
                         // Set the variable when the toggle switch is used
                         comp.onMouseClickConsumer((event)->{
@@ -650,14 +672,8 @@ public class ConfigGui extends WindowScreen {
                         final UIComponent finalColorPreview = colorPreview;
 
                         comp.onMouseClick((event,a)->{
-                            boolean featureOption = false;
-                            if(feature.searchTags().length>0) {
-                                String tag = feature.searchTags()[0];
+                            boolean featureOption = !feature.parentName().isEmpty();
 
-                                if (!tag.equals("parent")) {
-                                    featureOption = true;
-                                }
-                            }
                             AnimatingConstraints anim = border.makeAnimation();
                             if(featureOption) {
                                 if(feature.type() == PropertyType.COLOR) {
@@ -686,7 +702,7 @@ public class ConfigGui extends WindowScreen {
                         });
                     }
 
-                    if(feature.type() == PropertyType.SELECTOR) {
+                    if(feature.type() == PropertyType.DROPDOWN) {
                         UIComponent comp = new SelectorComponent((int) valueMap.get(feature),getOptions(feature.name())).setChildOf(exampleFeature);
                         ((SelectorComponent) comp).onValueChange((value)->{
                             setVariable(feature.name(),value);
@@ -695,10 +711,7 @@ public class ConfigGui extends WindowScreen {
                     }
 
                     if(feature.type() == PropertyType.TEXT) {
-                        UIComponent comp = new TextComponent((String) valueMap.get(feature), "", false, false).setChildOf(exampleFeature);
-                        if(feature.name().contains("API")) {
-                            comp = new TextComponent((String) valueMap.get(feature), "", false, true).setChildOf(exampleFeature);
-                        }
+                        UIComponent comp = new TextComponent((String) valueMap.get(feature), "", true, false).setChildOf(exampleFeature);
                         ((TextComponent) comp).onValueChange((value)->{
                             setVariable(feature.name(),value);
                             return Unit.INSTANCE;
@@ -749,14 +762,6 @@ public class ConfigGui extends WindowScreen {
                         });
                     }
 
-                    if(feature.type() == PropertyType.PARAGRAPH) {
-                        UIComponent comp = new TextComponent((String) valueMap.get(feature), "", true, false).setChildOf(exampleFeature);
-                        ((TextComponent) comp).onValueChange((value)->{
-                            setVariable(feature.name(),value);
-                            return Unit.INSTANCE;
-                        });
-                    }
-
                     if(feature.type() == PropertyType.SLIDER) {
                         UIComponent comp = new SliderComponent((Integer) valueMap.get(feature), feature.min(), feature.max()).setChildOf(exampleFeature);
                         ((SliderComponent) comp).onValueChange((value)->{
@@ -764,37 +769,36 @@ public class ConfigGui extends WindowScreen {
                             return Unit.INSTANCE;
                         });
                     }
+
                     border.setHeight(new PixelConstraint(exampleFeature.getHeight()));
 
-                    // Adds components to 'parentElements' accordingly
-                    if(feature.searchTags().length>0) {
-                        String tag = feature.searchTags()[0];
-                        if(tag.equals("parent")) {
-                            Boolean enabled = (Boolean) getVariable(feature.name());
-                            ExpandableComponent comp = new ExpandableComponent();
-                            comp.enabled = enabled;
-                            comp.parent = feature;
-                            parentElements.put(feature.name(),comp);
-                        } else {
-                            border.setWidth(new RelativeConstraint(.85f));
-                            exampleFeature.setWidth(new RelativeConstraint(1f));
+                    String parentName = feature.parentName();
 
-                            UIComponent test = new UIBlock(clear)
-                                    .setChildOf(loadedFeaturesList)
-                                    .setWidth(new PixelConstraint(0f))
-                                    .setHeight(new PixelConstraint(0f))
-                                    .setY(new SiblingConstraint(Margin))
-                                    .enableEffect(new ScissorEffect());
+                    if(feature.hasOptions()) {
+                        Boolean enabled = (Boolean) getVariable(feature.name());
+                        ExpandableComponent comp = new ExpandableComponent();
+                        comp.enabled = enabled;
+                        comp.parent = feature;
+                        parentElements.put(feature.name(),comp);
+                    } else if(!feature.parentName().isEmpty()) {
+                        border.setWidth(new RelativeConstraint(.85f));
+                        exampleFeature.setWidth(new RelativeConstraint(1f));
 
-                            if(!searchQuery.isEmpty()) {
-                                test.setWidth(new RelativeConstraint(1f));
-                                test.setHeight(new PixelConstraint(border.getHeight()));
-                            }
-                            loadedFeaturesList.removeChild(border);
-                            test.addChild(border);
-                            if(parentElements.containsKey(tag)) {
-                                parentElements.get(tag).children.put(feature.name(),test);
-                            }
+                        UIComponent test = new UIBlock(clear)
+                                .setChildOf(loadedFeaturesList)
+                                .setWidth(new PixelConstraint(0f))
+                                .setHeight(new PixelConstraint(0f))
+                                .setY(new SiblingConstraint(Margin))
+                                .enableEffect(new ScissorEffect());
+
+                        if(!searchQuery.isEmpty()) {
+                            test.setWidth(new RelativeConstraint(1f));
+                            test.setHeight(new PixelConstraint(border.getHeight()));
+                        }
+                        loadedFeaturesList.removeChild(border);
+                        test.addChild(border);
+                        if(parentElements.containsKey(parentName)) {
+                            parentElements.get(parentName).children.put(feature.name(),test);
                         }
                     }
                 }
