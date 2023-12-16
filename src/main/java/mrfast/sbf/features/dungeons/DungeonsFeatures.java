@@ -252,26 +252,6 @@ public class DungeonsFeatures {
         }
     }
 
-    @SubscribeEvent
-    public void onDrawSlots(GuiContainerEvent.DrawSlotEvent.Pre event) {
-        if (!Utils.inSkyblock) return;
-        if(!event.slot.getHasStack()) return;
-        ItemStack stack = event.slot.getStack();
-        int x = event.slot.xDisplayPosition;
-        int y = event.slot.yDisplayPosition;
-        String n = ItemUtils.getSkyBlockItemID(stack);
-        String i = Utils.cleanColor(stack.getDisplayName());
-
-        if(SkyblockFeatures.config.highlightTrash && n != null) {
-            if(n.equals("CRYPT_DREADLORD_SWORD")||n.equals("MACHINE_GUN_BOW")||i.contains("Healing VIII")||n.equals("DUNGEON_LORE_PAPER")||n.equals("ENCHANTED_BONE")||n.equals("CRYPT_BOW")||n.contains("ZOMBIE_SOLDIER")||n.contains("SKELETON_SOLDIER")||n.contains("SKELETON_MASTER")||n.contains("SUPER_HEAVY")||n.contains("INFLATABLE_JERRY")||n.contains("DUNGEON_TRAP")||n.contains("SKELETOR")||n.contains("PREMIUM_FLESH")||n.contains("TRAINING")||n.contains("CONJURING_SWORD")||n.contains("FEL_PEARL")||n.contains("ZOMBIE_KNIGHT")||n.contains("ENCHANTED_ROTTEN_FLESH")) {
-                Gui.drawRect(x, y, x + 16, y + 1, new Color(255, 0, 0, 255).getRGB());
-                Gui.drawRect(x, y, x + 1, y + 16, new Color(255, 0, 0, 255).getRGB());
-                Gui.drawRect(x+15, y, x+16, y + 16, new Color(255, 0, 0, 255).getRGB());
-                Gui.drawRect(x, y+15, x + 16, y + 16, new Color(255, 85, 0, 255).getRGB());
-            }
-        }
-    }
-
     static {
         new BlessingViewer();
     }
