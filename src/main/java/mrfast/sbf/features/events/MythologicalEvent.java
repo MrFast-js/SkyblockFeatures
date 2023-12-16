@@ -175,15 +175,14 @@ public class MythologicalEvent {
         }
 
         String unformatted = Utils.cleanColor(event.message.getUnformattedText());
-        if (unformatted.startsWith("You dug out a Griffin Burrow") || unformatted.startsWith("You finished the Griffin burrow chain")) {
-            reset(true);
-        }
-        if (unformatted.startsWith("You dug out a Griffin Burrow") || unformatted.startsWith("You finished the Griffin burrow chain") || unformatted.startsWith("Wow! You dug out") || unformatted.startsWith("Uh oh! You dug out") || unformatted.startsWith("Oh! You dug out") || unformatted.startsWith("Oi! You dug out") || unformatted.startsWith("Danger! You dug out") || unformatted.startsWith("Woah! You dug out") || unformatted.startsWith("Good Grief! You dug out")) {
-            reset(false);
+        if (unformatted.matches("^(Wow!|Uh oh!|Oh!|Oi!|Danger!|Woah!|Good Grief!)\\s+You\\sdug\\sout.*") ||
+                unformatted.startsWith("You dug out a Griffin Burrow") ||
+                unformatted.startsWith("You finished the Griffin burrow chain")) {
+            reset();
         }
     }
 
-    public void reset(boolean silent) {
+    public void reset() {
         endPos = null;
         startPos = null;
         particles.clear();
@@ -198,7 +197,6 @@ public class MythologicalEvent {
                 Burrow closestBurrow = sortedBurrows.get(0);
                 if (closestBurrow != null) {
                     prevBurrow = closestBurrow.pos;
-                    if (!silent) sendNotification = true;
                 }
                 sortedBurrows = sortedBurrows.stream().filter((a) -> Utils.GetMC().thePlayer.getDistanceSq(a.pos) > 25).collect(Collectors.toList());
                 burrows = sortedBurrows;
