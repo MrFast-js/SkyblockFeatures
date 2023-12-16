@@ -130,8 +130,7 @@ public class MetalDetectorSolver {
 
     @SubscribeEvent
     public void onRenderWorld(ClientTickEvent event) {
-        if (Utils.GetMC().thePlayer == null || !SkyblockFeatures.config.MetalDetectorSolver || !CrystalHollowsMap.inCrystalHollows)
-            return;
+        if (Utils.GetMC().thePlayer == null || !SkyblockFeatures.config.MetalDetectorSolver || !CrystalHollowsMap.inCrystalHollows) return;
 
         ticks++;
         if (ticks >= 4 && Utils.GetMC().thePlayer.getHeldItem() != null && Utils.GetMC().thePlayer.getHeldItem().getDisplayName().contains("Detector") && distanceToTreasure != 0 && center != null) {

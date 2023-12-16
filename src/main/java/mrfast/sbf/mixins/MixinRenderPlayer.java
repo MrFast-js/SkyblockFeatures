@@ -22,7 +22,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 
 @Mixin(RenderPlayer.class)
-public abstract class MixinRenderPlayer extends MixinRendererLivingEntity {
+public abstract class MixinRenderPlayer {
     @Inject(method = { "preRenderCallback(Lnet/minecraft/client/entity/AbstractClientPlayer;F)V" }, at = { @At("HEAD") })
     public void beforeRender(AbstractClientPlayer entitylivingbaseIn, float partialTickTime, CallbackInfo ci) {
         if (SkyblockFeatures.config.DisguisePlayersAs == 7 && SkyblockFeatures.config.playerDiguiser && !Utils.isNPC(entitylivingbaseIn) && Utils.inSkyblock) {
