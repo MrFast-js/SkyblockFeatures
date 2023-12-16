@@ -78,6 +78,8 @@ public class SkyblockFeatures {
         if (!modDir.exists()) modDir.mkdirs();
         TrashHighlighter.initTrashFile();
         GUIMANAGER = new GuiManager();
+        // Load the config
+        ConfigManager.loadConfiguration(config);
     }
 
     @Mod.EventHandler
@@ -87,13 +89,6 @@ public class SkyblockFeatures {
 
         // Load blacklist
         initBlacklist(playerUUID);
-
-        // Save the config
-        try {
-            ConfigManager.loadConfiguration(config);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
 
         // Modify configurableClass properties manually or programmatically
 

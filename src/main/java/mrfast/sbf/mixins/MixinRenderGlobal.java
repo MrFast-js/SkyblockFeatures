@@ -1,10 +1,25 @@
 package mrfast.sbf.mixins;
 
-import java.awt.*;
-import java.nio.FloatBuffer;
-import java.util.List;
-
+import mrfast.sbf.SkyblockFeatures;
+import mrfast.sbf.core.SkyblockInfo;
+import mrfast.sbf.utils.ItemRarity;
+import mrfast.sbf.utils.ItemUtils;
 import mrfast.sbf.utils.OutlineUtils;
+import mrfast.sbf.utils.Utils;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.RenderGlobal;
+import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.client.renderer.culling.ICamera;
+import net.minecraft.client.renderer.entity.RenderManager;
+import net.minecraft.client.settings.KeyBinding;
+import net.minecraft.client.shader.Framebuffer;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.item.EntityItem;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.scoreboard.ScorePlayerTeam;
+import net.minecraft.scoreboard.Team.EnumVisible;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
@@ -17,27 +32,9 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
-import mrfast.sbf.SkyblockFeatures;
-import mrfast.sbf.core.SkyblockInfo;
-import mrfast.sbf.utils.ItemRarity;
-import mrfast.sbf.utils.ItemUtils;
-import mrfast.sbf.utils.Utils;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.EntityPlayerSP;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.RenderGlobal;
-import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.renderer.culling.ICamera;
-import net.minecraft.client.renderer.entity.RenderManager;
-import net.minecraft.client.settings.KeyBinding;
-import net.minecraft.client.shader.Framebuffer;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.item.EntityItem;
-import net.minecraft.entity.monster.EntityEnderman;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.scoreboard.ScorePlayerTeam;
-import net.minecraft.scoreboard.Team.EnumVisible;
+import java.awt.*;
+import java.nio.FloatBuffer;
+import java.util.List;
 
 
 /**
@@ -155,7 +152,9 @@ public abstract class MixinRenderGlobal {
                         if(!outline.throughWalls) {
                             if(!Utils.GetMC().thePlayer.canEntityBeSeen(outline.entity)) continue;
                         }
-                        if(outline.outlineColor!=null) setColor(outline.outlineColor);
+                        if(outline.outlineColor!=null) {
+                            setColor(outline.outlineColor);
+                        }
                         renderManager.renderEntityStatic(entity,partialTicks,true);
                     }
 
@@ -199,7 +198,6 @@ public abstract class MixinRenderGlobal {
             GlStateManager.enableAlpha();
 
             GlStateManager.popMatrix();
-
         }
 
     }

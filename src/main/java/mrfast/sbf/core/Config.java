@@ -1152,7 +1152,7 @@ public class Config extends ConfigManager {
     @Property(
             type = PropertyType.TOGGLE,
             name = "Highlight Trash",
-            description = "Draws a red box around items that just fill up your inventory. \nExample §aDreadlord Sword§r, §aMachine Gun Bow",
+            description = "Draws a red box around items that just fill up your inventory.",
             category = "§1§rDungeons",
             subcategory = "Miscellaneous",
             hasOptions = true
@@ -1162,7 +1162,7 @@ public class Config extends ConfigManager {
     @Property(
             type = PropertyType.BUTTON,
             name = "§eEdit Trash",
-            description = "",
+            description = "The trash list will be updated once you save the file. Trash is item whos Skyblock ID contains any of the entries.",
             category = "§1§rDungeons",
             subcategory = "Miscellaneous",
             placeholder = "§cEdit Trash",

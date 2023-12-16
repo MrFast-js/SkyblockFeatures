@@ -62,7 +62,6 @@ public class TrashHighlighter {
                 e.printStackTrace();
             }
         } else {
-
             refreshTrashList();
             watchFileForChanges();
         }
@@ -94,13 +93,11 @@ public class TrashHighlighter {
                             if (event.kind() == StandardWatchEventKinds.ENTRY_MODIFY) {
                                 // File modified, refresh the array
                                 refreshTrashList();
-                                Utils.sendMessage(ChatFormatting.GREEN+"Your Trash List has been updated!");
-                                Utils.playSound("random.orb", 0.1);
                             }
                         }
                         key.reset();
                     }
-                } catch (InterruptedException e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             });
@@ -130,7 +127,14 @@ public class TrashHighlighter {
         String i = Utils.cleanColor(stack.getDisplayName());
 
         if(SkyblockFeatures.config.highlightTrash && n != null) {
-            if(trashList.contains(n)) {
+            boolean trash = false;
+            for (String s : trashList) {
+                if (n.contains(s)) {
+                    trash = true;
+                    break;
+                }
+            }
+            if(trash) {
                 Gui.drawRect(x, y, x + 16, y + 1, new Color(255, 0, 0, 255).getRGB());
                 Gui.drawRect(x, y, x + 1, y + 16, new Color(255, 0, 0, 255).getRGB());
                 Gui.drawRect(x+15, y, x+16, y + 16, new Color(255, 0, 0, 255).getRGB());
