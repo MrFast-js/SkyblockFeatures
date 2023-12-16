@@ -19,7 +19,6 @@
     "MixinNetHandlerPlayClient",
     "MixinNetworkManager",
     "MixinRender",
-    "MixinRendererLivingEntity",
     "MixinRenderPlayer",
     "MixinRenderGlobal"
   ],
