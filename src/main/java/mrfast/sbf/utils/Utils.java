@@ -14,6 +14,7 @@ import com.google.gson.JsonObject;
 
 import com.mojang.realmsclient.gui.ChatFormatting;
 
+import mrfast.sbf.SkyblockFeatures;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.network.NetworkPlayerInfo;
 import net.minecraft.entity.Entity;
@@ -132,13 +133,7 @@ public class Utils {
     public static boolean overrideDevMode = false;
     public static boolean overrideDevModeValue = false;
     public static boolean isDeveloper() {
-        String[] developers = {"Skyblock_Lobby"};
-        if(Utils.GetMC().thePlayer==null) return false;
-        boolean dev = Arrays.asList(developers).contains(Utils.GetMC().thePlayer.getName());
-        if(overrideDevMode) {
-            dev = overrideDevModeValue;
-        }
-        return dev;
+        return SkyblockFeatures.config.developerMode;
     }
 
      public static String convertToTitleCase(String input) {

@@ -23,6 +23,14 @@ public class Config extends ConfigManager {
             subcategory = "Mod"
     )
     public boolean updateNotify = true;
+    @Property(
+            type = PropertyType.TOGGLE,
+            name = "§eDeveloper Mode",
+            description = "§eDeveloper Mode§r causes more logs to happen, aswell as enabling certain debug features.",
+            category = "§2§rCustomization",
+            subcategory = "Mod"
+    )
+    public boolean developerMode = false;
 
     @Property(
             type = PropertyType.DROPDOWN,
@@ -2132,4 +2140,6 @@ public class Config extends ConfigManager {
             subcategory = "Settings"
     )
     public boolean showInspector = false;
+
+
 }
