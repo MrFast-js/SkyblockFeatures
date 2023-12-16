@@ -95,74 +95,8 @@ public class HideGlass {
                 System.out.println("-====================================-");
             }
         }
-        if(event.inventoryName.contains(ChatFormatting.GOLD+"✯")) {
-            if(event.inventoryName.contains("Correct Panes")) {
-                for(int slot : TerminalCommand.paneSlots) {
-                    if(event.slot==null) continue;
-                    if(event.slot.slotNumber == slot) {
-                        if(event.item.getUnlocalizedName().contains("red")) {
-                            Utils.playSound("note.pling", 2);
-                            TerminalCommand.clicked.add(event.slot.slotNumber);
-                            event.inventory.setInventorySlotContents(event.slot.slotNumber, new ItemStack(Blocks.stained_glass_pane, 1, 5).setStackDisplayName(ChatFormatting.RESET+""));
-                            if(TerminalCommand.clicked.size() == 14) {
-                                Utils.sendMessage(ChatFormatting.GREEN+"You completed 'Correct all the panes!' in "+Utils.round((System.currentTimeMillis()-TerminalCommand.start)/1000d,2)+"s");
-                                mc.thePlayer.closeScreen();
-                            }
-                            if(TerminalCommand.start == 0) {
-                                TerminalCommand.start = System.currentTimeMillis();
-                            }
-                        }
-                        if(event.item.getUnlocalizedName().contains("lime") && TerminalCommand.clicked.contains(event.slot.slotNumber)) {
-                            Utils.playSound("note.pling", 2);
-                            TerminalCommand.clicked.remove((Integer) event.slot.slotNumber);
-                            event.inventory.setInventorySlotContents(event.slot.slotNumber, new ItemStack(Blocks.stained_glass_pane, 1, 14).setStackDisplayName(ChatFormatting.RESET+""));
-                        }
-                    }
-                }
-            }
-            if(event.inventoryName.contains("Maze")) {
-                assert event.slot != null;
-                if(event.slot.slotNumber == TerminalCommand.mazeSlots[TerminalCommand.mazeSlots.length-(int) TerminalCommand.mazeIndex]) {
-                    if(event.item.getUnlocalizedName().contains("white")) {
-                        Utils.playSound("note.pling", 2);
-                        TerminalCommand.clicked.add(event.slot.slotNumber);
-                        event.inventory.setInventorySlotContents(event.slot.slotNumber, new ItemStack(Blocks.stained_glass_pane, 1, 5).setStackDisplayName(ChatFormatting.RESET+""));
-                        if(TerminalCommand.clicked.size() == TerminalCommand.mazeSlots.length) {
-                            Utils.sendMessage(ChatFormatting.GREEN+"You completed 'Maze!' in "+Utils.round((System.currentTimeMillis()-TerminalCommand.start)/1000d,2)+"s");
-                            mc.thePlayer.closeScreen();
-                            TerminalCommand.mazeIndex = 0;
-                        }
-                        if(TerminalCommand.start == 0) {
-                            TerminalCommand.start = System.currentTimeMillis();
-                        }
-                    
-                        TerminalCommand.mazeIndex++;
-                    }
-                }
-            }
-            if(event.inventoryName.contains("Click in order") && event.item.getUnlocalizedName().contains("red")) {
-                if(event.item.stackSize==TerminalCommand.orderNumber) {
-                    if(TerminalCommand.orderNumber==14) {
-                        Utils.sendMessage(ChatFormatting.GREEN+"You completed 'Click in order!' in "+Utils.round((System.currentTimeMillis()-TerminalCommand.start)/1000d,2)+"s");
-                        mc.thePlayer.closeScreen();
-                        TerminalCommand.orderNumber = 1;
-                    }
-				    event.inventory.setInventorySlotContents(event.slot.slotNumber, new ItemStack(Blocks.stained_glass_pane, event.item.stackSize, 5).setStackDisplayName(ChatFormatting.RESET+""));
-                    Utils.playSound("note.pling", 2);
-                    TerminalCommand.orderNumber++;
-                    if(TerminalCommand.start == 0) {
-                        TerminalCommand.start = System.currentTimeMillis();
-                    }
-                } else {
-                    mc.thePlayer.closeScreen();
-                    Utils.sendMessage(ChatFormatting.RED+"You failed 'Click in order!'");
-                }
-            }
-        }
-        try {
-            if(event.inventoryName.contains("✯")) event.setCanceled(true);
-        } catch (Exception e) {
-            //TODO: handle exception
+        if(event.inventoryName.contains("✯")) {
+            TerminalCommand.handleTerminalClick(event);
         }
     }
 

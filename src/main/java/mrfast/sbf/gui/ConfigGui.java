@@ -75,9 +75,6 @@ public class ConfigGui extends WindowScreen {
     Color mainBackground = SkyblockFeatures.config.mainBackground;
     Color searchBoxBackground = SkyblockFeatures.config.searchBoxBackground;
 
-    Color editGuiUnhovered = SkyblockFeatures.config.editGuiUnhovered;
-    Color editGuiHovered = SkyblockFeatures.config.editGuiHovered;
-
     Color clear = new Color(0,0,0,0);
     public ConfigGui(Boolean doAnimation) {
         super(ElementaVersion.V2);
@@ -269,29 +266,8 @@ public class ConfigGui extends WindowScreen {
             .setX(new CenterConstraint())
             .setY(new CenterConstraint());
 
-        editGuiButton.onMouseEnterRunnable(()->{
-            AnimatingConstraints anim = editGuiButton.makeAnimation();
-            anim.setColorAnimation(Animations.OUT_EXP,0.5f,new ConstantColorConstraint(editGuiHovered));
-            editGuiButton.animateTo(anim);
-        });
-        editGuiButton.onMouseLeaveRunnable(()->{
-            AnimatingConstraints anim = editGuiButton.makeAnimation();
-            anim.setColorAnimation(Animations.OUT_EXP,0.5f,new ConstantColorConstraint(editGuiUnhovered));
-            editGuiButton.animateTo(anim);
-        });
         // Open gui locations gui when clicked
         editGuiButton.onMouseClickConsumer((event)->{
-            if(isShiftKeyDown()) {
-                Utils.overrideDevMode = true;
-                Utils.overrideDevModeValue = !Utils.overrideDevModeValue;
-                if(Utils.overrideDevModeValue) {
-                    Utils.sendMessage(ChatFormatting.YELLOW+"Developer Mode Enabled!");
-                } else {
-                    Utils.sendMessage(ChatFormatting.YELLOW+"Developer Mode Disabled!");
-                }
-                Utils.playSound("random.orb", 0.1);
-                return;
-            }
             GuiUtils.openGui(new EditLocationsGui());
         });
         UIComponent discordButton = new ShadowIcon(new ResourceImageFactory("/assets/skyblockfeatures/gui/discord.png",true),true)
@@ -343,66 +319,30 @@ public class ConfigGui extends WindowScreen {
             animation.setTextScaleAnimation(Animations.OUT_EXP, 0.5f, new PixelConstraint((float) (4.0*fontScale)));
             titleText.animateTo(animation);
         }
-        if(selectedCategory.contains("Customization")) {
-            UIComponent resetGuiColorsButton = new UIRoundedRectangle(10f).setColor(editGuiUnhovered)
-                .setX(new RelativeConstraint(0.65f))
-                .setY(new PixelConstraint(0.01f*guiHeight))
-                .setHeight(new PixelConstraint(0.85f*0.10f*guiHeight))
-                .setWidth(new PixelConstraint(0.23f*guiWidth))
-                .setChildOf(loadedFeaturesList);
-            new UIText("§cReset Colors").setColor(editGuiText).setChildOf(resetGuiColorsButton)
-                .setTextScale(new PixelConstraint((float) fontScale*2))
-                .setX(new CenterConstraint())
-                .setY(new CenterConstraint());
-
-            resetGuiColorsButton.onMouseEnterRunnable(()->{
-                resetGuiColorsButton.setColor(editGuiHovered);
-            });
-            resetGuiColorsButton.onMouseLeaveRunnable(()->{
-                resetGuiColorsButton.setColor(editGuiUnhovered);
-            });
-            // Open gui locations gui when clicked
-            resetGuiColorsButton.onMouseClickConsumer((event)->{
-                SkyblockFeatures.config.guiLines = new Color(0x808080);
-                SkyblockFeatures.config.selectedCategory = new Color(0x02A9EA);
-                SkyblockFeatures.config.hoveredCategory = new Color(0x2CC8F7);
-                SkyblockFeatures.config.defaultCategory = new Color(0xFFFFFF);
-                SkyblockFeatures.config.featureDescription = new Color(0xbbbbbb);
-                SkyblockFeatures.config.mainBackground = new Color(25,25,25,200);
-                SkyblockFeatures.config.searchBoxBackground = new Color(120,120,120,60);
-                SkyblockFeatures.config.editGuiUnhovered = new Color(0,0,0,50);
-                SkyblockFeatures.config.editGuiHovered = new Color(0,0,0,75);
-                SkyblockFeatures.config.editGuiText = new Color(0xFFFFFF);
-                SkyblockFeatures.config.titleColor = new Color(0x00FFFF);
-                SkyblockFeatures.config.versionColor = new Color(0xFFFFFF);
-                quickSwapping = true;
-                GuiUtils.openGui(new ConfigGui(false));
-            });
-        }
     }
 
     public void reloadAllCategories() {
         categories.clear();
         Config field = SkyblockFeatures.config;
         Field[] fieldsOfFieldClass = Config.class.getFields();
-        for(int i = 0;i < fieldsOfFieldClass.length; i++) {
+        for (Field ofFieldClass : fieldsOfFieldClass) {
             try {
-                Object value = fieldsOfFieldClass[i].get(field);
-                if (fieldsOfFieldClass[i].isAnnotationPresent(Property.class)) {
-                    Property feature = fieldsOfFieldClass[i].getAnnotation(Property.class);
+                Object value = ofFieldClass.get(field);
+                if (ofFieldClass.isAnnotationPresent(Property.class)) {
+                    Property feature = ofFieldClass.getAnnotation(Property.class);
                     // Create category if not exist already
-                    if(!categories.containsKey(feature.category())) {
+                    if (!categories.containsKey(feature.category())) {
                         categories.put(feature.category(), new TreeMap<>());
                     }
                     SortedMap<String, List<Property>> category = categories.get(feature.category());
 
                     // Create subcategory if not exist already
-                    if(!category.containsKey(feature.subcategory())) {
+                    if (!category.containsKey(feature.subcategory())) {
                         category.put(feature.subcategory(), new ArrayList<>());
                     }
                     List<Property> subcategory = category.get(feature.subcategory());
 
-                    if(!subcategory.contains(feature)) {
+                    if (!subcategory.contains(feature)) {
                         valueMap.put(feature, value);
                         subcategory.add(feature);
                     }
@@ -476,6 +416,7 @@ public class ConfigGui extends WindowScreen {
 
     // Reloads the current visible features by clearing old and redoing all of them
     public void reloadFeatures(UIComponent loadedFeaturesList, float guiHeight, float guiWidth, double fontScale) {
+        expandedFeatures.clear();
         float Margin = 6f;
         // Default category
         // Loop through main categories
@@ -561,7 +502,6 @@ public class ConfigGui extends WindowScreen {
 
                         border.setHeight(new RelativeConstraint(0.16f));
                         exampleFeature.setHeight(new RelativeConstraint(1f));
-
                     } else {
                         // Draw Feature Title
                         new UIText(feature.name()).setChildOf(exampleFeature)
@@ -667,9 +607,20 @@ public class ConfigGui extends WindowScreen {
                     }
 
                     if(feature.type() == PropertyType.COLOR) {
+                        UIComponent resetImg = new ShadowIcon(new ResourceImageFactory("/assets/skyblockfeatures/gui/reset.png", true), false)
+                                .setChildOf(exampleFeature)
+                                .setY(new CenterConstraint())
+                                .setWidth(new PixelConstraint(10f))
+                                .setHeight(new PixelConstraint(11f))
+                                .setX(new PixelConstraint(170f,true));
                         UIComponent comp = new ColorComponent((Color) valueMap.get(feature),false).setChildOf(exampleFeature);
-
                         final UIComponent finalColorPreview = colorPreview;
+
+                        resetImg.onMouseClickConsumer((event)->{
+                            Color defaultValue = (Color) ConfigManager.defaultValues.get(feature.name());
+                            setVariable(feature.name(), defaultValue);
+                            finalColorPreview.setColor(defaultValue);
+                        });
 
                         comp.onMouseClick((event,a)->{
                             boolean featureOption = !feature.parentName().isEmpty();

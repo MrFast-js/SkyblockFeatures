@@ -124,7 +124,6 @@ public class TrashHighlighter {
         int x = event.slot.xDisplayPosition;
         int y = event.slot.yDisplayPosition;
         String n = ItemUtils.getSkyBlockItemID(stack);
-        String i = Utils.cleanColor(stack.getDisplayName());
 
         if(SkyblockFeatures.config.highlightTrash && n != null) {
             boolean trash = false;

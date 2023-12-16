@@ -5,8 +5,10 @@ import mrfast.sbf.SkyblockFeatures;
 
 import java.io.*;
 import java.lang.annotation.*;
+import java.util.HashMap;
 
 public class ConfigManager {
+    public static HashMap<String, Object> defaultValues = new HashMap<String, Object>();
     public enum PropertyType {
         SLIDER,
         TOGGLE, // switch
@@ -23,22 +25,17 @@ public class ConfigManager {
     @Target(ElementType.FIELD)
     public @interface Property {
         String name();
-
         String description() default "";
-
         String category();
         String subcategory();
-
         String placeholder() default "";
         boolean hidden() default false;
         int min() default 0;
         int max() default 100;
-
         boolean hasOptions() default false;
         String parentName() default "";
         String[] options() default {};
         PropertyType type();
-
     }
 
     private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
@@ -124,6 +121,8 @@ public class ConfigManager {
                 String fieldName = field.getName();
                 if (jsonObject.has(fieldName)) {
                     JsonElement propertyJson = jsonObject.get(fieldName);
+                    Property propertyAnnotation = field.getAnnotation(Property.class);
+                    defaultValues.put(propertyAnnotation.name(),field.get(obj));
                     Object value = gson.fromJson(propertyJson.getAsJsonObject().get("value"), field.getType());
                     field.set(obj, value);
                 }

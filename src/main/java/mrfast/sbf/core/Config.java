@@ -977,7 +977,7 @@ public class Config extends ConfigManager {
     public boolean furfSkyThemed = false;
 
     @Property(type = PropertyType.COLOR, name = "Gui Lines", description = "", category = "§2§rCustomization", subcategory = "§1§rGui")
-    public Color guiLines = new Color(0x000000);
+    public Color guiLines = new Color(0x8d8d8d);
 
     @Property(type = PropertyType.COLOR, name = "Selected Category Text", description = "", category = "§2§rCustomization", subcategory = "§1§rGui")
     public Color selectedCategory = new Color(0x02A9EA);
@@ -996,12 +996,6 @@ public class Config extends ConfigManager {
 
     @Property(type = PropertyType.COLOR, name = "Search Box Background", description = "", category = "§2§rCustomization", subcategory = "§1§rGui")
     public Color searchBoxBackground = new Color(120, 120, 120, 60);
-
-    @Property(type = PropertyType.COLOR, name = "Button Background", description = "", category = "§2§rCustomization", subcategory = "§1§rGui")
-    public Color editGuiUnhovered = new Color(0, 0, 0, 50);
-
-    @Property(type = PropertyType.COLOR, name = "Button Hover Background", description = "", category = "§2§rCustomization", subcategory = "§1§rGui")
-    public Color editGuiHovered = new Color(0, 0, 0, 75);
 
     @Property(type = PropertyType.COLOR, name = "Edit Gui Text", description = "", category = "§2§rCustomization", subcategory = "§1§rGui")
     public Color editGuiText = new Color(0xFFFFFF);
@@ -1162,7 +1156,7 @@ public class Config extends ConfigManager {
     @Property(
             type = PropertyType.BUTTON,
             name = "§eEdit Trash",
-            description = "The trash list will be updated once you save the file. Trash is item whos Skyblock ID contains any of the entries.",
+            description = "The trash list will be updated once you save the file. \nTrash is item whos Skyblock ID contains any of the entries.",
             category = "§1§rDungeons",
             subcategory = "Miscellaneous",
             placeholder = "§cEdit Trash",
