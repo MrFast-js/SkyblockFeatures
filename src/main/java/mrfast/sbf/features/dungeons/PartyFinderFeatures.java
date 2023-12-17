@@ -84,7 +84,8 @@ public class PartyFinderFeatures {
         if(event.item.getItem() instanceof ItemSkull && event.item.getDisplayName().contains("'s Party")) {
             String regex = "^(\\w+):\\s(\\w+)\\s\\((\\d+)\\)$";
             Pattern pattern = Pattern.compile(regex);
-
+            boolean blocked = ItemUtils.getItemLore(event.item).toString().contains(ChatFormatting.RED+"Requires ");
+            if(blocked) return;
             for(String line:ItemUtils.getItemLore(event.item)) {
                 line = Utils.cleanColor(line.trim());
                 // Match the input against the pattern
@@ -354,7 +355,7 @@ public class PartyFinderFeatures {
             sorted.sort((a, b) -> Math.toIntExact(b.addedAt - a.addedAt));
             for (PartyFinderMonkey monkey : sorted) {
                 stillNeededClasses.remove(monkey.selectedClass);
-                boolean dupe = partyFinderMonkeys.values().stream().anyMatch((a)->{return !a.name.equals(monkey.name) && Objects.equals(a.selectedClass, monkey.selectedClass);});
+                boolean dupe = partyFinderMonkeys.values().stream().anyMatch((a)-> !a.name.equals(monkey.name) && Objects.equals(a.selectedClass, monkey.selectedClass));
                 if(SkyblockFeatures.config.dungeonPartyDisplayDupes && dupe) dupe=false;
 
                 String name = monkey.name;
