@@ -1,5 +1,6 @@
 package mrfast.sbf.utils;
 
+import java.awt.*;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -21,9 +22,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.scoreboard.ScoreObjective;
-import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.EnumChatFormatting;
-import net.minecraft.util.IChatComponent;
+import net.minecraft.util.*;
 
 public class Utils {
     private static final Minecraft mc = Minecraft.getMinecraft();
@@ -102,6 +101,40 @@ public class Utils {
         }
     }
 
+    /*
+        Unsure if going to use this because it does cause a performance impact
+     */
+    public static boolean isBlockVisible(BlockPos targetBlockPos) {
+        Minecraft mc = Minecraft.getMinecraft();
+
+        // Get the player's eye position
+        double eyeX = mc.thePlayer.posX;
+        double eyeY = mc.thePlayer.posY + mc.thePlayer.getEyeHeight();
+        double eyeZ = mc.thePlayer.posZ;
+        List<Vec3> corners = Arrays.asList(
+                new Vec3(targetBlockPos.getX()+0.1, targetBlockPos.getY() + 0.5, targetBlockPos.getZ()+0.1),
+                new Vec3(targetBlockPos.getX()+0.1, targetBlockPos.getY() + 0.5, targetBlockPos.getZ() + .9),
+                new Vec3(targetBlockPos.getX() + 0.9, targetBlockPos.getY() + 0.5, targetBlockPos.getZ() + .9),
+                new Vec3(targetBlockPos.getX() + 0.9, targetBlockPos.getY() + 0.5, targetBlockPos.getZ()+0.1)
+        );
+        boolean visible = false;
+        for (Vec3 corner : corners) {
+            MovingObjectPosition rayTraceResult = mc.theWorld.rayTraceBlocks(
+                    new Vec3(eyeX, eyeY, eyeZ),
+                    corner
+            );
+            if(checkRaytrace(rayTraceResult,targetBlockPos)) {
+                visible = true;
+                break;
+            }
+        }
+        return visible;
+    }
+
+    public static boolean checkRaytrace(MovingObjectPosition result, BlockPos targetBlockPos) {
+        return result != null && result.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK && result.getBlockPos().equals(targetBlockPos);
+    }
+
     /**
      * Taken from Danker's Skyblock Mod under GPL 3.0 license
      * https://github.com/bowser0000/SkyblockMod/blob/master/LICENSE
@@ -177,7 +210,7 @@ public class Utils {
         Random rand = new Random();
         return rand.nextInt((max - min) + 1) + min;
     }
-    
+
     public static String secondsToTime(long seconds) {
         String time = "";
         long sec = seconds % 60;

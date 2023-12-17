@@ -22,6 +22,7 @@ import net.minecraft.entity.item.EntityArmorStand;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.play.server.S2APacketParticles;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.BlockPos;
 import net.minecraft.util.Vec3;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
@@ -63,10 +64,10 @@ public class GiftTracker {
     public void onWorldChange(WorldEvent.Load event) {
         gifts.clear();
         // Reset unique gifts given next time the event comes next year
-        if(SkyblockFeatures.config.winterYear==0) {
-            SkyblockFeatures.config.winterYear= Year.now().getValue();
+        if (SkyblockFeatures.config.winterYear == 0) {
+            SkyblockFeatures.config.winterYear = Year.now().getValue();
         } else {
-            if(Year.now().getValue()!=SkyblockFeatures.config.winterYear) {
+            if (Year.now().getValue() != SkyblockFeatures.config.winterYear) {
                 SkyblockFeatures.config.uniqueGiftsGiven = 0;
                 SkyblockFeatures.config.winterYear = Year.now().getValue();
             }
@@ -75,7 +76,7 @@ public class GiftTracker {
 
     @SubscribeEvent
     public void onRenderEntity(CheckRenderEntityEvent event) {
-        if(!SkyblockFeatures.config.hideOtherGifts) return;
+        if (!SkyblockFeatures.config.hideOtherGifts) return;
 
         if (event.entity instanceof EntityArmorStand) {
             for (Gift gift : gifts.values()) {
@@ -94,10 +95,10 @@ public class GiftTracker {
 
     @SubscribeEvent
     public void onChat(ClientChatReceivedEvent event) {
-        if(!SkyblockFeatures.config.showGiftingInfo) return;
+        if (!SkyblockFeatures.config.showGiftingInfo) return;
 
         String clean = Utils.cleanColor(event.message.getUnformattedText());
-        if(clean.startsWith("+1 Unique Gift given!")) {
+        if (clean.startsWith("+1 Unique Gift given!")) {
             SkyblockFeatures.config.uniqueGiftsGiven++;
             ConfigManager.saveConfig(SkyblockFeatures.config);
         }
@@ -105,15 +106,15 @@ public class GiftTracker {
 
     @SubscribeEvent
     public void onDrawTitle(GuiContainerEvent.TitleDrawnEvent event) {
-        if(!SkyblockFeatures.config.showGiftingInfo) return;
+        if (!SkyblockFeatures.config.showGiftingInfo) return;
 
-        if(event.displayName.equals("Generow")) {
+        if (event.displayName.equals("Generow")) {
             ItemStack giftStack = event.container.getSlot(40).getStack();
-            if(giftStack!=null) {
-                for(String line:ItemUtils.getItemLore(giftStack)) {
+            if (giftStack != null) {
+                for (String line : ItemUtils.getItemLore(giftStack)) {
                     line = Utils.cleanColor(line);
-                    if(line.startsWith("Unique Players Gifted:")) {
-                        int gifts = Integer.parseInt(line.replaceAll("[^0-9]",""));
+                    if (line.startsWith("Unique Players Gifted:")) {
+                        int gifts = Integer.parseInt(line.replaceAll("[^0-9]", ""));
                         SkyblockFeatures.config.uniqueGiftsGiven = gifts;
                         ConfigManager.saveConfig(SkyblockFeatures.config);
                         break;
@@ -143,7 +144,8 @@ public class GiftTracker {
     @SubscribeEvent
     public void onTick(TickEvent.ClientTickEvent event) {
         if (Utils.GetMC().theWorld == null) return;
-        if(!(SkyblockFeatures.config.highlightSelfGifts||SkyblockFeatures.config.hideOtherGifts||SkyblockFeatures.config.hideGiftParticles)) return;
+        if (!(SkyblockFeatures.config.highlightSelfGifts || SkyblockFeatures.config.hideOtherGifts || SkyblockFeatures.config.hideGiftParticles))
+            return;
 
         for (Map.Entry<Entity, Gift> entry : new HashMap<>(gifts).entrySet()) {
             if (!entry.getKey().isEntityAlive()) {
@@ -201,9 +203,7 @@ public class GiftTracker {
             }
         }
 
-        if(!(SkyblockFeatures.config.icecaveHighlightWalls || SkyblockFeatures.config.presentWaypoints)) return;
-
-        if(SkyblockFeatures.config.icecaveHighlightWalls) GlStateManager.disableDepth();
+        if (!(SkyblockFeatures.config.icecaveHighlight || SkyblockFeatures.config.presentWaypoints)) return;
 
         for (Entity entity : mc.theWorld.loadedEntityList) {
             if (SkyblockFeatures.config.presentWaypoints && entity instanceof EntityArmorStand && !inGlacialCave && ((EntityArmorStand) entity).getCurrentArmor(3) != null && ((EntityArmorStand) entity).getCurrentArmor(3).serializeNBT().getCompoundTag("tag").getCompoundTag("SkullOwner").getCompoundTag("Properties").toString().contains("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMTBmNTM5ODUxMGIxYTA1YWZjNWIyMDFlYWQ4YmZjNTgzZTU3ZDcyMDJmNTE5M2IwYjc2MWZjYmQwYWUyIn19fQ=")) {
@@ -217,70 +217,83 @@ public class GiftTracker {
                     isPlayerGift = true;
                 }
                 if (!saintJerryGifts.contains(entity) && !isPlayerGift) {
+                    GlStateManager.disableDepth();
                     highlightBlock(SkyblockFeatures.config.presentWaypointsColor, entity.posX - 0.5, entity.posY + 1.5, entity.posZ - 0.5, 1.0D, event.partialTicks);
                 }
             }
             if (inGlacialCave && SkyblockFeatures.config.icecaveHighlight) {
+                if(SkyblockFeatures.config.icecaveHighlightWalls) {
+                    GlStateManager.disableDepth();
+                }
                 Block blockState = mc.theWorld.getBlockState(entity.getPosition().up()).getBlock();
                 if (SkyblockFeatures.config.icecaveHighlight && (blockState instanceof BlockIce || blockState instanceof BlockPackedIce) && entity instanceof EntityArmorStand && ((EntityArmorStand) entity).getCurrentArmor(3) != null) {
                     String itemName = ((EntityArmorStand) entity).getCurrentArmor(3).serializeNBT().getCompoundTag("tag").getCompoundTag("display").getString("Name");
                     Vec3 StringPos = new Vec3(entity.posX, entity.posY + 3, entity.posZ);
+                    BlockPos pos = new BlockPos(entity.posX, entity.posY + 2, entity.posZ);
 
                     // White gift
                     if (itemName.contains("White Gift")) {
-                        highlightBlock(Color.white, entity.posX - 0.5, entity.posY + 1.5, entity.posZ - 0.5, 1.0D, event.partialTicks);
+                        highlightBlock(pos, Color.white, event.partialTicks);
                         RenderUtil.draw3DString(StringPos, ChatFormatting.WHITE + "White Gift", event.partialTicks);
                     }
                     // Green Gift
                     else if (itemName.contains("Green Gift")) {
-                        highlightBlock(Color.green, entity.posX - 0.5, entity.posY + 1.5, entity.posZ - 0.5, 1.0D, event.partialTicks);
+                        highlightBlock(pos, Color.green, event.partialTicks);
                         RenderUtil.draw3DString(StringPos, ChatFormatting.GREEN + "Green Gift", event.partialTicks);
                     }
                     // Red Gift
                     else if (itemName.contains("Red Gift")) {
-                        highlightBlock(Color.red, entity.posX - 0.5, entity.posY + 1.5, entity.posZ - 0.5, 1.0D, event.partialTicks);
+                        highlightBlock(pos, Color.red, event.partialTicks);
                         RenderUtil.draw3DString(StringPos, ChatFormatting.RED + "Red Gift", event.partialTicks);
                     }
                     // Glacial Talisman
                     else if (itemName.contains("Talisman")) {
-                        highlightBlock(Color.orange, entity.posX - 0.5, entity.posY + 1.5, entity.posZ - 0.5, 1.0D, event.partialTicks);
+                        highlightBlock(pos, Color.orange, event.partialTicks);
                         RenderUtil.draw3DString(StringPos, ChatFormatting.GOLD + "Talisman", event.partialTicks);
                     }
                     // Glacial Frag
                     else if (itemName.contains("Fragment")) {
-                        highlightBlock(Color.magenta, entity.posX - 0.5, entity.posY + 1.5, entity.posZ - 0.5, 1.0D, event.partialTicks);
+                        highlightBlock(pos, Color.magenta, event.partialTicks);
                         RenderUtil.draw3DString(StringPos, ChatFormatting.LIGHT_PURPLE + "Frag", event.partialTicks);
                     }
                     // Packed Ice
                     else if (itemName.contains("Enchanted Ice")) {
-                        highlightBlock(new Color(0x0a0d61), entity.posX - 0.5, entity.posY + 1.5, entity.posZ - 0.5, 1.0D, event.partialTicks);
+                        highlightBlock(pos, new Color(0x0a0d61), event.partialTicks);
                         RenderUtil.draw3DString(StringPos, ChatFormatting.DARK_BLUE + "E. Ice", event.partialTicks);
                     }
                     // Enchanted Packed Ice
                     else if (itemName.contains("Enchanted Packed Ice")) {
-                        highlightBlock(new Color(0x5317eb), entity.posX - 0.5, entity.posY + 1.5, entity.posZ - 0.5, 1.0D, event.partialTicks);
+                        highlightBlock(pos, new Color(0x5317eb), event.partialTicks);
                         RenderUtil.draw3DString(StringPos, ChatFormatting.DARK_BLUE + "E. Packed Ice", event.partialTicks);
                     }
                     // Enchanted Packed Ice
                     else if (itemName.contains("Glowy Chum Bait")) {
-                        highlightBlock(new Color(0x44ad86), entity.posX - 0.5, entity.posY + 1.5, entity.posZ - 0.5, 1.0D, event.partialTicks);
+                        highlightBlock(pos, new Color(0x44ad86), event.partialTicks);
                         RenderUtil.draw3DString(StringPos, ChatFormatting.DARK_AQUA + "Glowy Chum Bait", event.partialTicks);
                     }
                     // Einary' Red Hoodie
                     else if (itemName.contains("Einary's Red Hoodie")) {
-                        highlightBlock(new Color(0x9c0000), entity.posX - 0.5, entity.posY + 1.5, entity.posZ - 0.5, 1.0D, event.partialTicks);
+                        highlightBlock(pos, new Color(0x9c0000), event.partialTicks);
                         RenderUtil.draw3DString(StringPos, ChatFormatting.DARK_RED + "Einary's Red Hoodie", event.partialTicks);
                     }
                     // Highlight everything else gray
                     else {
-                        highlightBlock(Color.lightGray, entity.posX - 0.5, entity.posY + 1.5, entity.posZ - 0.5, 1.0D, event.partialTicks);
+                        highlightBlock(pos, Color.lightGray, event.partialTicks);
                         RenderUtil.draw3DString(StringPos, itemName, event.partialTicks);
                     }
                 }
+                GlStateManager.enableDepth();
             }
         }
+    }
 
-        if (SkyblockFeatures.config.icecaveHighlightWalls) GlStateManager.enableDepth();
+    public static void highlightBlock(BlockPos pos, Color color, float partialTicks) {
+        int x = pos.getX();
+        int y = pos.getY();
+        int z = pos.getZ();
+
+        RenderUtil.drawOutlinedFilledBoundingBox(new AxisAlignedBB(x, y, z, x + 1, y + 1, z + 1), color, partialTicks);
+
     }
 
     public static void highlightBlock(Color c, double d, double d1, double d2, double size, float ticks) {
@@ -290,50 +303,52 @@ public class GiftTracker {
     static {
         new giftingOverlay();
     }
+
     public static int getGiftMilestone(int gifts) {
         if (gifts <= 100) {
             return (gifts / 10);
         } else if (gifts <= 200) {
-            gifts-=100;
+            gifts -= 100;
             return 10 + (gifts / 20);
         } else if (gifts <= 350) {
-            gifts-=200;
+            gifts -= 200;
             return 15 + (gifts / 30);
         } else {
-            gifts-=350;
+            gifts -= 350;
             return 20 + (gifts / 50);
         }
     }
+
     public static class giftingOverlay extends UIElement {
         public giftingOverlay() {
-            super("giftingOverlay", new Point(0f,0f));
+            super("giftingOverlay", new Point(0f, 0f));
             SkyblockFeatures.GUIMANAGER.registerElement(this);
         }
 
         @Override
         public void drawElement() {
-            if(Utils.GetMC().thePlayer == null || !Utils.inSkyblock) return;
+            if (Utils.GetMC().thePlayer == null || !Utils.inSkyblock) return;
             if (this.getToggled() && Minecraft.getMinecraft().thePlayer != null) {
                 int milestone = getGiftMilestone(SkyblockFeatures.config.uniqueGiftsGiven);
                 String[] lines = {
                         "§e§lGifting Info",
-                        " §f"+SkyblockFeatures.config.uniqueGiftsGiven+"§7/600 §6Unique Gifts ",
-                        " §aMilestone §b"+milestone,
+                        " §f" + SkyblockFeatures.config.uniqueGiftsGiven + "§7/600 §6Unique Gifts ",
+                        " §aMilestone §b" + milestone,
                 };
-                GuiUtils.drawTextLines(Arrays.asList(lines),0,0, GuiUtils.TextStyle.DROP_SHADOW);
+                GuiUtils.drawTextLines(Arrays.asList(lines), 0, 0, GuiUtils.TextStyle.DROP_SHADOW);
             }
         }
 
         @Override
         public void drawElementExample() {
-            if(Utils.GetMC().thePlayer == null || !Utils.inSkyblock) return;
+            if (Utils.GetMC().thePlayer == null || !Utils.inSkyblock) return;
             int milestone = getGiftMilestone(SkyblockFeatures.config.uniqueGiftsGiven);
             String[] lines = {
                     "§e§lGifting Info",
-                    " §f"+SkyblockFeatures.config.uniqueGiftsGiven+"§7/600 §6Unique Gifts",
-                    " §aMilestone §b"+milestone,
+                    " §f" + SkyblockFeatures.config.uniqueGiftsGiven + "§7/600 §6Unique Gifts",
+                    " §aMilestone §b" + milestone,
             };
-            GuiUtils.drawTextLines(Arrays.asList(lines),0,0, GuiUtils.TextStyle.DROP_SHADOW);
+            GuiUtils.drawTextLines(Arrays.asList(lines), 0, 0, GuiUtils.TextStyle.DROP_SHADOW);
         }
 
         @Override
@@ -343,7 +358,7 @@ public class GiftTracker {
 
         @Override
         public int getHeight() {
-            return (Utils.GetMC().fontRendererObj.FONT_HEIGHT+1)*3;
+            return (Utils.GetMC().fontRendererObj.FONT_HEIGHT + 1) * 3;
         }
 
         @Override
