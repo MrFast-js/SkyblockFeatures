@@ -277,7 +277,7 @@ public class InstallerFrame extends JFrame {
     private File getDefaultFolder(String option, String minecraftDir) {
         switch (option) {
             case "Feather":
-                return new File(minecraftDir + "\\.feather\\user-mods");
+                return new File(minecraftDir + "\\.feather\\user-mods\\1.8.9");
             case "Forge":
                 return new File(minecraftDir + "\\.minecraft\\mods");
             case "Custom":
