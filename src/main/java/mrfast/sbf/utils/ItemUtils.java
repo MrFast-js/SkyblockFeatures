@@ -501,10 +501,14 @@ public class ItemUtils {
         NBTTagCompound nbt = extraAttributes.getCompoundTag("enchantments");
         long total = 0;
         for (String enchant : nbt.getKeySet()) {
-            String id = "ENCHANTMENT_" + enchant.toUpperCase() + "_" + nbt.getInteger(enchant);
+            int enchLvl = nbt.getInteger(enchant);
+            String id = "ENCHANTMENT_" + enchant.toUpperCase() + "_" + enchLvl;
             if (PricingData.bazaarPrices.get(id) != null) {
                 if (id.contains("ENCHANTMENT_SCAVENGER") || id.contains("ENCHANTMENT_INFINITE_QUIVER")) continue;
                 total += (long) (PricingData.bazaarPrices.get(id) * 0.85);
+            }
+            if(enchant.equals("efficiency") && enchLvl>5) {
+                total+= PricingData.bazaarPrices.get("SIL_EX").longValue()*(enchLvl-5);
             }
         }
         return total;
