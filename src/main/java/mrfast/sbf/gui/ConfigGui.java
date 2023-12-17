@@ -14,7 +14,6 @@ import java.util.TreeMap;
 import mrfast.sbf.core.ConfigManager;
 import mrfast.sbf.core.ConfigManager.PropertyType;
 import mrfast.sbf.core.ConfigManager.Property;
-import com.mojang.realmsclient.gui.ChatFormatting;
 import gg.essential.elementa.ElementaVersion;
 import gg.essential.elementa.UIComponent;
 import gg.essential.elementa.WindowScreen;
@@ -552,7 +551,7 @@ public class ConfigGui extends WindowScreen {
                                 .setChildOf(exampleFeature);
                         // Search tags are used because custom properties cannot be added onto one feature easily,
                         // So im using the first search tag to set it either as a 'parent' or the name of a feature that has 'parent'
-                        if (feature.hasOptions()) {
+                        if (feature.isParent()) {
                             // Create settings gear
                             ConstantColorConstraint unhovered = new ConstantColorConstraint(new Color(200,200,200));
                             ConstantColorConstraint hovered = new ConstantColorConstraint(new Color(255,255,255));
@@ -725,7 +724,7 @@ public class ConfigGui extends WindowScreen {
 
                     String parentName = feature.parentName();
 
-                    if(feature.hasOptions()) {
+                    if(feature.isParent()) {
                         Boolean enabled = (Boolean) getVariable(feature.name());
                         ExpandableComponent comp = new ExpandableComponent();
                         comp.enabled = enabled;

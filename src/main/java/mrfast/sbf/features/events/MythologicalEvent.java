@@ -260,14 +260,15 @@ public class MythologicalEvent {
                         continue;
                     }
                     GlStateManager.disableCull();
-                    RenderUtil.draw3DArrowLine(prev, particle, new Color(255, 85, 85));
+                    RenderUtil.draw3DArrowLine(prev, particle, SkyblockFeatures.config.MythologicalHelperActualColor);
                     GlStateManager.enableCull();
                     xDif = prev.xCoord - particle.xCoord;
                     zDif = prev.zCoord - particle.zCoord;
                     yDif = prev.yCoord - particle.yCoord;
+
                     if (index == particles.size()) {
                         for (int i = 0; i < 300; i++) {
-                            RenderUtil.draw3DArrowLine(prev, new Vec3(particle.xCoord + xDif * -(i), particle.yCoord - yDif * i, particle.zCoord + zDif * -(i)), Color.white);
+                            RenderUtil.draw3DArrowLine(prev, new Vec3(particle.xCoord + xDif * -(i), particle.yCoord - yDif * i, particle.zCoord + zDif * -(i)), SkyblockFeatures.config.MythologicalHelperPredictionColor);
                             prev = new Vec3(particle.xCoord + xDif * -(i), particle.yCoord - yDif * i, particle.zCoord + zDif * -(i));
                         }
                     }
@@ -285,9 +286,9 @@ public class MythologicalEvent {
         try {
             for (Burrow burrow : burrows) {
                 String type = ChatFormatting.RED + "(" + burrow.type + ")";
-                Color color = Objects.equals(burrow.type, "Treasure") ?new Color(0xFFAA00):
-                        Objects.equals(burrow.type, "Mob") ?Color.RED:
-                                Color.green;
+                Color color = Objects.equals(burrow.type, "Treasure") ?SkyblockFeatures.config.MythologicalHelperTreasureColor:
+                        Objects.equals(burrow.type, "Mob") ?SkyblockFeatures.config.MythologicalHelperMobColor:
+                                SkyblockFeatures.config.MythologicalHelperDefaultColor;
 
                 RenderUtil.drawWaypoint(burrow.pos, color, ChatFormatting.GOLD + "Burrow " + type, partialTicks, true);
             }
@@ -300,7 +301,7 @@ public class MythologicalEvent {
         if (startPos != null && endPos != null) {
             GlStateManager.pushMatrix();
             GlStateManager.disableDepth();
-            RenderUtil.draw3DArrowLine(startPos, endPos, Color.cyan);
+            RenderUtil.draw3DArrowLine(startPos, endPos, SkyblockFeatures.config.MythologicalHelperNextColor);
             GlStateManager.enableDepth();
             GlStateManager.popMatrix();
         }

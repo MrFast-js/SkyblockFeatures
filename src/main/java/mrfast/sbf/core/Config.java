@@ -202,7 +202,7 @@ public class Config extends ConfigManager {
             description = "Draws a box around bats to make bats easier to find",
             category = "§1§rDungeons",
             subcategory = "Miscellaneous",
-            hasOptions = true
+            isParent = true
     )
     public boolean highlightBats = false;
 
@@ -222,7 +222,7 @@ public class Config extends ConfigManager {
             description = "Highlights with a box of where gifts are at the Jerry's workshop.",
             category = "§1§rEvents",
             subcategory = "Jerrys Workshop",
-            hasOptions = true
+            isParent = true
     )
     public boolean presentWaypoints = false;
 
@@ -242,7 +242,7 @@ public class Config extends ConfigManager {
             description = "Highlights gifts that are given to you",
             category = "§1§rEvents",
             subcategory = "Jerrys Workshop",
-            hasOptions = true
+            isParent = true
     )
     public boolean highlightSelfGifts = false;
 
@@ -262,7 +262,7 @@ public class Config extends ConfigManager {
             description = "Highlights ice treasures in the wall when inside the Glacial Cave",
             category = "§1§rEvents",
             subcategory = "Glacial Cave",
-            hasOptions = true
+            isParent = true
     )
     public boolean icecaveHighlight = false;
 
@@ -337,7 +337,7 @@ public class Config extends ConfigManager {
             description = "Shows a glow effect on summoned slayers.",
             category = "Slayers",
             subcategory = "Highlight Slayers",
-            hasOptions = true
+            isParent = true
     )
     public boolean highlightSlayers = false;
     @Property(
@@ -374,7 +374,7 @@ public class Config extends ConfigManager {
             description = "Changes the glow effect depending the stage of the voidgloom. §cRequires Highlight Slayers to be enabled!",
             category = "Slayers",
             subcategory = "Highlight Slayers",
-            hasOptions = true
+            isParent = true
     )
     public boolean highlightVoidgloomColors = false;
 
@@ -413,7 +413,7 @@ public class Config extends ConfigManager {
             description = "Highlights the beacon thats thrown by the enderman slayer.",
             category = "Slayers",
             subcategory = "Voidgloom",
-            hasOptions = true
+            isParent = true
     )
     public boolean highlightBeacons = false;
 
@@ -461,7 +461,7 @@ public class Config extends ConfigManager {
             description = "Highlights the sparkly blocks in the end",
             category = "§1§rThe End",
             subcategory = "Mining",
-            hasOptions = true
+            isParent = true
     )
     public boolean highlightEnderNodes = false;
 
@@ -510,7 +510,7 @@ public class Config extends ConfigManager {
             description = "Hides Health, Mana and other attributes from action bar",
             category = "General",
             subcategory = "Health & Mana Bars",
-            hasOptions = true
+            isParent = true
     )
     public boolean cleanerActionBar = false;
     @Property(
@@ -619,7 +619,7 @@ public class Config extends ConfigManager {
             description = "Creates a better user interface for the dungeon party finder",
             category = "§1§rDungeons",
             subcategory = "Party Finder",
-            hasOptions = true
+            isParent = true
     )
     public boolean betterPartyFinder = false;
     @Property(
@@ -656,7 +656,7 @@ public class Config extends ConfigManager {
             description = "Shows who all is in your dungeon party, including class and class lvl",
             category = "§1§rDungeons",
             subcategory = "Party Finder",
-            hasOptions = true
+            isParent = true
     )
     public boolean dungeonPartyDisplay = false;
     @Property(
@@ -692,7 +692,7 @@ public class Config extends ConfigManager {
             description = "Highlights starred mobs in dungeons by making them glowing.",
             category = "§1§rDungeons",
             subcategory = "Miscellaneous",
-            hasOptions = true
+            isParent = true
     )
     public boolean boxStarredMobs = false;
     @Property(
@@ -711,7 +711,7 @@ public class Config extends ConfigManager {
             description = "Highlights the incorrect livid",
             category = "§1§rDungeons",
             subcategory = "Miscellaneous",
-            hasOptions = true
+            isParent = true
     )
     public boolean highlightCorrectLivid = false;
     @Property(
@@ -730,7 +730,7 @@ public class Config extends ConfigManager {
             description = "Highlights nearby fairy souls using waypoints",
             category = "Render",
             subcategory = "Highlights",
-            hasOptions = true
+            isParent = true
     )
     public boolean fairySoulHelper = false;
     @Property(
@@ -758,7 +758,7 @@ public class Config extends ConfigManager {
             description = "Highlights nearby Enigma souls using waypoints in the Rift",
             category = "The Rift",
             subcategory = "General",
-            hasOptions = true
+            isParent = true
     )
     public boolean riftSouls = false;
     @Property(
@@ -786,7 +786,7 @@ public class Config extends ConfigManager {
             description = "Solvers for some of the puzzles in the mirrorverse in the Rift",
             category = "The Rift",
             subcategory = "General",
-            hasOptions = true
+            isParent = true
     )
     public boolean riftMirrorverseHelper = false;
 
@@ -869,7 +869,7 @@ public class Config extends ConfigManager {
             description = "Turns on Fullbright in §aCrystal Hollows§r,§aYour Island§r,§aDungeons",
             category = "Render",
             subcategory = "Fullbright",
-            hasOptions = true
+            isParent = true
     )
     public boolean DynamicFullbright = false;
 
@@ -1012,7 +1012,7 @@ public class Config extends ConfigManager {
             description = "Disguises players as different things",
             category = "§2§rCustomization",
             subcategory = "Player",
-            hasOptions = true
+            isParent = true
     )
     public boolean playerDiguiser = false;
 
@@ -1040,9 +1040,66 @@ public class Config extends ConfigManager {
             name = "Diana Mythological Helper",
             description = "Draw an extended line of where the Mythological burrow could be",
             category = "§1§rEvents",
-            subcategory = "Diana"
+            subcategory = "Diana",
+            isParent = true
+
     )
     public boolean MythologicalHelper = false;
+
+    @Property(
+            type = PropertyType.COLOR,
+            name = "Actual Line Color",
+            description = "",
+            category = "§1§rEvents",
+            subcategory = "Diana",
+            parentName = "Diana Mythological Helper"
+    )
+    public Color MythologicalHelperActualColor = new Color(255, 85, 85);
+    @Property(
+            type = PropertyType.COLOR,
+            name = "Prediction Line Color",
+            description = "",
+            category = "§1§rEvents",
+            subcategory = "Diana",
+            parentName = "Diana Mythological Helper"
+    )
+    public Color MythologicalHelperPredictionColor = Color.WHITE;
+    @Property(
+            type = PropertyType.COLOR,
+            name = "Next Burrow Line Color",
+            description = "",
+            category = "§1§rEvents",
+            subcategory = "Diana",
+            parentName = "Diana Mythological Helper"
+    )
+    public Color MythologicalHelperNextColor = Color.CYAN;
+    @Property(
+            type = PropertyType.COLOR,
+            name = "Default Burrow Color",
+            description = "",
+            category = "§1§rEvents",
+            subcategory = "Diana",
+            parentName = "Diana Mythological Helper"
+    )
+    public Color MythologicalHelperDefaultColor = Color.GREEN;
+    @Property(
+            type = PropertyType.COLOR,
+            name = "Mob Burrow Color",
+            description = "",
+            category = "§1§rEvents",
+            subcategory = "Diana",
+            parentName = "Diana Mythological Helper"
+    )
+    public Color MythologicalHelperMobColor = Color.RED;
+    @Property(
+            type = PropertyType.COLOR,
+            name = "Treasure Burrow Color",
+            description = "",
+            category = "§1§rEvents",
+            subcategory = "Diana",
+            parentName = "Diana Mythological Helper"
+    )
+    public Color MythologicalHelperTreasureColor = new Color(0xFFAA00);
 
     @Property(
             type = PropertyType.TOGGLE,
@@ -1059,7 +1116,7 @@ public class Config extends ConfigManager {
             description = "Shows where pests are in your garden",
             category = "§1§rFarming",
             subcategory = "Garden",
-            hasOptions = true
+            isParent = true
     )
     public boolean highlightPests = false;
     @Property(
@@ -1149,7 +1206,7 @@ public class Config extends ConfigManager {
             description = "Draws a red box around items that just fill up your inventory.",
             category = "§1§rDungeons",
             subcategory = "Miscellaneous",
-            hasOptions = true
+            isParent = true
     )
     public boolean highlightTrash = false;
 
@@ -1170,7 +1227,7 @@ public class Config extends ConfigManager {
             description = "Render a moveable dungeon map on screen",
             category = "§1§rDungeons",
             subcategory = "Dungeon Map",
-            hasOptions = true
+            isParent = true
     )
     public boolean dungeonMap = false;
 
@@ -1322,7 +1379,7 @@ public class Config extends ConfigManager {
             description = "Highlights the cobblestone you place in crystal hollows",
             category = "Quality of Life",
             subcategory = "Mining",
-            hasOptions = true
+            isParent = true
     )
     public boolean highlightCobblestone = false;
     @Property(
@@ -1341,7 +1398,7 @@ public class Config extends ConfigManager {
             description = "Show a map of the crystal hollows",
             category = "Mining",
             subcategory = "Map",
-            hasOptions = true
+            isParent = true
     )
     public boolean CrystalHollowsMap = false;
 
@@ -1488,7 +1545,7 @@ public class Config extends ConfigManager {
             description = "Draws a better hitbox for dragons. Useful for §cMaster Mode 7§r and §eDragons",
             category = "Render",
             subcategory = "Highlights",
-            hasOptions = true
+            isParent = true
     )
     public boolean advancedDragonHitbox = false;
 
@@ -1526,7 +1583,7 @@ public class Config extends ConfigManager {
             description = "Applys the 1.9 glow effect to zealots to make them glow and shiny. §cSignificant performance impact.",
             category = "§1§rThe End",
             subcategory = "Zealots",
-            hasOptions = true
+            isParent = true
     )
     public boolean glowingZealots = false;
 
@@ -1546,7 +1603,7 @@ public class Config extends ConfigManager {
             description = "Highlights glowing mushrooms in the Glowing Mushroom Cave",
             category = "§1§rFarming",
             subcategory = "Glowing Mushroom Cave",
-            hasOptions = true
+            isParent = true
     )
     public boolean highlightMushrooms = false;
 
@@ -1701,7 +1758,7 @@ public class Config extends ConfigManager {
             description = "Shows the arrows in currently your quiver. §cThis will also estimate the count after arrows are shot",
             category = "Miscellaneous",
             subcategory = "Overlay",
-            hasOptions = true
+            isParent = true
     )
     public boolean quiverOverlay = false;
 

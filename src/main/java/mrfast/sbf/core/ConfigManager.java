@@ -32,7 +32,7 @@ public class ConfigManager {
         boolean hidden() default false;
         int min() default 0;
         int max() default 100;
-        boolean hasOptions() default false;
+        boolean isParent() default false;
         String parentName() default "";
         String[] options() default {};
         PropertyType type();
