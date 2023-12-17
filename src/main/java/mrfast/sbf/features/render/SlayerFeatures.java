@@ -92,8 +92,8 @@ public class SlayerFeatures {
         }
     }
 
-    long slayerStarted = 0;
-    long slayerSpawned = 0;
+    long slayerStarted = System.currentTimeMillis();
+    long slayerSpawned = System.currentTimeMillis();
 
     @SubscribeEvent
     public void onChat(ClientChatReceivedEvent event) {
