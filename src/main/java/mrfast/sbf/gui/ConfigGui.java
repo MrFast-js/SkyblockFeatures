@@ -406,6 +406,7 @@ public class ConfigGui extends WindowScreen {
         if (feature.hidden()) {
             ignoreFeature = true;
         }
+        if(!SkyblockFeatures.config.riskyFeatures && feature.risky()) ignoreFeature=true;
 
         return ignoreFeature;
     }

@@ -35,6 +35,7 @@ public class ConfigManager {
         boolean isParent() default false;
         String parentName() default "";
         String[] options() default {};
+        boolean risky() default false;
         PropertyType type();
     }
 

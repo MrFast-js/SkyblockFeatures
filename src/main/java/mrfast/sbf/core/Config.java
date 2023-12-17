@@ -40,7 +40,14 @@ public class Config extends ConfigManager {
             subcategory = "Mod"
     )
     public boolean developerMode = false;
-
+    @Property(
+            type = PropertyType.TOGGLE,
+            name = "Use At Own Risk Features",
+            description = "Toggles whether §cUse At Own Risk§r features will show inside of the config menu",
+            category = "§2§rCustomization",
+            subcategory = "Mod"
+    )
+    public boolean riskyFeatures = true;
 
     @Property(
             type = PropertyType.TOGGLE,
@@ -272,7 +279,8 @@ public class Config extends ConfigManager {
             description = "§cWarning Use At Own Risk",
             category = "§1§rEvents",
             subcategory = "Glacial Cave",
-            parentName = "Glacial Cave Treasure Finder"
+            parentName = "Glacial Cave Treasure Finder",
+            risky = true
     )
     public boolean icecaveHighlightWalls = false;
 
@@ -423,7 +431,8 @@ public class Config extends ConfigManager {
             description = "Highlights the beacon that's thrown by the enderman slayer through walls. §cWarning Use At Own Risk",
             category = "Slayers",
             subcategory = "Voidgloom",
-            parentName = "Highlight Thrown Beacon"
+            parentName = "Highlight Thrown Beacon",
+            risky = true
     )
     public boolean highlightBeaconsThroughWalls = false;
 
@@ -471,7 +480,8 @@ public class Config extends ConfigManager {
             description = "Makes the Ender Node Highlight go through walls. §cWarning Use At Own Risk",
             category = "§1§rThe End",
             subcategory = "Mining",
-            parentName = "Highlight Ender Nodes"
+            parentName = "Highlight Ender Nodes",
+            risky = true
     )
     public boolean highlightEnderNodesWalls = false;
 
@@ -1134,7 +1144,8 @@ public class Config extends ConfigManager {
             description = "§cWarning Use At Own Risk",
             category = "§1§rFarming",
             subcategory = "Garden",
-            parentName = "Highlight Pests"
+            parentName = "Highlight Pests",
+            risky = true
     )
     public boolean highlightPestThroughWalls = false;
 
@@ -2032,7 +2043,8 @@ public class Config extends ConfigManager {
             name = "Auto Party Chat",
             description = "Auto sends §a/chat p§r after joining a party §cWarning Use At Own Risk",
             category = "General",
-            subcategory = "Other"
+            subcategory = "Other",
+            risky = true
     )
     public boolean autoPartyChat = false;
 

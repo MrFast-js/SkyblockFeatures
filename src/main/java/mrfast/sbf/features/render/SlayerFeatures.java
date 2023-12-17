@@ -103,6 +103,9 @@ public class SlayerFeatures {
         }
         if(msg.trim().startsWith("NICE! SLAYER BOSS SLAIN!") || msg.trim().startsWith("SLAYER QUEST COMPLETE!")) {
             if(SkyblockFeatures.config.slayerTimer) {
+                if(Utils.isDeveloper()) {
+                    Utils.sendMessage("Slayer Killed! Sending timer..");
+                }
                 double spawn = System.currentTimeMillis() - slayerStarted;
                 double spawnTime = Math.ceil(spawn / 1000);
                 double kill = System.currentTimeMillis() - slayerSpawned;
@@ -145,7 +148,9 @@ public class SlayerFeatures {
             if(event.getSbMob().getSkyblockMobId().startsWith(slayerName) && hasSlayerSpawned) {
                 slayerSpawned = System.currentTimeMillis();
                 spawnedSlayer = event.getSbMob();
-                Utils.sendMessage("Slayer Spawned");
+                if(Utils.isDeveloper()) {
+                    Utils.sendMessage("Slayer Spawned");
+                }
             }
         }
     }
