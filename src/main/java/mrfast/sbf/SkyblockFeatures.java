@@ -190,11 +190,6 @@ public class SkyblockFeatures {
 
         ConfigManager.saveConfig(SkyblockFeatures.config);
         System.out.println("You have started Skyblock Features up " + SkyblockFeatures.config.timeStartedUp + " times!");
-
-        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-            ConfigManager.saveConfig(SkyblockFeatures.config);
-            System.out.println("Saving Skyblock Features Config...");
-        }));
     }
 
     /*

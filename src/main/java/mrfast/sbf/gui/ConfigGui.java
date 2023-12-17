@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
+import com.mojang.realmsclient.gui.ChatFormatting;
 import mrfast.sbf.core.ConfigManager;
 import mrfast.sbf.core.ConfigManager.PropertyType;
 import mrfast.sbf.core.ConfigManager.Property;
@@ -616,9 +617,13 @@ public class ConfigGui extends WindowScreen {
                         final UIComponent finalColorPreview = colorPreview;
 
                         resetImg.onMouseClickConsumer((event)->{
-                            Color defaultValue = (Color) ConfigManager.defaultValues.get(feature.name());
-                            setVariable(feature.name(), defaultValue);
-                            finalColorPreview.setColor(defaultValue);
+                            try {
+                                Color defaultValue = (Color) ConfigManager.defaultValues.get(feature.name());
+                                setVariable(feature.name(), defaultValue);
+                                finalColorPreview.setColor(defaultValue);
+                            } catch (Exception e) {
+                                Utils.sendMessage(ChatFormatting.RED+"There was a problem resetting this color! Try again later");
+                            }
                         });
 
                         comp.onMouseClick((event,a)->{
