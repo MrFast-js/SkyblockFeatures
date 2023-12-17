@@ -61,30 +61,53 @@ public class Config extends ConfigManager {
 
     @Property(
             type = PropertyType.TOGGLE,
+            name = "Customizable Sidebar",
+            description = "Make the sidebar customizable",
+            category = "General",
+            subcategory = "Sidebar",
+            isParent = true
+    )
+    public boolean customSidebar = false;
+
+    @Property(
+            type = PropertyType.TOGGLE,
+            name = "Remove Background",
+            description = "Stops the background of the sidebar from rendering",
+            category = "General",
+            subcategory = "Sidebar",
+            parentName = "Customizable Sidebar"
+    )
+    public boolean removeSidebarBackground = false;
+
+    @Property(
+            type = PropertyType.TOGGLE,
             name = "Hide Red Numbers From Sidebar",
             description = "Hide the red numbers from the sidebar",
             category = "General",
-            subcategory = "Sidebar"
+            subcategory = "Sidebar",
+            parentName = "Customizable Sidebar"
     )
-    public boolean hideRedNumbers = false;
+    public boolean removeSidebarRedNumbers = true;
 
     @Property(
             type = PropertyType.TOGGLE,
             name = "Draw Text With Shadow",
             description = "Draws the text on the sidebar with a shadow",
             category = "General",
-            subcategory = "Sidebar"
+            subcategory = "Sidebar",
+            parentName = "Customizable Sidebar"
     )
-    public boolean drawTextWithShadow = false;
+    public boolean useShadowOnSidebar = true;
 
     @Property(
             type = PropertyType.TOGGLE,
             name = "Remove Hypixel From sidebar",
             description = "Hide the www.hypixel.net the sidebar bottom",
             category = "General",
-            subcategory = "Sidebar"
+            subcategory = "Sidebar",
+            parentName = "Customizable Sidebar"
     )
-    public boolean hideHypixelSidebar = false;
+    public boolean hideHypixelFromSidebar = true;
 
     @Property(
             type = PropertyType.TOGGLE,
