@@ -3,6 +3,7 @@ package mrfast.sbf.features.items;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import mrfast.sbf.features.termPractice.TerminalManager;
 import mrfast.sbf.utils.GuiUtils;
 import org.lwjgl.input.Keyboard;
 
@@ -76,12 +77,6 @@ public class HideGlass {
         return itemStack != null && (itemStack.getItem() == Item.getItemFromBlock(Blocks.stained_glass_pane)
                 || itemStack.getItem() == Item.getItemFromBlock(Blocks.glass_pane)) && itemStack.hasDisplayName() && Utils.cleanColor(itemStack.getDisplayName().trim()).isEmpty();
     }
-
-    @SubscribeEvent
-    public void onGuiClose(GuiContainerEvent.CloseWindowEvent event) {
-        TerminalCommand.start = 0;
-        TerminalCommand.mazeIndex = 1;
-    }
     
     @SubscribeEvent
     public void onSlotClick(SlotClickedEvent event) {
@@ -94,22 +89,6 @@ public class HideGlass {
                 }
                 System.out.println("-====================================-");
             }
-        }
-        if(event.inventoryName.contains("✯")) {
-            TerminalCommand.handleTerminalClick(event);
-        }
-    }
-
-    @SubscribeEvent
-    public void onTitleDrawn(TitleDrawnEvent event) {
-        if(!(event.gui instanceof GuiChest)) return;
-        GuiChest gui = (GuiChest) event.gui;
-        ContainerChest chest = (ContainerChest) gui.inventorySlots;
-        IInventory inv = chest.getLowerChestInventory();
-        String chestName = inv.getDisplayName().getUnformattedText().trim();
-        if(chestName.contains("✯")) {
-            if(TerminalCommand.start!=0) Utils.GetMC().fontRendererObj.drawStringWithShadow(chestName+" "+(Utils.round((System.currentTimeMillis() - TerminalCommand.start)/1000d,2))+"s", 8, 6, 0);
-            else Utils.GetMC().fontRendererObj.drawStringWithShadow(chestName, 8, 6, 0);
         }
     }
 

@@ -26,6 +26,7 @@ import mrfast.sbf.features.overlays.maps.DwarvenMap;
 import mrfast.sbf.features.overlays.menuOverlay.*;
 import mrfast.sbf.features.render.*;
 import mrfast.sbf.features.statDisplays.*;
+import mrfast.sbf.features.termPractice.TerminalManager;
 import mrfast.sbf.features.trackers.*;
 import mrfast.sbf.gui.GuiManager;
 import mrfast.sbf.gui.ProfileViewerUtils;
@@ -117,6 +118,7 @@ public class SkyblockFeatures {
                 new FireVeilTimer(),
                 new TrashHighlighter(),
                 new SpeedDisplay(),
+                new TerminalManager(),
                 new EffectiveHealthDisplay(),
                 new ManaDisplay(),
                 new HealthDisplay(),
