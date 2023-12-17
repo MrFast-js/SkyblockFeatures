@@ -1,10 +1,7 @@
 package mrfast.sbf.features.events;
 
 import java.awt.Color;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import com.mojang.realmsclient.gui.ChatFormatting;
@@ -12,6 +9,7 @@ import com.mojang.realmsclient.gui.ChatFormatting;
 import mrfast.sbf.SkyblockFeatures;
 import mrfast.sbf.core.SkyblockInfo;
 import mrfast.sbf.events.PacketEvent.ReceiveEvent;
+import mrfast.sbf.events.UseItemAbilityEvent;
 import mrfast.sbf.utils.RenderUtil;
 import mrfast.sbf.utils.Utils;
 import net.minecraft.client.entity.EntityOtherPlayerMP;
@@ -29,7 +27,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
 
 public class MythologicalEvent {
-    private List<Burrow> burrows = new ArrayList<>();
+    private static List<Burrow> burrows = new ArrayList<>();
 
     public static class Burrow {
         String type;
@@ -122,20 +120,39 @@ public class MythologicalEvent {
             event.setCanceled(true);
         }
     }
+    boolean spoonSearching = false;
+    @SubscribeEvent
+    public void onItemAbility(UseItemAbilityEvent event) {
+        if(event.ability.itemId.equals("ANCESTRAL_SPADE")) {
+            spoonSearching = true;
+            particles.clear();
+            Utils.setTimeout(()->{
+                spoonSearching = false;
+            },3000);
+        }
+    }
+    private boolean fromGriffinPet(Vec3i pos) {
+        for(Entity e:Utils.GetMC().theWorld.loadedEntityList) {
+            if(e instanceof EntityArmorStand && e.getDistance(pos.getX(),pos.getY(),pos.getZ())<3) {
+                if(e.isInvisible()) return true;
+            }
+        }
+        return false;
+    }
 
     private void handleAncestralParticles(S2APacketParticles packet) {
-        if (Utils.GetMC().thePlayer.getHeldItem() != null && Utils.GetMC().thePlayer.getHeldItem().getDisplayName().contains("Ancestral") && SkyblockFeatures.config.MythologicalHelper) {
+        if (SkyblockFeatures.config.MythologicalHelper) {
             if (packet.getParticleType() == EnumParticleTypes.DRIP_LAVA) {
                 Vec3i pos = new Vec3i(packet.getXCoordinate(), packet.getYCoordinate(), packet.getZCoordinate());
                 double dist = Utils.GetMC().thePlayer.getDistance(packet.getXCoordinate(), packet.getYCoordinate(), packet.getZCoordinate());
-                if (dist > 3 && dist < 5) {
-                    particles.clear();
-                }
+
                 Burrow closest = getClosestBurrow(pos);
 
-                if (dist > 2 && !particles.contains(new Vec3(pos))) {
+                if (dist > 8 && !particles.contains(new Vec3(pos)) && spoonSearching) {
+                    if(fromGriffinPet(pos)) return;
+
                     if (closest != null) {
-                        if (Utils.GetMC().thePlayer.getDistance(closest.pos.getX(),closest.pos.getY(),closest.pos.getZ()) < 30) {
+                        if (Utils.GetMC().thePlayer.getDistance(closest.pos.getX(),closest.pos.getY(),closest.pos.getZ()) < 35) {
                             return;
                         }
                     }
@@ -143,7 +160,9 @@ public class MythologicalEvent {
                 }
 
                 if (closest != null) {
-                    closest.type = "Treasure";
+                    if(closest.pos.distanceSq(pos.getX(),pos.getY(),pos.getZ())==1) {
+                        closest.type = "Treasure";
+                    }
                 }
             }
             if (packet.getParticleType() == EnumParticleTypes.CRIT) {
@@ -151,14 +170,14 @@ public class MythologicalEvent {
 
                 Burrow closest = getClosestBurrow(pos);
 
-                if (closest != null && closest.pos.distanceSq(pos) < 3) {
+                if (closest != null && closest.pos.distanceSq(pos)==1) {
                     closest.type = "Mob";
                 }
             }
         }
     }
 
-    public Burrow getClosestBurrow(Vec3i pos) {
+    public static Burrow getClosestBurrow(Vec3i pos) {
         Burrow closest = null;
         for (Burrow burrow : burrows) {
             if (closest == null || burrow.pos.distanceSq(closest.pos) < closest.pos.distanceSq(pos)) {
@@ -266,7 +285,11 @@ public class MythologicalEvent {
         try {
             for (Burrow burrow : burrows) {
                 String type = ChatFormatting.RED + "(" + burrow.type + ")";
-                RenderUtil.drawWaypoint(burrow.pos, Color.green, ChatFormatting.GOLD + "Burrow " + type, partialTicks, true);
+                Color color = Objects.equals(burrow.type, "Treasure") ?new Color(0xFFAA00):
+                        Objects.equals(burrow.type, "Mob") ?Color.RED:
+                                Color.green;
+
+                RenderUtil.drawWaypoint(burrow.pos, color, ChatFormatting.GOLD + "Burrow " + type, partialTicks, true);
             }
         } catch (Exception ignored) {
 

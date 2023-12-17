@@ -38,13 +38,13 @@ public class CooldownTracker {
     }
 
     public static class ItemAbility {
-        int cooldownSeconds;
-        int currentCount;
-        boolean counting = false;
-        long usedAt;
-        String itemId;
-        String abilityName;
-        String type;
+        public int cooldownSeconds;
+        public int currentCount;
+        public boolean counting = false;
+        public long usedAt;
+        public String itemId;
+        public String abilityName;
+        public String type;
         public ItemAbility(String id) {
             this.itemId=id;
             this.usedAt=System.currentTimeMillis();
