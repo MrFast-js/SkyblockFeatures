@@ -389,7 +389,7 @@ public class ItemUtils {
             total += PricingData.bazaarPrices.get("BOOK_OF_STATS").longValue();
         }
         if(ExtraAttributes.hasKey("polarvoid")) {
-            total += PricingData.averageLowestBINs.get("POLARVOID_BOOK").longValue();
+            total += PricingData.averageLowestBINs.get("POLARVOID_BOOK").longValue()*ExtraAttributes.getInteger("polarvoid");
         }
 
         return total;
