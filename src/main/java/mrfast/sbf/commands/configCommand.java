@@ -2,6 +2,7 @@ package mrfast.sbf.commands;
 
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
 import com.google.common.collect.Lists;
 import com.mojang.realmsclient.gui.ChatFormatting;
@@ -69,6 +70,12 @@ public class configCommand extends CommandBase {
                     if(!args[1].equals("pre") && !args[1].equals("full")) {
                         Utils.sendMessage(ChatFormatting.RED + "Invalid Usage! " + ChatFormatting.YELLOW + "/update pre, full");
                     } else {
+                        if(args.length>2) {
+                            if(Objects.equals(args[2], "force")) {
+                                VersionManager.checkForUpdates(args[1],true);
+                                return;
+                            }
+                        }
                         VersionManager.checkForUpdates(args[1]);
                     }
                 } else {

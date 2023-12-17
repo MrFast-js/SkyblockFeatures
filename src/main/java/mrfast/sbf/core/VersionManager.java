@@ -62,12 +62,19 @@ public class VersionManager {
     }
 
     public static void checkForUpdates(String updateType) {
+        checkForUpdates(updateType,false);
+    }
+
+    public static void checkForUpdates(String updateType,boolean force) {
         // pre full
         Utils.sendMessage(ChatFormatting.YELLOW + "Checking for updates...");
         context.checkUpdate(updateType).thenAcceptAsync((update)->{
             if (update != null) {
                 potentialUpdate = update;
-                checkIfNeedUpdate();
+                if(checkIfNeedUpdate() || force) {
+                    doUpdate();
+                }
+
             } else {
                 Utils.sendMessage("No updates available. You are already using the latest version.");
             }
@@ -88,11 +95,11 @@ public class VersionManager {
         return num1;
     }
 
-    public static void checkIfNeedUpdate() {
+    public static boolean checkIfNeedUpdate() {
         double currentVersionValue = getVersionValue(SkyblockFeatures.VERSION);
         if (potentialUpdate == null) {
             Utils.sendMessage(ChatFormatting.RED + "Unable to check for updates. Please try again later.");
-            return;
+            return false;
         }
 
         String updateVersionName = potentialUpdate.getUpdate().getVersionName().split("v")[1];
@@ -103,12 +110,14 @@ public class VersionManager {
 
         if (currentVersionValue > updateVersionValue) {
             Utils.sendMessage(ChatFormatting.GREEN + "You are using an more recent version. No update needed.");
+            return false;
         } else if (currentVersionValue == updateVersionValue) {
             Utils.sendMessage(ChatFormatting.GREEN + "You are already using the latest version.");
+            return false;
         } else {
             Utils.sendMessage(ChatFormatting.YELLOW + "You are using an outdated version. Updating to version "
                     + ChatFormatting.AQUA + updateVersionName + ChatFormatting.YELLOW + "...");
-            doUpdate();
+            return true;
         }
     }
 
