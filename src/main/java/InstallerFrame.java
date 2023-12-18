@@ -48,7 +48,7 @@ public class InstallerFrame extends JFrame {
 
         // Description
         JTextArea descriptionTextArea = new JTextArea(
-                "This installer will copy Skyblock Features into your selected mods folder for you, and replace any old versions that already exist. Skyblock Features is a 1.8.9 Forge Hypixel Skyblock mod that adds features that are not commonly found or are paid in other mods but are very useful. SBF is free and will always be free.");
+                "This installer will put Skyblock Features into your selected mods folder for you, and replace any old versions that already exist. Skyblock Features is a 1.8.9 Forge Hypixel Skyblock mod that adds features that are not commonly found or are paid in other mods but are very useful. SBF is free and will always be free.");
         descriptionTextArea.setWrapStyleWord(true);
         descriptionTextArea.setLineWrap(true);
         descriptionTextArea.setEditable(false);
