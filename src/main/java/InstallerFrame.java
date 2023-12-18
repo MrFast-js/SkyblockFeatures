@@ -52,6 +52,7 @@ public class InstallerFrame extends JFrame {
         descriptionTextArea.setWrapStyleWord(true);
         descriptionTextArea.setLineWrap(true);
         descriptionTextArea.setEditable(false);
+        descriptionTextArea.setFont(new Font(Font.DIALOG, Font.PLAIN, 12));
         descriptionTextArea.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
         descriptionTextArea.setBackground(panel.getBackground());
 
@@ -98,8 +99,6 @@ public class InstallerFrame extends JFrame {
         panel.add(installButton);
 
         // Set custom colors for buttons and background
-        installButton.setBackground(new Color(0, 153, 204)); // Light Blue
-        installButton.setForeground(Color.WHITE); // White text
         panel.setBackground(new Color(240, 240, 240)); // Light Gray background
 
         add(panel);
@@ -163,8 +162,8 @@ public class InstallerFrame extends JFrame {
      * @author Moulberry
      */
     private void removeOldRelease(String selectedFolder) {
-        String minecraftDir = System.getenv("APPDATA");
-        File destinationFolder = getDefaultFolder(selectedFolder, minecraftDir);
+        String userHome = System.getProperty("user.home", ".");
+        File destinationFolder = getDefaultFolder(selectedFolder, userHome);
         if(destinationFolder.isDirectory()) {
             for (File file : destinationFolder.listFiles()) {
                 if(file.getPath().endsWith(".jar")) {
@@ -225,8 +224,8 @@ public class InstallerFrame extends JFrame {
 
 
     private void installRelease(String version, String selectedFolder) {
-        String minecraftDir = System.getenv("APPDATA");
-        File destinationFolder = getDefaultFolder(selectedFolder, minecraftDir);
+        String userHome = System.getProperty("user.home", ".");
+        File destinationFolder = getDefaultFolder(selectedFolder, userHome);
 
         try {
             URL downloadUrl = getDownloadUrl(version);
@@ -274,14 +273,14 @@ public class InstallerFrame extends JFrame {
         return null;
     }
 
-    private File getDefaultFolder(String option, String minecraftDir) {
+    private File getDefaultFolder(String option, String userHome) {
         switch (option) {
             case "Feather":
-                return new File(minecraftDir + "\\.feather\\user-mods\\1.8.9");
+                return new File(userHome + "\\.feather\\user-mods\\1.8.9");
             case "Forge":
-                return new File(minecraftDir + "\\.minecraft\\mods");
+                return new File(userHome + "\\.minecraft\\mods");
             case "Custom":
-                JFileChooser fileChooser = new JFileChooser();
+                JFileChooser fileChooser = new JFileChooser(userHome);
                 fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
                 int result = fileChooser.showOpenDialog(this);
 
@@ -301,12 +300,12 @@ public class InstallerFrame extends JFrame {
     }
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                InstallerFrame installer = new InstallerFrame();
-                installer.setVisible(true);
-            }
+        SwingUtilities.invokeLater(() -> {
+            try {
+                UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+            } catch (Exception e) {}
+            InstallerFrame installer = new InstallerFrame();
+            installer.setVisible(true);
         });
     }
 }
