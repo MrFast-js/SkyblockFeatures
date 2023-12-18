@@ -10,7 +10,7 @@
         <img src="https://img.shields.io/github/license/MrFast-js/SkyblockFeatures?label=License&logo=Github&logoColor=FFFFFF&color=04aed9&style=for-the-badge" alt="lines">
     </a>&nbsp;
     <!-- discord -->
-    <a href="https://discord.gg/UVXCPDAmJK" target="_blank">
+    <a href="https://discord.gg/MDTEAjbNw8" target="_blank">
         <img src="https://img.shields.io/discord/1004750886985277583?label=Discord&logo=Discord&logoColor=FFFFFF&color=04aed9&style=for-the-badge" alt="discord">
     </a>&nbsp;
     <!-- downloads -->
