@@ -493,7 +493,13 @@ public class ConfigGui extends WindowScreen {
                             .setY(new CenterConstraint())
                             .setX(new PixelConstraint(4f))
                             .setTextScale(new PixelConstraint((float) fontScale*2f));
-                        colorPreview = new UIBlock((Color) valueMap.get(feature))
+                        Color color = (Color) ConfigManager.defaultValues.get(feature.name());
+                        try {
+                            color = (Color) valueMap.get(feature);
+                        } catch (Exception e) {}
+                        if(color==null) color = Color.GRAY;
+
+                        colorPreview = new UIBlock(color)
                             .setChildOf(exampleFeature)
                             .setY(new CenterConstraint())
                             .setX(new PixelConstraint(120f,true))
@@ -614,7 +620,12 @@ public class ConfigGui extends WindowScreen {
                                 .setWidth(new PixelConstraint(10f))
                                 .setHeight(new PixelConstraint(11f))
                                 .setX(new PixelConstraint(170f,true));
-                        UIComponent comp = new ColorComponent((Color) valueMap.get(feature),false).setChildOf(exampleFeature);
+                        Color color = (Color) ConfigManager.defaultValues.get(feature.name());
+                        try {
+                            color = (Color) valueMap.get(feature);
+                        } catch (Exception e) {}
+                        if(color==null) color = Color.GRAY;
+                        UIComponent comp = new ColorComponent(color,false).setChildOf(exampleFeature);
                         final UIComponent finalColorPreview = colorPreview;
 
                         resetImg.onMouseClickConsumer((event)->{

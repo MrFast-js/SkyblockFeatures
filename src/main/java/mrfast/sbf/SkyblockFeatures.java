@@ -4,9 +4,11 @@ import com.mojang.realmsclient.gui.ChatFormatting;
 import mrfast.sbf.commands.*;
 import mrfast.sbf.core.*;
 import mrfast.sbf.events.ChatEventListener;
+import mrfast.sbf.events.GuiContainerEvent;
 import mrfast.sbf.events.SecondPassedEvent;
 import mrfast.sbf.features.dungeons.*;
 import mrfast.sbf.features.dungeons.solvers.*;
+import mrfast.sbf.features.dungeons.solvers.terminals.ClickInOrderSolver;
 import mrfast.sbf.features.events.JerryTimer;
 import mrfast.sbf.features.events.MayorJerry;
 import mrfast.sbf.features.events.MythologicalEvent;
@@ -35,6 +37,8 @@ import mrfast.sbf.utils.CapeUtils;
 import mrfast.sbf.utils.OutlineUtils;
 import mrfast.sbf.utils.Utils;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.command.ICommand;
 import net.minecraft.util.EnumChatFormatting;
@@ -118,7 +122,6 @@ public class SkyblockFeatures {
                 new FireVeilTimer(),
                 new TrashHighlighter(),
                 new SpeedDisplay(),
-                new TerminalManager(),
                 new EffectiveHealthDisplay(),
                 new ManaDisplay(),
                 new HealthDisplay(),
@@ -131,6 +134,8 @@ public class SkyblockFeatures {
                 new JerryTimer(),
                 new GiftTracker(),
                 new CropCounter(),
+                new ClickInOrderSolver(),
+                new TerminalManager(),
                 new HideGlass(),
                 new AuctionFeatures(),
                 new CapeUtils(),
@@ -237,6 +242,7 @@ public class SkyblockFeatures {
     }
 
     boolean sentUpdateNotification = false;
+    GuiScreen lastOpenContainer = null;
     @SubscribeEvent
     public void onTick(TickEvent.ClientTickEvent event) {
         if (event.phase != TickEvent.Phase.START) return;
@@ -244,6 +250,11 @@ public class SkyblockFeatures {
             sentUpdateNotification = true;
             VersionManager.silentUpdateCheck();
         }
+
+        if(Utils.GetMC().currentScreen==null && lastOpenContainer instanceof GuiContainer) {
+            MinecraftForge.EVENT_BUS.post(new GuiContainerEvent.CloseWindowEvent((GuiContainer) lastOpenContainer,((GuiContainer) lastOpenContainer).inventorySlots));
+        }
+        lastOpenContainer = Utils.GetMC().currentScreen;
 
         if (ticks % 20 == 0) {
             if (mc.thePlayer != null) {

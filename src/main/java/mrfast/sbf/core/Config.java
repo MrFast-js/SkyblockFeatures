@@ -165,6 +165,43 @@ public class Config extends ConfigManager {
 
     @Property(
             type = PropertyType.TOGGLE,
+            name = "Click in order Terminal solver",
+            description = "Highlights the correct order for the Click in order terminal.",
+            category = "§1§rDungeons",
+            subcategory = "Terminal Solvers",
+            isParent = true
+    )
+    public boolean clickInOrderSolver = false;
+    @Property(
+            type = PropertyType.COLOR,
+            name = "Current Color",
+            description = "",
+            category = "§1§rDungeons",
+            subcategory = "Terminal Solvers",
+            parentName = "Click in order Terminal solver"
+    )
+    public Color clickInOrderSolverCurrent = new Color(0, 60, 60);
+    @Property(
+            type = PropertyType.COLOR,
+            name = "Next Color",
+            description = "",
+            category = "§1§rDungeons",
+            subcategory = "Terminal Solvers",
+            parentName = "Click in order Terminal solver"
+    )
+    public Color clickInOrderSolverNext = new Color(0, 140, 140);
+    @Property(
+            type = PropertyType.COLOR,
+            name = "Next Next Color",
+            description = "",
+            category = "§1§rDungeons",
+            subcategory = "Terminal Solvers",
+            parentName = "Click in order Terminal solver"
+    )
+    public Color clickInOrderSolverNext2 = new Color(0, 250, 250);
+
+    @Property(
+            type = PropertyType.TOGGLE,
             name = "Blaze Solver",
             description = "Highlights the correct blazes to shoot.",
             category = "§1§rDungeons",

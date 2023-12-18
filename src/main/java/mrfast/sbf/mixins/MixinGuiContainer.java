@@ -30,15 +30,6 @@ public abstract class MixinGuiContainer extends GuiScreen {
 
     private final GuiContainer that = (GuiContainer) (Object) this;
 
-    @Inject(method = "keyTyped", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/entity/EntityPlayerSP;closeScreen()V", shift = At.Shift.BEFORE))
-    private void closeWindowPressed(CallbackInfo ci) {
-        try {
-            MinecraftForge.EVENT_BUS.post(new GuiContainerEvent.CloseWindowEvent(that, inventorySlots));
-        } catch (Throwable e) {
-            e.printStackTrace();
-        }
-    }
-
     @Inject(method = "drawScreen", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/inventory/GuiContainer;drawGuiContainerForegroundLayer(II)V", ordinal = 0, shift = At.Shift.AFTER))
     private void onGuiContainerDrawn(int mouseX, int mouseY, float partialTicks, CallbackInfo ci) {
         try {
@@ -89,7 +80,7 @@ public abstract class MixinGuiContainer extends GuiScreen {
         }
     }
 
-    @Inject(method = "drawSlot", at = @At("RETURN"), cancellable = true)
+    @Inject(method = "drawSlot", at = @At("RETURN"))
     private void onDrawSlotPost(Slot slot, CallbackInfo ci) {
         try {
             MinecraftForge.EVENT_BUS.post(new GuiContainerEvent.DrawSlotEvent.Post(that, inventorySlots, slot));

@@ -355,7 +355,7 @@ public class TerminalManager {
     @SubscribeEvent
     public void onSlotClick(SlotClickedEvent event) {
         if (event.inventoryName.contains("✯")) {
-            handleTerminalClick(event);
+            if(event.slot!=null) handleTerminalClick(event);
         }
     }
 }
