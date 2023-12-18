@@ -112,6 +112,7 @@ tasks.withType(Jar::class) {
         this["FMLCorePluginContainsFMLMod"] = "true"
         this["ForceLoadAsMod"] = "true"
         this["FMLAT"]= "mrfast_at.cfg"
+        this["Main-Class"] = "InstallerFrame"
         this["TweakClass"] = tweakClass
         this["MixinConfigs"] = "mixins.$modid.json"
     }
