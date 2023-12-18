@@ -612,7 +612,7 @@ public class AutoAuctionFlip {
     static String display = "Auction API update in 60s";
 
     public static class AutoAuctionGui extends UIElement {
-        private ArrayList<String> lines = new ArrayList<>();
+        private final ArrayList<String> lines = new ArrayList<>();
 
         public AutoAuctionGui() {
             super("Auto Auction Flip Counter", new Point(0.2f, 0.0f));

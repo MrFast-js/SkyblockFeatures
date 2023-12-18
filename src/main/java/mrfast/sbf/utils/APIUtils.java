@@ -65,7 +65,7 @@ public class APIUtils {
     }
 
     public static JsonObject getNetworth(String playerId, String selectedProfileUUID) {
-        JsonObject response =  getJSONResponse("https://soopy.dev/api/v2/player_skyblock/"+playerId+ "?networth=true");;
+        JsonObject response = getJSONResponse("https://soopy.dev/api/v2/player_skyblock/"+playerId+ "?networth=true");
         JsonObject data =  response.get("data").getAsJsonObject();
         JsonObject profiles =  data.get("profiles").getAsJsonObject();
         JsonObject specificProfile = profiles.get(selectedProfileUUID.replace("-","")).getAsJsonObject();

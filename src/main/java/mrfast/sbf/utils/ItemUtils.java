@@ -121,7 +121,7 @@ public class ItemUtils {
         return null;
     }
 
-    private static HashMap<String, ItemStack> itemDataCache = new HashMap<>();
+    private static final HashMap<String, ItemStack> itemDataCache = new HashMap<>();
 
     public static ItemStack getSkyblockItem(String id) {
         if (itemDataCache.containsKey(id)) {

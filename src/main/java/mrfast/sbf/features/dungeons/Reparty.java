@@ -18,7 +18,7 @@ public class Reparty {
     private long startTime = 0;
 
     private boolean isPartyLeader = false;
-    private List<String> memberList = new ArrayList<>();
+    private final List<String> memberList = new ArrayList<>();
     private static long lastRepartyTime = 0;
     private boolean lookingForLine = false;
 

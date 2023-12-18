@@ -156,8 +156,9 @@ public class DungeonsFeatures {
         if (!Utils.inDungeons || event.type == 2) return;
         String text = event.message.getUnformattedText();
         for(String line:ScoreboardUtil.getSidebarLines()) {
-            if(line.startsWith("Keys: ")) {
+            if (line.startsWith("Keys: ")) {
                 dungeonStarted = true;
+                break;
             }
         }
         if(text.startsWith("[BOSS] ") && !text.contains("The Watcher")) {

@@ -58,7 +58,7 @@ public class GiftTracker {
         Entity fromEntity;
     }
 
-    private static HashMap<Entity, Gift> gifts = new HashMap<>();
+    private static final HashMap<Entity, Gift> gifts = new HashMap<>();
 
     @SubscribeEvent
     public void onWorldChange(WorldEvent.Load event) {

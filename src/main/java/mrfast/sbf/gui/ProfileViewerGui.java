@@ -1946,7 +1946,7 @@ public class ProfileViewerGui extends WindowScreen {
     }
 
     private static JsonObject collectionsData = null;
-    private static HashMap<String, JsonObject> categoryDataCache = new HashMap<>();
+    private static final HashMap<String, JsonObject> categoryDataCache = new HashMap<>();
     private static UIComponent statsAreaContainerNew;
 
     public void loadCollectionsCategories() {

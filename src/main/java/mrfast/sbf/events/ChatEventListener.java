@@ -27,7 +27,7 @@ public class ChatEventListener {
                 StringBuilder monkiMessage = new StringBuilder();
                 for(String word:message.split(" ")) {
                     List<String> words = Arrays.asList("Ooh","ooh","ah","Ee","Hoo","Grrr","uuh");
-                    monkiMessage.append(words.get((int) Utils.randomNumber(0, 6))).append(" ");
+                    monkiMessage.append(words.get(Utils.randomNumber(0, 6))).append(" ");
                 }
                 event.setCanceled(true);
                 Utils.GetMC().thePlayer.addChatMessage(new ChatComponentText(name+": "+monkiMessage));
