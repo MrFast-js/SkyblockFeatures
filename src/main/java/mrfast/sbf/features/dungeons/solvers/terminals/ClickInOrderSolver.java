@@ -16,7 +16,7 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.Item;
 import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-
+import net.minecraftforge.event.world.WorldEvent;
 import java.awt.*;
 import java.util.HashMap;
 
@@ -39,6 +39,11 @@ public class ClickInOrderSolver {
     public void onWindowClose(GuiContainerEvent.CloseWindowEvent event) {
         currentNumber = 1;
         orderMap.clear();
+    }
+    @SubscribeEvent
+    public void onWorldChanges(WorldEvent.Load event) {
+        currentNumber = 1;
+        orderMap.clear();;
     }
 
     @SubscribeEvent
