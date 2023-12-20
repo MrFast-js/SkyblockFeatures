@@ -80,7 +80,7 @@ public class InstallerFrame extends JFrame {
         // Folder Dropdown
         JPanel folderDropdownPanel = new JPanel();
         folderDropdownPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        folderDropdownPanel.add(new JLabel("Install to: "));
+        folderDropdownPanel.add(new JLabel("Mods Folder: "));
         folderDropdown = new JComboBox<>(new String[]{"Forge","Feather", "Custom"});
         folderDropdownPanel.add(folderDropdown);
         panel.add(folderDropdownPanel);
