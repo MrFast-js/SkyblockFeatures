@@ -171,7 +171,7 @@
 <div align="center"><img src='https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png'/></div>
 
 ## Cool Commands:
-- **/terminal** (*Allows you to practice a f7 dungeon terminal*)
+- **/terminal** (*Allows you to practice an f7 dungeon terminal*)
 - **/sky** \<name\> (*gives the link for someone's skyleamoe*)
 - **/pv** \<name\> || **/sfpv** \<name\> (*Opens a player in the [Profile Viewer](https://github.com/MrFast-js/SkyblockFeatures#profile-viewer)*)
 - **/shrug** \<msg\> (*Sends a message followed by a "¯\\_(ツ)_/¯"*)
