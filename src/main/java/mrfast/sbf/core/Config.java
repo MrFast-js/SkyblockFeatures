@@ -1578,10 +1578,40 @@ public class Config extends ConfigManager {
             type = PropertyType.TOGGLE,
             name = "Chat Timestamps",
             description = "Add Chat Timestamps to Messages",
-            category = "Quality of Life",
-            subcategory = "Visual"
+            category = "General",
+            subcategory = "§1§rChat"
     )
     public boolean timestamps = false;
+
+    @Property(
+            type = PropertyType.TOGGLE,
+            name = "Better Trading",
+            description = "Toggle this feature to get better trading features",
+            category = "General",
+            subcategory = "§1§rChat",
+            isParent = true
+    )
+    public boolean betterTrading = false;
+
+    @Property(
+            type = PropertyType.TOGGLE,
+            name = "Easier trading",
+            description = "Makes trading easier by typing /trade to trade with the person instead of the /tradeaccept command which expires after 30 seconds",
+            category = "General",
+            subcategory = "§1§rChat",
+            parentName = "Better Trading"
+    )
+    public boolean easierTrading = false;
+
+    @Property(
+            type = PropertyType.TOGGLE,
+            name = "Hide trade expired",
+            description = "Hides the message that says \"The /trade request from ... expired!\"",
+            category = "General",
+            subcategory = "§1§rChat",
+            parentName = "Better Trading"
+    )
+    public boolean hideExpired = false;
 
     @Property(
             type = PropertyType.TOGGLE,
