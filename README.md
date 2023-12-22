@@ -102,6 +102,7 @@
         <li>Small Items</li>
         <li>Glowing Items based on rarity</li>
         <li>Glowing Zealots</li>
+        <li>Highlight Slayers</li>
         <li>Ad Blocker (Hides people advertising in chat)</li>
     </ul>
 </details>
@@ -128,7 +129,7 @@
         <li>Pest Highlighter</li>
         <li>Diana Mythological Helper</li>
         <li>Endernode Highlighter</li>
-        <li>Highlight Zealots Spawn Locations</li></li>
+        <li>Highlight Zealots Spawn Locations</li>
         <li>1.12 Crop Hitbox</li>
         <li>Highlight Auction Flips</li>
         <li>Ad Blocker (Hides people advertising in chat)</li>
