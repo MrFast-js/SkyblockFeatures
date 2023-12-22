@@ -1,8 +1,6 @@
 package mrfast.sbf.features.dungeons;
 
-import com.mojang.realmsclient.gui.ChatFormatting;
 import mrfast.sbf.SkyblockFeatures;
-import mrfast.sbf.gui.GuiManager;
 import mrfast.sbf.gui.components.Point;
 import mrfast.sbf.gui.components.UIElement;
 import mrfast.sbf.utils.GuiUtils;
@@ -14,7 +12,7 @@ import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-public class FireFreeze {
+public class FireFreezeTimer {
 
     String bossDialogue = "[BOSS] The Professor: Oh? You found my Guardians' one weakness?";
 

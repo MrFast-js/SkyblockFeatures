@@ -180,7 +180,7 @@ public class SkyblockFeatures {
                 new PartyFinderFeatures(),
                 new CollectionOverlay(),
                 new RenderFeatures(),
-                new FireFreeze()
+                new FireFreezeTimer()
         );
         features.forEach(MinecraftForge.EVENT_BUS::register);
         // Checks mod folder for version of Skyblock Features your using
