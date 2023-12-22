@@ -186,5 +186,4 @@ This project is licensed under GNU General Public License v3.0 License, see [LIC
 <div align="center"><img src='https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png'/></div>
 
 ## Credits:
-This mod would not be possible without 
-[NEU](https://github.com/NotEnoughUpdates/NotEnoughUpdates), [Skytils 0.x](https://github.com/Skytils/SkytilsMod/tree/0.x), [SBA](https://github.com/BiscuitDevelopment/SkyblockAddons)
+This mod would not be possible without these open source [Third Party Projects](https://github.com/MrFast-js/SkyblockFeatures/blob/main/ThirdPartyProjects.md) 
