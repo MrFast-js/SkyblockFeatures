@@ -102,6 +102,7 @@
         <li>Small Items</li>
         <li>Glowing Items based on rarity</li>
         <li>Glowing Zealots</li>
+        <li>Highlight Slayers</li>
         <li>Ad Blocker (Hides people advertising in chat)</li>
     </ul>
 </details>
@@ -128,7 +129,7 @@
         <li>Pest Highlighter</li>
         <li>Diana Mythological Helper</li>
         <li>Endernode Highlighter</li>
-        <li>Highlight Zealots Spawn Locations</li></li>
+        <li>Highlight Zealots Spawn Locations</li>
         <li>1.12 Crop Hitbox</li>
         <li>Highlight Auction Flips</li>
         <li>Ad Blocker (Hides people advertising in chat)</li>
@@ -185,5 +186,4 @@ This project is licensed under GNU General Public License v3.0 License, see [LIC
 <div align="center"><img src='https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png'/></div>
 
 ## Credits:
-This mod would not be possible without 
-[NEU](https://github.com/NotEnoughUpdates/NotEnoughUpdates), [Skytils 0.x](https://github.com/Skytils/SkytilsMod/tree/0.x), [SBA](https://github.com/BiscuitDevelopment/SkyblockAddons)
+This mod would not be possible without these open source [Third Party Projects](https://github.com/MrFast-js/SkyblockFeatures/blob/main/ThirdPartyProjects.md) 
