@@ -161,7 +161,6 @@ public class MiscOverlays {
             if(heldItem==null) return;
             boolean holdingBow = (heldItem.getItem() instanceof ItemBow);
             if(packet.getSoundName().equals("random.bow") && holdingBow) {
-                event.setCanceled(false);
                 quiverArrows--;
             }
         }
