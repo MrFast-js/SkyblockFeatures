@@ -1,8 +1,12 @@
 package mrfast.sbf.events;
 
 import mrfast.sbf.core.ConfigManager;
+import net.minecraft.event.ClickEvent;
+import net.minecraft.event.HoverEvent;
 import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.ChatStyle;
 import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.IChatComponent;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -48,6 +52,25 @@ public class ChatEventListener {
             SkyblockFeatures.config.firstLaunch = false;
             ConfigManager.saveConfig(SkyblockFeatures.config);
 
+        }
+
+        String pattern = "\\b\\w+\\b has sent you a trade request\\. Click here to accept!.*";
+        if(unformatted.matches(pattern) && SkyblockFeatures.config.betterTrading && SkyblockFeatures.config.easierTrading) {
+            String tradeRequest = unformatted.split(" ")[0];
+
+            event.setCanceled(true);
+            IChatComponent notificationText = new ChatComponentText(
+                    EnumChatFormatting.GREEN + tradeRequest + " has sent you a trade request." + EnumChatFormatting.AQUA +
+                            " Click here " + EnumChatFormatting.GREEN + "to accept!")
+                    .setChatStyle(new ChatStyle()
+                            .setChatClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/trade " + tradeRequest))
+                            .setChatHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ChatComponentText(EnumChatFormatting.GREEN +
+                                    "Click here to accept!"))));
+            Utils.GetMC().thePlayer.addChatMessage(notificationText);
+        }
+
+        if(unformatted.startsWith("The /trade request from") && unformatted.endsWith("expired!") && SkyblockFeatures.config.betterTrading && SkyblockFeatures.config.hideExpired) {
+            event.setCanceled(true);
         }
     }
 }

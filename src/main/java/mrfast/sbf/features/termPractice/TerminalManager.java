@@ -170,6 +170,7 @@ public class TerminalManager {
         private void slotClick(SlotClickedEvent event) {
             // green -> blue -> red -> orange -> yellow
             List<Integer> colors = Arrays.asList(5, 3, 14, 1, 4);
+            if(event.item==null) return;
             int color = event.item.getMetadata();
             if (!colors.contains(color)) return;
             Utils.playSound("note.pling", 2);

@@ -81,7 +81,6 @@ public class ConfigManager {
                     if(propertyAnnotation.type() == PropertyType.BUTTON) continue;
 
                     JsonObject propertyJson = new JsonObject();
-                    propertyJson.addProperty("featureName", field.getName());
                     propertyJson.add("value", gson.toJsonTree(value));
                     jsonObject.add(field.getName(), propertyJson);
                 }
