@@ -994,21 +994,23 @@ public class Config extends ConfigManager {
 
     @Property(
             type = PropertyType.TOGGLE,
-            name = "Display Tree Capitator Cooldown",
+            name = "Treecapitator Cooldown",
             description = "Displays the cooldown for the treecapitator",
             category = "Quality of Life",
-            subcategory = "Foraging"
+            subcategory = "Foraging",
+            isParent = true
     )
-    public boolean treecapitatorCooldown = false;
+    public boolean treecapCooldown = false;
 
     @Property(
             type = PropertyType.TOGGLE,
-            name = "Display Conjuring Cooldown",
-            description = "Displays the cooldown for the Conjuring",
+            name = "Only show if held",
+            description = "Only show cooldown if the treecap is held rather than just in hotbar.",
             category = "Quality of Life",
-            subcategory = "Dungeons"
+            subcategory = "Foraging",
+            parentName = "Treecapitator Cooldown"
     )
-    public boolean ConjuringCooldown = false;
+    public boolean treecapHeld = false;
 
     @Property(
             type = PropertyType.TOGGLE,
@@ -1601,7 +1603,7 @@ public class Config extends ConfigManager {
             subcategory = "§1§rChat",
             parentName = "Better Trading"
     )
-    public boolean easierTrading = false;
+    public boolean easierTrading = true;
 
     @Property(
             type = PropertyType.TOGGLE,
@@ -1611,7 +1613,7 @@ public class Config extends ConfigManager {
             subcategory = "§1§rChat",
             parentName = "Better Trading"
     )
-    public boolean hideExpired = false;
+    public boolean hideExpired = true;
 
     @Property(
             type = PropertyType.TOGGLE,

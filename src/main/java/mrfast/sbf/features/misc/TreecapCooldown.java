@@ -4,62 +4,68 @@ import java.awt.Color;
 
 import mrfast.sbf.SkyblockFeatures;
 import mrfast.sbf.events.BlockChangeEvent;
-import mrfast.sbf.events.SecondPassedEvent;
+import mrfast.sbf.utils.ItemUtils;
 import mrfast.sbf.utils.Utils;
 import net.minecraft.block.BlockAir;
 import net.minecraft.block.BlockLog;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ScaledResolution;
-import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.RenderTickEvent;
 
 public class TreecapCooldown {
-    public static int seconds = 2;
+    public static double seconds = 2.0;
     private static final Minecraft mc = Minecraft.getMinecraft();
 
     @SubscribeEvent
     public void onPlayerInteractEvent(BlockChangeEvent event) {
-        if(!Utils.inSkyblock || mc.thePlayer.getHeldItem() == null || !SkyblockFeatures.config.treecapitatorCooldown) return; 
+        if(!Utils.inSkyblock || mc.thePlayer.getHeldItem() == null || !SkyblockFeatures.config.treecapCooldown) return;
 
-        if(mc.thePlayer.getHeldItem().getDisplayName().toLowerCase().contains("treecapitator") && event.getNew().getBlock() instanceof BlockAir && event.getOld().getBlock() instanceof BlockLog && Utils.GetMC().thePlayer.getDistanceSq(event.pos) < 10) {
-            if(ready) {
+        if(mc.thePlayer.getHeldItem().getDisplayName().toLowerCase().contains("treecapitator") && event.getNew().getBlock() instanceof BlockAir && event.getOld().getBlock() instanceof BlockLog && Utils.GetMC().thePlayer.getDistanceSq(event.pos) < 20) {
+            if(seconds<=0) {
                 seconds = 2;
-                ready = false;
             }
         }
     }
 
     @SubscribeEvent
 	public void onTick(RenderTickEvent event) {
-		if(!Utils.inSkyblock || !SkyblockFeatures.config.treecapitatorCooldown || Minecraft.getMinecraft().currentScreen != null) return;
+		if(!Utils.inSkyblock || !SkyblockFeatures.config.treecapCooldown || Minecraft.getMinecraft().currentScreen != null) return;
 		
-		ItemStack item = Minecraft.getMinecraft().thePlayer.getHeldItem();
-		
-		if (item == null) return;
-		
-		if (item.getDisplayName().contains("Treecapitator")) {
-			
-			if (!ready) {
-    			ScaledResolution sr = new ScaledResolution(Minecraft.getMinecraft());
-    			int guiLeft = (sr.getScaledWidth() - 176) / 2;
-    			int guiTop = (sr.getScaledHeight() - 222) / 2;
-    			
-                float x = guiLeft + 82.5f;
-    			int y = guiTop + 120;
+		boolean hasTreecap = false;
 
-                if(seconds <= 10) x = guiLeft + 85;
-    			
-    			Minecraft.getMinecraft().fontRendererObj.drawString(seconds+"", x, y, new Color(255, 85, 85).getRGB(), true);
+        if(SkyblockFeatures.config.treecapHeld) {
+            ItemStack stack = Utils.GetMC().thePlayer.getHeldItem();
+            if(stack==null) return;
+            if(ItemUtils.getSkyBlockItemID(stack).equals("TREECAPITATOR_AXE")) {
+                hasTreecap=true;
+            }
+        } else {
+            for (int i = 0; i < 8; i++) {
+                if (Utils.GetMC().thePlayer.inventory.mainInventory[i] == null) continue;
+                ItemStack stack = Utils.GetMC().thePlayer.inventory.mainInventory[i];
+                if(ItemUtils.getSkyBlockItemID(stack).equals("TREECAPITATOR_AXE")) {
+                    hasTreecap=true;
+                }
+            }
+        }
+
+
+		if (hasTreecap) {
+            ScaledResolution sr = new ScaledResolution(Minecraft.getMinecraft());
+            int guiLeft = (sr.getScaledWidth() - 176) / 2;
+            int guiTop = (sr.getScaledHeight() - 222) / 2;
+            if (seconds>0) {
+                float x = guiLeft + 85;
+    			int y = guiTop + 120;
+                if(seconds <= 10) x = guiLeft + 82.5f;
+
+    			Minecraft.getMinecraft().fontRendererObj.drawString(Utils.round(seconds,1), x, y, new Color(255, 85, 85).getRGB(), true);
 			} else {
-    			ScaledResolution sr = new ScaledResolution(Minecraft.getMinecraft());
-    			int guiLeft = (sr.getScaledWidth() - 176) / 2;
-    			int guiTop = (sr.getScaledHeight() - 222) / 2;
-    			
-    			int x = guiLeft + 85;
+
+                int x = guiLeft + 85;
     			int y = guiTop + 120;
     			
     			Minecraft.getMinecraft().fontRendererObj.drawString("✔", x, y, new Color(85, 255, 85).getRGB(), true);
@@ -67,15 +73,11 @@ public class TreecapCooldown {
 		}
 	}
 
-    static boolean ready = false;
     @SubscribeEvent
-    public void onSeconds(SecondPassedEvent event) {
-        if(!Utils.inSkyblock) { return; }
-        if (seconds < 3 && seconds > 0) {
-            seconds--;
-        }
-        if (seconds == 0) {
-            ready = true;
+    public void onSeconds(TickEvent.ClientTickEvent event) {
+        if (event.phase != TickEvent.Phase.START || !Utils.inSkyblock ) return;
+        if (seconds > 0) {
+            seconds-=0.05;
         }
     }
 
