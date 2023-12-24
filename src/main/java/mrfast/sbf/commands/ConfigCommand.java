@@ -8,7 +8,6 @@ import com.google.common.collect.Lists;
 import com.mojang.realmsclient.gui.ChatFormatting;
 
 import mrfast.sbf.SkyblockFeatures;
-import mrfast.sbf.core.SkyblockInfo;
 import mrfast.sbf.core.VersionManager;
 import mrfast.sbf.gui.ConfigGui;
 import mrfast.sbf.gui.EditLocationsGui;
@@ -23,7 +22,7 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.ChatComponentText;
 
-public class configCommand extends CommandBase {
+public class ConfigCommand extends CommandBase {
 
     @Override
     public String getCommandName() {

@@ -224,7 +224,7 @@ public class SkyblockFeatures {
         List<ICommand> commands = new ArrayList<>();
         commands.add(new debugCommand());
         commands.add(new SkyCommand());
-        commands.add(new configCommand());
+        commands.add(new ConfigCommand());
         commands.add(new TerminalCommand());
         commands.add(new ShrugCommand());
         commands.add(new FlipsCommand());
