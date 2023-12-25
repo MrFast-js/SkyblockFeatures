@@ -778,7 +778,7 @@ public class Config extends ConfigManager {
     @Property(
             type = PropertyType.TOGGLE,
             name = "Highlight Correct Livid",
-            description = "Highlights the incorrect livid",
+            description = "Highlights the correct livid during the f5 boss fight",
             category = "§1§rDungeons",
             subcategory = "Miscellaneous",
             isParent = true
