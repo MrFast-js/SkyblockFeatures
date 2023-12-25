@@ -38,7 +38,8 @@ public class TreecapCooldown {
 
         if(SkyblockFeatures.config.treecapHeld) {
             ItemStack stack = Utils.GetMC().thePlayer.getHeldItem();
-            if(stack==null) return;
+            if(stack==null||ItemUtils.getSkyBlockItemID(stack)==null) return;
+	 
             if(ItemUtils.getSkyBlockItemID(stack).equals("TREECAPITATOR_AXE")) {
                 hasTreecap=true;
             }
@@ -46,6 +47,7 @@ public class TreecapCooldown {
             for (int i = 0; i < 8; i++) {
                 if (Utils.GetMC().thePlayer.inventory.mainInventory[i] == null) continue;
                 ItemStack stack = Utils.GetMC().thePlayer.inventory.mainInventory[i];
+		if(ItemUtils.getSkyBlockItemID(stack)==null) return;
                 if(ItemUtils.getSkyBlockItemID(stack).equals("TREECAPITATOR_AXE")) {
                     hasTreecap=true;
                 }
