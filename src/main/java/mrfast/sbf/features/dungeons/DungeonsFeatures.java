@@ -3,8 +3,10 @@ package mrfast.sbf.features.dungeons;
 import java.awt.Color;
 import java.util.*;
 
+import mrfast.sbf.core.SkyblockInfo;
 import mrfast.sbf.core.SkyblockMobDetector;
 import mrfast.sbf.events.CheckRenderEntityEvent;
+import mrfast.sbf.events.RenderEntityOutlineEvent;
 import mrfast.sbf.gui.GuiManager;
 import mrfast.sbf.utils.*;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
@@ -53,7 +55,7 @@ public class DungeonsFeatures {
     public static boolean dungeonStarted = false;
     int ticks = 0;
     boolean inSpecialRoom = false;
-    HashMap<SkyblockMobDetector.SkyblockMob, Boolean> starredMobs = new HashMap<>();
+    static HashMap<SkyblockMobDetector.SkyblockMob, Boolean> starredMobs = new HashMap<>();
     @SubscribeEvent
     public void onTick(TickEvent.ClientTickEvent event) {
         if(!Utils.inDungeons || !dungeonStarted) return;
@@ -73,6 +75,21 @@ public class DungeonsFeatures {
     }
 
     @SubscribeEvent
+    public void onRenderEntityOutlines(RenderEntityOutlineEvent event) {
+        if(Utils.GetMC().theWorld == null || !Utils.inDungeons || SkyblockInfo.getLocation()==null) return;
+        if (event.type == RenderEntityOutlineEvent.Type.XRAY) return;
+        if(!SkyblockFeatures.config.boxStarredMobs) return;
+
+        if(dungeonStarted && !inSpecialRoom) {
+            starredMobs.forEach((sbMob,starred)->{
+                if(starred) {
+                    event.queueEntityToOutline(sbMob.skyblockMob,SkyblockFeatures.config.boxStarredMobsColor);
+                }
+            });
+        }
+    }
+
+    @SubscribeEvent
     public void checkRender(CheckRenderEntityEvent event) {
         if(!SkyblockFeatures.config.hideNonStarredMobs) return;
 
@@ -88,14 +105,6 @@ public class DungeonsFeatures {
     @SubscribeEvent
     public void onRender3D(RenderWorldLastEvent event) {
         if(!Utils.inDungeons) return;
-
-        if(dungeonStarted && !inSpecialRoom && SkyblockFeatures.config.boxStarredMobs) {
-            starredMobs.forEach((sbMob,starred)->{
-                if(starred) {
-                    OutlineUtils.renderOutline(sbMob.skyblockMob,SkyblockFeatures.config.boxStarredMobsColor,false);
-                }
-            });
-        }
 
         if(SkyblockFeatures.config.highlightBats) {
             for(Entity entity:mc.theWorld.loadedEntityList) {
@@ -166,7 +175,7 @@ public class DungeonsFeatures {
         }
 
         if(text.endsWith("has obtained Blood Key!")) {
-            for (EntityPlayer entry : Nametags.players) {
+            for (EntityPlayer entry : Nametags.playersAndClass.keySet()) {
                 if(text.contains(entry.getName())) {
                     bloodguy = entry;
                 }

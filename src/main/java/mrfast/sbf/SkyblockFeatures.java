@@ -5,6 +5,7 @@ import mrfast.sbf.commands.*;
 import mrfast.sbf.core.*;
 import mrfast.sbf.events.ChatEventListener;
 import mrfast.sbf.events.GuiContainerEvent;
+import mrfast.sbf.events.RenderEntityOutlineEvent;
 import mrfast.sbf.events.SecondPassedEvent;
 import mrfast.sbf.features.dungeons.*;
 import mrfast.sbf.features.dungeons.solvers.*;
@@ -32,10 +33,7 @@ import mrfast.sbf.features.termPractice.TerminalManager;
 import mrfast.sbf.features.trackers.*;
 import mrfast.sbf.gui.GuiManager;
 import mrfast.sbf.gui.ProfileViewerUtils;
-import mrfast.sbf.utils.APIUtils;
-import mrfast.sbf.utils.CapeUtils;
-import mrfast.sbf.utils.OutlineUtils;
-import mrfast.sbf.utils.Utils;
+import mrfast.sbf.utils.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.inventory.GuiContainer;
@@ -57,6 +55,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import org.lwjgl.input.Keyboard;
 
+import java.awt.*;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStreamReader;
@@ -161,6 +160,7 @@ public class SkyblockFeatures {
                 new PowderTracker(),
                 new DwarvenMap(),
                 new GrandmaWolfTimer(),
+                new EntityOutlineRenderer(),
                 new RelicFinderWaypoints(),
                 new DynamicFullbright(),
                 new GardenFeatures(),
@@ -175,6 +175,7 @@ public class SkyblockFeatures {
                 new BlazeSolver(),
                 new ThreeWeirdosSolver(),
                 new SkyblockInfo(),
+                new GlowingItems(),
                 new Reparty(),
                 new ProfileViewerUtils(),
                 new PartyFinderFeatures(),
@@ -279,11 +280,6 @@ public class SkyblockFeatures {
         ClientRegistry.registerKeyBinding(openBestFlipKeybind);
         ClientRegistry.registerKeyBinding(reloadPartyFinder);
         ClientRegistry.registerKeyBinding(toggleSprint);
-    }
-
-    @SubscribeEvent
-    public void onWorldLoad(WorldEvent.Load event) {
-        OutlineUtils.entityOutlines.clear();
     }
 
     @SubscribeEvent

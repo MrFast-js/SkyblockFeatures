@@ -11,17 +11,15 @@ import com.mojang.realmsclient.gui.ChatFormatting;
 import mrfast.sbf.SkyblockFeatures;
 import mrfast.sbf.core.SkyblockInfo;
 import mrfast.sbf.core.SkyblockMobDetector;
-import mrfast.sbf.events.CheckRenderEntityEvent;
+import mrfast.sbf.events.RenderEntityOutlineEvent;
 import mrfast.sbf.events.SecondPassedEvent;
 import mrfast.sbf.gui.components.Point;
 import mrfast.sbf.gui.components.UIElement;
 import mrfast.sbf.utils.GuiUtils;
-import mrfast.sbf.utils.OutlineUtils;
 import mrfast.sbf.utils.RenderUtil;
 import mrfast.sbf.utils.Utils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.item.EntityArmorStand;
 import net.minecraft.entity.monster.EntityEnderman;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.BlockPos;
@@ -77,20 +75,26 @@ public class ZealotSpawnLocations {
 
     static String loc = "";
     static Boolean inNest = false;
+    @SubscribeEvent
+    public void onRenderEntityOutlines(RenderEntityOutlineEvent event) {
+        if(Utils.GetMC().theWorld == null || Utils.GetMC().thePlayer == null || SkyblockInfo.getLocation()==null) return;
+        if (event.type == RenderEntityOutlineEvent.Type.XRAY) return;
+
+        if (Utils.inSkyblock && SkyblockInfo.map.equals("The End") && SkyblockFeatures.config.glowingZealots) {
+            if (loc.contains("Zealot Bruiser Hideout") || inNest) {
+                for (Entity entity : Utils.GetMC().theWorld.loadedEntityList) {
+                    if (entity instanceof EntityEnderman) {
+                        event.queueEntityToOutline(entity,SkyblockFeatures.config.glowingZealotsColor);
+                    }
+                }
+            }
+        }
+    }
 
     @SubscribeEvent
     public void onRender(RenderWorldLastEvent event) {
         loc = SkyblockInfo.localLocation;
         inNest = loc.contains("Dragons Nest");
-        if (Utils.inSkyblock && SkyblockInfo.map.equals("The End") && SkyblockFeatures.config.glowingZealots) {
-            if (loc.contains("Zealot Bruiser Hideout") || inNest) {
-                for (Entity entity : Utils.GetMC().theWorld.loadedEntityList) {
-                    if (entity instanceof EntityEnderman) {
-                        OutlineUtils.renderOutline(entity, SkyblockFeatures.config.glowingZealotsColor, false);
-                    }
-                }
-            }
-        }
 
         if (!SkyblockFeatures.config.showZealotSpawnAreas) return;
 
