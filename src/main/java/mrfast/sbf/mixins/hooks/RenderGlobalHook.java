@@ -1,11 +1,9 @@
 package mrfast.sbf.mixins.hooks;
 
-import com.sun.javafx.geom.Vec3d;
 import mrfast.sbf.utils.EntityOutlineRenderer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.culling.ICamera;
 import net.minecraft.entity.Entity;
-import net.minecraft.util.Vec3;
 import net.minecraft.util.Vec3i;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
