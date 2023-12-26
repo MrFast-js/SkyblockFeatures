@@ -759,7 +759,7 @@ public class Config extends ConfigManager {
     @Property(
             type = PropertyType.TOGGLE,
             name = "Highlight Starred Mobs",
-            description = "Highlights starred mobs in dungeons by making them glowing.",
+            description = "Highlights starred mobs in dungeons by making them glowing. §cRequires Optifine",
             category = "§1§rDungeons",
             subcategory = "Miscellaneous",
             isParent = true
@@ -1368,7 +1368,7 @@ public class Config extends ConfigManager {
     @Property(
             type = PropertyType.TOGGLE,
             name = "Glowing Dungeon Teammates",
-            description = "Make your teamates glow based on there class in dungeons. §cSignificant performance impact.",
+            description = "Make your teamates glow based on there class in dungeons. §cRequires Optifine",
             category = "Render",
             subcategory = "1.9 Glow Effect",
             isParent = true
@@ -1429,7 +1429,7 @@ public class Config extends ConfigManager {
     @Property(
             type = PropertyType.TOGGLE,
             name = "Glowing Items!",
-            description = "Make items glow depending on rarity. (Requires Fast render to be off) §cSignificant performance impact.",
+            description = "Make items glow depending on rarity. (Requires Fast render to be off) §cRequires Optifine",
             category = "Render",
             subcategory = "1.9 Glow Effect"
     )
@@ -1735,7 +1735,7 @@ public class Config extends ConfigManager {
     @Property(
             type = PropertyType.TOGGLE,
             name = "Make Zealots Glow",
-            description = "Applys the 1.9 glow effect to zealots to make them glow and shiny. §cSignificant performance impact.",
+            description = "Applys the 1.9 glow effect to zealots to make them glow and shiny. §cRequires Optifine",
             category = "§1§rThe End",
             subcategory = "Zealots",
             isParent = true
