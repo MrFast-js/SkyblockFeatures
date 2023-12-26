@@ -7,7 +7,7 @@ import java.util.List;
 import com.mojang.realmsclient.gui.ChatFormatting;
 
 import mrfast.sbf.SkyblockFeatures;
-import mrfast.sbf.utils.OutlineUtils;
+import mrfast.sbf.events.RenderEntityOutlineEvent;
 import mrfast.sbf.utils.ScoreboardUtil;
 import mrfast.sbf.utils.Utils;
 
@@ -25,12 +25,23 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 public class Nametags {
 
     public Minecraft mc = Minecraft.getMinecraft();
-    public static Set<EntityPlayer> players = new HashSet<>();
+    public static HashMap<EntityPlayer,String> playersAndClass = new HashMap<>();
 
     @SubscribeEvent
     public void onWorldChange(WorldEvent.Load event) {
-        players.clear();
+        playersAndClass.clear();
     }
+
+    @SubscribeEvent
+    public void onRenderEntityOutlines(RenderEntityOutlineEvent event) {
+        if(Utils.GetMC().theWorld == null || !Utils.inDungeons || !SkyblockFeatures.config.glowingDungeonPlayers) return;
+        if (event.type == RenderEntityOutlineEvent.Type.NO_XRAY) return;
+
+        for (EntityPlayer entity : playersAndClass.keySet()) {
+            event.queueEntityToOutline(entity,getColorForClass(playersAndClass.get(entity)));
+        }
+    }
+
     @SubscribeEvent
     public void onRender3D(RenderWorldLastEvent event) {
         if(!Utils.inDungeons) return;
@@ -48,12 +59,8 @@ public class Nametags {
                 for (String cleanedLine : sidebarLines) {
                     String classTag = getClassTag(cleanedLine);
                     if (classTag != null && cleanedLine.contains("[" + classTag + "] " + cutShort)) {
-                        if(player != Utils.GetMC().thePlayer && SkyblockFeatures.config.glowingDungeonPlayers) {
-                            OutlineUtils.renderOutline(player,getColorForClass(classTag),true);
-                        }
-
                         if(SkyblockFeatures.config.NameTags) {
-                            renderNameTag(player, ChatFormatting.YELLOW + "[" + classTag + "] " + ChatFormatting.GREEN + player.getName(), x, y, z);
+                            renderNameTag(player, ChatFormatting.YELLOW + "[" + classTag + "] " + ChatFormatting.GREEN + player.getName(), x, y, z,classTag);
                         }
                         break;
                     }
@@ -75,15 +82,15 @@ public class Nametags {
     private Color getColorForClass(String classTag) {
         switch (classTag) {
             case "M":
-                return Color.cyan;
+                return SkyblockFeatures.config.dungeonMageColor;
             case "T":
-                return Color.gray;
+                return SkyblockFeatures.config.dungeonTankColor;
             case "A":
-                return Color.green;
+                return SkyblockFeatures.config.dungeonArchColor;
             case "B":
-                return new Color(255,85,85);
+                return SkyblockFeatures.config.dungeonBersColor;
             case "H":
-                return Color.magenta;
+                return SkyblockFeatures.config.dungeonHealColor;
             default:
                 return Color.white; // Default color if no match is found
         }
@@ -93,9 +100,9 @@ public class Nametags {
         return (previous + (current - previous) * delta);
     }
 
-    private void renderNameTag(EntityPlayer player, String displayName, double x, double y, double z) {
+    private void renderNameTag(EntityPlayer player, String displayName, double x, double y, double z, String classTag) {
         if(player.equals(Utils.GetMC().thePlayer)) return;
-        players.add(player);
+        playersAndClass.put(player,classTag);
 
         float f = 1.6F;
 		float f1 = 0.016666668F * f;

@@ -1,4 +1,4 @@
-package mrfast.sbf.mixins;
+package mrfast.sbf.mixins.transformers;
 
 import org.lwjgl.opengl.GL11;
 import org.spongepowered.asm.mixin.Mixin;

@@ -1,4 +1,4 @@
-package mrfast.sbf.mixins;
+package mrfast.sbf.mixins.transformers;
 
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.renderer.GlStateManager;

@@ -1,26 +1,10 @@
 {
   "compatibilityLevel": "JAVA_8",
-  "package": "mrfast.sbf.mixins",
+  "package": "mrfast.sbf.mixins.transformers",
   "refmap": "mixins.skyblockfeatures.refmap.json",
-  "minVersion": "0.8",
-  "mixins": [
-    "MixinAbstractClientPlayer",
-    "MixinBlockCrops",
-    "MixinBlockNetherWart",
-    "MixinChunk",
-    "MixinEntityRenderer",
-    "MixinGui",
-    "MixinGuiContainer",
-    "MixinGuiEditSign",
-    "MixinGuiIngame",
-    "MixinItemRenderer",
-    "MixinLayerArmorBase",
-    "MixinMinecraft",
-    "MixinNetHandlerPlayClient",
-    "MixinNetworkManager",
-    "MixinRender",
-    "MixinRenderPlayer",
-    "MixinRenderGlobal"
-  ],
-  "verbose": true
+  "plugin": "mrfast.sbf.mixins.init.MixinPlugin",
+  "verbose": true,
+  "injectors": {
+    "maxShiftBy": 2
+  }
 }

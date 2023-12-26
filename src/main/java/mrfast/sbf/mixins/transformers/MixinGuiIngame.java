@@ -1,4 +1,4 @@
-package mrfast.sbf.mixins;
+package mrfast.sbf.mixins.transformers;
 
 import java.util.Collection;
 import java.util.List;

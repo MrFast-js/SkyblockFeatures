@@ -1,4 +1,4 @@
-package mrfast.sbf.mixins;
+package mrfast.sbf.mixins.transformers;
 
 import io.netty.channel.ChannelHandlerContext;
 import mrfast.sbf.events.PacketEvent;

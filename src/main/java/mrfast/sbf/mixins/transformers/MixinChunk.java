@@ -1,4 +1,4 @@
-package mrfast.sbf.mixins;
+package mrfast.sbf.mixins.transformers;
 
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
