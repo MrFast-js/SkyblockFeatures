@@ -570,9 +570,20 @@ public class Config extends ConfigManager {
             name = "Dungeon Chest Profit",
             description = "Shows the estimated profit for items from chests in dungeons.",
             category = "§1§rDungeons",
-            subcategory = "Miscellaneous"
+            subcategory = "Miscellaneous",
+            isParent = true
     )
     public boolean dungeonChestProfit = false;
+
+    @Property(
+            type = PropertyType.TOGGLE,
+            name = "Include Essence",
+            description = "Adds essence into the profit calculation.",
+            category = "§1§rDungeons",
+            subcategory = "Miscellaneous",
+            parentName = "Dungeon Chest Profit"
+    )
+    public boolean dungeonChestProfitEssence = true;
 
     @Property(
             type = PropertyType.TOGGLE,
