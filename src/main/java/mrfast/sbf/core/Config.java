@@ -1367,12 +1367,64 @@ public class Config extends ConfigManager {
 
     @Property(
             type = PropertyType.TOGGLE,
-            name = "Glowing Dungeon Teammates!",
+            name = "Glowing Dungeon Teammates",
             description = "Make your teamates glow based on there class in dungeons. §cSignificant performance impact.",
             category = "Render",
-            subcategory = "1.9 Glow Effect"
+            subcategory = "1.9 Glow Effect",
+            isParent = true
     )
     public boolean glowingDungeonPlayers = false;
+
+    @Property(
+            type = PropertyType.COLOR,
+            name = "Archer Color",
+            description = "",
+            category = "Render",
+            subcategory = "1.9 Glow Effect",
+            parentName = "Glowing Dungeon Teammates"
+    )
+    public Color dungeonArchColor = Color.GREEN;
+
+    @Property(
+            type = PropertyType.COLOR,
+            name = "Berserker Color",
+            description = "",
+            category = "Render",
+            subcategory = "1.9 Glow Effect",
+            parentName = "Glowing Dungeon Teammates"
+    )
+    public Color dungeonBersColor = new Color(255,85,85);
+
+    @Property(
+            type = PropertyType.COLOR,
+            name = "Mage Color",
+            description = "",
+            category = "Render",
+            subcategory = "1.9 Glow Effect",
+            parentName = "Glowing Dungeon Teammates"
+    )
+    public Color dungeonMageColor = Color.cyan;
+
+    @Property(
+            type = PropertyType.COLOR,
+            name = "Healer Color",
+            description = "",
+            category = "Render",
+            subcategory = "1.9 Glow Effect",
+            parentName = "Glowing Dungeon Teammates"
+    )
+    public Color dungeonHealColor = Color.magenta;
+
+    @Property(
+            type = PropertyType.COLOR,
+            name = "Tank Color",
+            description = "",
+            category = "Render",
+            subcategory = "1.9 Glow Effect",
+            parentName = "Glowing Dungeon Teammates"
+    )
+    public Color dungeonTankColor = Color.gray;
+
 
     @Property(
             type = PropertyType.TOGGLE,
