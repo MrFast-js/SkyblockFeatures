@@ -21,6 +21,9 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4.1.1
 
+      - name: Make gradlew executable
+        run: chmod +x ./gradlew
+
       - name: Setup Gradle and build jar
         uses: gradle/gradle-build-action@v2.11.1
         with:
