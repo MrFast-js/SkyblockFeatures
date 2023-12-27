@@ -93,9 +93,11 @@ public class APIUtils {
         return getJSONResponse(urlString,headers,true);
     }
     public static JsonObject getJSONResponse(String urlString, String[] headers, boolean caching) {
+        
         if(urlString.contains("api.hypixel.net")) {
             urlString = urlString.replace("https://api.hypixel.net", SkyblockFeatures.config.modAPIURL+"аpi");
         }
+        boolean isMyApi = urlString.contains(SkyblockFeatures.config.modAPIURL);
 
         if(Utils.isDeveloper()) {
             if (urlString.contains("#")) {
@@ -126,17 +128,18 @@ public class APIUtils {
                 String value = header.split("=")[1];
                 request.setHeader(name, value);
             }
-
+if(isMyApi) {
             if(!SkyblockFeatures.config.temporaryAuthKey.isEmpty()) {
                 request.setHeader("temp-auth-key",SkyblockFeatures.config.temporaryAuthKey);
             }
 
             List<String> nearby = Utils.GetMC().theWorld.playerEntities.stream().filter((e)-> !Utils.isNPC(e)).map(EntityPlayer::getUniqueID).map(UUID::toString).limit(20).collect(Collectors.toList());
+            
             // Server checks 2 random non-duplicate nearby player's uuids and checks if they are online to verify ingame auth
             request.setHeader("x-players",nearby.toString());
             // Send player author for logging past requests
             request.setHeader("x-request-author",Utils.GetMC().thePlayer.toString());
-
+            }
             try (CloseableHttpResponse response = client.execute(request)) {
                 HttpEntity entity = response.getEntity();
                 int statusCode = response.getStatusLine().getStatusCode();
@@ -144,7 +147,7 @@ public class APIUtils {
                 try (BufferedReader in = new BufferedReader(new InputStreamReader(entity.getContent(),StandardCharsets.UTF_8))) {
                     Gson gson = new Gson();
                     JsonObject out = gson.fromJson(in, JsonObject.class);
-                    if(urlString.contains(SkyblockFeatures.config.modAPIURL)) {
+                    ifisMyApi) {
                         if(out.has("auth-key")) {
                             SkyblockFeatures.config.temporaryAuthKey = out.get("auth-key").getAsString();
                             System.out.println("GOT AUTH KEY " + SkyblockFeatures.config.temporaryAuthKey);
@@ -170,7 +173,7 @@ public class APIUtils {
             // Will typically happen if the server is offline so will return '502 Bad Gateway'
             System.out.println(urlString);
             ex.printStackTrace();
-            if(urlString.contains(SkyblockFeatures.config.modAPIURL)) {
+            if(isMyApi) {
                 Utils.sendMessage(new ChatComponentText(EnumChatFormatting.RED + "The Skyblock Features API service seems to be down. Try again later."));
             } else {
                 String baseUrl = urlString.split("/")[2];
