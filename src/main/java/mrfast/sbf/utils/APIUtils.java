@@ -147,7 +147,7 @@ if(isMyApi) {
                 try (BufferedReader in = new BufferedReader(new InputStreamReader(entity.getContent(),StandardCharsets.UTF_8))) {
                     Gson gson = new Gson();
                     JsonObject out = gson.fromJson(in, JsonObject.class);
-                    ifisMyApi) {
+                    if(isMyApi) {
                         if(out.has("auth-key")) {
                             SkyblockFeatures.config.temporaryAuthKey = out.get("auth-key").getAsString();
                             System.out.println("GOT AUTH KEY " + SkyblockFeatures.config.temporaryAuthKey);
