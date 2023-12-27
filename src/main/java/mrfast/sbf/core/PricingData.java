@@ -1,8 +1,6 @@
 package mrfast.sbf.core;
 
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 
 import org.apache.commons.lang3.time.StopWatch;
 
@@ -46,10 +44,11 @@ public class PricingData {
 
     public static String getIdentifier(ItemStack item) {
         NBTTagCompound extraAttr = ItemUtils.getExtraAttributes(item);
-	if(extraAttr==null) return null;
+	    if(extraAttr==null) return null;
 	
         String id = ItemUtils.getSkyBlockItemID(extraAttr);
         if (id == null) return null;
+
         switch (id) {
             case "PET":
                 if (extraAttr.hasKey("petInfo")) {
@@ -74,6 +73,7 @@ public class PricingData {
                 }
             break;
         }
+
         return id;
     }
 

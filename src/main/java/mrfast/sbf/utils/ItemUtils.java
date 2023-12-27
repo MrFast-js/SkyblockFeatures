@@ -374,7 +374,7 @@ public class ItemUtils {
 
     public static Long getScrollsAndMisc(NBTTagCompound ExtraAttributes) {
         long total = 0;
-
+        String itemId = getSkyBlockItemID(ExtraAttributes);
         if (ExtraAttributes.hasKey("ability_scroll")) {
             NBTTagList scrolls = ExtraAttributes.getTagList("ability_scroll", Constants.NBT.TAG_STRING);
             for (int i = 0; i < scrolls.tagCount(); i++) {
@@ -391,8 +391,54 @@ public class ItemUtils {
         if(ExtraAttributes.hasKey("polarvoid")) {
             total += PricingData.averageLowestBINs.get("POLARVOID_BOOK").longValue()*ExtraAttributes.getInteger("polarvoid");
         }
+        System.out.println(ExtraAttributes);
+        if(ExtraAttributes.hasKey("attributes")) {
+            List<Attribute> valuedAttr = getAttributes(ExtraAttributes);
+            for (Attribute attribute : valuedAttr) {
+                Utils.sendMessage(itemId+" "+ attribute.id+" "+attribute.lvl+" "+attribute.value);
+                total+=attribute.value;
+            }
+        }
 
         return total;
+    }
+
+    public static List<Attribute> getAttributes(NBTTagCompound ExtraAttributes) {
+        NBTTagCompound attr = ExtraAttributes.getCompoundTag("attributes");
+        String itemId = getSkyBlockItemID(ExtraAttributes);
+        List<Attribute> valuedAttr = new ArrayList<>();
+        for (String attributeName : attr.getKeySet()) {
+            int attributeLvl = attr.getInteger(attributeName);
+            String attrId = itemId+"+ATTRIBUTE_"+attributeName.toUpperCase()+";"+attributeLvl;
+            Attribute attribute = new Attribute(attributeName.toUpperCase(),attributeLvl);
+            Double lowestBin = PricingData.lowestBINs.get(itemId);
+            long value = getValueOfAttr(attrId);
+            if(value != -1) {
+                attribute.value = (long) (value-lowestBin);
+                valuedAttr.add(attribute);
+            }
+        }
+        return valuedAttr;
+    }
+
+    public static class Attribute {
+        int lvl;
+        String id;
+        long value = 0L;
+
+        public Attribute(String id,int lvl) {
+            this.id=id;
+            this.lvl=lvl;
+        }
+    }
+
+    public static long getValueOfAttr(String attr) {
+        Double value = PricingData.lowestBINs.get(attr);
+        if(value!=null) {
+            return PricingData.lowestBINs.get(attr).longValue();
+        }
+
+        return -1;
     }
 
     public static Long getDrillParts(NBTTagCompound ExtraAttributes) {
