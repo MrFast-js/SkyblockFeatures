@@ -25,7 +25,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 public class Nametags {
 
     public Minecraft mc = Minecraft.getMinecraft();
-    public static HashMap<EntityPlayer,String> playersAndClass = new HashMap<>();
+    public static HashMap<String,String> playersAndClass = new HashMap<>();
 
     @SubscribeEvent
     public void onWorldChange(WorldEvent.Load event) {
@@ -37,8 +37,12 @@ public class Nametags {
         if(Utils.GetMC().theWorld == null || !Utils.inDungeons || !SkyblockFeatures.config.glowingDungeonPlayers) return;
         if (event.type == RenderEntityOutlineEvent.Type.NO_XRAY) return;
 
-        for (EntityPlayer entity : playersAndClass.keySet()) {
-            event.queueEntityToOutline(entity,getColorForClass(playersAndClass.get(entity)));
+        for (String playerName : playersAndClass.keySet()) {
+            for(EntityPlayer player:Utils.GetMC().theWorld.playerEntities) {
+                if(player.getName().equals(playerName)) {
+                    event.queueEntityToOutline(player,Color.GREEN);
+                }
+            }
         }
     }
 
@@ -61,7 +65,7 @@ public class Nametags {
                     if (classTag != null && cleanedLine.contains("[" + classTag + "] " + cutShort)) {
                         if(player.equals(Utils.GetMC().thePlayer)) continue;
 
-                        playersAndClass.put(player,classTag);
+                        playersAndClass.put(player.getName(),classTag);
                         if(SkyblockFeatures.config.NameTags) {
                             renderNameTag(player, ChatFormatting.YELLOW + "[" + classTag + "] " + ChatFormatting.GREEN + player.getName(), x, y, z,classTag);
                         }
@@ -81,23 +85,6 @@ public class Nametags {
             return cleanedLine.substring(cleanedLine.indexOf("[") + 1, cleanedLine.indexOf("]"));
         }
         return null;
-    }
-
-    private Color getColorForClass(String classTag) {
-        switch (classTag) {
-            case "M":
-                return SkyblockFeatures.config.dungeonMageColor;
-            case "T":
-                return SkyblockFeatures.config.dungeonTankColor;
-            case "A":
-                return SkyblockFeatures.config.dungeonArchColor;
-            case "B":
-                return SkyblockFeatures.config.dungeonBersColor;
-            case "H":
-                return SkyblockFeatures.config.dungeonHealColor;
-            default:
-                return Color.white; // Default color if no match is found
-        }
     }
 
     private double interpolate(double previous, double current, float delta) {

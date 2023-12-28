@@ -770,7 +770,7 @@ public class Config extends ConfigManager {
     @Property(
             type = PropertyType.TOGGLE,
             name = "Highlight Starred Mobs",
-            description = "Highlights starred mobs in dungeons by making them glowing. §cRequires Optifine",
+            description = "Highlights starred mobs in dungeons by making them glowing.",
             category = "§1§rDungeons",
             subcategory = "Miscellaneous",
             isParent = true
@@ -1379,68 +1379,16 @@ public class Config extends ConfigManager {
     @Property(
             type = PropertyType.TOGGLE,
             name = "Glowing Dungeon Teammates",
-            description = "Make your teamates glow based on there class in dungeons. §cRequires Optifine",
+            description = "Make your teamates glow based on there class in dungeons.",
             category = "Render",
-            subcategory = "1.9 Glow Effect",
-            isParent = true
+            subcategory = "1.9 Glow Effect"
     )
     public boolean glowingDungeonPlayers = false;
 
     @Property(
-            type = PropertyType.COLOR,
-            name = "Archer Color",
-            description = "",
-            category = "Render",
-            subcategory = "1.9 Glow Effect",
-            parentName = "Glowing Dungeon Teammates"
-    )
-    public Color dungeonArchColor = Color.GREEN;
-
-    @Property(
-            type = PropertyType.COLOR,
-            name = "Berserker Color",
-            description = "",
-            category = "Render",
-            subcategory = "1.9 Glow Effect",
-            parentName = "Glowing Dungeon Teammates"
-    )
-    public Color dungeonBersColor = new Color(255,85,85);
-
-    @Property(
-            type = PropertyType.COLOR,
-            name = "Mage Color",
-            description = "",
-            category = "Render",
-            subcategory = "1.9 Glow Effect",
-            parentName = "Glowing Dungeon Teammates"
-    )
-    public Color dungeonMageColor = Color.cyan;
-
-    @Property(
-            type = PropertyType.COLOR,
-            name = "Healer Color",
-            description = "",
-            category = "Render",
-            subcategory = "1.9 Glow Effect",
-            parentName = "Glowing Dungeon Teammates"
-    )
-    public Color dungeonHealColor = Color.magenta;
-
-    @Property(
-            type = PropertyType.COLOR,
-            name = "Tank Color",
-            description = "",
-            category = "Render",
-            subcategory = "1.9 Glow Effect",
-            parentName = "Glowing Dungeon Teammates"
-    )
-    public Color dungeonTankColor = Color.gray;
-
-
-    @Property(
             type = PropertyType.TOGGLE,
             name = "Glowing Items!",
-            description = "Make items glow depending on rarity. (Requires Fast render to be off) §cRequires Optifine",
+            description = "Make items glow depending on rarity. (Requires Fast render to be off)",
             category = "Render",
             subcategory = "1.9 Glow Effect"
     )
@@ -1746,7 +1694,7 @@ public class Config extends ConfigManager {
     @Property(
             type = PropertyType.TOGGLE,
             name = "Make Zealots Glow",
-            description = "Applys the 1.9 glow effect to zealots to make them glow and shiny. §cRequires Optifine",
+            description = "Applys the 1.9 glow effect to zealots to make them glow and shiny.",
             category = "§1§rThe End",
             subcategory = "Zealots",
             isParent = true

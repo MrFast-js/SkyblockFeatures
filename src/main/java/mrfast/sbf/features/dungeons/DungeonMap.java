@@ -135,7 +135,7 @@ public class DungeonMap {
         GlStateManager.pushMatrix();
         GlStateManager.scale(0.75f, 0.75f, 0);
         if (DungeonsFeatures.bloodguy != null && SkyblockFeatures.config.dungeonMapBloodGuy) {
-            if (DungeonsFeatures.bloodguy.getName().contains(shortName)) {
+            if (DungeonsFeatures.bloodguy.contains(shortName)) {
                 shortName = ChatFormatting.RED + shortName;
             }
         }

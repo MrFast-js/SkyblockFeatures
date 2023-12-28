@@ -29,7 +29,7 @@ public class FireFreezeTimer {
 
                 Utils.setTimeout(()->{
                     display = count;
-                },i*835);
+                },i*860);
             }
         }
     }
@@ -68,7 +68,7 @@ public class FireFreezeTimer {
 
             float scale = 2f;
             GlStateManager.scale(scale, scale, 0);
-            GuiUtils.drawText("Fire Freeze in 5 seconds!", 0, 0, GuiUtils.TextStyle.DROP_SHADOW);
+            GuiUtils.drawText("§cFire Freeze in 5 seconds!", 0, 0, GuiUtils.TextStyle.DROP_SHADOW);
             GlStateManager.scale(1/scale, 1/scale, 0);
         }
 

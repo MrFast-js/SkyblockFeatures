@@ -157,7 +157,7 @@ public class DungeonsFeatures {
 
     String delimiter = EnumChatFormatting.AQUA + EnumChatFormatting.STRIKETHROUGH.toString() + EnumChatFormatting.BOLD + "--------------------------------------";
     int count = 0;
-    public static EntityPlayer bloodguy;
+    public static String bloodguy;
     static Map<String,Integer> blessings = new HashMap<String,Integer>();
 
     @SubscribeEvent(priority = EventPriority.HIGHEST, receiveCanceled = true)
@@ -175,13 +175,13 @@ public class DungeonsFeatures {
         }
 
         if(text.endsWith("has obtained Blood Key!")) {
-            for (EntityPlayer entry : Nametags.playersAndClass.keySet()) {
-                if(text.contains(entry.getName())) {
+            for (String entry : Nametags.playersAndClass.keySet()) {
+                if(text.contains(entry)) {
                     bloodguy = entry;
                 }
             }
             if(bloodguy==null) {
-                bloodguy = Utils.GetMC().thePlayer;
+                bloodguy = Utils.GetMC().thePlayer.getName();
             }
         }
 
