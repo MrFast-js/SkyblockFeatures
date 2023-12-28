@@ -416,7 +416,7 @@ public class PartyFinderFeatures {
     @SubscribeEvent
     public void onKeyInput(GuiScreenEvent.KeyboardInputEvent keyboardInputEvent) {
         GuiScreen screen = Minecraft.getMinecraft().currentScreen;
-        if (screen instanceof GuiChest && Keyboard.isKeyDown(SkyblockFeatures.reloadPartyFinder.getKeyCode()) && canRefresh) {
+        if (screen instanceof GuiChest && Keyboard.isKeyDown(SkyblockFeatures.config.betterPartyFinderReloadKey) && canRefresh && SkyblockFeatures.config.betterPartyFinder) {
             GuiChest chestScreen = (GuiChest) screen;
             ContainerChest chestContainer = (ContainerChest) chestScreen.inventorySlots;
             if (!chestContainer.getLowerChestInventory().getName().contains("Party Finder")) return;
