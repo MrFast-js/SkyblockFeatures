@@ -165,11 +165,8 @@ public class MinionOverlay {
                 if(e instanceof EntityArmorStand) {
                     if(isMinion((EntityArmorStand) e)) {
                         if(SkyblockFeatures.config.minionLastCollected && lastCollected.containsKey(e.getPosition().toString()) && Utils.GetMC().thePlayer.getDistanceToEntity(e)<8) {
-                            String duration = "Unknown";
-                            if(lastCollected.containsKey(e.getPosition().toString())) {
-                                long timeElapsed = (System.currentTimeMillis()-lastCollected.get(e.getPosition().toString()))/1000L;
-                                duration = Utils.secondsToTime(timeElapsed);
-                            }
+                            long timeElapsed = (System.currentTimeMillis()-lastCollected.get(e.getPosition().toString()))/1000L;
+                            String duration = Utils.secondsToTime(timeElapsed);
                             RenderUtil.draw3DStringWithShadow(e.getPositionVector().add(new Vec3(0,1.5,0)),ChatFormatting.YELLOW+"Last Collected: "+ChatFormatting.AQUA+duration,event.partialTicks);
                         }
 
