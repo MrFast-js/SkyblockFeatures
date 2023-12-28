@@ -8,7 +8,7 @@ import java.lang.annotation.*;
 import java.util.HashMap;
 
 public class ConfigManager {
-    public static HashMap<String, Object> defaultValues = new HashMap<String, Object>();
+    public static HashMap<String, Object> defaultValues = new HashMap<>();
     public enum PropertyType {
         SLIDER,
         TOGGLE, // switch
@@ -17,6 +17,7 @@ public class ConfigManager {
         BUTTON,
         NUMBER,
         CHECKBOX,
+        KEYBIND,
         TEXT // paragraph
         // Add other property types as needed
     }

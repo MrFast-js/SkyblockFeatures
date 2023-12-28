@@ -41,6 +41,8 @@ import mrfast.sbf.SkyblockFeatures;
 import mrfast.sbf.core.Config;
 import mrfast.sbf.utils.GuiUtils;
 import mrfast.sbf.utils.Utils;
+import org.lwjgl.input.Keyboard;
+import scala.Char;
 
 public class ConfigGui extends WindowScreen {
     public static SortedMap<String, SortedMap<String,List<Property>>> categories = new TreeMap<>();
@@ -50,6 +52,7 @@ public class ConfigGui extends WindowScreen {
     public String searchQuery = "";
     static Boolean furfSkyThemed = false;
     static boolean quickSwapping = false;
+    public static boolean listeningForKeybind = false;
 
     @Override
 	public void onScreenClose() {
@@ -549,6 +552,79 @@ public class ConfigGui extends WindowScreen {
 
                         button.onMouseClickConsumer((event)->{
                             ((Runnable) valueMap.get(feature)).run();
+                        });
+                    }
+
+                    if(feature.type() == PropertyType.KEYBIND) {
+                        UIComponent resetImg = new ShadowIcon(new ResourceImageFactory("/assets/skyblockfeatures/gui/reset.png", true), false)
+                                .setChildOf(exampleFeature)
+                                .setY(new CenterConstraint())
+                                .setWidth(new PixelConstraint(10f))
+                                .setHeight(new PixelConstraint(11f))
+                                .setX(new PixelConstraint(120f,true));
+                        UIComponent button = new ShadowIcon(new ResourceImageFactory("/assets/skyblockfeatures/gui/default_button.png", true), false)
+                                .setHeight(new PixelConstraint(24f))
+                                .setWidth(new PixelConstraint(88.5f))
+                                .setY(new CenterConstraint())
+                                .setX(new PixelConstraint(15f,true))
+                                .setChildOf(exampleFeature);
+
+                        int keycode = (Integer) valueMap.get(feature);
+                        String currentKey = "NONE";
+                        if(keycode!=-1) {
+                            currentKey=Keyboard.getKeyName(keycode);
+                        }
+                        UIComponent text = new UIText(currentKey).setChildOf(button).setX(new CenterConstraint()).setY(new CenterConstraint());
+                        border.setHeight(new RelativeConstraint(0.16f));
+                        exampleFeature.setHeight(new RelativeConstraint(1f));
+
+                        button.onMouseClickConsumer((event) -> {
+                            listeningForKeybind = true;
+                            // Set listening style, similar to minecrafts keybind system
+                            ((UIText) text).setText("§r> §e"+((UIText) text).getText()+"§r <");
+                            new Thread(() -> {
+                                boolean keyPressed = false;
+                                while (!keyPressed) {
+                                    for (int i = 0; i < Keyboard.KEYBOARD_SIZE; i++) {
+                                        if (Keyboard.isKeyDown(i)) {
+                                            Utils.setTimeout(()->{
+                                                listeningForKeybind = false;
+                                            },100);
+                                            String newKeyName = Keyboard.getKeyName(i);
+
+                                            // Reset if ESCAPE is pressed
+                                            if(i==1) {
+                                                ((UIText) text).setText("NONE");
+                                                break;
+                                            }
+                                            ((UIText) text).setText(newKeyName);
+                                            keyPressed = true;
+                                            setVariable(feature.name(),i);
+                                            break;
+                                        }
+                                    }
+
+                                    // Add a small delay to avoid excessive CPU usage
+                                    try {
+                                        Thread.sleep(10);
+                                    } catch (InterruptedException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                            }).start();
+                        });
+
+                        resetImg.onMouseClickConsumer((event)->{
+                            try {
+                                int defaultValue = (int) ConfigManager.defaultValues.get(feature.name());
+                                setVariable(feature.name(), defaultValue);
+                                String newCurrentKey = "NONE";
+                                if(defaultValue!=-1) newCurrentKey=Keyboard.getKeyName(keycode);
+                                ((UIText) text).setText(newCurrentKey);
+
+                            } catch (Exception e) {
+                                Utils.sendMessage(ChatFormatting.RED+"There was a problem resetting this feature! Try again later");
+                            }
                         });
                     }
 

@@ -31,6 +31,7 @@ import mrfast.sbf.features.render.*;
 import mrfast.sbf.features.statDisplays.*;
 import mrfast.sbf.features.termPractice.TerminalManager;
 import mrfast.sbf.features.trackers.*;
+import mrfast.sbf.gui.ConfigGui;
 import mrfast.sbf.gui.GuiManager;
 import mrfast.sbf.gui.ProfileViewerUtils;
 import mrfast.sbf.utils.*;
@@ -41,6 +42,7 @@ import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.command.ICommand;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.client.ClientCommandHandler;
+import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
@@ -271,15 +273,18 @@ public class SkyblockFeatures {
     }
 
     private final static KeyBinding toggleSprint = new KeyBinding("Toggle Sprint", 0, "Skyblock Features");
-    public final static KeyBinding reloadPartyFinder = new KeyBinding("Reload Party Finder", Keyboard.KEY_R, "Skyblock Features");
-    public final static KeyBinding openBestFlipKeybind = new KeyBinding("Open Best Flip", Keyboard.KEY_J, "Skyblock Features");
-
     @EventHandler
     public void initKeybinds(FMLInitializationEvent event) {
         MinecraftForge.EVENT_BUS.register(this);
-        ClientRegistry.registerKeyBinding(openBestFlipKeybind);
-        ClientRegistry.registerKeyBinding(reloadPartyFinder);
         ClientRegistry.registerKeyBinding(toggleSprint);
+    }
+
+    // Stop the escape key from closing the gui if listening for a keybind
+    @SubscribeEvent
+    public void onGuiKeyEvent(GuiScreenEvent.KeyboardInputEvent.Pre event) {
+        if(ConfigGui.listeningForKeybind && Keyboard.getEventKey() == Keyboard.KEY_ESCAPE) {
+            event.setCanceled(true);
+        }
     }
 
     @SubscribeEvent
