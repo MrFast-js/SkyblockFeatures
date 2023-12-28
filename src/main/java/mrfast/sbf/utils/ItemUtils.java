@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -391,14 +392,13 @@ public class ItemUtils {
         if(ExtraAttributes.hasKey("polarvoid")) {
             total += PricingData.averageLowestBINs.get("POLARVOID_BOOK").longValue()*ExtraAttributes.getInteger("polarvoid");
         }
-        System.out.println(ExtraAttributes);
-        if(ExtraAttributes.hasKey("attributes")) {
-            List<Attribute> valuedAttr = getAttributes(ExtraAttributes);
-            for (Attribute attribute : valuedAttr) {
-                Utils.sendMessage(itemId+" "+ attribute.id+" "+attribute.lvl+" "+attribute.value);
-                total+=attribute.value;
-            }
-        }
+
+//        if(ExtraAttributes.hasKey("attributes")) {
+//            List<Attribute> valuedAttr = getAttributes(ExtraAttributes);
+//            for (Attribute attribute : valuedAttr) {
+//                total+=attribute.value;
+//            }
+//        }
 
         return total;
     }
@@ -409,37 +409,51 @@ public class ItemUtils {
         List<Attribute> valuedAttr = new ArrayList<>();
         for (String attributeName : attr.getKeySet()) {
             int attributeLvl = attr.getInteger(attributeName);
-            String attrId = itemId+"+ATTRIBUTE_"+attributeName.toUpperCase()+";"+attributeLvl;
-            Attribute attribute = new Attribute(attributeName.toUpperCase(),attributeLvl);
+            Attribute attribute = new Attribute(attributeName.toUpperCase(),attributeLvl,itemId);
             Double lowestBin = PricingData.lowestBINs.get(itemId);
-            long value = getValueOfAttr(attrId);
+            long value = getValueOfAttr(attribute,itemId);
             if(value != -1) {
                 attribute.value = (long) (value-lowestBin);
-                valuedAttr.add(attribute);
             }
+            valuedAttr.add(attribute);
         }
         return valuedAttr;
     }
 
     public static class Attribute {
-        int lvl;
-        String id;
-        long value = 0L;
+        public int lvl;
+        public String id;
+        public String itemId;
+        public long value = 0L;
+        public long pricePerTier = 0L;
 
-        public Attribute(String id,int lvl) {
+        public Attribute(String id,int lvl,String itemId) {
             this.id=id;
             this.lvl=lvl;
+            this.itemId=itemId;
         }
     }
 
-    public static long getValueOfAttr(String attr) {
-        Double value = PricingData.lowestBINs.get(attr);
-        if(value!=null) {
-            return PricingData.lowestBINs.get(attr).longValue();
+    public static long getValueOfAttr(Attribute attribute,String itemId) {
+        Double lowestPrice = PricingData.lowestBINs.get(itemId+"+ATTRIBUTE_"+attribute.id.toUpperCase()+";"+attribute.lvl);
+        if(lowestPrice!=null) return lowestPrice.longValue();
+
+        List<Attribute> matches = PricingData.attributeAuctions.stream().filter((attr)->
+                attr.id.equals(attribute.id) && attr.itemId.equals(attribute.itemId)
+        ).collect(Collectors.toList());
+
+        if(!matches.isEmpty()) {
+            for (Attribute match : matches) {
+                if(match.lvl==attribute.lvl) {
+                    return match.value;
+                }
+            }
+            return matches.get(0).value;
         }
 
         return -1;
     }
+
 
     public static Long getDrillParts(NBTTagCompound ExtraAttributes) {
         long total = 0;

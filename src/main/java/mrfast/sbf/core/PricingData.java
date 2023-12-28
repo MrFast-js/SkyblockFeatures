@@ -1,7 +1,12 @@
 package mrfast.sbf.core;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
+import net.minecraft.nbt.CompressedStreamTools;
+import org.apache.commons.codec.binary.Base64InputStream;
 import org.apache.commons.lang3.time.StopWatch;
 
 import com.google.gson.Gson;
@@ -21,6 +26,7 @@ import net.minecraftforge.fml.common.gameevent.TickEvent;
 
 public class PricingData {
     public static final HashMap<String, Double> lowestBINs = new HashMap<>();
+    public static final List<ItemUtils.Attribute> attributeAuctions = new ArrayList<>();
     public static final HashMap<String, Double> averageLowestBINs = new HashMap<>();
     public static final HashMap<String, Double> bazaarPrices = new HashMap<>();
     public static final HashMap<String, Integer> npcSellPrices = new HashMap<>();
@@ -116,6 +122,38 @@ public class PricingData {
                     }, ()->{});
                 }).start();
             }
+
+//            DISABLED UNTIL SBU DEV
+//            if(attributeAuctions.isEmpty()) {
+//                new Thread(() -> {
+//                    String[] headers = new String[]{"UUID="+Utils.GetMC().thePlayer.getUniqueID().toString(),"IGN="+Utils.GetMC().thePlayer.getName(),"User-Agent=SBU"};
+//                    JsonObject data = APIUtils.getJSONResponse("https://mastermindgolem.pythonanywhere.com/?auctions=mb",headers,true);
+//                    if(data==null) {
+//                        Utils.sendMessage("Failed to load attribute prices");
+//                        return;
+//                    }
+//                    JsonArray auctions = data.get("auctions").getAsJsonArray();
+//                    for (JsonElement entry : auctions) {
+//                        JsonObject product = entry.getAsJsonObject();
+//                        Double sellPrice = Math.floor(product.get("starting_bid").getAsDouble());
+//                        String item_bytes = product.get("item_bytes").getAsString();
+//                        Base64InputStream is = new Base64InputStream(new ByteArrayInputStream(item_bytes.getBytes(StandardCharsets.UTF_8)));
+//                        NBTTagCompound nbt = null;
+//                        try {
+//                            nbt = CompressedStreamTools.readCompressed(is);
+//                        } catch (IOException e) {
+//                            throw new RuntimeException(e);
+//                        }
+//                        NBTTagCompound extraAttributes = nbt.getTagList("i", 10).getCompoundTagAt(0).getCompoundTag("tag").getCompoundTag("ExtraAttributes");
+//
+//                        for (ItemUtils.Attribute attribute : ItemUtils.getAttributes(extraAttributes)) {
+//                            attribute.value = sellPrice.longValue();
+//                            attribute.pricePerTier = (long) (attribute.value/Math.pow(2,attribute.lvl));
+//                            attributeAuctions.add(attribute);
+//                        }
+//                    }
+//                }).start();
+//            }
 
             // Get bazaar prices
             if (bazaarPrices.isEmpty()) {
