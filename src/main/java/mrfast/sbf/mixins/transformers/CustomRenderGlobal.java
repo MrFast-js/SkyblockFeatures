@@ -17,5 +17,4 @@ public interface CustomRenderGlobal {
 
     @Accessor("entityOutlineShader")
     ShaderGroup sbf$entityOutlineShader();
-
 }

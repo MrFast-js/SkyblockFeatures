@@ -113,6 +113,7 @@ public class EntityOutlineRenderer {
             GL11.glTexEnvi(GL11.GL_TEXTURE_ENV, GL13.GL_SOURCE0_ALPHA, GL11.GL_TEXTURE);
             GL11.glTexEnvi(GL11.GL_TEXTURE_ENV, GL13.GL_OPERAND0_ALPHA, GL11.GL_SRC_ALPHA);
 
+
             // Render x-ray outlines first, ignoring the depth buffer bit
             if (!isXrayCacheEmpty()) {
 
@@ -127,8 +128,7 @@ public class EntityOutlineRenderer {
                             } else {
                                 setColor(new Color(entityAndColor.getValue()));
                             }
-
-                            renderManager.renderEntityStatic(entityAndColor.getKey(), partialTicks, true);
+                            renderManager.renderEntityStatic(entityAndColor.getKey(), partialTicks, false);
                         } catch (Exception ignored) {
                         }
                     }
