@@ -19,10 +19,7 @@ import mrfast.sbf.core.PricingData;
 import mrfast.sbf.core.SkyblockInfo;
 import mrfast.sbf.events.SlotClickedEvent;
 import mrfast.sbf.events.GuiContainerEvent.TitleDrawnEvent;
-import mrfast.sbf.utils.GuiUtils;
-import mrfast.sbf.utils.ItemRarity;
-import mrfast.sbf.utils.ItemUtils;
-import mrfast.sbf.utils.Utils;
+import mrfast.sbf.utils.*;
 import net.minecraft.client.gui.inventory.GuiChest;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityArmorStand;
@@ -30,12 +27,15 @@ import net.minecraft.inventory.ContainerChest;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.Vec3;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class MinionOverlay {
     static HashMap<String,Long> lastCollected = new HashMap<>();
-
+    static {
+        readConfig();
+    }
     @SubscribeEvent
     public void onDrawContainerTitle(TitleDrawnEvent event) {
         if (event.gui instanceof GuiChest && SkyblockFeatures.config.minionOverlay) {
@@ -46,9 +46,6 @@ public class MinionOverlay {
 
             String chestName = inv.getDisplayName().getUnformattedText().trim();
             if(chestName.contains(" Minion ") && !chestName.contains("Recipe")) {
-                if(lastCollected.isEmpty()) {
-                    readConfig();
-                }
                 int secondsPerAction = 0;
                 ItemStack generating = null;
                 for(int slotId = 0;slotId<inv.getSizeInventory();slotId++) {
@@ -163,20 +160,31 @@ public class MinionOverlay {
     Entity closestMinion = null;
     @SubscribeEvent
     public void onRecievePacket(RenderWorldLastEvent event) {
-        if(Utils.inSkyblock && SkyblockInfo.map.equals("Private Island") && SkyblockFeatures.config.minionOverlay) {
+        if(Utils.inSkyblock && SkyblockInfo.map.equals("Private Island") && (SkyblockFeatures.config.minionOverlay||SkyblockFeatures.config.minionLastCollected)) {
             for(Entity e : Utils.GetMC().theWorld.loadedEntityList){
                 if(e instanceof EntityArmorStand) {
                     if(isMinion((EntityArmorStand) e)) {
+                        if(SkyblockFeatures.config.minionLastCollected && lastCollected.containsKey(e.getPosition().toString()) && Utils.GetMC().thePlayer.getDistanceToEntity(e)<8) {
+                            String duration = "Unknown";
+                            if(lastCollected.containsKey(e.getPosition().toString())) {
+                                long timeElapsed = (System.currentTimeMillis()-lastCollected.get(e.getPosition().toString()))/1000L;
+                                duration = Utils.secondsToTime(timeElapsed);
+                            }
+                            RenderUtil.draw3DStringWithShadow(e.getPositionVector().add(new Vec3(0,1.5,0)),ChatFormatting.YELLOW+"Last Collected: "+ChatFormatting.AQUA+duration,event.partialTicks);
+                        }
+
                         if(closestMinion==null) {
                             closestMinion = e;
                             continue;
                         }
+
                         if(Utils.GetMC().thePlayer.getDistanceToEntity(e)<Utils.GetMC().thePlayer.getDistanceToEntity(closestMinion)) {
                             closestMinion = e;
                         }
                     }
                 }
             }
+
         }
     }
 

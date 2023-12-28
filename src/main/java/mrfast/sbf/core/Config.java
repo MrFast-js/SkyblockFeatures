@@ -1874,9 +1874,18 @@ public class Config extends ConfigManager {
             name = "Minion Overlay",
             description = "Shows the extra information inside the minion gui.",
             category = "Miscellaneous",
-            subcategory = "Overlay"
+            subcategory = "Minion"
     )
     public boolean minionOverlay = false;
+
+    @Property(
+            type = PropertyType.TOGGLE,
+            name = "Show Last Collected Above Minion",
+            description = "Shows when the minion was last collected above the minions head",
+            category = "Miscellaneous",
+            subcategory = "Minion"
+    )
+    public boolean minionLastCollected = false;
 
     @Property(
             type = PropertyType.TOGGLE,
