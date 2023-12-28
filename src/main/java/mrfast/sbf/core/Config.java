@@ -1,6 +1,7 @@
 package mrfast.sbf.core;
 
 import mrfast.sbf.features.dungeons.TrashHighlighter;
+import org.lwjgl.input.Keyboard;
 
 import java.awt.*;
 
@@ -732,6 +733,16 @@ public class Config extends ConfigManager {
     public boolean betterPartyFinderNoDupe = true;
 
     @Property(
+            type = PropertyType.KEYBIND,
+            name = "Refresh Parties",
+            description = "Refreshes the Party Finder menu so new parties show up.",
+            category = "§1§rDungeons",
+            subcategory = "Party Finder",
+            parentName = "Better Party Finder Menu"
+    )
+    public int betterPartyFinderReloadKey = Keyboard.KEY_R;
+
+    @Property(
             type = PropertyType.TOGGLE,
             name = "Dungeon Party Display",
             description = "Shows who all is in your dungeon party, including class and class lvl",
@@ -749,6 +760,7 @@ public class Config extends ConfigManager {
             parentName = "Dungeon Party Display"
     )
     public boolean dungeonPartyDisplayDupes = true;
+
     @Property(
             type = PropertyType.TOGGLE,
             name = "Party Finder Join Info",
@@ -2002,9 +2014,20 @@ public class Config extends ConfigManager {
             name = "Flipper Active",
             description = "Enables or disables the flipper with its current settings.\n§cDo not put 100% trust in the mod, it can and probably will make mistakes.",
             category = "§1§rAuction Flipper",
-            subcategory = "Flipper Settings"
+            subcategory = "Flipper Settings",
+            isParent = true
     )
     public boolean aucFlipperEnabled = false;
+
+    @Property(
+            type = PropertyType.KEYBIND,
+            name = "Keybind to toggle",
+            description = "Keybind used to toggle the flipper on/off",
+            category = "§1§rAuction Flipper",
+            subcategory = "Flipper Settings",
+            parentName = "Flipper Active"
+    )
+    public int aucFlipperKeybind = -1;
 
     @Property(
             type = PropertyType.TOGGLE,
@@ -2095,6 +2118,15 @@ public class Config extends ConfigManager {
             subcategory = "Flipper Settings"
     )
     public boolean autoAuctionFlipOpen = false;
+
+    @Property(
+            type = PropertyType.KEYBIND,
+            name = "Open Best Flip Keybind",
+            description = "Opens up the bid menu for the item with the highest profit.",
+            category = "§1§rAuction Flipper",
+            subcategory = "Flipper Settings"
+    )
+    public int autoAuctionFlipOpenKeybind = Keyboard.KEY_F;
 
     @Property(
             type = PropertyType.TOGGLE,

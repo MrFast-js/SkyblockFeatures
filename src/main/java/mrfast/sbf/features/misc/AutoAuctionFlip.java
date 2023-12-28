@@ -18,6 +18,7 @@ import mrfast.sbf.utils.GuiUtils;
 import mrfast.sbf.utils.ItemUtils;
 import mrfast.sbf.utils.Utils;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.inventory.GuiChest;
 import net.minecraft.event.ClickEvent;
 import net.minecraft.event.HoverEvent;
@@ -28,8 +29,10 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.IChatComponent;
 import net.minecraft.util.MathHelper;
+import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.InputEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import org.apache.commons.codec.binary.Base64InputStream;
 import org.lwjgl.input.Keyboard;
@@ -145,7 +148,7 @@ public class AutoAuctionFlip {
         if (!SkyblockFeatures.config.aucFlipperEnabled) return;
 
         try {
-            boolean down = Mouse.isButtonDown(SkyblockFeatures.openBestFlipKeybind.getKeyCode()) || Keyboard.isKeyDown(SkyblockFeatures.openBestFlipKeybind.getKeyCode());
+            boolean down = Mouse.isButtonDown(SkyblockFeatures.config.autoAuctionFlipOpenKeybind) || Keyboard.isKeyDown(SkyblockFeatures.config.autoAuctionFlipOpenKeybind);
             if (down && Utils.GetMC().currentScreen == null) {
                 if (!auctionFlips.isEmpty() && !sent) {
                     bestAuction = auctionFlips.get(0);
@@ -163,6 +166,19 @@ public class AutoAuctionFlip {
 
         }
     }
+    boolean canToggle = true;
+    @SubscribeEvent
+    public void onKeyInput(InputEvent.KeyInputEvent keyboardInputEvent) {
+        GuiScreen screen = Minecraft.getMinecraft().currentScreen;
+        if (screen ==null && Keyboard.isKeyDown(SkyblockFeatures.config.aucFlipperKeybind) && canToggle) {
+            SkyblockFeatures.config.aucFlipperEnabled=!SkyblockFeatures.config.aucFlipperEnabled;
+            canToggle = false;
+            Utils.setTimeout(()->{
+                canToggle = true;
+            }, 1000);
+        }
+    }
+
 
     boolean stopUpdatingTimes = false;
 
