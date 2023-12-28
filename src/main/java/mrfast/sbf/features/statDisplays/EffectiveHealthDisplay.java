@@ -27,22 +27,22 @@ public class EffectiveHealthDisplay {
 
         @Override
         public void drawElement() {
-            if(mc.thePlayer == null || !Utils.inSkyblock) return;
-            if (this.getToggled() && Minecraft.getMinecraft().thePlayer != null && mc.theWorld != null) {
-                GuiUtils.drawText("§2"+getEffectiveHealth(), 0, 0, GuiUtils.TextStyle.BLACK_OUTLINE);
-            }
+            GuiUtils.drawText("§2"+getEffectiveHealth(), 0, 0, GuiUtils.TextStyle.BLACK_OUTLINE);
         }
         @Override
         public void drawElementExample() {
-            if(mc.thePlayer == null || !Utils.inSkyblock) return;
             GuiUtils.drawText("§2"+getEffectiveHealth(), 0, 0, GuiUtils.TextStyle.BLACK_OUTLINE);
         }
 
         @Override
         public boolean getToggled() {
-            return Utils.inSkyblock && SkyblockFeatures.config.EffectiveHealthDisplay;
+            return SkyblockFeatures.config.EffectiveHealthDisplay;
         }
 
+        @Override
+        public boolean getRequirement() {
+            return Utils.inSkyblock;
+        }
         @Override
         public int getHeight() {
             return Utils.GetMC().fontRendererObj.FONT_HEIGHT;

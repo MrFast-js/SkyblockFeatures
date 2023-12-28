@@ -10,8 +10,6 @@ import net.minecraft.client.Minecraft;
 
 public class SpeedDisplay {
 
-    private static final Minecraft mc = Minecraft.getMinecraft();
-
     static {
         new SpeedDisplayGUI();
     }
@@ -23,8 +21,7 @@ public class SpeedDisplay {
         String walkSpeed = String.valueOf(Minecraft.getMinecraft().thePlayer.capabilities.getWalkSpeed() * 1000);
         text = walkSpeed.substring(0, Math.min(walkSpeed.length(), 3));
         if (text.endsWith(".")) text = text.substring(0, text.indexOf('.')); //remove trailing periods
-        text += "%";
-        return text;
+        return text+"%";
     }
     public static class SpeedDisplayGUI extends UIElement {
         public SpeedDisplayGUI() {
@@ -34,22 +31,22 @@ public class SpeedDisplay {
 
         @Override
         public void drawElement() {
-            if(mc.thePlayer == null || !Utils.inSkyblock) return;
-            if (this.getToggled() && Minecraft.getMinecraft().thePlayer != null && mc.theWorld != null) {
-                GuiUtils.drawText(getSpeed(), 0, 0, GuiUtils.TextStyle.BLACK_OUTLINE);
-            }
+            GuiUtils.drawText(getSpeed(), 0, 0, GuiUtils.TextStyle.BLACK_OUTLINE);
         }
         @Override
         public void drawElementExample() {
-            if(mc.thePlayer == null || !Utils.inSkyblock) return;
-            GuiUtils.drawText("123%", 0, 0, GuiUtils.TextStyle.BLACK_OUTLINE);
+            GuiUtils.drawText(getSpeed(), 0, 0, GuiUtils.TextStyle.BLACK_OUTLINE);
         }
 
         @Override
         public boolean getToggled() {
-            return Utils.inSkyblock && SkyblockFeatures.config.SpeedDisplay;
+            return SkyblockFeatures.config.SpeedDisplay;
         }
 
+        @Override
+        public boolean getRequirement() {
+            return Utils.inSkyblock;
+        }
         @Override
         public int getHeight() {
             return Utils.GetMC().fontRendererObj.FONT_HEIGHT;

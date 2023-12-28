@@ -1,6 +1,7 @@
 package mrfast.sbf.gui.components;
 import java.awt.Color;
 
+import mrfast.sbf.gui.GuiManager;
 import mrfast.sbf.utils.GuiUtils;
 import mrfast.sbf.utils.Utils;
 import net.minecraft.client.Minecraft;
@@ -37,6 +38,7 @@ public class MoveableFeature extends GuiButton {
         float actualY = (screenHeight*y)-2;
         float elementWidth = element.getWidth()*guiScaleFactor;
         float elementHeight = element.getHeight()*guiScaleFactor;
+        if(!element.getRequirement() && !GuiManager.showAllEnabledElements) return;
 
         float xWidth = actualX+elementWidth+4;
         float yHeight = actualY+elementHeight+4;

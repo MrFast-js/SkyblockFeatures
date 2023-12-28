@@ -73,11 +73,11 @@ public class EnderNodeTracker {
     }
 
     static {
-        new EnderNodeGui();
+        new EnderNodeTrackerElement();
     }
 
-    public static class EnderNodeGui extends UIElement {
-        public EnderNodeGui() {
+    public static class EnderNodeTrackerElement extends UIElement {
+        public EnderNodeTrackerElement() {
             super("Ender Node Tracker", new Point(0.2f, 0.0f));
             SkyblockFeatures.GUIMANAGER.registerElement(this);
         }
@@ -126,7 +126,12 @@ public class EnderNodeTracker {
 
         @Override
         public boolean getToggled() {
-            return Utils.inSkyblock && SkyblockFeatures.config.EnderNodeTracker && SkyblockInfo.map.contains("The End");
+            return SkyblockFeatures.config.EnderNodeTracker;
+        }
+
+        @Override
+        public boolean getRequirement() {
+            return SkyblockInfo.map.contains("The End") && Utils.inSkyblock;
         }
 
         @Override

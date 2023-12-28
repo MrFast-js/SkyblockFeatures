@@ -25,25 +25,23 @@ public class DefenseDisplay {
 
         @Override
         public void drawElement() {
-            if(mc.thePlayer == null || !Utils.inSkyblock) return;
-            display = Utils.Defense+"";
-            if (this.getToggled() && Minecraft.getMinecraft().thePlayer != null && mc.theWorld != null) {
-                GuiUtils.drawText("§a"+display, 0, 0, GuiUtils.TextStyle.BLACK_OUTLINE);
-            }
+            GuiUtils.drawText("§a"+Utils.Defense, 0, 0, GuiUtils.TextStyle.BLACK_OUTLINE);
         }
         @Override
         public void drawElementExample() {
-            if(mc.thePlayer == null || !Utils.inSkyblock) return;
-            display = Utils.Defense+"";
-            GuiUtils.drawText("§a"+display, 0, 0, GuiUtils.TextStyle.BLACK_OUTLINE);
-
+            display="§a"+Utils.Defense;
+            GuiUtils.drawText(display, 0, 0, GuiUtils.TextStyle.BLACK_OUTLINE);
         }
 
         @Override
         public boolean getToggled() {
-            return Utils.inSkyblock && SkyblockFeatures.config.DefenseDisplay;
+            return SkyblockFeatures.config.DefenseDisplay;
         }
 
+        @Override
+        public boolean getRequirement() {
+            return Utils.inSkyblock;
+        }
         @Override
         public int getHeight() {
             return Utils.GetMC().fontRendererObj.FONT_HEIGHT;

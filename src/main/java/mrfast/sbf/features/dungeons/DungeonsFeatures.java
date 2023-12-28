@@ -283,10 +283,15 @@ public class DungeonsFeatures {
             GuiUtils.drawText("§dBlessing of Wisdom V", 0, 3 * Utils.GetMC().fontRendererObj.FONT_HEIGHT);
             GuiUtils.drawText("§dBlessing of Stone VII", 0, 4 * Utils.GetMC().fontRendererObj.FONT_HEIGHT);
         }
-  
+        
         @Override
         public boolean getToggled() {
-            return Utils.inSkyblock && SkyblockFeatures.config.blessingViewer && Utils.inDungeons;
+            return SkyblockFeatures.config.blessingViewer;
+        }
+
+        @Override
+        public boolean getRequirement() {
+            return Utils.inDungeons && Utils.inSkyblock;
         }
   
         @Override

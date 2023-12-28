@@ -123,7 +123,7 @@ public class AutomatonTracker {
 
         @Override
         public void drawElement() {
-            if (this.getToggled() && Minecraft.getMinecraft().thePlayer != null && mc.theWorld != null && !hidden) {
+            if (!hidden) {
                 String[] lines = {
                     ChatFormatting.GRAY+""+ChatFormatting.BOLD+"Automaton Loot Tracker",
                     ChatFormatting.GREEN+"  Time Elapsed: §r"+Utils.secondsToTime(totalSeconds),
@@ -145,7 +145,6 @@ public class AutomatonTracker {
         }
         @Override
         public void drawElementExample() {
-            if(mc.thePlayer == null || !Utils.inSkyblock) return;
             String[] lines = {
                     ChatFormatting.GRAY+""+ChatFormatting.BOLD+"Automaton Loot Tracker",
                     ChatFormatting.GREEN+"  Time Elapsed: §r50m 26s",
@@ -167,7 +166,12 @@ public class AutomatonTracker {
 
         @Override
         public boolean getToggled() {
-            return Utils.inSkyblock && SkyblockFeatures.config.AutomatonTracker && CrystalHollowsMap.inCrystalHollows;
+            return SkyblockFeatures.config.AutomatonTracker;
+        }
+
+        @Override
+        public boolean getRequirement() {
+            return CrystalHollowsMap.inCrystalHollows && Utils.inSkyblock;
         }
 
         @Override

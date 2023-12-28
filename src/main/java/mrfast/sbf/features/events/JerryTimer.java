@@ -84,7 +84,12 @@ public class JerryTimer {
 
         @Override
         public boolean getToggled() {
-            return Utils.inSkyblock && isJerryMayor && SkyblockFeatures.config.jerryTimer;
+            return SkyblockFeatures.config.jerryTimer;
+        }
+
+        @Override
+        public boolean getRequirement() {
+            return Utils.inSkyblock && isJerryMayor;
         }
 
         @Override

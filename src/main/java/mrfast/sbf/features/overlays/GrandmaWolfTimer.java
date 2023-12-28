@@ -143,18 +143,17 @@ public class GrandmaWolfTimer {
     }
 
     static {
-        new gWolfTimer();
+        new GrandmaWolfTimerGui();
     }   
 
-    public static class gWolfTimer extends UIElement {
-        public gWolfTimer() {
+    public static class GrandmaWolfTimerGui extends UIElement {
+        public GrandmaWolfTimerGui() {
             super("Grandma Wolf Timer", new Point(0.2f, 0.0f));
             SkyblockFeatures.GUIMANAGER.registerElement(this);
         }
 
         @Override
         public void drawElement() {
-            if(mc.thePlayer == null || !Utils.inSkyblock || Utils.GetMC().theWorld==null || !SkyblockFeatures.config.GrandmaWolfTimer) return;
             double remaining = Math.floor(SecondsRemaining*100)/100;
             String time = (remaining+"").length()==3?remaining+"0":remaining+"";
             if(SecondsRemaining>0.05) {
@@ -166,13 +165,17 @@ public class GrandmaWolfTimer {
 
         @Override
         public void drawElementExample() {
-            if(mc.thePlayer == null || !Utils.inSkyblock) return;
             GuiUtils.drawText(ChatFormatting.GREEN+"5.231s",0,0, GuiUtils.TextStyle.BLACK_OUTLINE);
         }
 
         @Override
         public boolean getToggled() {
             return SkyblockFeatures.config.GrandmaWolfTimer;
+        }
+
+        @Override
+        public boolean getRequirement() {
+            return Utils.inSkyblock;
         }
 
         @Override

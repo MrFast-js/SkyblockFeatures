@@ -1458,7 +1458,7 @@ public class Config extends ConfigManager {
             category = "Mining",
             subcategory = "Trackers"
     )
-    public boolean PowderTracker = false;
+    public boolean powderTracker = false;
 
     @Property(
             type = PropertyType.TOGGLE,

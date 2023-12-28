@@ -75,33 +75,34 @@ public class CropCounter {
 
         @Override
         public void drawElement() {
-            if(mc.thePlayer == null) return;
-            if (this.getToggled() && Minecraft.getMinecraft().thePlayer != null && mc.theWorld != null) {
-                try {
-                    ItemStack item = mc.thePlayer.getHeldItem();
-                    if(item == null) return;
-                    String hoes = "Euclid Gauss Pythagorean Turing Newton";
-                    for(String hoe: hoes.split(" ")) {
-                        if(Utils.cleanColor(item.getDisplayName()).contains(hoe)) {
-                            mc.fontRendererObj.drawStringWithShadow(ChatFormatting.RED+"Counter: "+ChatFormatting.YELLOW+count, 0, 0, 0xFFFFFF);   
-                            mc.fontRendererObj.drawStringWithShadow(ChatFormatting.RED+"Crops Per Second: "+ChatFormatting.YELLOW+cropsPerSecond, 0, Utils.GetMC().fontRendererObj.FONT_HEIGHT, 0xFFFFFF);   
-                        }
+            try {
+                ItemStack item = mc.thePlayer.getHeldItem();
+                if(item == null) return;
+                String hoes = "Euclid Gauss Pythagorean Turing Newton";
+                for(String hoe: hoes.split(" ")) {
+                    if(Utils.cleanColor(item.getDisplayName()).contains(hoe)) {
+                        mc.fontRendererObj.drawStringWithShadow(ChatFormatting.RED+"Counter: "+ChatFormatting.YELLOW+count, 0, 0, 0xFFFFFF);
+                        mc.fontRendererObj.drawStringWithShadow(ChatFormatting.RED+"Crops Per Second: "+ChatFormatting.YELLOW+cropsPerSecond, 0, Utils.GetMC().fontRendererObj.FONT_HEIGHT, 0xFFFFFF);
                     }
-                } catch (Exception e) {
-                    //TODO: handle exception
                 }
+            } catch (Exception e) {
+                //TODO: handle exception
             }
         }
         @Override
         public void drawElementExample() {
-            if(mc.thePlayer == null) return;
-            mc.fontRendererObj.drawStringWithShadow(ChatFormatting.RED+"Counter: "+ChatFormatting.YELLOW+"19,302", 0, 0, 0xFFFFFF);   
+            mc.fontRendererObj.drawStringWithShadow(ChatFormatting.RED+"Counter: "+ChatFormatting.YELLOW+"19,302", 0, 0, 0xFFFFFF);
             mc.fontRendererObj.drawStringWithShadow(ChatFormatting.RED+"Crops Per Second: "+ChatFormatting.YELLOW+"0", 0, Utils.GetMC().fontRendererObj.FONT_HEIGHT, 0xFFFFFF);   
         }
 
         @Override
         public boolean getToggled() {
-            return Utils.inSkyblock && SkyblockFeatures.config.Counter;
+            return SkyblockFeatures.config.Counter;
+        }
+
+        @Override
+        public boolean getRequirement() {
+            return Utils.inSkyblock;
         }
 
         @Override

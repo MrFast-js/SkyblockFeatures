@@ -280,7 +280,8 @@ public class CooldownTracker {
 
         @Override
         public void drawElement() {
-            if(Utils.GetMC().thePlayer == null || !Utils.inSkyblock || activeCooldowns.isEmpty()) return;
+            if(activeCooldowns.isEmpty()) return;
+
             List<String> lines = new ArrayList<>(Collections.singletonList(
                     "§3§lCooldowns"
             ));
@@ -310,7 +311,6 @@ public class CooldownTracker {
         }
         @Override
         public void drawElementExample() {
-            if(Utils.GetMC().thePlayer == null || !Utils.inSkyblock) return;
             String[] lines = {
                     "§3§lCooldowns",
                     " §6Throw §e4s",
@@ -323,7 +323,12 @@ public class CooldownTracker {
 
         @Override
         public boolean getToggled() {
-            return Utils.inSkyblock && SkyblockFeatures.config.cooldownDisplay;
+            return SkyblockFeatures.config.cooldownDisplay;
+        }
+
+        @Override
+        public boolean getRequirement() {
+            return Utils.inSkyblock;
         }
 
         @Override

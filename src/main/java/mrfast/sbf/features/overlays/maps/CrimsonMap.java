@@ -31,13 +31,13 @@ public class CrimsonMap {
         locations.clear();
         loaded = false;
         ticks = 0;
-        start = Minecraft.getMinecraft().thePlayer != null && Minecraft.getMinecraft().theWorld != null && SkyblockFeatures.config.dwarvenMinesMap;
+        start = Minecraft.getMinecraft().thePlayer != null && Minecraft.getMinecraft().theWorld != null && SkyblockFeatures.config.crimsonsIslesMap;
     }
     
     
     @SubscribeEvent
     public void onTick(TickEvent.ClientTickEvent event) {
-        if(start && Minecraft.getMinecraft().thePlayer != null && Minecraft.getMinecraft().theWorld != null && SkyblockFeatures.config.dwarvenMinesMap) {
+        if(start && Minecraft.getMinecraft().thePlayer != null && Minecraft.getMinecraft().theWorld != null && SkyblockFeatures.config.crimsonsIslesMap) {
             ticks++;
             if(ticks >= 40) {
                 loaded = true;
@@ -63,7 +63,7 @@ public class CrimsonMap {
         public void drawElement() {
             try {
                 if(SkyblockInfo.getLocation()==null) return;
-                if (loaded && Minecraft.getMinecraft().thePlayer != null && Utils.inSkyblock && Minecraft.getMinecraft().theWorld != null && SkyblockFeatures.config.crimsonsIslesMap) {
+                if (loaded) {
                     GlStateManager.pushMatrix(); 
                         GlStateManager.enableBlend();
                         GlStateManager.color(1, 1, 1, 1);
@@ -131,9 +131,15 @@ public class CrimsonMap {
             GlStateManager.popMatrix();
         }
 
+
         @Override
         public boolean getToggled() {
-            return SkyblockFeatures.config.crimsonsIslesMap && Utils.inSkyblock && SkyblockInfo.map.equals("Crimson Isle");
+            return SkyblockFeatures.config.crimsonsIslesMap;
+        }
+
+        @Override
+        public boolean getRequirement() {
+            return Utils.inSkyblock && SkyblockInfo.map.equals("Crimson Isle");
         }
 
         @Override

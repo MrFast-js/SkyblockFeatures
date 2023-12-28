@@ -25,24 +25,23 @@ public class HealthDisplay {
 
         @Override
         public void drawElement() {
-            if(mc.thePlayer == null || !Utils.inSkyblock) return;
-            display = Utils.Health+"/"+Utils.maxHealth;
-            if (this.getToggled() && Minecraft.getMinecraft().thePlayer != null && mc.theWorld != null) {
-                GuiUtils.drawText("§c"+display, 0, 0, GuiUtils.TextStyle.BLACK_OUTLINE);
-            }
+            GuiUtils.drawText("§c"+Utils.Health+"/"+Utils.maxHealth, 0, 0, GuiUtils.TextStyle.BLACK_OUTLINE);
         }
         @Override
         public void drawElementExample() {
-            if(mc.thePlayer == null || !Utils.inSkyblock) return;
-            display = Utils.Health+"/"+Utils.maxHealth;
-            GuiUtils.drawText("§c"+display, 0, 0, GuiUtils.TextStyle.BLACK_OUTLINE);
+            display = "§c"+Utils.Health+"/"+Utils.maxHealth;
+            GuiUtils.drawText(display, 0, 0, GuiUtils.TextStyle.BLACK_OUTLINE);
         }
 
         @Override
         public boolean getToggled() {
-            return Utils.inSkyblock && SkyblockFeatures.config.HealthDisplay;
-        }    
+            return SkyblockFeatures.config.HealthDisplay;
+        }
 
+        @Override
+        public boolean getRequirement() {
+            return Utils.inSkyblock;
+        }
         @Override
         public int getHeight() {
             return Utils.GetMC().fontRendererObj.FONT_HEIGHT;

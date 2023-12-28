@@ -52,21 +52,17 @@ public class FireFreezeTimer {
 
         @Override
         public void drawElement() {
-            if(mc.thePlayer == null || !Utils.inDungeons) return;
             float scale = 2f;
 
-            if (this.getToggled() && Minecraft.getMinecraft().thePlayer != null && mc.theWorld != null) {
-                GlStateManager.scale(scale, scale, 0);
-                GuiUtils.drawText(display, 0, 0, GuiUtils.TextStyle.DROP_SHADOW);
-                GlStateManager.scale(1 / scale, 1 / scale, 0);
-            }
+            GlStateManager.scale(scale, scale, 0);
+            GuiUtils.drawText(display, 0, 0, GuiUtils.TextStyle.DROP_SHADOW);
+            GlStateManager.scale(1 / scale, 1 / scale, 0);
         }
 
         @Override
         public void drawElementExample() {
-            if(mc.thePlayer == null || !Utils.inSkyblock) return;
-
             float scale = 2f;
+
             GlStateManager.scale(scale, scale, 0);
             GuiUtils.drawText("§cFire Freeze in 5 seconds!", 0, 0, GuiUtils.TextStyle.DROP_SHADOW);
             GlStateManager.scale(1/scale, 1/scale, 0);
@@ -74,7 +70,12 @@ public class FireFreezeTimer {
 
         @Override
         public boolean getToggled() {
-            return Utils.inSkyblock && SkyblockFeatures.config.fireFreezeTimer && Utils.inDungeons;
+            return SkyblockFeatures.config.fireFreezeTimer;
+        }
+
+        @Override
+        public boolean getRequirement() {
+            return Utils.inDungeons && Utils.inSkyblock;
         }
 
         @Override

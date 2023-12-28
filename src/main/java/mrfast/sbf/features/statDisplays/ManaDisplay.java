@@ -10,8 +10,6 @@ import net.minecraft.client.Minecraft;
 
 public class ManaDisplay {
 
-    private static final Minecraft mc = Minecraft.getMinecraft();
-
     static {
         new ManaDisplayGUI();
     }
@@ -25,22 +23,22 @@ public class ManaDisplay {
 
         @Override
         public void drawElement() {
-            if(mc.thePlayer == null || !Utils.inSkyblock) return;
-            display = "§9"+Utils.Mana+"/"+Utils.maxMana;
-            if (this.getToggled() && Minecraft.getMinecraft().thePlayer != null && mc.theWorld != null) {
-                GuiUtils.drawText(display, 0, 0, GuiUtils.TextStyle.BLACK_OUTLINE);
-            }
+            GuiUtils.drawText("§9"+Utils.Mana+"/"+Utils.maxMana, 0, 0, GuiUtils.TextStyle.BLACK_OUTLINE);
         }
         @Override
         public void drawElementExample() {
-            if(mc.thePlayer == null || !Utils.inSkyblock) return;
-            display = "§9"+Utils.Mana+"/"+Utils.maxMana;
+            display="§9"+Utils.Mana+"/"+Utils.maxMana;
             GuiUtils.drawText(display, 0, 0, GuiUtils.TextStyle.BLACK_OUTLINE);
         }
 
         @Override
         public boolean getToggled() {
-            return Utils.inSkyblock && SkyblockFeatures.config.ManaDisplay;
+            return SkyblockFeatures.config.ManaDisplay;
+        }
+
+        @Override
+        public boolean getRequirement() {
+            return Utils.inSkyblock;
         }
 
         @Override

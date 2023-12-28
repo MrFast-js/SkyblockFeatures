@@ -17,6 +17,8 @@ public abstract class UIElement {
 
     public abstract boolean getToggled();
 
+    public abstract boolean getRequirement();
+
     public Point getPos() {
         return this.pos;
     }

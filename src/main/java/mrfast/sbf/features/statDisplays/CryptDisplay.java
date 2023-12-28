@@ -34,7 +34,6 @@ public class CryptDisplay {
         
         @Override
         public void drawElement() {
-            if(mc.thePlayer == null || !Utils.inDungeons) return;
             int crypts = 0;
             for (NetworkPlayerInfo pi : TabListUtils.getTabEntries()) {
                 try {
@@ -51,16 +50,12 @@ public class CryptDisplay {
             String color = crypts >= 5?"§a":"§c";
 
             float scale = 2f;
-            if (this.getToggled() && Minecraft.getMinecraft().thePlayer != null && mc.theWorld != null) {
-                GlStateManager.scale(scale, scale, 0);
-                GuiUtils.drawText(color+"Crypts: "+crypts, 0, 0, GuiUtils.TextStyle.DROP_SHADOW);
-                GlStateManager.scale(1/scale, 1/scale, 0);
-            }
+            GlStateManager.scale(scale, scale, 0);
+            GuiUtils.drawText(color+"Crypts: "+crypts, 0, 0, GuiUtils.TextStyle.DROP_SHADOW);
+            GlStateManager.scale(1/scale, 1/scale, 0);
         }
         @Override
         public void drawElementExample() {
-            if(mc.thePlayer == null || !Utils.inSkyblock) return;
-
             float scale = 2f;
             GlStateManager.scale(scale, scale, 0);
             GuiUtils.drawText("§cCrypts: 3", 0, 0, GuiUtils.TextStyle.DROP_SHADOW);
@@ -69,7 +64,12 @@ public class CryptDisplay {
 
         @Override
         public boolean getToggled() {
-            return Utils.inSkyblock && SkyblockFeatures.config.cryptCount && Utils.inDungeons;
+            return SkyblockFeatures.config.cryptCount;
+        }
+
+        @Override
+        public boolean getRequirement() {
+            return Utils.inDungeons && Utils.inSkyblock;
         }
 
         @Override

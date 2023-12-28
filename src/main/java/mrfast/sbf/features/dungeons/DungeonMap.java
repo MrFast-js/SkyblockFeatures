@@ -447,7 +447,12 @@ public class DungeonMap {
 
         @Override
         public boolean getToggled() {
-            return Utils.inSkyblock && SkyblockFeatures.config.dungeonMap && Utils.inDungeons;
+            return SkyblockFeatures.config.dungeonMap;
+        }
+
+        @Override
+        public boolean getRequirement() {
+            return Utils.inDungeons && Utils.inSkyblock;
         }
 
         @Override

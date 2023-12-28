@@ -60,8 +60,7 @@ public class DwarvenMap {
         @Override
         public void drawElement() {
             try {
-                if(SkyblockInfo.getLocation()==null) return;
-                if (loaded && Minecraft.getMinecraft().thePlayer != null && Utils.inSkyblock && Minecraft.getMinecraft().theWorld != null && SkyblockFeatures.config.dwarvenMinesMap && SkyblockInfo.map.equals("Dwarven Mines")) {
+                if (loaded) {
                     GlStateManager.pushMatrix(); 
                         GlStateManager.enableBlend();
                         GlStateManager.color(1, 1, 1, 1);
@@ -131,7 +130,12 @@ public class DwarvenMap {
 
         @Override
         public boolean getToggled() {
-            return SkyblockFeatures.config.dwarvenMinesMap && Utils.inSkyblock && SkyblockInfo.map.equals("Dwarven Mines");
+            return SkyblockFeatures.config.dwarvenMinesMap;
+        }
+
+        @Override
+        public boolean getRequirement() {
+            return Utils.inSkyblock && SkyblockInfo.map.equals("Dwarven Mines");
         }
 
         @Override

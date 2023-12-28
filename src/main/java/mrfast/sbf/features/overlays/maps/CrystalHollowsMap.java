@@ -18,7 +18,6 @@ import mrfast.sbf.gui.components.UIElement;
 import mrfast.sbf.utils.RenderUtil;
 import mrfast.sbf.utils.Utils;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.GlStateManager;
@@ -119,10 +118,10 @@ public class CrystalHollowsMap {
     static double lastPlayerR = 0;
 
     static {
-        new CHMap();
+        new CrystalHollowsMapElement();
     }   
-    public static class CHMap extends UIElement {
-        public CHMap() {
+    public static class CrystalHollowsMapElement extends UIElement {
+        public CrystalHollowsMapElement() {
             super("CrystalHollowsMap", new Point(0.2f, 0.0f));
             SkyblockFeatures.GUIMANAGER.registerElement(this);
         }
@@ -130,7 +129,7 @@ public class CrystalHollowsMap {
         @Override
         public void drawElement() {
             try {
-                if (loaded && Minecraft.getMinecraft().thePlayer != null && Utils.inSkyblock && Minecraft.getMinecraft().theWorld != null) {
+                if (loaded) {
                     GlStateManager.pushMatrix(); 
                         GlStateManager.enableBlend();
                         GlStateManager.color(1, 1, 1, 1);
@@ -229,7 +228,12 @@ public class CrystalHollowsMap {
 
         @Override
         public boolean getToggled() {
-            return SkyblockFeatures.config.CrystalHollowsMap && Utils.inSkyblock && CrystalHollowsMap.inCrystalHollows;
+            return SkyblockFeatures.config.CrystalHollowsMap;
+        }
+
+        @Override
+        public boolean getRequirement() {
+            return Utils.inSkyblock && CrystalHollowsMap.inCrystalHollows;
         }
 
         @Override

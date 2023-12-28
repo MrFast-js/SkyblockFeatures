@@ -31,16 +31,13 @@ public class SecretDisplay {
 
         @Override
         public void drawElement() {
-            if(mc.thePlayer == null || !Utils.inDungeons) return;
             int secrets = ActionBarListener.secrets;
             int maxSecrets = ActionBarListener.maxSecrets;
 
-            if (this.getToggled() && Minecraft.getMinecraft().thePlayer != null && mc.theWorld != null) {
-                List<String> text = getSecrets(secrets, maxSecrets);
+            List<String> text = getSecrets(secrets, maxSecrets);
 
-                for (int i = 0; i < text.size(); i++) {
-                    GuiUtils.drawText(text.get(i), ((float) getWidth() /3)*i, i * Utils.GetMC().fontRendererObj.FONT_HEIGHT, GuiUtils.TextStyle.BLACK_OUTLINE);
-                }
+            for (int i = 0; i < text.size(); i++) {
+                GuiUtils.drawText(text.get(i), ((float) getWidth() /3)*i, i * Utils.GetMC().fontRendererObj.FONT_HEIGHT, GuiUtils.TextStyle.BLACK_OUTLINE);
             }
         }
         @Override
@@ -57,7 +54,12 @@ public class SecretDisplay {
 
         @Override
         public boolean getToggled() {
-            return SkyblockFeatures.config.SecretsDisplay && Utils.inSkyblock && Utils.inDungeons;
+            return SkyblockFeatures.config.SecretsDisplay;
+        }
+
+        @Override
+        public boolean getRequirement() {
+            return Utils.inDungeons && Utils.inSkyblock;
         }
 
         @Override

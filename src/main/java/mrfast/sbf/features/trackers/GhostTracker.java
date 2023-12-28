@@ -125,7 +125,7 @@ public class GhostTracker {
 
         @Override
         public void drawElement() {
-            if (this.getToggled() && Minecraft.getMinecraft().thePlayer != null && mc.theWorld != null && !hidden) {
+            if (!hidden) {
                 String[] lines = {
                         ChatFormatting.YELLOW+""+ChatFormatting.BOLD+"Ghost Loot Tracker",
                         ChatFormatting.GREEN+"  Time Elapsed: §r"+Utils.secondsToTime(totalSeconds),
@@ -146,7 +146,6 @@ public class GhostTracker {
         }
         @Override
         public void drawElementExample() {
-            if(mc.thePlayer == null || !Utils.inSkyblock) return;
             String[] lines = {
                 ChatFormatting.AQUA+""+ChatFormatting.BOLD+"Ghost Loot Tracker",
                 ChatFormatting.GREEN+"  Time Elapsed: §r27m 3s",
@@ -167,7 +166,12 @@ public class GhostTracker {
 
         @Override
         public boolean getToggled() {
-            return Utils.inSkyblock && SkyblockFeatures.config.ghostTracker && SkyblockInfo.localLocation.contains("Mist");
+            return SkyblockFeatures.config.ghostTracker;
+        }
+
+        @Override
+        public boolean getRequirement() {
+            return SkyblockInfo.localLocation.contains("Mist") && Utils.inSkyblock;
         }
 
         @Override

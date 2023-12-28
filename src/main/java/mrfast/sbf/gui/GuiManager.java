@@ -93,7 +93,7 @@ public class GuiManager {
 
         }
     }
-
+    public static boolean showAllEnabledElements = false;
     @SubscribeEvent
     public void renderPlayerInfo(RenderGameOverlayEvent.Post event) {
         if (event.type != RenderGameOverlayEvent.ElementType.EXPERIENCE && event.type != RenderGameOverlayEvent.ElementType.JUMPBAR) return;
@@ -104,6 +104,7 @@ public class GuiManager {
             try {
                 UIElement element = e.getValue();
                 if (element.getToggled()) {
+                    if(!element.getRequirement()) continue;
                     GlStateManager.pushMatrix();
                     GlStateManager.scale(guiScaleFactor, guiScaleFactor, 1.0f); // Apply the GUI scale factor
                     GlStateManager.translate((element.getX() * (Utils.GetMC().displayWidth / 2)), (element.getY() * (Utils.GetMC().displayHeight / 2)), 0);

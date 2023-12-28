@@ -185,22 +185,24 @@ public class ZealotSpawnLocations {
 
         @Override
         public void drawElement() {
-            if (mc.thePlayer == null || !Utils.inSkyblock) return;
-            if (this.getToggled() && Minecraft.getMinecraft().thePlayer != null && mc.theWorld != null) {
-                GuiUtils.drawText(activeDisplay, 0, 0, GuiUtils.TextStyle.BLACK_OUTLINE);
-            }
+            GuiUtils.drawText(activeDisplay, 0, 0, GuiUtils.TextStyle.BLACK_OUTLINE);
         }
 
         @Override
         public void drawElementExample() {
-            if (mc.thePlayer == null || !Utils.inSkyblock) return;
             GuiUtils.drawText(EnumChatFormatting.LIGHT_PURPLE + "Zealot Spawn: " + ChatFormatting.DARK_PURPLE + "10s", 0, 0, GuiUtils.TextStyle.BLACK_OUTLINE);
         }
 
         @Override
         public boolean getToggled() {
-            return Utils.inSkyblock && SkyblockFeatures.config.showZealotSpawnAreas && SkyblockInfo.map.equals("The End");
+            return SkyblockFeatures.config.showZealotSpawnAreas;
         }
+
+        @Override
+        public boolean getRequirement() {
+            return Utils.inSkyblock && SkyblockInfo.map.equals("The End");
+        }
+
 
         @Override
         public int getHeight() {

@@ -37,7 +37,7 @@ public class PowderTracker {
 
     @SubscribeEvent
     public void onChat(ClientChatReceivedEvent event) {
-        if(!SkyblockFeatures.config.PowderTracker) return;
+        if(!SkyblockFeatures.config.powderTracker) return;
         String raw = event.message.getUnformattedText();
         if(raw.contains("You uncovered a treasure chest!")) {
             seconds = 300;
@@ -54,7 +54,7 @@ public class PowderTracker {
 
     @SubscribeEvent
     public void onSecond(SecondPassedEvent event) {
-        if(Minecraft.getMinecraft().thePlayer != null && Minecraft.getMinecraft().theWorld != null && SkyblockFeatures.config.PowderTracker) {
+        if(Minecraft.getMinecraft().thePlayer != null && Minecraft.getMinecraft().theWorld != null && SkyblockFeatures.config.powderTracker) {
             if(!hidden) {
                 seconds--;
             }
@@ -79,7 +79,7 @@ public class PowderTracker {
 
         @Override
         public void drawElement() {
-            if (this.getToggled() && Minecraft.getMinecraft().thePlayer != null && mc.theWorld != null && !hidden && totalSeconds>0) {
+            if (!hidden && totalSeconds>0) {
                 String gemPowderPerHour = Utils.nf.format(Math.floor(((double) 3600 /totalSeconds)*gemstonePowderGained));
                 String mithrilPowderPerHour = Utils.nf.format(Math.floor(((double) 3600 /totalSeconds)*mithrilPowderGained));
 
@@ -102,7 +102,6 @@ public class PowderTracker {
         }
         @Override
         public void drawElementExample() {
-            if(mc.thePlayer == null || !Utils.inSkyblock) return;
             String gemPowderPerHour = Utils.nf.format(Math.floor(((double) 3600 /937)*283242));
             String mithrilPowderPerHour = Utils.nf.format(Math.floor(((double) 3600 /937)*65424));
             String[] lines = {
@@ -120,7 +119,12 @@ public class PowderTracker {
 
         @Override
         public boolean getToggled() {
-            return Utils.inSkyblock && SkyblockFeatures.config.PowderTracker && SkyblockInfo.getMap().equals("Crystal Hollows");
+            return SkyblockFeatures.config.powderTracker;
+        }
+
+        @Override
+        public boolean getRequirement() {
+            return SkyblockInfo.getMap().equals("Crystal Hollows") && Utils.inSkyblock;
         }
 
         @Override

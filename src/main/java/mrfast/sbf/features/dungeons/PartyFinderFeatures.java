@@ -334,18 +334,19 @@ public class PartyFinderFeatures {
 
 
     static {
-        new partyDisplayGUI();
+        new PartyDisplayGUI();
     }
 
-    public static class partyDisplayGUI extends UIElement {
-        public partyDisplayGUI() {
+    public static class PartyDisplayGUI extends UIElement {
+        public PartyDisplayGUI() {
             super("Dungeon Party Display", new Point(0.2f, 0.0f));
             SkyblockFeatures.GUIMANAGER.registerElement(this);
         }
 
         @Override
         public void drawElement() {
-            if(Utils.GetMC().thePlayer == null || !Utils.inSkyblock || partyFinderMonkeys.isEmpty()) return;
+            if(partyFinderMonkeys.isEmpty()) return;
+
             List<String> stillNeededClasses = new ArrayList<>(neededClasses);
             List<String> lines = new ArrayList<>(Collections.singletonList(
                     "§9§lDungeon Party"
@@ -376,7 +377,6 @@ public class PartyFinderFeatures {
         }
         @Override
         public void drawElementExample() {
-            if(Utils.GetMC().thePlayer == null || !Utils.inSkyblock) return;
             String playerName = Utils.GetMC().thePlayer.getName();
             String[] lines = {
                     "§9§lDungeon Party",
@@ -391,7 +391,12 @@ public class PartyFinderFeatures {
 
         @Override
         public boolean getToggled() {
-            return Utils.inSkyblock && SkyblockFeatures.config.dungeonPartyDisplay;
+            return SkyblockFeatures.config.dungeonPartyDisplay;
+        }
+
+        @Override
+        public boolean getRequirement() {
+            return Utils.inSkyblock;
         }
 
         @Override

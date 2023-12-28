@@ -160,10 +160,15 @@ public class IceTreasureTracker {
                 lineCount++;
             }
         }
-
+        
         @Override
         public boolean getToggled() {
-            return Utils.inSkyblock && SkyblockFeatures.config.IceTreasureTracker && SkyblockInfo.localLocation.contains("Glacial");
+            return SkyblockFeatures.config.IceTreasureTracker;
+        }
+
+        @Override
+        public boolean getRequirement() {
+            return SkyblockInfo.localLocation.contains("Glacial") && Utils.inSkyblock;
         }
 
         @Override

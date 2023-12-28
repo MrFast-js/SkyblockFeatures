@@ -301,7 +301,7 @@ public class GiftTracker {
     }
 
     static {
-        new giftingOverlay();
+        new GiftingOverlay();
     }
 
     public static int getGiftMilestone(int gifts) {
@@ -319,29 +319,25 @@ public class GiftTracker {
         }
     }
 
-    public static class giftingOverlay extends UIElement {
-        public giftingOverlay() {
+    public static class GiftingOverlay extends UIElement {
+        public GiftingOverlay() {
             super("giftingOverlay", new Point(0f, 0f));
             SkyblockFeatures.GUIMANAGER.registerElement(this);
         }
 
         @Override
         public void drawElement() {
-            if (Utils.GetMC().thePlayer == null || !Utils.inSkyblock) return;
-            if (this.getToggled() && Minecraft.getMinecraft().thePlayer != null) {
-                int milestone = getGiftMilestone(SkyblockFeatures.config.uniqueGiftsGiven);
-                String[] lines = {
-                        "§e§lGifting Info",
-                        " §f" + SkyblockFeatures.config.uniqueGiftsGiven + "§7/600 §6Unique Gifts ",
-                        " §aMilestone §b" + milestone,
-                };
-                GuiUtils.drawTextLines(Arrays.asList(lines), 0, 0, GuiUtils.TextStyle.DROP_SHADOW);
-            }
+            int milestone = getGiftMilestone(SkyblockFeatures.config.uniqueGiftsGiven);
+            String[] lines = {
+                    "§e§lGifting Info",
+                    " §f" + SkyblockFeatures.config.uniqueGiftsGiven + "§7/600 §6Unique Gifts ",
+                    " §aMilestone §b" + milestone,
+            };
+            GuiUtils.drawTextLines(Arrays.asList(lines), 0, 0, GuiUtils.TextStyle.DROP_SHADOW);
         }
 
         @Override
         public void drawElementExample() {
-            if (Utils.GetMC().thePlayer == null || !Utils.inSkyblock) return;
             int milestone = getGiftMilestone(SkyblockFeatures.config.uniqueGiftsGiven);
             String[] lines = {
                     "§e§lGifting Info",
@@ -354,6 +350,11 @@ public class GiftTracker {
         @Override
         public boolean getToggled() {
             return SkyblockFeatures.config.showGiftingInfo;
+        }
+
+        @Override
+        public boolean getRequirement() {
+            return Utils.inSkyblock;
         }
 
         @Override

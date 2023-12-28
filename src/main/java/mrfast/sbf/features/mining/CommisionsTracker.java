@@ -35,9 +35,6 @@ public class CommisionsTracker {
         public void drawElement() {
             ArrayList<String> text = new ArrayList<>();
             try {
-
-                if (mc.thePlayer == null || !Utils.inSkyblock || !SkyblockFeatures.config.CommisionsTracker) return;
-
                 text.add(ChatFormatting.BLUE + "Commissions");
                 List<String> commissions = new ArrayList<String>();
                 commissions.add(mc.ingameGUI.getTabList().getPlayerName(TabListUtils.getTabEntries().get(50)));
@@ -90,7 +87,12 @@ public class CommisionsTracker {
 
         @Override
         public boolean getToggled() {
-            return Utils.inSkyblock && SkyblockFeatures.config.CommisionsTracker && (SkyblockInfo.map.equals("Dwarven Mines") || CrystalHollowsMap.inCrystalHollows);
+            return SkyblockFeatures.config.CommisionsTracker;
+        }
+
+        @Override
+        public boolean getRequirement() {
+            return Utils.inSkyblock && (SkyblockInfo.map.equals("Dwarven Mines") || CrystalHollowsMap.inCrystalHollows);
         }
 
         @Override

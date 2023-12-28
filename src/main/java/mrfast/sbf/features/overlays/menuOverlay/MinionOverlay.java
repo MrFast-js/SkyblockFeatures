@@ -33,9 +33,6 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class MinionOverlay {
     static HashMap<String,Long> lastCollected = new HashMap<>();
-    static {
-        readConfig();
-    }
     @SubscribeEvent
     public void onDrawContainerTitle(TitleDrawnEvent event) {
         if (event.gui instanceof GuiChest && SkyblockFeatures.config.minionOverlay) {
@@ -161,6 +158,7 @@ public class MinionOverlay {
     @SubscribeEvent
     public void onRecievePacket(RenderWorldLastEvent event) {
         if(Utils.inSkyblock && SkyblockInfo.map.equals("Private Island") && (SkyblockFeatures.config.minionOverlay||SkyblockFeatures.config.minionLastCollected)) {
+            if(lastCollected.isEmpty()) readConfig();
             for(Entity e : Utils.GetMC().theWorld.loadedEntityList){
                 if(e instanceof EntityArmorStand) {
                     if(isMinion((EntityArmorStand) e)) {

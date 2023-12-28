@@ -89,7 +89,6 @@ public class GemstoneMiningOverlay {
         @Override
         public void drawElement() {
             try {
-                if(mc.thePlayer == null || !Utils.inSkyblock || !getToggled() || !CrystalHollowsMap.inCrystalHollows) return;
                 int total = 0;
                 for(Gemstone gemstone:gemstones) {
                     if(PricingData.bazaarPrices.get(gemstone.item_name) != null) {
@@ -113,7 +112,6 @@ public class GemstoneMiningOverlay {
         }
         @Override
         public void drawElementExample() {
-            if(mc.thePlayer == null || !Utils.inSkyblock) return;
             String[] lines = {
                 ChatFormatting.LIGHT_PURPLE+""+ChatFormatting.BOLD+"Gemstone Mining Info",
                 ChatFormatting.GRAY+" Time Spent Mining: §a19m 27s",
@@ -126,7 +124,12 @@ public class GemstoneMiningOverlay {
 
         @Override
         public boolean getToggled() {
-            return Utils.inSkyblock && SkyblockFeatures.config.gemstoneTracker && CrystalHollowsMap.inCrystalHollows;
+            return SkyblockFeatures.config.gemstoneTracker;
+        }
+
+        @Override
+        public boolean getRequirement() {
+            return Utils.inSkyblock && CrystalHollowsMap.inCrystalHollows;
         }
 
         @Override
