@@ -15,6 +15,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.BlockPos;
 import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import org.lwjgl.BufferUtils;
@@ -43,6 +44,12 @@ public class EntityOutlineRenderer {
     private static Method isShaders = null;
     private static Method isAntialiasing = null;
     private static Framebuffer swapBuffer = null;
+
+    @SubscribeEvent
+    public void onWorldChange(WorldEvent.Load event) {
+        initSwapBuffer();
+        updateFramebufferSize();
+    }
 
     /**
      * @return a new framebuffer with the size of the main framebuffer

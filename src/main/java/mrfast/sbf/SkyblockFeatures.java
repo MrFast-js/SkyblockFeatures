@@ -173,6 +173,7 @@ public class SkyblockFeatures {
                 new ShadowAssasinFeatures(),
                 new SlayerFeatures(),
                 new CrimsonMap(),
+                new EntityOutlineRenderer(),
                 new RiftFeatures(),
                 new BlazeSolver(),
                 new ThreeWeirdosSolver(),
