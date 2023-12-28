@@ -84,10 +84,11 @@ public class ChestProfit {
                         String name = item.getDisplayName().contains("Enchanted")?ItemUtils.getItemLore(item).get(0):item.getDisplayName();
                         lines.add(name + "§f: §a" + Utils.nf.format(items.get(item)));
                     }
-                    lines.add("");
-                    lines.add("§7Wither Essence: §a"+Utils.nf.format(witherEss));
-                    lines.add("§7Undead Essence: §a"+Utils.nf.format(undeadEss));
-
+                    if(SkyblockFeatures.config.dungeonChestProfitEssence) {
+                        lines.add("");
+                        lines.add("§7Wither Essence: §a" + Utils.nf.format(witherEss));
+                        lines.add("§7Undead Essence: §a" + Utils.nf.format(undeadEss));
+                    }
                     lines.add("");
                     lines.add("Total Profit: §" + (profit > 0 ? "a" : "c")+Utils.nf.format(profit));
 
