@@ -67,7 +67,7 @@ public class ClickInOrderSolver {
         String name = cont.getLowerChestInventory().getName();
 
         // Using contains rather than equals so it works for practice terminals aswell
-        if (name.contains("Click in order")) {
+        if (name.contains("Click in order") && SkyblockFeatures.config.clickInOrderSolver) {
             for (Slot slot : orderMap.keySet()) {
                 if(slot.getStack()==null) continue;
                 int order = orderMap.get(slot);

@@ -349,7 +349,6 @@ public class debugCommand extends CommandBase {
                     JsonObject json = new Gson().fromJson(out, JsonObject.class);
                     hostUrl = "https://hst.sh/raw/" + json.get("key").getAsString();
                 } else {
-                    Utils.sendMessage("That failed too :(");
                     System.out.println("Request failed with code " + responseCode);
                 }
 
