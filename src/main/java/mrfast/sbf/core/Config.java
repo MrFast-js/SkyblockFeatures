@@ -1934,21 +1934,68 @@ public class Config extends ConfigManager {
 
     @Property(
             type = PropertyType.TOGGLE,
-            name = "Highlight Auctions For Flipping",
-            description = "Highlights auctions that have 100,000 profit or more.",
+            name = "Highlight Auction Flips",
+            description = "Highlights auctions that have a certain amount of profit or more.",
             category = "§1§rAuction house",
-            subcategory = "Auction Utils"
+            subcategory = "Auction Utils",
+            isParent = true
     )
     public boolean highlightAuctionProfit = false;
+    @Property(
+            type = PropertyType.NUMBER,
+            name = "Margin",
+            description = "Highlights auctions that have this margin",
+            category = "§1§rAuction house",
+            subcategory = "Auction Utils",
+            parentName = "Highlight Auction Flips"
+    )
+    public int highlightAuctionProfitMargin = 100000;
 
     @Property(
             type = PropertyType.TOGGLE,
-            name = "Highlight Losing Auctions Red",
-            description = "Highlights auctions that you arent winning",
+            name = "Highlight Auctions Status",
+            description = "Highlights auctions in the \"View Bids\" menu based off of if its outbid, ended, sold to someone else.",
             category = "§1§rAuction house",
-            subcategory = "Auction Utils"
+            subcategory = "Auction Utils",
+            isParent = true
     )
-    public boolean highlightlosingAuction = false;
+    public boolean highlightAuctionStatus = false;
+
+    @Property(
+            type = PropertyType.COLOR,
+            name = "Winning Auctions",
+            category = "§1§rAuction house",
+            subcategory = "Auction Utils",
+            parentName = "Highlight Auctions Status"
+    )
+    public Color winningAuctionColor = new Color(0x669bbc);
+
+    @Property(
+            type = PropertyType.COLOR,
+            name = "Collect Auction",
+            category = "§1§rAuction house",
+            subcategory = "Auction Utils",
+            parentName = "Highlight Auctions Status"
+    )
+    public Color collectAuctionColor = new Color(0x003049);
+
+    @Property(
+            type = PropertyType.COLOR,
+            name = "Outbid Auctions",
+            category = "§1§rAuction house",
+            subcategory = "Auction Utils",
+            parentName = "Highlight Auctions Status"
+    )
+    public Color outbidAuctionColor = new Color(0xe9c46a);
+
+    @Property(
+            type = PropertyType.COLOR,
+            name = "Lost Auctions",
+            category = "§1§rAuction house",
+            subcategory = "Auction Utils",
+            parentName = "Highlight Auctions Status"
+    )
+    public Color lostAuctionColor = new Color(0xf4a261);
 
     @Property(
             type = PropertyType.TOGGLE,

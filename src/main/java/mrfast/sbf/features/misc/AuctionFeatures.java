@@ -180,7 +180,7 @@ public class AuctionFeatures {
                             if(avgBinValue != null) {
                                 double profit = (avgBinValue*stack.stackSize) - price;
                                 if (price < (avgBinValue)) {
-                                    if(profit > 100000) {
+                                    if(profit > SkyblockFeatures.config.highlightAuctionProfitMargin) {
                                         // Draw Green Square
                                         Gui.drawRect(x, y, x + 16, y + 16, new Color(85, 255, 85).getRGB());
                                     }
@@ -522,36 +522,56 @@ public class AuctionFeatures {
             }
             
             if(chestName.contains("Your Bids")) {
-                int ended = 0;
+                int endedAuctions = 0;
                 int winning = 0;
-                int losing = 0;
+                int losingAuctions = 0;
                 List<String> winningAuctions = new ArrayList<String>();
                 for (Auction auction : selfItems) {
                     ItemStack stack = auction.stack;
+                    boolean ended = false;
+                    boolean outbid = true;
+                    int x = auction.slot.xDisplayPosition;
+                    int y = auction.slot.yDisplayPosition;
                     for(String line : ItemUtils.getItemLore(stack)) {
                         line = Utils.cleanColor(line);
-                        if(line.contains("Ended")) {
-                            ended++;
+                        if(line.startsWith("Bidder")) {
+                            if(line.endsWith(Utils.GetMC().thePlayer.getName()) && !winningAuctions.contains(auction.identifier)) {
+                                winning++;
+                                winningAuctions.add(auction.identifier);
+                                outbid = false;
+                            } else {
+                                losingAuctions++;
+                                profit -= auction.profit;
+                            }
                         }
-                        if(line.contains(Utils.GetMC().thePlayer.getName()) && !winningAuctions.contains(auction.identifier)) {
-                            winning++;
-                            winningAuctions.add(auction.identifier);
+                        if(line.startsWith("Status")) {
+                            endedAuctions++;
+                            ended = true;
                         }
-                        else if(line.contains("Bidder")) {
-                            int x = auction.slot.xDisplayPosition;
-                            int y = auction.slot.yDisplayPosition;
-                            if(SkyblockFeatures.config.highlightlosingAuction) Gui.drawRect(x, y, x + 16, y + 16, new Color(255, 35, 35).getRGB());
-                            losing++;
-                            profit -= auction.profit;
-                        }
+                    }
+                    Color slotColor = null;
+                    if(ended&&outbid) { // Sold to someone else
+                        slotColor = SkyblockFeatures.config.lostAuctionColor;
+                    }
+                    if(ended&&!outbid) { // Ready to collect
+                        slotColor = SkyblockFeatures.config.collectAuctionColor;
+                    }
+                    if(!ended&&outbid) { // Outbid by someone
+                        slotColor = SkyblockFeatures.config.outbidAuctionColor;
+                    }
+                    if(!ended&&!outbid) {
+                        slotColor = SkyblockFeatures.config.winningAuctionColor;
+                    }
+                    if(slotColor!=null && SkyblockFeatures.config.highlightAuctionStatus) {
+                        Gui.drawRect(x, y, x + 16, y + 16, slotColor.getRGB());
                     }
                 }
                 
                 String[] lines = {
                     ChatFormatting.GREEN+""+winning+ChatFormatting.WHITE+" Winning Auctions",
-                    ChatFormatting.RED+""+losing+ChatFormatting.WHITE+" Losing Auctions",
+                    ChatFormatting.RED+""+losingAuctions+ChatFormatting.WHITE+" Losing Auctions",
                     "",
-                    ChatFormatting.WHITE+"Ended Auctions: "+ChatFormatting.GOLD+Utils.nf.format(ended),
+                    ChatFormatting.WHITE+"Ended Auctions: "+ChatFormatting.GOLD+Utils.nf.format(endedAuctions),
                     ChatFormatting.WHITE+"Total Profit: "+ChatFormatting.GOLD+Utils.nf.format(profit)
                 };
                 GuiUtils.drawSideMenu(Arrays.asList(lines), GuiUtils.TextStyle.DROP_SHADOW);
