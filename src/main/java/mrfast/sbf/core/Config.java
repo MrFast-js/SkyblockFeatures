@@ -2057,6 +2057,15 @@ public class Config extends ConfigManager {
     public boolean aucFlipperAucs = true;
 
     @Property(
+            type = PropertyType.TOGGLE,
+            name = "Play sound when flip found",
+            description = "",
+            category = "§1§rAuction Flipper",
+            subcategory = "Flipper Settings"
+    )
+    public boolean aucFlipperSound = true;
+
+    @Property(
             type = PropertyType.NUMBER,
             name = "Profit Margin",
             description = "The minimum amount of profit for an auction to be shown to you.",

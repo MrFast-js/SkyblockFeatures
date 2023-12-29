@@ -15,6 +15,7 @@ import com.google.gson.JsonObject;
 import com.mojang.realmsclient.gui.ChatFormatting;
 
 import mrfast.sbf.core.SkyblockInfo;
+import mrfast.sbf.utils.APIUtils;
 import mrfast.sbf.utils.ScoreboardUtil;
 import mrfast.sbf.utils.TabListUtils;
 import mrfast.sbf.utils.Utils;
@@ -82,6 +83,9 @@ public class debugCommand extends CommandBase {
                 break;
             case "tiles":
                 getMobData(true,false,dist);
+                break;
+            case "sock":
+                APIUtils.setupSocket();
                 break;
             case "location":
             case "loc":

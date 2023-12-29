@@ -262,7 +262,7 @@ public class Utils {
 
 
     public static void sendMessage(String string) {
-        if (Utils.GetMC().ingameGUI != null || Utils.GetMC().thePlayer == null) {
+        if (Utils.GetMC().ingameGUI != null && Utils.GetMC().thePlayer != null) {
             Utils.GetMC().ingameGUI.getChatGUI().printChatMessage(new ChatComponentText(ChatFormatting.AQUA+"[SBF] "+ChatFormatting.RESET+string));
         }
     }

@@ -85,6 +85,7 @@ dependencies {
 
     shadowImpl("gg.essential:loader-launchwrapper:1.1.3")
     implementation("gg.essential:essential-1.8.9-forge:11092+gecb85a783")
+    implementation ("io.socket:engine.io-client:2.1.0:")
     shadowImpl("moe.nea:libautoupdate:1.2.0")
 
     // If you don't want mixins, remove these lines

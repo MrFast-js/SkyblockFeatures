@@ -3,10 +3,7 @@ package mrfast.sbf;
 import com.mojang.realmsclient.gui.ChatFormatting;
 import mrfast.sbf.commands.*;
 import mrfast.sbf.core.*;
-import mrfast.sbf.events.ChatEventListener;
-import mrfast.sbf.events.GuiContainerEvent;
-import mrfast.sbf.events.RenderEntityOutlineEvent;
-import mrfast.sbf.events.SecondPassedEvent;
+import mrfast.sbf.events.*;
 import mrfast.sbf.features.dungeons.*;
 import mrfast.sbf.features.dungeons.solvers.*;
 import mrfast.sbf.features.dungeons.solvers.terminals.ClickInOrderSolver;
@@ -285,6 +282,15 @@ public class SkyblockFeatures {
     public void onGuiKeyEvent(GuiScreenEvent.KeyboardInputEvent.Pre event) {
         if(ConfigGui.listeningForKeybind && Keyboard.getEventKey() == Keyboard.KEY_ESCAPE) {
             event.setCanceled(true);
+        }
+    }
+
+    // Send messages to the user from the server for needed announcements or something idk yet
+    @SubscribeEvent
+    public void onSocketMessage(SocketMessageEvent event) {
+        if(event.type.equals("message")) {
+            if(event.message.contains("Checking for auction flips") && !SkyblockFeatures.config.aucFlipperEnabled) return;
+            Utils.sendMessage(event.message);
         }
     }
 

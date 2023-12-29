@@ -10,6 +10,7 @@ import mrfast.sbf.core.PricingData;
 import mrfast.sbf.core.SkyblockInfo;
 import mrfast.sbf.events.SecondPassedEvent;
 import mrfast.sbf.events.SlotClickedEvent;
+import mrfast.sbf.events.SocketMessageEvent;
 import mrfast.sbf.features.items.HideGlass;
 import mrfast.sbf.gui.components.Point;
 import mrfast.sbf.gui.components.UIElement;
@@ -47,20 +48,12 @@ public class AutoAuctionFlip {
     static boolean sent = false;
     static boolean clicking = false;
     static boolean clicking2 = false;
-    static boolean checkForNewReloadTime = true;
-    static boolean checkingForNewReloadTime = false;
-    static boolean foundReloadTime = false;
-    static boolean apiUpdated = true;
     static List<Auction> auctionFlips = new ArrayList<>();
-    static int lastSecond = -1;
-    static int earliestApiUpdateTime = 60;
-    static int latestApiUpdateTime = 0;
     static int seconds = 50;
     static int auctionsFilteredThrough = 0;
     static int messageSent = 0;
     static int auctionsPassedFilteredThrough = 0;
     static long startMs;
-    static int stage = 0;
 
     public static class Auction {
         String auctionId = "";
@@ -72,6 +65,45 @@ public class AutoAuctionFlip {
             this.auctionId = aucId;
             this.item_Data = itemData;
         }
+    }
+
+
+    @SubscribeEvent
+    public void onSocketMessage(SocketMessageEvent event) {
+        if (!SkyblockFeatures.config.aucFlipperEnabled) return;
+
+        if(event.type.equals("event") && event.message.equals("AuctionUpdate")) {
+            getNewAuctions();
+        }
+    }
+
+    public void getNewAuctions() {
+        auctionFlips.clear();
+        new Thread(() -> {
+            int pages = 30; // Can be changed in the future
+
+            // Check pages for auctions
+            for (int b = 0; b < pages; b++) {
+                JsonObject data = APIUtils.getJSONResponse("https://api.hypixel.net/skyblock/auctions?page=" + b,new String[]{},false,false);
+                if(data!=null) {
+                    JsonArray products = data.get("auctions").getAsJsonArray();
+                    filterAndNotifyProfitableAuctions(products);
+                    if (b == pages - 1) {
+                        if (!auctionFlips.isEmpty()) {
+                            bestAuction = auctionFlips.get(0);
+                            if (SkyblockFeatures.config.autoAuctionFlipOpen) {
+                                if (bestAuction != null) {
+                                    Utils.GetMC().thePlayer.sendChatMessage("/viewauction " + bestAuction.auctionId);
+                                    auctionFlips.remove(auctionFlips.get(0));
+                                }
+                            }
+                        } else {
+                            Utils.sendMessage(ChatFormatting.RED + "No flips that match your filter found!");
+                        }
+                    }
+                }
+            }
+        }).start();
     }
 
     @SubscribeEvent
@@ -145,6 +177,7 @@ public class AutoAuctionFlip {
             lastToggle = SkyblockFeatures.config.aucFlipperEnabled;
             resetFlipper();
         }
+
         if (!SkyblockFeatures.config.aucFlipperEnabled) return;
 
         try {
@@ -178,157 +211,6 @@ public class AutoAuctionFlip {
             }, 1000);
         }
     }
-
-
-    boolean stopUpdatingTimes = false;
-
-    @SubscribeEvent
-    public void onSecond(SecondPassedEvent event) {
-        if (!SkyblockFeatures.config.aucFlipperEnabled || Utils.inDungeons || Utils.GetMC().theWorld == null) return;
-        Date date = new Date();
-        Calendar calendar = GregorianCalendar.getInstance();
-        calendar.setTime(date);
-        seconds = calendar.get(Calendar.SECOND) + 1;
-        if (lastSecond == seconds) return;
-        lastSecond = seconds;
-        int timeUntilReload = seconds < earliestApiUpdateTime ? earliestApiUpdateTime - seconds : 60 - seconds + earliestApiUpdateTime;
-
-        if (timeUntilReload == 40) {
-            messageSent = 0;
-            if ((earliestApiUpdateTime != 60 && latestApiUpdateTime != 0) && stage == 3) {
-                Utils.sendMessage(ChatFormatting.GRAY + "Filtered out " + Utils.nf.format((auctionsFilteredThrough - auctionsPassedFilteredThrough)) + " auctions in the past 60s ");
-            }
-        }
-        if (timeUntilReload == 60) {
-            auctionFlips.clear();
-        }
-        if (timeUntilReload == 10) {
-            if (earliestApiUpdateTime != 60 && latestApiUpdateTime != 0 && stage == 3) {
-                Utils.sendMessage(ChatFormatting.GRAY + "Scanning for auctions in 10s");
-
-            }
-            auctionsFilteredThrough = 0;
-            apiUpdated = true;
-            auctionsPassedFilteredThrough = 0;
-        }
-        if (checkForNewReloadTime && !checkingForNewReloadTime) {
-            stage = 1;
-            checkingForNewReloadTime = true;
-            Utils.sendMessage(ChatFormatting.YELLOW + "Starting Flipper..");
-
-            new Thread(() -> {
-                /*
-                    Find the point in time when the auction API reloads.
-                    This gets the auction id of the first auction visible, then every second
-                    it checks the first auction again to see if it changed, if it has then it knows the API updated.
-                */
-                if (Utils.inDungeons || !SkyblockFeatures.config.aucFlipperEnabled || foundReloadTime) return;
-                JsonObject data = APIUtils.getJSONResponse(SkyblockFeatures.config.modAPIURL + "update-times");
-
-                setupComplete(data);
-            }).start();
-        }
-
-        if (stage == 3 && seconds == earliestApiUpdateTime - 1 && Utils.GetMC().theWorld != null && Utils.inSkyblock && apiUpdated) {
-            // Starts searching the auction house
-            new Thread(() -> {
-                apiUpdated = false;
-                // The difference between two api updates to see how much of a margin of error there is to work with
-                int lengthOfSearch = MathHelper.clamp_int(latestApiUpdateTime - earliestApiUpdateTime, 8, 12);
-                JsonObject startingData = APIUtils.getJSONResponse("https://api.hypixel.net/skyblock/auctions?page=0",false);
-                JsonArray startingProducts = startingData.get("auctions").getAsJsonArray();
-                String startingUUID = startingProducts.get(0).getAsJsonObject().get("uuid").getAsString();
-
-                // Status message
-                System.out.println("Searching for " + lengthOfSearch + " seconds low:" + earliestApiUpdateTime + " high:" + latestApiUpdateTime);
-                Utils.sendMessage(ChatFormatting.GRAY + "Scanning for auctions..");
-
-                for (int i = 0; i < lengthOfSearch; i++) {
-                    Utils.setTimeout(() -> {
-                        if (apiUpdated) return;
-
-                        JsonObject data = APIUtils.getJSONResponse("https://api.hypixel.net/skyblock/auctions?page=0",false);
-                        JsonArray products = data.get("auctions").getAsJsonArray();
-                        String currentUUID = products.get(0).getAsJsonObject().get("uuid").getAsString();
-
-                        if (!currentUUID.equals(startingUUID) && !apiUpdated) {
-                            System.out.println("Detected API Update "+seconds);
-                            apiUpdated = true;
-                            int pages = 1;
-
-                            // Check pages for auctions
-                            for (int b = 0; b < pages; b++) {
-                                JsonObject data2 = APIUtils.getJSONResponse("https://api.hypixel.net/skyblock/auctions?page=" + b,false);
-
-                                JsonArray products2 = data2.get("auctions").getAsJsonArray();
-                                filterAndNotifyProfitableAuctions(products2);
-                                if (b == pages - 1) {
-                                    if (!auctionFlips.isEmpty()) {
-                                        bestAuction = auctionFlips.get(0);
-                                        if (SkyblockFeatures.config.autoAuctionFlipOpen) {
-                                            if (bestAuction != null) {
-                                                Utils.GetMC().thePlayer.sendChatMessage("/viewauction " + bestAuction.auctionId);
-                                                auctionFlips.remove(auctionFlips.get(0));
-                                            }
-                                        }
-                                    } else {
-                                        Utils.sendMessage(ChatFormatting.RED + "No flips that match your filter found!");
-                                    }
-                                }
-                            }
-                        }
-                    }, i * 2000);
-                }
-                Utils.setTimeout(() -> {
-                    if (!apiUpdated) {
-//                        old code used to find when api updated (not sure if going to use)
-
-//                        new Thread(()->{
-//                            JsonObject startingData2 = APIUtils.getJSONResponse("https://api.hypixel.net/skyblock/auctions?page=0");
-//                            JsonArray startingProducts2 = startingData2.get("auctions").getAsJsonArray();
-//                            String startingUUID2 = startingProducts2.get(0).getAsJsonObject().get("uuid").getAsString();
-//                            stopUpdatingTimes = false;
-//
-//                            for(int i=0;i<60;i++) {
-//                                Utils.setTimeout(()->{
-//                                    if(stopUpdatingTimes) return;
-//                                    JsonObject comparingData = APIUtils.getJSONResponse("https://api.hypixel.net/skyblock/auctions?page=0");
-//                                    JsonArray comparingProducts = comparingData.get("auctions").getAsJsonArray();
-//                                    String comparingUUID = comparingProducts.get(0).getAsJsonObject().get("uuid").getAsString();
-//
-//                                    if(!Objects.equals(comparingUUID, startingUUID2)) {
-//                                        String[] headers = new String[]{"updateTimes="+seconds};
-//                                        Utils.SendMessage("NEW SECONDS "+seconds);
-//                                        JsonObject newData = APIUtils.getJSONResponse("https://auction-update.mrfastkrunker.workers.dev#updateTimes=",headers);
-//                                        if(newData.get("success").getAsBoolean()) {
-//                                            Utils.SendMessage(ChatFormatting.YELLOW+"Updated Searching Times!");
-//                                            setupComplete(newData);
-//                                            stopUpdatingTimes = true;
-//                                        }
-//                                    }
-//                                },1000*i);
-//                            }
-//                        }).start();
-//                        stage = 1;
-                        Utils.sendMessage(ChatFormatting.RED + "The API Didnt update when expected! Current Check Time: " + seconds + "s");
-                    }
-                }, lengthOfSearch * 1000 + 1500);
-            }).start();
-        }
-    }
-
-    private void setupComplete(JsonObject data) {
-        latestApiUpdateTime = data.get("max").getAsInt();
-        earliestApiUpdateTime = data.get("min").getAsInt();
-        System.out.println(latestApiUpdateTime + "  " + earliestApiUpdateTime + " UPDATED");
-        foundReloadTime = true;
-        stage = 3;
-        checkForNewReloadTime = false;
-        checkingForNewReloadTime = false;
-        Utils.sendMessage(ChatFormatting.GREEN + "Auction Flipper Setup!");
-        Utils.playSound("random.orb", 0.1);
-    }
-
     boolean debugLogging = false;
 
     public void filterAndNotifyProfitableAuctions(JsonArray products) {
@@ -412,7 +294,7 @@ public class AutoAuctionFlip {
                                     (starValue > 0 ? (ChatFormatting.GRAY + " Stars: " + ChatFormatting.AQUA + sPrice) : ""));
                             message.getChatStyle().setChatClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/viewauction " + auctionId));
                             message.getChatStyle().setChatHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ChatComponentText(ChatFormatting.GREEN + "/viewauction " + auctionId)));
-                            Utils.playSound("note.pling", 0.5);
+                            if(SkyblockFeatures.config.aucFlipperSound) Utils.playSound("note.pling", 0.5);
                             Utils.GetMC().thePlayer.addChatComponentMessage(message);
                             messageSent++;
                         }
@@ -513,7 +395,7 @@ public class AutoAuctionFlip {
                             message.getChatStyle().setChatHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ChatComponentText(ChatFormatting.GREEN + "/viewauction " + auctionId)));
 
                             // Notify User
-                            Utils.playSound("note.pling", 0.5);
+                            if(SkyblockFeatures.config.aucFlipperSound) Utils.playSound("note.pling", 0.5);
                             Utils.GetMC().thePlayer.addChatComponentMessage(message);
 
                             // Track how many notifications have been sent so it doesnt send too many
@@ -600,15 +482,6 @@ public class AutoAuctionFlip {
     }
 
     public void resetFlipper() {
-        lastSecond = -1;
-        stopUpdatingTimes = true;
-        apiUpdated = true;
-        earliestApiUpdateTime = 60;
-        latestApiUpdateTime = 0;
-        checkForNewReloadTime = true;
-        checkingForNewReloadTime = false;
-        foundReloadTime = false;
-        seconds = 50;
         auctionsFilteredThrough = 0;
         auctionsPassedFilteredThrough = 0;
         bestAuction = null;
@@ -637,12 +510,10 @@ public class AutoAuctionFlip {
 
         private void updateLines() {
             lines.clear();
-            int timeUntilReload = seconds < earliestApiUpdateTime ? earliestApiUpdateTime - seconds : 60 - seconds + earliestApiUpdateTime;
             double seconds = Math.floor((System.currentTimeMillis() - startMs) / 1000d);
 
-            lines.add(ChatFormatting.GREEN + "Auction API update in " + (Math.max(timeUntilReload, 0)) + "s");
             lines.add(ChatFormatting.GOLD + "Time Elapsed: " + Utils.secondsToTime((int) seconds));
-            lines.add(ChatFormatting.YELLOW + (stage != 3 ? "Stage " + stage : "Flipper Active"));
+            lines.add(ChatFormatting.YELLOW + "Flipper Active");
         }
 
         @Override
