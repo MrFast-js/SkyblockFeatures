@@ -2041,11 +2041,20 @@ public class Config extends ConfigManager {
     @Property(
             type = PropertyType.TOGGLE,
             name = "Include BIN Flips",
-            description = "Check BINs for flips. §cThis is risky you need to know what you're doing.",
+            description = "Check BINs for flips. §cThis is risky you need to know what your doing.",
             category = "§1§rAuction Flipper",
             subcategory = "Flipper Settings"
     )
     public boolean aucFlipperBins = false;
+
+    @Property(
+            type = PropertyType.TOGGLE,
+            name = "Include Item Upgrades",
+            description = "Adds value to the auctions based off of enchants, stars, drill parts, hot potato books, etc. §cThis may over-value items!",
+            category = "§1§rAuction Flipper",
+            subcategory = "Flipper Settings"
+    )
+    public boolean aucFlipperItemUpgrades = false;
 
     @Property(
             type = PropertyType.TOGGLE,
@@ -2118,15 +2127,6 @@ public class Config extends ConfigManager {
 //        subcategory = "Flipper Settings"
 //    )
 //    public boolean autoFlipAddEnchAndStar = false;
-
-    @Property(
-            type = PropertyType.TOGGLE,
-            name = "Refresh Countdown",
-            description = "Show the countdown till refreshing.",
-            category = "§1§rAuction Flipper",
-            subcategory = "Flipper Settings"
-    )
-    public boolean autoAuctionFlipCounter = false;
 
     @Property(
             type = PropertyType.TOGGLE,
@@ -2406,23 +2406,12 @@ public class Config extends ConfigManager {
 
     @Property(
             type = PropertyType.TOGGLE,
-            name = "Bestiary Helper",
-            category = "Quality of Life",
-            description = "Toggle this feature to get features that help you with bestiary grinding",
-            subcategory = "Bestiary",
-            isParent = true
+            name = "Log Debug info for Auction Flipper",
+            category = "§eDeveloper",
+            description = "",
+            subcategory = "Settings"
     )
-    public boolean bestiaryHelper = false;
-
-    @Property(
-            type = PropertyType.TEXT,
-            name = "Draw hitboxes around mobs",
-            category = "Quality of Life",
-            description = "Draws hitboxes around \nthe chosen mobs",
-            subcategory = "Bestiary",
-            parentName = "Bestiary Helper"
-    )
-    public String drawHitboxes = "";
+    public boolean debugAuctionFlipper = false;
 
 
 }

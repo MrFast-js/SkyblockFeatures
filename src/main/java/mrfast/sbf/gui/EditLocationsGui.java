@@ -39,7 +39,15 @@ public class EditLocationsGui extends GuiScreen {
             this.buttonList.add(lb);
             this.MoveableFeatures.put(e.getValue(), lb);
         }
-        this.buttonList.add(new GuiButton(6969, this.width / 2 - 60, 0, 120, 20, "§e§lShow All Enabled"));
+        this.buttonList.add(new GuiButton(6969, this.width / 2 - 60, 0, 120, 20, getLabel()));
+    }
+
+    public String getLabel() {
+        if(GuiManager.showAllEnabledElements) {
+            return "§e§lShow Active Only";
+        } else {
+            return "§e§lShow All Enabled";
+        }
     }
 
     @Override
@@ -81,11 +89,7 @@ public class EditLocationsGui extends GuiScreen {
         }
         if(button.id==6969) {
             GuiManager.showAllEnabledElements=!GuiManager.showAllEnabledElements;
-            if(GuiManager.showAllEnabledElements) {
-                button.displayString = "§e§lShow Active Only";
-            } else {
-                button.displayString = "§e§lShow All Enabled";
-            }
+            button.displayString = getLabel();
         }
     }
 

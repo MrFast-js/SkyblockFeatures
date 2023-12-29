@@ -274,17 +274,23 @@ public class ItemUtils {
 
     public static long getEstimatedItemValue(ItemStack stack) {
         if (stack == null) return 0L;
+        NBTTagCompound ExtraAttributes = getExtraAttributes(stack);
+        return getEstimatedItemValue(ExtraAttributes);
+    }
 
+    // Used for Auction flipper
+    public static Long getEstimatedItemValue(NBTTagCompound ExtraAttributes) {
         if (skyhelperItemMap.isEmpty()) {
-            JsonArray items = APIUtils.getArrayResponse("https://raw.githubusercontent.com/Altpapier/SkyHelper-Networth/abb278d6be1e13b3204ccb05f47c5e8aaf614733/constants/items.json");
-            for (int i = 0; i < items.size(); i++) {
-                JsonObject a = items.get(i).getAsJsonObject();
-                skyhelperItemMap.put(a.get("id").getAsString(), a);
-            }
+            new Thread(() -> {
+                JsonArray items = APIUtils.getArrayResponse("https://raw.githubusercontent.com/Altpapier/SkyHelper-Networth/abb278d6be1e13b3204ccb05f47c5e8aaf614733/constants/items.json");
+                for (int i = 0; i < items.size(); i++) {
+                    JsonObject a = items.get(i).getAsJsonObject();
+                    skyhelperItemMap.put(a.get("id").getAsString(), a);
+                }
+            }).start();
         }
 
-        String id = PricingData.getIdentifier(stack);
-        NBTTagCompound ExtraAttributes = getExtraAttributes(stack);
+        String id = ExtraAttributes.getString("id");
         Long total = 0L;
 
         try {
@@ -307,49 +313,11 @@ public class ItemUtils {
             // scrolls for hyperion
             total += getScrollsAndMisc(ExtraAttributes);
         } catch (Exception e) {
-            e.printStackTrace();
             // TODO: handle exception
-            return -1L;
         }
+
         return total;
     }
-
-    // Used for Auction flipper
-//    public static Integer getEstimatedItemValue(NBTTagCompound ExtraAttributes) {
-//        if(skyhelperItemMap.isEmpty()) {
-//            new Thread(()->{
-//                JsonArray items = APIUtils.getArrayResponse("https://raw.githubusercontent.com/Altpapier/SkyHelper-Networth/abb278d6be1e13b3204ccb05f47c5e8aaf614733/constants/items.json");
-//                for(int i=0;i<items.size();i++) {
-//                    JsonObject a = items.get(i).getAsJsonObject();
-//                    skyhelperItemMap.put(a.get("id").getAsString(), a);
-//                }
-//            }).start();
-//        }
-//        String id = ExtraAttributes.getString("id");
-//        if(!PricingData.averageLowestBINs.containsKey(id)) return 0;
-//        double total = 0;
-//
-//        try {
-//            // Add lowest bin as a base price
-//            total+=PricingData.lowestBINs.get(id);
-//            // Add wither essence value
-//            total+=getStarCost(ExtraAttributes);
-//            // Add enchants
-//            total+=getEnchantsWorth(ExtraAttributes);
-//            // Hbp, recombs
-//            total+=getUpgradeCost(ExtraAttributes);
-//            // gemstones
-//            total+=getGemstoneWorth(ExtraAttributes);
-//            // drill parts
-//            total+=getDrillParts(ExtraAttributes);
-//            // scrolls for hyperion
-//            total+=getScrolls(ExtraAttributes);
-//        } catch (Exception e) {
-//            // TODO: handle exception
-//        }
-//
-//        return (int) total;
-//    }
 
     public static Long getUpgradeCost(NBTTagCompound ExtraAttributes) {
         long total = 0;
@@ -383,14 +351,14 @@ public class ItemUtils {
                 total += PricingData.bazaarPrices.get(abilityScroll).longValue();
             }
         }
-        if(ExtraAttributes.hasKey("art_of_war_count")) {
+        if (ExtraAttributes.hasKey("art_of_war_count")) {
             total += PricingData.bazaarPrices.get("THE_ART_OF_WAR").longValue();
         }
-        if(ExtraAttributes.hasKey("stats_book")) {
+        if (ExtraAttributes.hasKey("stats_book")) {
             total += PricingData.bazaarPrices.get("BOOK_OF_STATS").longValue();
         }
-        if(ExtraAttributes.hasKey("polarvoid")) {
-            total += PricingData.averageLowestBINs.get("POLARVOID_BOOK").longValue()*ExtraAttributes.getInteger("polarvoid");
+        if (ExtraAttributes.hasKey("polarvoid")) {
+            total += PricingData.averageLowestBINs.get("POLARVOID_BOOK").longValue() * ExtraAttributes.getInteger("polarvoid");
         }
 
 //        if(ExtraAttributes.hasKey("attributes")) {
@@ -409,11 +377,11 @@ public class ItemUtils {
         List<Attribute> valuedAttr = new ArrayList<>();
         for (String attributeName : attr.getKeySet()) {
             int attributeLvl = attr.getInteger(attributeName);
-            Attribute attribute = new Attribute(attributeName.toUpperCase(),attributeLvl,itemId);
+            Attribute attribute = new Attribute(attributeName.toUpperCase(), attributeLvl, itemId);
             Double lowestBin = PricingData.lowestBINs.get(itemId);
-            long value = getValueOfAttr(attribute,itemId);
-            if(value != -1) {
-                attribute.value = (long) (value-lowestBin);
+            long value = getValueOfAttr(attribute, itemId);
+            if (value != -1) {
+                attribute.value = (long) (value - lowestBin);
             }
             valuedAttr.add(attribute);
         }
@@ -427,24 +395,24 @@ public class ItemUtils {
         public long value = 0L;
         public long pricePerTier = 0L;
 
-        public Attribute(String id,int lvl,String itemId) {
-            this.id=id;
-            this.lvl=lvl;
-            this.itemId=itemId;
+        public Attribute(String id, int lvl, String itemId) {
+            this.id = id;
+            this.lvl = lvl;
+            this.itemId = itemId;
         }
     }
 
-    public static long getValueOfAttr(Attribute attribute,String itemId) {
-        Double lowestPrice = PricingData.lowestBINs.get(itemId+"+ATTRIBUTE_"+attribute.id.toUpperCase()+";"+attribute.lvl);
-        if(lowestPrice!=null) return lowestPrice.longValue();
+    public static long getValueOfAttr(Attribute attribute, String itemId) {
+        Double lowestPrice = PricingData.lowestBINs.get(itemId + "+ATTRIBUTE_" + attribute.id.toUpperCase() + ";" + attribute.lvl);
+        if (lowestPrice != null) return lowestPrice.longValue();
 
-        List<Attribute> matches = PricingData.attributeAuctions.stream().filter((attr)->
+        List<Attribute> matches = PricingData.attributeAuctions.stream().filter((attr) ->
                 attr.id.equals(attribute.id) && attr.itemId.equals(attribute.itemId)
         ).collect(Collectors.toList());
 
-        if(!matches.isEmpty()) {
+        if (!matches.isEmpty()) {
             for (Attribute match : matches) {
-                if(match.lvl==attribute.lvl) {
+                if (match.lvl == attribute.lvl) {
                     return match.value;
                 }
             }
@@ -567,8 +535,8 @@ public class ItemUtils {
                 if (id.contains("ENCHANTMENT_SCAVENGER") || id.contains("ENCHANTMENT_INFINITE_QUIVER")) continue;
                 total += (long) (PricingData.bazaarPrices.get(id) * 0.85);
             }
-            if(enchant.equals("efficiency") && enchLvl>5) {
-                total+= PricingData.bazaarPrices.get("SIL_EX").longValue()*(enchLvl-5);
+            if (enchant.equals("efficiency") && enchLvl > 5) {
+                total += PricingData.bazaarPrices.get("SIL_EX").longValue() * (enchLvl - 5);
             }
         }
         return total;
@@ -585,8 +553,7 @@ public class ItemUtils {
             return this.data.replace("\\u003d", "=");
         }
     }
-
-    public static List<ItemStack> decodeItem(Inventory inventory, Boolean offset) {
+    public static List<ItemStack> decodeInventory(Inventory inventory, Boolean offset) {
         List<ItemStack> itemStack = new ArrayList<>();
         if (inventory != null) {
             byte[] decode = Base64.getDecoder().decode(inventory.getData());
