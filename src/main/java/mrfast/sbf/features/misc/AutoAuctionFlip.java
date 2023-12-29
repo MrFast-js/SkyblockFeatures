@@ -203,12 +203,16 @@ public class AutoAuctionFlip {
     @SubscribeEvent
     public void onKeyInput(InputEvent.KeyInputEvent keyboardInputEvent) {
         GuiScreen screen = Minecraft.getMinecraft().currentScreen;
-        if (screen ==null && Keyboard.isKeyDown(SkyblockFeatures.config.aucFlipperKeybind) && canToggle) {
-            SkyblockFeatures.config.aucFlipperEnabled=!SkyblockFeatures.config.aucFlipperEnabled;
-            canToggle = false;
-            Utils.setTimeout(()->{
-                canToggle = true;
-            }, 1000);
+        try {
+            if (screen == null && Keyboard.isKeyDown(SkyblockFeatures.config.aucFlipperKeybind) && canToggle) {
+                SkyblockFeatures.config.aucFlipperEnabled = !SkyblockFeatures.config.aucFlipperEnabled;
+                canToggle = false;
+                Utils.setTimeout(() -> {
+                    canToggle = true;
+                }, 1000);
+            }
+        } catch (Exception ignored) {
+
         }
     }
     boolean debugLogging = false;
