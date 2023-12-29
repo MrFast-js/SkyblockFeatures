@@ -2425,13 +2425,22 @@ public class Config extends ConfigManager {
 
     @Property(
             type = PropertyType.TEXT,
-            name = "Draw hitboxes around mobs",
+            name = "Highlight Certain Mobs",
             category = "Quality of Life",
-            description = "Draws hitboxes around \nthe chosen mobs",
+            description = "Highlights the chosen mobs which are typed in the text field",
             subcategory = "Bestiary",
             parentName = "Bestiary Helper"
     )
-    public String drawHitboxes = "";
+    public String highlightMobs = "";
 
+    @Property(
+            type = PropertyType.TOGGLE,
+            name = "Currently Tracked Mob",
+            category = "Quality of Life",
+            description = "Tracks info about the mob that you are currently grinding.\nYou can ctrl+click inside the bestiary menu to track specific mobs",
+            subcategory = "Bestiary",
+            parentName = "Bestiary Helper"
+    )
+    public boolean currentlyTrackedMob = false;
 
 }

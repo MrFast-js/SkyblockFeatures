@@ -24,8 +24,8 @@ public class BestiaryHelper {
             if (sbMob == null) continue;
 
             if (sbMob.skyblockMob == entity && sbMob.getSkyblockMobId() != null) {
-                if (!config.drawHitboxes.isEmpty()) {
-                    if (sbMob.mobNameEntity.getCustomNameTag().contains(config.drawHitboxes)) {
+                if (!config.highlightMobs.isEmpty()) {
+                    if (sbMob.mobNameEntity.getCustomNameTag().contains(config.highlightMobs)) {
                         event.queueEntityToOutline(sbMob.skyblockMob, Color.green);
                     }
                 }
