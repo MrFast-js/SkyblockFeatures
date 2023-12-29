@@ -1527,7 +1527,10 @@ public class ProfileViewerGui extends WindowScreen {
             {// Fishing
                 new UIText(ChatFormatting.YELLOW + "" + ChatFormatting.BOLD + "Fishing").setChildOf(fishingContainer).setY(new SiblingConstraint(4f)).setX(new CenterConstraint()).setTextScale(new PixelConstraint(2f));
 
-                int caught = Utils.safeGetInt(ProfilePlayerResponse.get("trophy_fish").getAsJsonObject(), "total_caught");
+                int caught = 0;
+                try {
+                    Utils.safeGetInt(ProfilePlayerResponse.get("trophy_fish").getAsJsonObject(), "total_caught");
+                } catch (Exception ignored) {}
                 int treasure = Utils.safeGetInt(ProfilePlayerResponse, "fishing_treasure_caught");
 
                 new UIText(g + "Trophy Fish Caught: " + bold + Utils.nf.format(caught)).setY(new SiblingConstraint(2f)).setChildOf(fishingContainer);
