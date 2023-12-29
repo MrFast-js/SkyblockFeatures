@@ -579,9 +579,11 @@ public class ConfigGui extends WindowScreen {
                         exampleFeature.setHeight(new RelativeConstraint(1f));
 
                         button.onMouseClickConsumer((event) -> {
+                            if(listeningForKeybind) return;
                             listeningForKeybind = true;
                             // Set listening style, similar to minecrafts keybind system
                             ((UIText) text).setText("§r> §e"+((UIText) text).getText()+"§r <");
+
                             new Thread(() -> {
                                 boolean keyPressed = false;
                                 while (!keyPressed) {
