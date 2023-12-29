@@ -2413,5 +2413,34 @@ public class Config extends ConfigManager {
     )
     public boolean debugAuctionFlipper = false;
 
+    @Property(
+            type = PropertyType.TOGGLE,
+            name = "Bestiary Helper",
+            category = "Quality of Life",
+            description = "Toggle this feature to get features that help you with bestiary grinding",
+            subcategory = "Bestiary",
+            isParent = true
+    )
+    public boolean bestiaryHelper = false;
+
+    @Property(
+            type = PropertyType.TEXT,
+            name = "Highlight Certain Mobs",
+            category = "Quality of Life",
+            description = "Highlights the chosen mobs which are typed in the text field",
+            subcategory = "Bestiary",
+            parentName = "Bestiary Helper"
+    )
+    public String highlightMobs = "";
+
+    @Property(
+            type = PropertyType.TOGGLE,
+            name = "Currently Tracked Mob",
+            category = "Quality of Life",
+            description = "Tracks info about the mob that you are currently grinding.\nYou can ctrl+click inside the bestiary menu to track specific mobs",
+            subcategory = "Bestiary",
+            parentName = "Bestiary Helper"
+    )
+    public boolean currentlyTrackedMob = false;
 
 }
