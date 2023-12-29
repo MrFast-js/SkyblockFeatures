@@ -756,9 +756,37 @@ public class ConfigGui extends WindowScreen {
                     }
 
                     if(feature.type() == PropertyType.TEXT) {
-                        UIComponent comp = new TextComponent((String) valueMap.get(feature), "", true, false).setChildOf(exampleFeature);
-                        ((TextComponent) comp).onValueChange((value)->{
-                            setVariable(feature.name(),value);
+                        UIComponent comp = new UIBlock(new Color(0x232323))
+                                .enableEffect(new OutlineEffect(VigilancePalette.INSTANCE.getComponentBorder(),1f))
+                                .setX(new PixelConstraint(22f,true))
+                                .setY(new CenterConstraint())
+                                .setWidth(new PixelConstraint(58f))
+                                .setHeight(new PixelConstraint(16f))
+                                .setChildOf(exampleFeature);
+
+                        UITextInput newcomp = (UITextInput) new UITextInput("")
+                                .setChildOf(comp)
+                                .setColor(new Color(0xBBBBBB))
+                                .setWidth(new PixelConstraint(54f))
+                                .setHeight(new PixelConstraint(16f))
+                                .setX(new PixelConstraint(3f))
+                                .setY(new PixelConstraint(4f));
+
+                        newcomp.setText((String) valueMap.get(feature));
+                        newcomp.onMouseClickConsumer((event)->{
+                            newcomp.grabWindowFocus();
+                        });
+                        int initialWidth = Math.min(200,Math.max(Utils.GetMC().fontRendererObj.getStringWidth((String) valueMap.get(feature)),80));
+                        comp.setWidth(new PixelConstraint(initialWidth));
+                        newcomp.setWidth(new PixelConstraint(initialWidth-4));
+
+                        newcomp.onKeyType((component, character, integer) ->{
+                            String newText = newcomp.getText();
+                            setVariable(feature.name(),newText);
+                            int width = Math.min(160,Math.max(Utils.GetMC().fontRendererObj.getStringWidth(newText),80));
+                            comp.setWidth(new PixelConstraint(width));
+                            newcomp.setWidth(new PixelConstraint(width-4));
+
                             return Unit.INSTANCE;
                         });
                     }

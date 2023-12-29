@@ -1126,7 +1126,8 @@ public class Config extends ConfigManager {
             name = "Player Cape",
             category = "§2§rCustomization",
             description = "Paste a image url to give yourself a cape!\n§aEx. https://i.imgur.com/wHk1W6X.png (This is only visible to you)",
-            subcategory = "Player"
+            subcategory = "Player",
+            parentName = "Player Disguiser"
     )
     public String playerCapeURL = "";
 
@@ -2049,6 +2050,15 @@ public class Config extends ConfigManager {
 
     @Property(
             type = PropertyType.TOGGLE,
+            name = "Include Item Upgrades",
+            description = "Adds value to the auctions based off of enchants, stars, drill parts, hot potato books, etc. §cThis may over-value items!",
+            category = "§1§rAuction Flipper",
+            subcategory = "Flipper Settings"
+    )
+    public boolean aucFlipperItemUpgrades = false;
+
+    @Property(
+            type = PropertyType.TOGGLE,
             name = "Include Auction Flips",
             description = "Check auctions for flips",
             category = "§1§rAuction Flipper",
@@ -2118,15 +2128,6 @@ public class Config extends ConfigManager {
 //        subcategory = "Flipper Settings"
 //    )
 //    public boolean autoFlipAddEnchAndStar = false;
-
-    @Property(
-            type = PropertyType.TOGGLE,
-            name = "Refresh Countdown",
-            description = "Show the countdown till refreshing.",
-            category = "§1§rAuction Flipper",
-            subcategory = "Flipper Settings"
-    )
-    public boolean autoAuctionFlipCounter = false;
 
     @Property(
             type = PropertyType.TOGGLE,
@@ -2403,6 +2404,15 @@ public class Config extends ConfigManager {
             subcategory = "Settings"
     )
     public boolean showInspector = false;
+
+    @Property(
+            type = PropertyType.TOGGLE,
+            name = "Log Debug info for Auction Flipper",
+            category = "§eDeveloper",
+            description = "",
+            subcategory = "Settings"
+    )
+    public boolean debugAuctionFlipper = false;
 
 
 }
