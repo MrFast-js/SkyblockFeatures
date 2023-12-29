@@ -33,8 +33,7 @@ public class SlayerFeatures {
 
     @SubscribeEvent
     public void onRenderEntityOutlines(RenderEntityOutlineEvent event) {
-        if (Utils.GetMC().theWorld == null || Utils.GetMC().thePlayer == null || SkyblockInfo.getLocation() == null)
-            return;
+        if (Utils.GetMC().theWorld == null || Utils.GetMC().thePlayer == null || SkyblockInfo.getLocation() == null) return;
         if (event.type == RenderEntityOutlineEvent.Type.XRAY) return;
 
         if (SkyblockFeatures.config.highlightSlayers) {
