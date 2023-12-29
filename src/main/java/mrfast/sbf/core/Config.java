@@ -2041,7 +2041,7 @@ public class Config extends ConfigManager {
     @Property(
             type = PropertyType.TOGGLE,
             name = "Include BIN Flips",
-            description = "Check BINs for flips. §cThis is risky you need to know what your doing.",
+            description = "Check BINs for flips. §cThis is risky you need to know what you're doing.",
             category = "§1§rAuction Flipper",
             subcategory = "Flipper Settings"
     )
@@ -2403,6 +2403,26 @@ public class Config extends ConfigManager {
             subcategory = "Settings"
     )
     public boolean showInspector = false;
+
+    @Property(
+            type = PropertyType.TOGGLE,
+            name = "Bestiary Helper",
+            category = "Quality of Life",
+            description = "Toggle this feature to get features that help you with bestiary grinding",
+            subcategory = "Bestiary",
+            isParent = true
+    )
+    public boolean bestiaryHelper = false;
+
+    @Property(
+            type = PropertyType.TEXT,
+            name = "Draw hitboxes around mobs",
+            category = "Quality of Life",
+            description = "Draws hitboxes around \nthe chosen mobs",
+            subcategory = "Bestiary",
+            parentName = "Bestiary Helper"
+    )
+    public String drawHitboxes = "";
 
 
 }
