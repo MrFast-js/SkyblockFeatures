@@ -1126,8 +1126,7 @@ public class Config extends ConfigManager {
             name = "Player Cape",
             category = "§2§rCustomization",
             description = "Paste a image url to give yourself a cape!\n§aEx. https://i.imgur.com/wHk1W6X.png (This is only visible to you)",
-            subcategory = "Player",
-            parentName = "Player Disguiser"
+            subcategory = "Player"
     )
     public String playerCapeURL = "";
 
