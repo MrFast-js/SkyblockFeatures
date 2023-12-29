@@ -40,7 +40,6 @@ import gg.essential.elementa.constraints.RelativeConstraint;
 import gg.essential.elementa.constraints.SiblingConstraint;
 import gg.essential.elementa.constraints.animation.AnimatingConstraints;
 import gg.essential.elementa.constraints.animation.Animations;
-import gg.essential.elementa.effects.OutlineEffect;
 import gg.essential.elementa.effects.ScissorEffect;
 import gg.essential.elementa.utils.Vector2f;
 import gg.essential.universal.UMatrixStack;
@@ -49,7 +48,6 @@ import gg.essential.vigilance.gui.settings.DropDownComponent;
 import gg.essential.vigilance.utils.ResourceImageFactory;
 import kotlin.Unit;
 import mrfast.sbf.SkyblockFeatures;
-import mrfast.sbf.commands.debugCommand;
 import mrfast.sbf.utils.*;
 import mrfast.sbf.utils.ItemUtils.Inventory;
 import mrfast.sbf.core.PricingData;
@@ -674,7 +672,7 @@ public class ProfileViewerGui extends WindowScreen {
         if (ProfilePlayerResponse.has("inv_armor")) {
             String inventoryBase64 = ProfilePlayerResponse.get("inv_armor").getAsJsonObject().get("data").getAsString();
             Inventory items = new Inventory(inventoryBase64);
-            List<ItemStack> a = ItemUtils.decodeItem(items, true);
+            List<ItemStack> a = ItemUtils.decodeInventory(items, true);
             List<ItemStack> b = new ArrayList<>(Arrays.asList(null, null, null, null));
 
             int index = 0;
@@ -714,7 +712,7 @@ public class ProfileViewerGui extends WindowScreen {
         if (ProfilePlayerResponse.has("equippment_contents")) {
             String inventoryBase64 = ProfilePlayerResponse.get("equippment_contents").getAsJsonObject().get("data").getAsString();
             Inventory items = new Inventory(inventoryBase64);
-            List<ItemStack> a = ItemUtils.decodeItem(items, false);
+            List<ItemStack> a = ItemUtils.decodeInventory(items, false);
 
             for (ItemStack item : a) {
                 UIComponent backgroundSlot = new UIRoundedRectangle(3f)
@@ -1089,7 +1087,7 @@ public class ProfileViewerGui extends WindowScreen {
                     if (ProfilePlayerResponse.has("inv_contents")) {
                         String inventoryBase64 = ProfilePlayerResponse.get("inv_contents").getAsJsonObject().get("data").getAsString();
                         Inventory items = new Inventory(inventoryBase64);
-                        List<ItemStack> a = ItemUtils.decodeItem(items, true);
+                        List<ItemStack> a = ItemUtils.decodeInventory(items, true);
 
                         int index = 0;
                         for (ItemStack item : a) {
@@ -1103,7 +1101,7 @@ public class ProfileViewerGui extends WindowScreen {
                     if (ProfilePlayerResponse.has("wardrobe_contents")) {
                         String inventoryBase64 = ProfilePlayerResponse.get("wardrobe_contents").getAsJsonObject().get("data").getAsString();
                         Inventory items = new Inventory(inventoryBase64);
-                        List<ItemStack> a = ItemUtils.decodeItem(items, false);
+                        List<ItemStack> a = ItemUtils.decodeInventory(items, false);
 
                         int index = 0;
                         for (ItemStack item : a) {
@@ -1149,7 +1147,7 @@ public class ProfileViewerGui extends WindowScreen {
                     if (ProfilePlayerResponse.has("talisman_bag")) {
                         String inventoryBase64 = ProfilePlayerResponse.get("talisman_bag").getAsJsonObject().get("data").getAsString();
                         Inventory items = new Inventory(inventoryBase64);
-                        List<ItemStack> a = ItemUtils.decodeItem(items, false);
+                        List<ItemStack> a = ItemUtils.decodeInventory(items, false);
 
                         int index = 0;
                         for (ItemStack item : a) {
@@ -1228,7 +1226,7 @@ public class ProfileViewerGui extends WindowScreen {
                     if (ProfilePlayerResponse.has("ender_chest_contents")) {
                         String inventoryBase64 = ProfilePlayerResponse.get("ender_chest_contents").getAsJsonObject().get("data").getAsString();
                         Inventory items = new Inventory(inventoryBase64);
-                        List<ItemStack> a = ItemUtils.decodeItem(items, false);
+                        List<ItemStack> a = ItemUtils.decodeInventory(items, false);
                         int numPages = (int) Math.ceil(a.size() / 45.0);
 
                         int pageIndex = 0;
@@ -1279,7 +1277,7 @@ public class ProfileViewerGui extends WindowScreen {
                             JsonObject backpack = a.getValue().getAsJsonObject();
                             String inventoryBase64 = backpack.get("data").getAsString();
                             Inventory items = new Inventory(inventoryBase64);
-                            List<ItemStack> b = ItemUtils.decodeItem(items, false);
+                            List<ItemStack> b = ItemUtils.decodeInventory(items, false);
                             InventoryBasic backpackInv = new InventoryBasic("Backpack: " + a.getKey(), true, b.size());
 
                             for (int i = 0; i < b.size(); i++) {
@@ -1725,7 +1723,7 @@ public class ProfileViewerGui extends WindowScreen {
                     if(inventory.has("inv_contents")) {
                         String inventoryBase64 = inventory.get("inv_contents").getAsJsonObject().get("data").getAsString();
                         Inventory items = new Inventory(inventoryBase64);
-                        List<ItemStack> a = ItemUtils.decodeItem(items, true);
+                        List<ItemStack> a = ItemUtils.decodeInventory(items, true);
 
                         int index = 0;
                         for (ItemStack item : a) {
@@ -1736,7 +1734,7 @@ public class ProfileViewerGui extends WindowScreen {
                     if(inventory.has("ender_chest_contents")) {
                         String inventoryBase64 = inventory.get("ender_chest_contents").getAsJsonObject().get("data").getAsString();
                         Inventory items = new Inventory(inventoryBase64);
-                        List<ItemStack> a = ItemUtils.decodeItem(items, true);
+                        List<ItemStack> a = ItemUtils.decodeInventory(items, true);
                         Collections.reverse(a);
 
                         int index = 0;
@@ -1809,7 +1807,7 @@ public class ProfileViewerGui extends WindowScreen {
                     if (inventory !=null && inventory.has("inv_armor")) {
                         String inventoryBase64 = inventory.get("inv_armor").getAsJsonObject().get("data").getAsString();
                         Inventory items = new Inventory(inventoryBase64);
-                        List<ItemStack> a = ItemUtils.decodeItem(items, true);
+                        List<ItemStack> a = ItemUtils.decodeInventory(items, true);
                         List<ItemStack> b = new ArrayList<>(Arrays.asList(null, null, null, null));
 
                         int index = 0;
@@ -1849,7 +1847,7 @@ public class ProfileViewerGui extends WindowScreen {
                     if (inventory!=null && inventory.has("equippment_contents")) {
                         String inventoryBase64 = inventory.get("equippment_contents").getAsJsonObject().get("data").getAsString();
                         Inventory items = new Inventory(inventoryBase64);
-                        List<ItemStack> a = ItemUtils.decodeItem(items, false);
+                        List<ItemStack> a = ItemUtils.decodeInventory(items, false);
 
                         for (ItemStack item : a) {
                             UIComponent backgroundSlot = new UIRoundedRectangle(3f)
