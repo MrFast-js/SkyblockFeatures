@@ -98,17 +98,21 @@ public class SlayerFeatures {
         }
     }
 
-    long slayerStarted = System.currentTimeMillis();
-    long slayerSpawned = System.currentTimeMillis();
-
+    static long slayerStarted = System.currentTimeMillis();
+    static long slayerSpawned = System.currentTimeMillis();
+    
     @SubscribeEvent
     public void onChat(ClientChatReceivedEvent event) {
         String msg = event.message.getUnformattedText();
         if (msg.trim().startsWith("SLAYER QUEST STARTED!")) {
+            // use timeout because auto slayer will mess it up otherwise 
+            Utils.setTimeout(()->{
+                
             slayerStarted = System.currentTimeMillis();
             if(Utils.isDeveloper()) {
                 Utils.sendMessage("Slayer quest started");
             }
+            },100);
         }
         if (msg.trim().startsWith("NICE! SLAYER BOSS SLAIN!") || msg.trim().startsWith("SLAYER QUEST COMPLETE!")) {
             if (SkyblockFeatures.config.slayerTimer) {
