@@ -139,7 +139,7 @@ public class SlayerFeatures {
     @SubscribeEvent
     public void onSbMobSpawn(SkyblockMobEvent.Render event) {
         if (!SkyblockFeatures.config.slayerTimer || hasSlayerSpawned) return;
-
+        if (event.getSbMob()==null) return;
         if (event.getSbMob().getSkyblockMobId().endsWith("Slayer")) {
             boolean nextLine = false;
             String slayerName = "";
