@@ -33,7 +33,8 @@ public class SlayerFeatures {
 
     @SubscribeEvent
     public void onRenderEntityOutlines(RenderEntityOutlineEvent event) {
-        if (Utils.GetMC().theWorld == null || Utils.GetMC().thePlayer == null || SkyblockInfo.getLocation() == null) return;
+        if (Utils.GetMC().theWorld == null || Utils.GetMC().thePlayer == null || SkyblockInfo.getLocation() == null)
+            return;
         if (event.type == RenderEntityOutlineEvent.Type.XRAY) return;
 
         if (SkyblockFeatures.config.highlightSlayers) {
@@ -74,7 +75,8 @@ public class SlayerFeatures {
 
     @SubscribeEvent
     public void render3d(RenderWorldLastEvent event) {
-        if (Utils.GetMC().theWorld == null || Utils.GetMC().thePlayer == null || SkyblockInfo.getLocation() == null) return;
+        if (Utils.GetMC().theWorld == null || Utils.GetMC().thePlayer == null || SkyblockInfo.getLocation() == null)
+            return;
         if (!SkyblockFeatures.config.highlightBeacons || !SkyblockInfo.map.equals("The End")) return;
 
         for (TileEntity e : Utils.GetMC().theWorld.loadedTileEntityList) {
@@ -100,19 +102,19 @@ public class SlayerFeatures {
 
     static long slayerStarted = System.currentTimeMillis();
     static long slayerSpawned = System.currentTimeMillis();
-    
+
     @SubscribeEvent
     public void onChat(ClientChatReceivedEvent event) {
         String msg = event.message.getUnformattedText();
         if (msg.trim().startsWith("SLAYER QUEST STARTED!")) {
             // use timeout because auto slayer will mess it up otherwise 
-            Utils.setTimeout(()->{
-                
-            slayerStarted = System.currentTimeMillis();
-            if(Utils.isDeveloper()) {
-                Utils.sendMessage("Slayer quest started");
-            }
-            },100);
+            Utils.setTimeout(() -> {
+
+                slayerStarted = System.currentTimeMillis();
+                if (Utils.isDeveloper()) {
+                    Utils.sendMessage("Slayer quest started");
+                }
+            }, 100);
         }
         if (msg.trim().startsWith("NICE! SLAYER BOSS SLAIN!") || msg.trim().startsWith("SLAYER QUEST COMPLETE!")) {
             if (SkyblockFeatures.config.slayerTimer) {
@@ -138,12 +140,13 @@ public class SlayerFeatures {
             slayerStarted = 0;
         }
     }
+
     boolean hasSlayerSpawned = false;
 
     @SubscribeEvent
     public void onSbMobSpawn(SkyblockMobEvent.Render event) {
         if (!SkyblockFeatures.config.slayerTimer || hasSlayerSpawned) return;
-        if (event.getSbMob()==null||event.getSbMob().getSkyblockMobId()==null) return;
+        if (event.getSbMob() == null || event.getSbMob().getSkyblockMobId() == null) return;
         if (event.getSbMob().getSkyblockMobId().endsWith("Slayer")) {
             boolean nextLine = false;
             String slayerName = "";
@@ -151,13 +154,13 @@ public class SlayerFeatures {
             for (String line : ScoreboardUtil.getSidebarLines(true)) {
                 if (nextLine) {
                     nextLine = false;
-                    slayerName = line;
+                    slayerName = getActualSlayerName(line);
                 }
                 if (line.contains("Slayer Quest")) {
                     nextLine = true;
                 }
                 if (line.contains("Slay the boss!")) {
-                    if(Utils.isDeveloper()) {
+                    if (Utils.isDeveloper()) {
                         Utils.sendMessage("Detected sidebar slayer spawned");
                     }
                     hasSlayerSpawned = true;
@@ -172,4 +175,15 @@ public class SlayerFeatures {
             }
         }
     }
+
+    public String getActualSlayerName(String sidebarName) {
+        if (sidebarName.contains("Revenant Horror V")) {
+            return "Atoned Horror";
+        }
+        if (sidebarName.contains("Riftslalker Bloodfiend")) {
+            return "Bloodfiend";
+        }
+        return sidebarName;
+    }
+
 }
