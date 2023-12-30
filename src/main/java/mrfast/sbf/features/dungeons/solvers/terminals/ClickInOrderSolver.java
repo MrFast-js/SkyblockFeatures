@@ -4,17 +4,11 @@ import mrfast.sbf.SkyblockFeatures;
 import mrfast.sbf.events.GuiContainerEvent;
 import mrfast.sbf.events.SlotClickedEvent;
 import mrfast.sbf.utils.GuiUtils;
-import mrfast.sbf.utils.Utils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.inventory.GuiChest;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.init.Blocks;
 import net.minecraft.inventory.ContainerChest;
 import net.minecraft.inventory.Slot;
-import net.minecraft.item.Item;
-import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import java.awt.*;
@@ -26,7 +20,7 @@ public class ClickInOrderSolver {
 
     @SubscribeEvent
     public void onSlotClick(SlotClickedEvent event) {
-        if (event.inventoryName.contains("Click in order")) {
+        if (event.chestName.contains("Click in order")) {
             if(event.slot.getStack()==null) return;
 
             if(event.slot.getStack().getMetadata()==14) {

@@ -1,6 +1,7 @@
 package mrfast.sbf.core;
 
 import mrfast.sbf.features.dungeons.TrashHighlighter;
+import mrfast.sbf.utils.Utils;
 import org.lwjgl.input.Keyboard;
 
 import java.awt.*;
@@ -2415,32 +2416,54 @@ public class Config extends ConfigManager {
 
     @Property(
             type = PropertyType.TOGGLE,
-            name = "Bestiary Helper",
+            name = "Highlight Selected Bestiary Mobs",
             category = "Quality of Life",
-            description = "Toggle this feature to get features that help you with bestiary grinding",
+            description = "Highlights mobs from the §aBestiary Menu§r in the world with glowing effect.  §eCtrl+Click§r on a mob inside the §aBestiary Menu§r to start tracking it.",
             subcategory = "Bestiary",
             isParent = true
     )
-    public boolean bestiaryHelper = false;
-
-    @Property(
-            type = PropertyType.TEXT,
-            name = "Highlight Certain Mobs",
-            category = "Quality of Life",
-            description = "Highlights the chosen mobs which are typed in the text field",
-            subcategory = "Bestiary",
-            parentName = "Bestiary Helper"
-    )
-    public String highlightMobs = "";
+    public boolean highlightBestiaryMobs = false;
 
     @Property(
             type = PropertyType.TOGGLE,
-            name = "Currently Tracked Mob",
+            name = "Middle Click To Track",
             category = "Quality of Life",
-            description = "Tracks info about the mob that you are currently grinding.\nYou can ctrl+click inside the bestiary menu to track specific mobs",
+            description = "If you middle click a mob in the world it will start being tracked.",
             subcategory = "Bestiary",
-            parentName = "Bestiary Helper"
+            parentName = "Highlight Selected Bestiary Mobs"
     )
-    public boolean currentlyTrackedMob = false;
+    public boolean highlightBestiaryMobsMidClick = false;
+
+    @Property(
+            type = PropertyType.COLOR,
+            name = "Mob Highlight Color",
+            category = "Quality of Life",
+            description = "",
+            subcategory = "Bestiary",
+            parentName = "Highlight Selected Bestiary Mobs"
+    )
+    public Color highlightBestiaryColor = Color.orange;
+
+    @Property(
+            type = PropertyType.TEXT,
+            name = "Tracked Mobs",
+            description = "This is the list of currently tracked mobs",
+            category = "Quality of Life",
+            subcategory = "Bestiary",
+            parentName = "Highlight Selected Bestiary Mobs"
+    )
+    public String trackedBestiaryMobs = "";
+
+    @Property(
+            type = PropertyType.BUTTON,
+            name = "§eOpen Bestiary Menu",
+            description = "Opens the bestiary menu where you can select which mobs to track.",
+            category = "Quality of Life",
+            subcategory = "Bestiary",
+            placeholder = "§cOpen Bestiary"
+    )
+    public Runnable openBestiary = () -> {
+        Utils.GetMC().thePlayer.sendChatMessage("/bestiary");
+    };
 
 }

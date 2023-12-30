@@ -11,7 +11,6 @@ import net.minecraft.init.Blocks;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -24,7 +23,7 @@ public class ChronomotronSolver {
     @SubscribeEvent
     public void onSlotClick(SlotClickedEvent event) {
         if(!SkyblockFeatures.config.enchantingSolvers) return;
-        if (event.inventoryName.startsWith("Chronomatron (")) {
+        if (event.chestName.startsWith("Chronomatron (")) {
             IInventory inventory = event.inventory;
             ItemStack item = event.item;
             if (item == null) return;

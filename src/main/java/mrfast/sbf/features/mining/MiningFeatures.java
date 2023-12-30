@@ -10,6 +10,7 @@ import mrfast.sbf.SkyblockFeatures;
 import mrfast.sbf.core.SkyblockInfo;
 import mrfast.sbf.events.BlockChangeEvent;
 import mrfast.sbf.events.PacketEvent;
+import mrfast.sbf.events.SecondPassedEvent;
 import mrfast.sbf.features.overlays.maps.CrystalHollowsMap;
 import mrfast.sbf.utils.RenderUtil;
 import mrfast.sbf.utils.Utils;
@@ -45,6 +46,19 @@ public class MiningFeatures {
             treasureChest = null;
             particles.clear();
             progress = 0;
+        }
+    }
+
+    public int seconds = 0;
+    @SubscribeEvent
+    public void onPlayerInteractEvent(SecondPassedEvent event) {
+        if (Utils.inSkyblock && SkyblockFeatures.config.highlightEnderNodes && SkyblockInfo.localLocation.contains("The End")) {
+            seconds++;
+            if (seconds%5==0) {
+                enderParticles.clear();
+                seconds=0;
+                drawnPositions.clear();
+            }
         }
     }
 

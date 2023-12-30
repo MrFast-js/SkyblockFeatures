@@ -547,7 +547,8 @@ public class ConfigGui extends WindowScreen {
                                 .setY(new CenterConstraint())
                                 .setX(new PixelConstraint(15f,true))
                                 .setChildOf(exampleFeature);
-
+                        border.setHeight(new RelativeConstraint(0.18f));
+                        exampleFeature.setHeight(new RelativeConstraint(1f));
                         UIComponent text = new UIText(feature.placeholder()).setChildOf(button).setX(new CenterConstraint()).setY(new CenterConstraint());
 
                         button.onMouseClickConsumer((event)->{
@@ -776,7 +777,7 @@ public class ConfigGui extends WindowScreen {
                         newcomp.onMouseClickConsumer((event)->{
                             newcomp.grabWindowFocus();
                         });
-                        int initialWidth = Math.min(200,Math.max(Utils.GetMC().fontRendererObj.getStringWidth((String) valueMap.get(feature)),80));
+                        int initialWidth = Math.min(160,Math.max(Utils.GetMC().fontRendererObj.getStringWidth((String) valueMap.get(feature)),80));
                         comp.setWidth(new PixelConstraint(initialWidth));
                         newcomp.setWidth(new PixelConstraint(initialWidth-4));
 

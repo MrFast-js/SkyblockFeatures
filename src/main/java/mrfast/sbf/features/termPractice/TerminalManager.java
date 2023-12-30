@@ -38,22 +38,22 @@ public class TerminalManager {
     public static double orderNumber = 1;
 
     public void handleTerminalClick(SlotClickedEvent event) {
-        if (event.inventoryName.contains(ChatFormatting.GOLD + "✯")) {
-            if (event.inventoryName.contains("Correct Panes")) {
+        if (event.chestName.contains(ChatFormatting.GOLD + "✯")) {
+            if (event.chestName.contains("Correct Panes")) {
                 new CorrectPanes().slotClick(event);
             }
-            if (event.inventoryName.contains("Click in order")) {
+            if (event.chestName.contains("Click in order")) {
                 new ClickInOrder().slotClick(event);
             }
-            if (event.inventoryName.contains("Change all to same color")) {
+            if (event.chestName.contains("Change all to same color")) {
                 new ColorPanes().slotClick(event);
             }
-            if (event.inventoryName.contains("What starts with")) {
+            if (event.chestName.contains("What starts with")) {
                 new StartsWith().slotClick(event);
             }
         }
 
-        if (event.inventoryName.contains("✯")) event.setCanceled(true);
+        if (event.chestName.contains("✯")) event.setCanceled(true);
     }
 
     public static GuiChest createTerminal(int terminalId) {
@@ -260,7 +260,7 @@ public class TerminalManager {
             if (start == 0) {
                 start = System.currentTimeMillis();
             }
-            String startingChar = event.inventoryName.split("'")[1];
+            String startingChar = event.chestName.split("'")[1];
             if (event.item.getDisplayName().startsWith(startingChar)) {
                 if (!event.item.isItemEnchanted()) {
                     event.item.addEnchantment(Enchantment.efficiency, 1);
@@ -355,7 +355,7 @@ public class TerminalManager {
 
     @SubscribeEvent
     public void onSlotClick(SlotClickedEvent event) {
-        if (event.inventoryName.contains("✯")) {
+        if (event.chestName.contains("✯")) {
             if(event.slot!=null) handleTerminalClick(event);
         }
     }

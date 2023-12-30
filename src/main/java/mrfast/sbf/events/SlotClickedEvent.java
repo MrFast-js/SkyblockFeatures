@@ -5,13 +5,10 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.inventory.GuiChest;
 import net.minecraft.client.gui.inventory.GuiContainer;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.Container;
 import net.minecraft.inventory.ContainerChest;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import net.minecraft.world.IInteractionObject;
 import net.minecraftforge.fml.common.eventhandler.Cancelable;
 import net.minecraftforge.fml.common.eventhandler.Event;
 
@@ -20,7 +17,7 @@ public class SlotClickedEvent extends Event {
     public GuiChest chest;
     public Gui gui;
     public IInventory inventory;
-    public String inventoryName;
+    public String chestName;
     public Slot slot;
     public int slotId;
     public ItemStack item;
@@ -29,12 +26,12 @@ public class SlotClickedEvent extends Event {
         if (!(Minecraft.getMinecraft().currentScreen instanceof GuiChest)) {
             this.chest = null;
             this.gui=Minecraft.getMinecraft().currentScreen;
-            this.inventoryName = "";
+            this.chestName = "";
             this.inventory = Utils.GetMC().thePlayer.inventory;
         } else {
             GuiChest chest = (GuiChest) Minecraft.getMinecraft().currentScreen;
             this.chest = chest;
-            this.inventoryName = ((ContainerChest) chest.inventorySlots).getLowerChestInventory().getName();
+            this.chestName = ((ContainerChest) chest.inventorySlots).getLowerChestInventory().getName();
             this.inventory = ((ContainerChest) container.inventorySlots).getLowerChestInventory();
         }
         if(slot2!=null) {
