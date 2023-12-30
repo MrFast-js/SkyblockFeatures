@@ -106,12 +106,17 @@ public class SlayerFeatures {
         String msg = event.message.getUnformattedText();
         if (msg.trim().startsWith("SLAYER QUEST STARTED!")) {
             slayerStarted = System.currentTimeMillis();
+            if(Utils.isDeveloper()) {
+                Utils.sendMessage("Slayer quest started");
+            }
         }
         if (msg.trim().startsWith("NICE! SLAYER BOSS SLAIN!") || msg.trim().startsWith("SLAYER QUEST COMPLETE!")) {
             if (SkyblockFeatures.config.slayerTimer) {
                 if (Utils.isDeveloper()) {
                     Utils.sendMessage("Slayer Killed! Sending timer..");
                 }
+                hasSlayerSpawned = false;
+
                 double spawn = System.currentTimeMillis() - slayerStarted;
                 double spawnTime = Math.ceil(spawn / 1000);
                 double kill = System.currentTimeMillis() - slayerSpawned;
@@ -129,15 +134,15 @@ public class SlayerFeatures {
             slayerStarted = 0;
         }
     }
+    boolean hasSlayerSpawned = false;
 
     @SubscribeEvent
-    public void onSbMobSpawn(SkyblockMobEvent.Spawn event) {
-        if (!SkyblockFeatures.config.slayerTimer) return;
+    public void onSbMobSpawn(SkyblockMobEvent.Render event) {
+        if (!SkyblockFeatures.config.slayerTimer || hasSlayerSpawned) return;
 
         if (event.getSbMob().getSkyblockMobId().endsWith("Slayer")) {
             boolean nextLine = false;
             String slayerName = "";
-            boolean hasSlayerSpawned = false;
 
             for (String line : ScoreboardUtil.getSidebarLines(true)) {
                 if (nextLine) {
@@ -148,6 +153,9 @@ public class SlayerFeatures {
                     nextLine = true;
                 }
                 if (line.contains("Slay the boss!")) {
+                    if(Utils.isDeveloper()) {
+                        Utils.sendMessage("Detected sidebar slayer spawned");
+                    }
                     hasSlayerSpawned = true;
                 }
             }
