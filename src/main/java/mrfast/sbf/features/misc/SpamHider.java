@@ -27,9 +27,7 @@ public class SpamHider {
         
         try {
             String u = unformatted.toLowerCase();
-            if(SkyblockFeatures.config.hideRingOfLoveMsg && u.endsWith("ring of love requires higher quest completion! its stats and effects don't apply!")) {
-                cancelChatPacket(event);
-            }
+
             if(SkyblockFeatures.config.hideAdvertisments) {
                 if (u.contains("/visit") || u.contains("lowballing") || u.contains("selling") || u.contains("buying") || u.contains("visit") || u.contains("ah") || u.contains("auction") || u.contains("guild")) {
                     // Dont remove messages from the auction house
