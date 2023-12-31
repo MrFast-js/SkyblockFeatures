@@ -1,5 +1,6 @@
 package mrfast.sbf.features.dungeons.solvers;
 
+import mrfast.sbf.features.dungeons.DungeonsFeatures;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -28,7 +29,7 @@ public class TeleportPadSolver {
 
     @SubscribeEvent
     public void onTick(ClientTickEvent event) {
-        if(Utils.GetMC().theWorld == null || !Utils.inDungeons || !SkyblockFeatures.config.teleportPadSolver) return;
+        if(Utils.GetMC().theWorld == null || !Utils.inDungeons || !SkyblockFeatures.config.teleportPadSolver || DungeonsFeatures.getDungeonRoomId()!=-60) return;
         Minecraft mc = Utils.GetMC();
 
         int[][] directionOffsets = {
@@ -64,7 +65,7 @@ public class TeleportPadSolver {
 
         for(BlockPos frame:endportalFrames) {
             AxisAlignedBB aabb = new AxisAlignedBB(frame, frame.add(1, 1, 1));
-            RenderUtil.drawOutlinedFilledBoundingBox(aabb, Color.red, event.partialTicks);
+            RenderUtil.drawOutlinedFilledBoundingBox(aabb, SkyblockFeatures.config.teleportPadSolverColor, event.partialTicks);
         }
     }
 }

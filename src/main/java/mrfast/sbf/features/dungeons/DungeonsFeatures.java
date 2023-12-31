@@ -65,7 +65,7 @@ public class DungeonsFeatures {
         if(ticks%20==0) {
             ticks = 0;
             int id = getDungeonRoomId();
-            inSpecialRoom = id==138||id==210||id==-96;
+            inSpecialRoom = id==138||id==210||id==-96||id==-60;
             starredMobs.entrySet().removeIf((sbMob)-> !sbMob.getKey().getSkyblockMob().isEntityAlive());
             for(SkyblockMobDetector.SkyblockMob sbMob:SkyblockMobDetector.getLoadedSkyblockMobs()) {
                 if(sbMob.skyblockMob.isInvisible()) continue;

@@ -234,9 +234,19 @@ public class Config extends ConfigManager {
             name = "Teleport Pad Solver",
             description = "Highlights teleport pads that you have stepped on",
             category = "§1§rDungeons",
-            subcategory = "Solvers"
+            subcategory = "Solvers",
+            isParent = true
     )
     public boolean teleportPadSolver = false;
+    @Property(
+            type = PropertyType.COLOR,
+            name = "Teleport Pad Solver",
+            description = "Highlights teleport pads that you have stepped on",
+            category = "§1§rDungeons",
+            subcategory = "Solvers",
+            parentName = "Teleport Pad Solver"
+    )
+    public Color teleportPadSolverColor = Color.red;
 
     @Property(
             type = PropertyType.TOGGLE,
