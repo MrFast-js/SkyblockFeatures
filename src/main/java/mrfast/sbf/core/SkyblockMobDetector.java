@@ -52,7 +52,11 @@ public class SkyblockMobDetector {
             if(entity instanceof EntityArmorStand && !skyblockMobHashMap.containsKey(entity) && entity.hasCustomName()) {
                 if(Utils.GetMC().thePlayer.getDistanceToEntity(entity)>30) continue;
                 Entity potentialMob = Utils.GetMC().theWorld.getEntityByID(entity.getEntityId()-1);
+                if(entity.getName().contains("Withermancer")) {
+                    potentialMob = Utils.GetMC().theWorld.getEntityByID(entity.getEntityId()-3);
+                }
                 if(potentialMob==null || !potentialMob.isEntityAlive()) continue;
+
 
                 SkyblockMob sbMob = new SkyblockMob(entity, potentialMob);
                 skyblockMobHashMap.put(entity,sbMob);
