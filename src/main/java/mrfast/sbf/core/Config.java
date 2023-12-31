@@ -1698,6 +1698,26 @@ public class Config extends ConfigManager {
 
     @Property(
             type = PropertyType.TOGGLE,
+            name = "Final Destination Armor Display",
+            description = "Shows your final destination armor onscreen with your progress to the next upgrade.",
+            category = "§1§rThe End",
+            subcategory = "Armor",
+            isParent = true
+    )
+    public boolean finalDestinationArmorDisplay = false;
+
+    @Property(
+            type = PropertyType.TOGGLE,
+            name = "Show kills instead of percentage",
+            description = "Replaces the percentage inside the display with the current number of kills / needed kills.",
+            category = "§1§rThe End",
+            subcategory = "Armor",
+            parentName = "Final Destination Armor Display"
+    )
+    public boolean finalDestinationArmorDisplayKills = false;
+
+    @Property(
+            type = PropertyType.TOGGLE,
             name = "Show Advanced Dragon Hitbox",
             description = "Draws a better hitbox for dragons. Useful for §cMaster Mode 7§r and §eDragons",
             category = "Render",

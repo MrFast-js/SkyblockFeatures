@@ -94,7 +94,7 @@ public class BestiaryHelper {
                     Utils.sendMessage("§aAdded " + sbMob.skyblockMobId + " to the bestiary tracker!");
                 }
                 config.trackedBestiaryMobs = mobs.toString().replace("[", "").replace("]", "");
-                ConfigManager.saveConfig(config);
+                ConfigManager.saveConfig();
             }
         }
     }
@@ -176,7 +176,7 @@ public class BestiaryHelper {
             config.trackedBestiaryMobs = mobs.toString().replace("[", "").replace("]", "");
 
             event.setCanceled(true);
-            ConfigManager.saveConfig(config);
+            ConfigManager.saveConfig();
         }
     }
 

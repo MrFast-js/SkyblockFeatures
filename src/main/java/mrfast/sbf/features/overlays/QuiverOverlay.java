@@ -1,6 +1,7 @@
 package mrfast.sbf.features.overlays;
 
 import mrfast.sbf.SkyblockFeatures;
+import mrfast.sbf.core.ConfigManager;
 import mrfast.sbf.events.GuiContainerEvent;
 import mrfast.sbf.events.PacketEvent;
 import mrfast.sbf.gui.components.Point;
@@ -21,14 +22,13 @@ public class QuiverOverlay {
     static {
         new quiverDisplay();
     }
-    static int quiverArrows = SkyblockFeatures.config.quiverOverlayCount;
 
     @SubscribeEvent
     public void onTitleDrawn(GuiContainerEvent.TitleDrawnEvent event) {
         if(!SkyblockFeatures.config.quiverOverlay) return;
 
         if(event.displayName.equals("Quiver") && event.chestInventory!=null) {
-            quiverArrows = 0;
+            int quiverArrows = 0;
             for (int i = 0; i < event.chestInventory.getSizeInventory(); i++) {
                 ItemStack stack = event.chestInventory.getStackInSlot(i);
                 String id = ItemUtils.getSkyBlockItemID(stack);
@@ -39,6 +39,7 @@ public class QuiverOverlay {
                 }
             }
             SkyblockFeatures.config.quiverOverlayCount = quiverArrows;
+            ConfigManager.saveConfig();
         }
     }
 
@@ -52,7 +53,7 @@ public class QuiverOverlay {
             if(heldItem==null) return;
             boolean holdingBow = (heldItem.getItem() instanceof ItemBow);
             if(packet.getSoundName().equals("random.bow") && holdingBow) {
-                quiverArrows--;
+                SkyblockFeatures.config.quiverOverlayCount--;
             }
         }
     }
@@ -71,6 +72,7 @@ public class QuiverOverlay {
                     return;
                 }
             }
+            int quiverArrows = SkyblockFeatures.config.quiverOverlayCount;
             String display = quiverArrows!=0?"§r§7x"+Utils.nf.format(quiverArrows):"§cOpen Quiver";
             RenderUtil.renderItemStackOnScreen(new ItemStack(Items.arrow),0,0,12,12);
             GuiUtils.drawText(display,14,2, GuiUtils.TextStyle.DROP_SHADOW);
@@ -78,6 +80,7 @@ public class QuiverOverlay {
 
         @Override
         public void drawElementExample() {
+            int quiverArrows = SkyblockFeatures.config.quiverOverlayCount;
             String display = quiverArrows!=0?"§r§7x"+Utils.nf.format(quiverArrows):"§cOpen Quiver";
             RenderUtil.renderItemStackOnScreen(new ItemStack(Items.arrow),0,0,12,12);
             GuiUtils.drawText(display,14,2, GuiUtils.TextStyle.DROP_SHADOW);

@@ -41,7 +41,6 @@ import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.client.ClientCommandHandler;
 import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
@@ -54,7 +53,6 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import org.lwjgl.input.Keyboard;
 
-import java.awt.*;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStreamReader;
@@ -172,6 +170,7 @@ public class SkyblockFeatures {
                 new CrimsonMap(),
                 new EntityOutlineRenderer(),
                 new RiftFeatures(),
+                new FinalDestinationOverlay(),
                 new BlazeSolver(),
                 new ThreeWeirdosSolver(),
                 new SkyblockInfo(),
@@ -199,7 +198,7 @@ public class SkyblockFeatures {
         SkyblockFeatures.config.timeStartedUp++;
         SkyblockFeatures.config.aucFlipperEnabled = false;
 
-        ConfigManager.saveConfig(SkyblockFeatures.config);
+        ConfigManager.saveConfig();
         System.out.println("You have started Skyblock Features up " + SkyblockFeatures.config.timeStartedUp + " times!");
     }
 

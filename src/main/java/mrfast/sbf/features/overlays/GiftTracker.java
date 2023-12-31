@@ -100,7 +100,7 @@ public class GiftTracker {
         String clean = Utils.cleanColor(event.message.getUnformattedText());
         if (clean.startsWith("+1 Unique Gift given!")) {
             SkyblockFeatures.config.uniqueGiftsGiven++;
-            ConfigManager.saveConfig(SkyblockFeatures.config);
+            ConfigManager.saveConfig();
         }
     }
 
@@ -116,7 +116,7 @@ public class GiftTracker {
                     if (line.startsWith("Unique Players Gifted:")) {
                         int gifts = Integer.parseInt(line.replaceAll("[^0-9]", ""));
                         SkyblockFeatures.config.uniqueGiftsGiven = gifts;
-                        ConfigManager.saveConfig(SkyblockFeatures.config);
+                        ConfigManager.saveConfig();
                         break;
                     }
                 }

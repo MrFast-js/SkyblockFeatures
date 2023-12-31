@@ -42,7 +42,6 @@ import mrfast.sbf.core.Config;
 import mrfast.sbf.utils.GuiUtils;
 import mrfast.sbf.utils.Utils;
 import org.lwjgl.input.Keyboard;
-import scala.Char;
 
 public class ConfigGui extends WindowScreen {
     public static SortedMap<String, SortedMap<String,List<Property>>> categories = new TreeMap<>();
@@ -56,7 +55,7 @@ public class ConfigGui extends WindowScreen {
 
     @Override
 	public void onScreenClose() {
-        ConfigManager.saveConfig(SkyblockFeatures.config);
+        ConfigManager.saveConfig();
         if(quickSwapping) {
             quickSwapping = false;
         } else {

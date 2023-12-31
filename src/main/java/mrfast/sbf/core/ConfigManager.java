@@ -42,9 +42,9 @@ public class ConfigManager {
 
     private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
-    public static void saveConfig(Object obj) {
+    public static void saveConfig() {
         try {
-            String json = saveProperties(obj);
+            String json = saveProperties(SkyblockFeatures.config);
             saveToFile(json);
         } catch (IOException e) {
             e.printStackTrace();

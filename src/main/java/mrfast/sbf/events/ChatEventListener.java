@@ -50,7 +50,7 @@ public class ChatEventListener {
             Utils.sendMessage("§bThank You for downloading Skyblock Features!§e Do /sbf for config!");
 
             SkyblockFeatures.config.firstLaunch = false;
-            ConfigManager.saveConfig(SkyblockFeatures.config);
+            ConfigManager.saveConfig();
 
         }
 
