@@ -1440,13 +1440,13 @@ public class ProfileViewerGui extends WindowScreen {
                             .setChildOf(container)
                             .setHeight(new RelativeConstraint(0.3f));
 
-                    new UIText(g + "Wither Essence: " + bold + nf.format(ProfilePlayerResponse.get("essence_wither").getAsInt())).setX(new SiblingConstraint(3f)).setChildOf(right);
-                    new UIText(g + ChatFormatting.GREEN + "Spider Essence: " + bold + nf.format(ProfilePlayerResponse.get("essence_spider").getAsInt())).setY(new SiblingConstraint(3f)).setChildOf(right);
-                    new UIText(g + ChatFormatting.AQUA + "Ice Essence: " + bold + nf.format(ProfilePlayerResponse.get("essence_ice").getAsInt())).setY(new SiblingConstraint(3f)).setChildOf(right);
-                    new UIText(g + ChatFormatting.RED + "Dragon Essence: " + bold + nf.format(ProfilePlayerResponse.get("essence_dragon").getAsInt())).setY(new SiblingConstraint(3f)).setChildOf(right);
-                    new UIText(g + ChatFormatting.YELLOW + "Undead Essence: " + bold + nf.format(ProfilePlayerResponse.get("essence_undead").getAsInt())).setY(new SiblingConstraint(3f)).setChildOf(right);
-                    new UIText(g + ChatFormatting.DARK_AQUA + "Diamond Essence: " + bold + nf.format(ProfilePlayerResponse.get("essence_diamond").getAsInt())).setY(new SiblingConstraint(3f)).setChildOf(right);
-                    new UIText(g + ChatFormatting.GOLD + "Gold Essence: " + bold + nf.format(ProfilePlayerResponse.get("essence_gold").getAsInt())).setY(new SiblingConstraint(3f)).setChildOf(right);
+                    new UIText(g + "Wither Essence: " + bold + nf.format(Utils.safeGetInt(ProfilePlayerResponse, "essence_wither"))).setX(new SiblingConstraint(3f)).setChildOf(right);
+                    new UIText(g + ChatFormatting.GREEN + "Spider Essence: " + bold + nf.format(Utils.safeGetInt(ProfilePlayerResponse, "essence_spider"))).setY(new SiblingConstraint(3f)).setChildOf(right);
+                    new UIText(g + ChatFormatting.AQUA + "Ice Essence: " + bold + nf.format(Utils.safeGetInt(ProfilePlayerResponse, "essence_ice"))).setY(new SiblingConstraint(3f)).setChildOf(right);
+                    new UIText(g + ChatFormatting.RED + "Dragon Essence: " + bold + nf.format(Utils.safeGetInt(ProfilePlayerResponse, "essence_dragon"))).setY(new SiblingConstraint(3f)).setChildOf(right);
+                    new UIText(g + ChatFormatting.YELLOW + "Undead Essence: " + bold + nf.format(Utils.safeGetInt(ProfilePlayerResponse, "essence_undead"))).setY(new SiblingConstraint(3f)).setChildOf(right);
+                    new UIText(g + ChatFormatting.DARK_AQUA + "Diamond Essence: " + bold + nf.format(Utils.safeGetInt(ProfilePlayerResponse, "essence_diamond"))).setY(new SiblingConstraint(3f)).setChildOf(right);
+                    new UIText(g + ChatFormatting.GOLD + "Gold Essence: " + bold + nf.format(Utils.safeGetInt(ProfilePlayerResponse, "essence_gold"))).setY(new SiblingConstraint(3f)).setChildOf(right);
 
                     totalDungeonRuns = 1;
 

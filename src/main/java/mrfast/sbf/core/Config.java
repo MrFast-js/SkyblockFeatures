@@ -2312,6 +2312,15 @@ public class Config extends ConfigManager {
 
     @Property(
             type = PropertyType.TOGGLE,
+            name = "Hide Ring of love message",
+            description = "Stops '§cYour §6Ring of Love§c requires higher quest completion! Its stats and effects don't apply!' from appearing",
+            category = "General",
+            subcategory = "Other"
+    )
+    public boolean hideRingOfLoveMsg = false;
+
+    @Property(
+            type = PropertyType.TOGGLE,
             name = "Small Items",
             description = "Makes the items you hold smaller",
             category = "General",
