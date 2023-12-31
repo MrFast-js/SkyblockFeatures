@@ -360,6 +360,18 @@ public class ItemUtils {
         if (ExtraAttributes.hasKey("polarvoid")) {
             total += PricingData.averageLowestBINs.get("POLARVOID_BOOK").longValue() * ExtraAttributes.getInteger("polarvoid");
         }
+        if(ExtraAttributes.hasKey("runes")) {
+            String runeType = Optional.ofNullable(ExtraAttributes.getCompoundTag("runes"))
+                    .map(NBTTagCompound::getKeySet)
+                    .flatMap(keys -> keys.stream().findFirst())
+                    .orElse(null);
+            int runeLvl = ExtraAttributes.getCompoundTag("runes").getInteger(runeType);
+            String runeId =runeType+"_RUNE;"+runeLvl;
+
+            if (PricingData.lowestBINs.containsKey(runeId)) {
+                total += PricingData.lowestBINs.get(runeId).longValue();
+            }
+        }
 
 //        if(ExtraAttributes.hasKey("attributes")) {
 //            List<Attribute> valuedAttr = getAttributes(ExtraAttributes);

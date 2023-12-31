@@ -39,19 +39,29 @@ public class PricingData {
     public static int getTier(String str) {
         int tier = 0;
         switch (str) {
-            case "UNCOMMON":tier = 1;break;
-            case "RARE":tier = 2;break;
-            case "EPIC":tier = 3;break;
-            case "LEGENDARY":tier = 4;break;
-            case "MYTHIC":tier = 5;break;
+            case "UNCOMMON":
+                tier = 1;
+                break;
+            case "RARE":
+                tier = 2;
+                break;
+            case "EPIC":
+                tier = 3;
+                break;
+            case "LEGENDARY":
+                tier = 4;
+                break;
+            case "MYTHIC":
+                tier = 5;
+                break;
         }
         return tier;
     }
 
     public static String getIdentifier(ItemStack item) {
         NBTTagCompound extraAttr = ItemUtils.getExtraAttributes(item);
-	    if(extraAttr==null) return null;
-	
+        if (extraAttr == null) return null;
+
         String id = ItemUtils.getSkyBlockItemID(extraAttr);
         if (id == null) return null;
 
@@ -63,41 +73,46 @@ public class PricingData {
                         id = petInfo.get("type").getAsString() + ";" + getTier(petInfo.get("tier").getAsString());
                     }
                 }
-            break;
+                break;
             case "ENCHANTED_BOOK":
                 if (extraAttr.hasKey("enchantments")) {
                     NBTTagCompound enchants = extraAttr.getCompoundTag("enchantments");
                     if (!enchants.hasNoTags()) {
                         String enchant = enchants.getKeySet().iterator().next();
-                        id = "ENCHANTMENT_"+enchant.toUpperCase(Locale.US) + "_" + enchants.getInteger(enchant);
+                        id = "ENCHANTMENT_" + enchant.toUpperCase(Locale.US) + "_" + enchants.getInteger(enchant);
                     }
                 }
-            break;
-            case "POTION":
-                if (extraAttr.hasKey("potion") && extraAttr.hasKey("potion_level")) {
-                    id = "POTION";
+                break;
+            case "UNIQUE_RUNE":
+            case "RUNE":
+                if(extraAttr.hasKey("runes")) {
+                    String runeType = Optional.ofNullable(extraAttr.getCompoundTag("runes"))
+                            .map(NBTTagCompound::getKeySet)
+                            .flatMap(keys -> keys.stream().findFirst())
+                            .orElse(null);
+                    id=runeType+"_RUNE;"+extraAttr.getCompoundTag("runes").getInteger(runeType);
                 }
-            break;
+                break;
         }
 
         return id;
     }
 
     public static JsonObject getItemAuctionInfo(String internalname) {
-		if (auctionPricesJson == null) return null;
-		JsonElement e = auctionPricesJson.get(internalname);
-		if (e == null) {
-			return null;
-		}
-		return e.getAsJsonObject();
-	}
+        if (auctionPricesJson == null) return null;
+        JsonElement e = auctionPricesJson.get(internalname);
+        if (e == null) {
+            return null;
+        }
+        return e.getAsJsonObject();
+    }
 
     @SubscribeEvent
     public void onTick(TickEvent.ClientTickEvent event) {
-        if (event.phase != TickEvent.Phase.START || !Utils.inSkyblock || Utils.GetMC().theWorld==null) return;
-        int reloadTime = 5*60*1000;
+        if (event.phase != TickEvent.Phase.START || !Utils.inSkyblock || Utils.GetMC().theWorld == null) return;
+        int reloadTime = 5 * 60 * 1000;
         if (reloadTimer.getTime() >= reloadTime || !reloadTimer.isStarted()) {
-            if(reloadTimer.getTime() >= reloadTime) reloadTimer.reset();
+            if (reloadTimer.getTime() >= reloadTime) reloadTimer.reset();
             reloadTimer.start();
 
             // Load lowest bins - Taken from NotEnoughUpdates
@@ -111,7 +126,8 @@ public class PricingData {
                     for (Map.Entry<String, JsonElement> items : jsonObject.entrySet()) {
                         averageLowestBINs.put(items.getKey(), Math.floor(items.getValue().getAsDouble()));
                     }
-                }, ()->{});
+                }, () -> {
+                });
             }).start();
 
             // Get extra auction data, like sales per day
@@ -119,7 +135,8 @@ public class PricingData {
                 new Thread(() -> {
                     AuctionUtil.getMyApiGZIPAsync("https://moulberry.codes/auction_averages/3day.json.gz", (jsonObject) -> {
                         auctionPricesJson = jsonObject;
-                    }, ()->{});
+                    }, () -> {
+                    });
                 }).start();
             }
 
@@ -173,18 +190,18 @@ public class PricingData {
             }
             // Get NPC sell prices
             if (npcSellPrices.isEmpty()) {
-                Utils.setTimeout(()->{
+                Utils.setTimeout(() -> {
                     new Thread(() -> {
                         JsonObject data = APIUtils.getJSONResponse("https://api.hypixel.net/resources/skyblock/items#NpcSellPrices");
                         JsonArray items = data.get("items").getAsJsonArray();
                         for (JsonElement item : items) {
                             JsonObject json = item.getAsJsonObject();
-                            if(json.has("npc_sell_price") && json.has("id")) {
+                            if (json.has("npc_sell_price") && json.has("id")) {
                                 npcSellPrices.put(json.get("id").getAsString(), json.get("npc_sell_price").getAsInt());
                             }
                         }
                     }).start();
-                },1000);
+                }, 1000);
             }
         }
     }
