@@ -495,7 +495,10 @@ public class ConfigGui extends WindowScreen {
                             .setY(new CenterConstraint())
                             .setX(new PixelConstraint(4f))
                             .setTextScale(new PixelConstraint((float) fontScale*2f));
-                        Color color = (Color) ConfigManager.defaultValues.get(feature.name());
+                        Color color = Color.gray;
+                        try{
+                            color = (Color) ConfigManager.defaultValues.get(feature.name());
+                        } catch (Exception e) {}
                         try {
                             color = (Color) valueMap.get(feature);
                         } catch (Exception e) {}

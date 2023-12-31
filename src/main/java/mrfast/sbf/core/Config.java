@@ -240,8 +240,8 @@ public class Config extends ConfigManager {
     public boolean teleportPadSolver = false;
     @Property(
             type = PropertyType.COLOR,
-            name = "Teleport Pad Solver",
-            description = "Highlights teleport pads that you have stepped on",
+            name = "Stepped On Color",
+            description = "",
             category = "§1§rDungeons",
             subcategory = "Solvers",
             parentName = "Teleport Pad Solver"
