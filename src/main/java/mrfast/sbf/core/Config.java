@@ -122,6 +122,26 @@ public class Config extends ConfigManager {
 
     @Property(
             type = PropertyType.TOGGLE,
+            name = "Salvage Protection",
+            description = "Blocks clicks on high-value items inside of the salvage menu.",
+            category = "§1§rDungeons",
+            subcategory = "Items",
+            isParent = true
+    )
+    public boolean salvageProtection = false;
+
+    @Property(
+            type = PropertyType.NUMBER,
+            name = "Value Threshold",
+            description = "Set the minimum estimated value threshold. Salvaging will be blocked if the item's value exceeds this threshold.",
+            category = "§1§rDungeons",
+            subcategory = "Items",
+            parentName = "Salvage Protection"
+    )
+    public int salvageProtectionMinValue = 200000;
+
+    @Property(
+            type = PropertyType.TOGGLE,
             name = "Box Shadow Assasins",
             description = "Draws a box around invisible shadow assasins when their sword is visible.",
             category = "§1§rDungeons",

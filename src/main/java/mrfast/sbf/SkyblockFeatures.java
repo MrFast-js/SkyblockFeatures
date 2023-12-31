@@ -177,6 +177,7 @@ public class SkyblockFeatures {
                 new GlowingItems(),
                 new Reparty(),
                 new ProfileViewerUtils(),
+                new SalvageProtection(),
                 new QuiverOverlay(),
                 new PartyFinderFeatures(),
                 new CollectionOverlay(),

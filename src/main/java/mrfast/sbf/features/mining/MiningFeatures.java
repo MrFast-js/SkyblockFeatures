@@ -172,7 +172,7 @@ public class MiningFeatures {
     @SubscribeEvent
     public void onReceivePacket(PacketEvent.ReceiveEvent event) {
         if(Utils.GetMC()==null||Utils.GetMC().thePlayer==null) return;
-        boolean inEnd = SkyblockInfo.localLocation.contains("The End");
+        boolean inEnd = SkyblockInfo.map.equals("The End");
         if (event.packet instanceof S2APacketParticles && SkyblockFeatures.config.highlightEnderNodes && inEnd) {
             S2APacketParticles packet = (S2APacketParticles) event.packet;
             EnumParticleTypes type = packet.getParticleType();
