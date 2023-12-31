@@ -111,7 +111,8 @@ public class RiftFeatures {
                 if (startingSilkPos != null) {
                     RenderUtil.drawOutlinedFilledBoundingBox(startingSilkPos, SkyblockFeatures.config.larvaSilkBlockColor, event.partialTicks);
                     MovingObjectPosition lookingBlock = Utils.GetMC().thePlayer.rayTrace(4, event.partialTicks);
-                    if (lookingBlock.getBlockPos() != null) {
+
+                    if (lookingBlock.getBlockPos() != null && lookingBlock.typeOfHit.equals(MovingObjectPosition.MovingObjectType.BLOCK)) {
                         Vec3 starting = new Vec3(startingSilkPos.getX()+0.5, startingSilkPos.getY()+0.5, startingSilkPos.getZ()+0.5);
                         Vec3 finish = new Vec3(lookingBlock.getBlockPos().getX()+0.5, lookingBlock.getBlockPos().getY()+0.5, lookingBlock.getBlockPos().getZ()+0.5);
 
