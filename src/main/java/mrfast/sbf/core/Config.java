@@ -2304,11 +2304,20 @@ public class Config extends ConfigManager {
     @Property(
             type = PropertyType.TOGGLE,
             name = "Ad Blocker",
-            description = "Hides auction/lowballing advertisments in chat",
+            description = "Hides auction/lowballing advertisements in chat",
             category = "General",
             subcategory = "Other"
     )
-    public boolean hideAdvertisments = false;
+    public boolean hideAdvertisements = false;
+
+    @Property(
+            type = PropertyType.TOGGLE,
+            name = "Hide Anita Artifact Notification",
+            description = "Stops '§rYour §6Anita's Artifact§r is giving you blah blah' from appearing",
+            category = "General",
+            subcategory = "Other"
+    )
+    public boolean hideAnitaArtifactNotification = false;
 
     @Property(
             type = PropertyType.TOGGLE,
