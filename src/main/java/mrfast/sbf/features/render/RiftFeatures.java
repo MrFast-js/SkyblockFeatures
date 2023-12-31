@@ -9,6 +9,7 @@ import mrfast.sbf.core.SkyblockInfo;
 import mrfast.sbf.events.GuiContainerEvent;
 import mrfast.sbf.events.PacketEvent;
 import mrfast.sbf.events.SecondPassedEvent;
+import mrfast.sbf.utils.ItemUtils;
 import mrfast.sbf.utils.RenderUtil;
 import mrfast.sbf.utils.Utils;
 import net.minecraft.client.gui.Gui;
@@ -17,13 +18,13 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.init.Blocks;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.ContainerChest;
+import net.minecraft.item.ItemStack;
 import net.minecraft.network.play.server.S2APacketParticles;
-import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.BlockPos;
-import net.minecraft.util.EnumParticleTypes;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.*;
+import net.minecraftforge.client.event.ClientChatReceivedEvent;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
@@ -73,9 +74,54 @@ public class RiftFeatures {
         }
     }
 
+    static BlockPos startingSilkPos;
+    @SubscribeEvent
+    public void onChat(ClientChatReceivedEvent event) {
+        if(!SkyblockFeatures.config.larvaSilkDisplay) return;
+        String clean = Utils.cleanColor(event.message.getUnformattedText());
+        if(clean.startsWith("You cancelled the wire")) {
+            startingSilkPos = null;
+        }
+    }
+    @SubscribeEvent
+    public void onBlockInteraction(PlayerInteractEvent event) {
+        if(!SkyblockFeatures.config.larvaSilkDisplay) return;
+        if(event.action.equals(PlayerInteractEvent.Action.RIGHT_CLICK_BLOCK)) {
+            ItemStack held = Utils.GetMC().thePlayer.getHeldItem();
+            if(held!=null) {
+                String id = ItemUtils.getSkyBlockItemID(held);
+                if(id!=null && id.equals("LARVA_SILK")) {
+                    if(startingSilkPos==null) {
+                        startingSilkPos = event.pos;
+                    } else {
+                        startingSilkPos = null;
+                    }
+                }
+            }
+        }
+    }
+
     @SubscribeEvent
     public void onRenderWorld(RenderWorldLastEvent event) {
         String location = Utils.cleanColor(SkyblockInfo.localLocation);
+        ItemStack held = Utils.GetMC().thePlayer.getHeldItem();
+        if(held!=null && SkyblockFeatures.config.larvaSilkDisplay) {
+            String id = ItemUtils.getSkyBlockItemID(held);
+            if (id!=null && id.equals("LARVA_SILK")) {
+                if (startingSilkPos != null) {
+                    RenderUtil.drawOutlinedFilledBoundingBox(startingSilkPos, SkyblockFeatures.config.larvaSilkBlockColor, event.partialTicks);
+                    MovingObjectPosition lookingBlock = Utils.GetMC().thePlayer.rayTrace(4, event.partialTicks);
+                    if (lookingBlock.getBlockPos() != null) {
+                        Vec3 starting = new Vec3(startingSilkPos.getX()+0.5, startingSilkPos.getY()+0.5, startingSilkPos.getZ()+0.5);
+                        Vec3 finish = new Vec3(lookingBlock.getBlockPos().getX()+0.5, lookingBlock.getBlockPos().getY()+0.5, lookingBlock.getBlockPos().getZ()+0.5);
+
+                        RenderUtil.draw3DLine(starting, finish, 2, SkyblockFeatures.config.larvaSilkLineColor, event.partialTicks);
+                        RenderUtil.drawOutlinedFilledBoundingBox(lookingBlock.getBlockPos(), SkyblockFeatures.config.larvaSilkBlockColor, event.partialTicks);
+                    }
+                }
+            }
+        }
+
         if(location.contains("Mirrorverse") && SkyblockFeatures.config.riftMirrorverseHelper) {
             // Laser puzzle
             if(Utils.GetMC().thePlayer.getPosition().getX()<-297) {
@@ -111,5 +157,6 @@ public class RiftFeatures {
     @SubscribeEvent
     public void onWorldChange(WorldEvent.Load event) {
         Barriers.clear();
+        startingSilkPos = null;
     }
 }

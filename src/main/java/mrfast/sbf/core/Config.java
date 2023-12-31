@@ -905,6 +905,36 @@ public class Config extends ConfigManager {
 
     @Property(
             type = PropertyType.TOGGLE,
+            name = "Larva Silk Display",
+            description = "Highlights where the line will be drawn when using Larva Silk.",
+            category = "The Rift",
+            subcategory = "General",
+            isParent = true
+    )
+    public boolean larvaSilkDisplay = false;
+
+    @Property(
+            type = PropertyType.COLOR,
+            name = "Larva Silk Block Color",
+            description = "",
+            category = "The Rift",
+            subcategory = "General",
+            parentName = "Larva Silk Display"
+    )
+    public Color larvaSilkBlockColor = Color.GREEN;
+
+    @Property(
+            type = PropertyType.COLOR,
+            name = "Larva Silk Line Color",
+            description = "",
+            category = "The Rift",
+            subcategory = "General",
+            parentName = "Larva Silk Display"
+    )
+    public Color larvaSilkLineColor = Color.CYAN;
+
+    @Property(
+            type = PropertyType.TOGGLE,
             name = "Relic Helper",
             description = "Highlights relics in the §cSpider's Den§r using waypoints",
             category = "General",
