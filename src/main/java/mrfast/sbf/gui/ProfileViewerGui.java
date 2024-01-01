@@ -2025,7 +2025,7 @@ public class ProfileViewerGui extends WindowScreen {
 
         if (collectionsData == null) {
             // Fetch the collections data only if it's not already cached
-            collectionsData = APIUtils.getJSONResponse("https://api.hypixel.net/v2/resources/skyblock/collections#CollectionsForPV").getAsJsonObject();
+            collectionsData = APIUtils.getJSONResponse("https://api.hypixel.net/v2/resources/skyblock/collections#CollectionsForPV",new String[]{},true,false).getAsJsonObject();
         }
 
         statsAreaContainerNew = new UIBlock(Color.red)
