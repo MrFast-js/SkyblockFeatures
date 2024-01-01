@@ -1,6 +1,9 @@
 package mrfast.sbf.gui.components;
-import java.awt.Color;
+import java.awt.*;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.StringSelection;
 
+import com.mojang.realmsclient.gui.ChatFormatting;
 import mrfast.sbf.gui.GuiManager;
 import mrfast.sbf.utils.GuiUtils;
 import mrfast.sbf.utils.Utils;
@@ -8,11 +11,13 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
+import org.lwjgl.input.Keyboard;
 
 public class MoveableFeature extends GuiButton {
 
     public UIElement element;
     public float x;
+    public boolean hovered = false;
     public float y;
 
     public MoveableFeature(UIElement element) {
@@ -25,7 +30,6 @@ public class MoveableFeature extends GuiButton {
         x = element.getX();
         y = element.getY();
     }
-
     @Override
     public void drawButton(Minecraft mc, int mouseX, int mouseY) {
         updateLocations();
@@ -44,6 +48,7 @@ public class MoveableFeature extends GuiButton {
         float yHeight = actualY+elementHeight+4;
 
         hovered = mouseX >= actualX && mouseY >= actualY && mouseX < xWidth && mouseY < yHeight;
+
         GuiUtils.drawGraySquare(-2, -2, (int) ((elementWidth + 4)/2)*scaledResolution.getScaleFactor(), (int) ((elementHeight + 4)/2)*scaledResolution.getScaleFactor(), hovered);
 
         GlStateManager.pushMatrix();

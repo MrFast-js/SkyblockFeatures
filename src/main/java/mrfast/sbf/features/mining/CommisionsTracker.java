@@ -27,7 +27,7 @@ public class CommisionsTracker {
     public static class CommisionsTrackerGUI extends UIElement {
 
         public CommisionsTrackerGUI() {
-            super("Commissions Tracker", new Point(0.2f, 0.0f));
+            super("Commissions Tracker", new Point(0.6484375f, 0.0037037036f));
             SkyblockFeatures.GUIMANAGER.registerElement(this);
         }
 

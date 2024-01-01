@@ -20,7 +20,7 @@ public class FinalDestinationOverlay {
     }
     public static class FinalDestinationOverlayElement extends UIElement {
         public FinalDestinationOverlayElement() {
-            super("finalDestinationOverlay", new Point(0f, 0f));
+            super("finalDestinationOverlay", new Point(0.0020833334f, 0.26018518f));
             SkyblockFeatures.GUIMANAGER.registerElement(this);
         }
         @Override

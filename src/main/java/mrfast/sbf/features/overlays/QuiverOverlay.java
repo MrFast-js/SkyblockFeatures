@@ -60,7 +60,7 @@ public class QuiverOverlay {
 
     public static class quiverDisplay extends UIElement {
         public quiverDisplay() {
-            super("quiverDisplay", new Point(0.2f, 0.0f));
+            super("quiverDisplay", new Point(0.47239587f, 0.8342593f));
             SkyblockFeatures.GUIMANAGER.registerElement(this);
         }
 

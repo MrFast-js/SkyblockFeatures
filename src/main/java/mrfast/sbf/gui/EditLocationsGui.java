@@ -1,10 +1,14 @@
 package mrfast.sbf.gui;
 
-import java.awt.Color;
+import java.awt.*;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.StringSelection;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.mojang.realmsclient.gui.ChatFormatting;
 import net.minecraft.client.Minecraft;
+import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 
@@ -49,7 +53,7 @@ public class EditLocationsGui extends GuiScreen {
             return "§e§lShow All Enabled";
         }
     }
-
+    public static boolean copyingPos = false;
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
         onMouseMove();
@@ -58,6 +62,22 @@ public class EditLocationsGui extends GuiScreen {
             if (button instanceof MoveableFeature) {
                 if (((MoveableFeature) button).element.getToggled()) {
                     MoveableFeature moveableFeature = (MoveableFeature) button;
+                    if(moveableFeature.hovered && Utils.isDeveloper()) {
+                        if(Keyboard.isKeyDown(Keyboard.KEY_LCONTROL) && Keyboard.isKeyDown(Keyboard.KEY_C)) {
+                            if(!copyingPos) {
+                                Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+                                String point = "new Point(" + moveableFeature.x + "f, " + moveableFeature.y + "f)";
+                                StringSelection stringSelection = new StringSelection(point);
+
+                                // Set the StringSelection as the clipboard content
+                                clipboard.setContents(stringSelection, null);
+                                copyingPos = true;
+                                Utils.sendMessage(ChatFormatting.GREEN + "Copied hovered element position: "+ChatFormatting.YELLOW+point);
+                            }
+                        } else {
+                            copyingPos = false;
+                        }
+                    }
                     ScaledResolution scaledResolution = new ScaledResolution(Minecraft.getMinecraft());
                     float guiScaleFactor = (1f/scaledResolution.getScaleFactor())*2;
 

@@ -17,7 +17,7 @@ public class ManaDisplay {
     static String display = Utils.Mana+"/"+Utils.maxMana;
     public static class ManaDisplayGUI extends UIElement {
         public ManaDisplayGUI() {
-            super("Mana Display", new Point(0f, 0f));
+            super("Mana Display", new Point(0.47864583f, 0.80324066f));
             SkyblockFeatures.GUIMANAGER.registerElement(this);
         }
 

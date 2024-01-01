@@ -21,7 +21,7 @@ public class EffectiveHealthDisplay {
     }
     public static class EffectiveHealthDisplayGUI extends UIElement {
         public EffectiveHealthDisplayGUI() {
-            super("Effective Health Display", new Point(0f,0f));
+            super("Effective Health Display", new Point(0.3703125f, 0.9539931f));
             SkyblockFeatures.GUIMANAGER.registerElement(this);
         }
 

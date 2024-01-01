@@ -53,7 +53,7 @@ public class DwarvenMap {
     }   
     public static class DwarvenMinesMap extends UIElement {
         public DwarvenMinesMap() {
-            super("Dwarven Mines Map", new Point(0.2f, 0.0f));
+            super("Dwarven Mines Map", new Point(0.86041665f, 0.0f));
             SkyblockFeatures.GUIMANAGER.registerElement(this);
         }
 

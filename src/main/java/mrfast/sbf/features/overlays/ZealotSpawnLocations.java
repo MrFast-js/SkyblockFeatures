@@ -179,7 +179,7 @@ public class ZealotSpawnLocations {
 
     public static class ZealotSpawnTimer extends UIElement {
         public ZealotSpawnTimer() {
-            super("Zealot Timer", new Point(0.2f, 0.0f));
+            super("Zealot Timer", new Point(0.49635422f, 0.9097222f));
             SkyblockFeatures.GUIMANAGER.registerElement(this);
         }
 

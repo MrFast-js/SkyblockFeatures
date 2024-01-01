@@ -274,7 +274,7 @@ public class CooldownTracker {
 
     public static class cooldownDisplay extends UIElement {
         public cooldownDisplay() {
-            super("Cooldown Display", new Point(0.2f, 0.0f));
+            super("Cooldown Display", new Point(0.0020833334f, 0.5114602f));
             SkyblockFeatures.GUIMANAGER.registerElement(this);
         }
 

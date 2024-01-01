@@ -122,7 +122,7 @@ public class CrystalHollowsMap {
     }   
     public static class CrystalHollowsMapElement extends UIElement {
         public CrystalHollowsMapElement() {
-            super("CrystalHollowsMap", new Point(0.2f, 0.0f));
+            super("CrystalHollowsMap", new Point(0.86041665f, 0.0f));
             SkyblockFeatures.GUIMANAGER.registerElement(this);
         }
 

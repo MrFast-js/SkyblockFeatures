@@ -25,7 +25,7 @@ public class SpeedDisplay {
     }
     public static class SpeedDisplayGUI extends UIElement {
         public SpeedDisplayGUI() {
-            super("Speed Display", new Point(0.2f, 0.0f));
+            super("Speed Display", new Point(0.375f, 0.9777778f));
             SkyblockFeatures.GUIMANAGER.registerElement(this);
         }
 

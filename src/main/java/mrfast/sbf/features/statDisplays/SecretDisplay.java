@@ -25,7 +25,7 @@ public class SecretDisplay {
     public static class SecretDisplayGUI extends UIElement {
 
         public SecretDisplayGUI() {
-            super("Secret Display", new Point(0.2f, 0.0f));
+            super("Secret Display", new Point(0.59876317f, 0.9574074f));
             SkyblockFeatures.GUIMANAGER.registerElement(this);
         }
 

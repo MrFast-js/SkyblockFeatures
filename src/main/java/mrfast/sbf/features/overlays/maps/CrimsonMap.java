@@ -55,7 +55,7 @@ public class CrimsonMap {
     }   
     public static class CrimsonIslesMap extends UIElement {
         public CrimsonIslesMap() {
-            super("Crimson Isles Map", new Point(0.2f, 0.0f));
+            super("Crimson Isles Map", new Point(0.0020833334f, 0.0037037036f));
             SkyblockFeatures.GUIMANAGER.registerElement(this);
         }
 

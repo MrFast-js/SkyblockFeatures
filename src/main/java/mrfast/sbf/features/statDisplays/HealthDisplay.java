@@ -19,7 +19,7 @@ public class HealthDisplay {
     static String display = Utils.Health+"/"+Utils.maxHealth;
     public static class HealthDisplayGUI extends UIElement {
         public HealthDisplayGUI() {
-            super("Health Display", new Point(0f,0f));
+            super("Health Display", new Point(0.39878336f, 0.8029036f));
             SkyblockFeatures.GUIMANAGER.registerElement(this);
         }
 

@@ -19,7 +19,7 @@ public class DefenseDisplay {
     static String display = Utils.Defense+"";
     public static class DefenseDisplayGUI extends UIElement {
         public DefenseDisplayGUI() {
-            super("Defense Display", new Point(0.2f, 0.0f));
+            super("Defense Display", new Point(0.5651042f, 0.8037037f));
             SkyblockFeatures.GUIMANAGER.registerElement(this);
         }
 

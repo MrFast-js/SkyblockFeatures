@@ -422,7 +422,7 @@ public class DungeonMap {
     public static class DungeonMapMove extends UIElement {
 
         public DungeonMapMove() {
-            super("DungeonMap", new Point(0, 0f));
+            super("DungeonMap", new Point(0.0020833334f, 0.0037037036f));
             SkyblockFeatures.GUIMANAGER.registerElement(this);
         }
 
