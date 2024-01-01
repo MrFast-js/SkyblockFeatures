@@ -7,6 +7,7 @@ import mrfast.sbf.events.GuiContainerEvent;
 import mrfast.sbf.events.RenderEntityOutlineEvent;
 import mrfast.sbf.events.SlotClickedEvent;
 import mrfast.sbf.utils.ItemUtils;
+import mrfast.sbf.utils.RenderUtil;
 import mrfast.sbf.utils.Utils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
@@ -19,10 +20,12 @@ import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
 import net.minecraftforge.client.event.MouseEvent;
+import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import org.lwjgl.input.Keyboard;
 
+import java.awt.*;
 import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -43,11 +46,29 @@ public class BestiaryHelper {
         for (Entity entity : Utils.GetMC().theWorld.loadedEntityList) {
             SkyblockMobDetector.SkyblockMob sbMob = SkyblockMobDetector.getSkyblockMob(entity);
             if (sbMob == null) continue;
-
-            if (sbMob.skyblockMob == entity && sbMob.getSkyblockMobId() != null) {
+            // Glowing doesnt render on invisible entities
+            if (sbMob.skyblockMob == entity && sbMob.getSkyblockMobId() != null && !sbMob.skyblockMob.isInvisible()) {
                 if (!config.trackedBestiaryMobs.isEmpty()) {
-                    if (config.trackedBestiaryMobs.contains(sbMob.skyblockMobId)) {
+                    if (isBeingTracked(sbMob.skyblockMobId)) {
                         event.queueEntityToOutline(sbMob.skyblockMob, config.highlightBestiaryColor);
+                    }
+                }
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public void onWorldRender(RenderWorldLastEvent event) {
+        if (!config.highlightBestiaryMobs) return;
+
+        for (Entity entity : Utils.GetMC().theWorld.loadedEntityList) {
+            SkyblockMobDetector.SkyblockMob sbMob = SkyblockMobDetector.getSkyblockMob(entity);
+            if (sbMob == null) continue;
+            // Render outline box instead of glowing for invisible entities
+            if (sbMob.skyblockMob == entity && sbMob.getSkyblockMobId() != null && sbMob.skyblockMob.isInvisible()) {
+                if (!config.trackedBestiaryMobs.isEmpty()) {
+                    if (isBeingTracked(sbMob.skyblockMobId)) {
+                        RenderUtil.drawOutlinedFilledBoundingBox(sbMob.skyblockMob.getEntityBoundingBox(),config.highlightBestiaryColor,event.partialTicks);
                     }
                 }
             }
@@ -81,7 +102,14 @@ public class BestiaryHelper {
 
             if (targetEntity != null) {
                 SkyblockMobDetector.SkyblockMob sbMob = SkyblockMobDetector.getSkyblockMob(targetEntity);
-                if(sbMob==null || sbMob.skyblockMobId==null) return;
+                if(sbMob!=null) {
+                    if(sbMob.skyblockMobId==null) {
+                        Utils.sendMessage(ChatFormatting.RED+"This mob could not be identified for the bestiary tracker!");
+                    }
+                }
+                if(sbMob==null || sbMob.skyblockMobId==null) {
+                    return;
+                }
                 List<String> mobs = Arrays.stream(config.trackedBestiaryMobs.split(", ")).collect(Collectors.toList());
 
                 if (isBeingTracked(sbMob.skyblockMobId)) {

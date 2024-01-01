@@ -21,6 +21,7 @@ import net.minecraft.util.Vec3;
 
 public class RenderUtil {
     public static void drawOutlinedFilledBoundingBox(AxisAlignedBB aabb, Color color, float partialTicks) {
+        if(aabb==null) return;
         aabb = aabb.offset(-0.001, -0.001, -0.001);
         aabb = aabb.expand(0.002, 0.002, 0.002);
         GlStateManager.pushMatrix();
