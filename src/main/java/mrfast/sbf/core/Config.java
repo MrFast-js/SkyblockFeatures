@@ -1551,10 +1551,29 @@ public class Config extends ConfigManager {
 
     @Property(
             type = PropertyType.TOGGLE,
+            name = "Highlight butterflies",
+            description = "Highlights butterflies in the fairy grotto",
+            category = "Quality of Life",
+            subcategory = "Mining"
+    )
+    public boolean highlightButterfly = false;
+
+    @Property(
+            type = PropertyType.COLOR,
+            name = "Butterfly Color",
+            description = "",
+            category = "Quality of Life",
+            subcategory = "Mining",
+            parentName = "Highlight Placed Cobblestone"
+    )
+    public Color highlightButterflyColor = Color.cyan;
+
+    @Property(
+            type = PropertyType.TOGGLE,
             name = "Crystal Hollows Map",
             description = "Show a map of the crystal hollows",
             category = "Mining",
-            subcategory = "Map",
+            subcategory = "Maps",
             isParent = true
     )
     public boolean CrystalHollowsMap = false;
@@ -1564,7 +1583,7 @@ public class Config extends ConfigManager {
             name = "Crystal Hollows Map Heads",
             description = "Show a heads instead of a marker on the crystal hollows map",
             category = "Mining",
-            subcategory = "Map",
+            subcategory = "Maps",
             parentName = "Crystal Hollows Map"
     )
     public boolean CrystalHollowsMapHeads = true;
@@ -1574,7 +1593,7 @@ public class Config extends ConfigManager {
             name = "Show Breadcrumb Trail On Map",
             description = "Show a trail of where you have been",
             category = "Mining",
-            subcategory = "Map",
+            subcategory = "Maps",
             parentName = "Crystal Hollows Map"
     )
     public boolean CrystalHollowsMapTrail = true;
@@ -1584,7 +1603,7 @@ public class Config extends ConfigManager {
             name = "Dwarven Mines Map",
             description = "Show a map of the dwarven map",
             category = "Mining",
-            subcategory = "Map"
+            subcategory = "Maps"
     )
     public boolean dwarvenMinesMap = false;
 
