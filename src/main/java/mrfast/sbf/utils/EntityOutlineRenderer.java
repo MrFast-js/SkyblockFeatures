@@ -47,8 +47,8 @@ public class EntityOutlineRenderer {
 
     @SubscribeEvent
     public void onWorldChange(WorldEvent.Load event) {
-        initSwapBuffer();
-        updateFramebufferSize();
+        CustomRenderGlobal renderGlobal = (CustomRenderGlobal) Utils.GetMC().renderGlobal;
+        renderGlobal.sbf$entityOutlineFramebuffer().framebufferClear();
     }
 
     /**
@@ -135,6 +135,7 @@ public class EntityOutlineRenderer {
                             } else {
                                 setColor(new Color(entityAndColor.getValue()));
                             }
+
                             renderManager.renderEntityStatic(entityAndColor.getKey(), partialTicks, false);
                         } catch (Exception ignored) {
                         }
@@ -184,7 +185,6 @@ public class EntityOutlineRenderer {
                             }
 
                             renderManager.renderEntityStatic(entityAndColor.getKey(), partialTicks, true);
-
                         } catch (Exception ignored) {
                             ignored.printStackTrace();
                         }
@@ -230,16 +230,7 @@ public class EntityOutlineRenderer {
                 (color.getBlue()/255f),
                 (color.getAlpha()/255f)
         );
-    }
-
-    public static Integer getCustomOutlineColor(EntityLivingBase entity) {
-        if (entityRenderCache.xrayCache != null && entityRenderCache.xrayCache.containsKey(entity)) {
-            return entityRenderCache.xrayCache.get(entity);
-        }
-        if (entityRenderCache.noXrayCache != null && entityRenderCache.noXrayCache.containsKey(entity)) {
-            return entityRenderCache.noXrayCache.get(entity);
-        }
-        return null;
+        GL11.glDisable(GL11.GL_BLEND);
     }
 
     /**
