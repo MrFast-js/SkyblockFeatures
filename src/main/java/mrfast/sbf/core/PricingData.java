@@ -175,7 +175,7 @@ public class PricingData {
             // Get bazaar prices
             if (bazaarPrices.isEmpty()) {
                 new Thread(() -> {
-                    JsonObject data = APIUtils.getJSONResponse("https://api.hypixel.net/skyblock/bazaar");
+                    JsonObject data = APIUtils.getJSONResponse("https://api.hypixel.net/skyblock/bazaar",new String[]{},true,false);
                     JsonObject products = data.get("products").getAsJsonObject();
                     for (Map.Entry<String, JsonElement> entry : products.entrySet()) {
                         if (entry.getValue().isJsonObject()) {
@@ -192,7 +192,7 @@ public class PricingData {
             if (npcSellPrices.isEmpty()) {
                 Utils.setTimeout(() -> {
                     new Thread(() -> {
-                        JsonObject data = APIUtils.getJSONResponse("https://api.hypixel.net/resources/skyblock/items#NpcSellPrices");
+                        JsonObject data = APIUtils.getJSONResponse("https://api.hypixel.net/resources/skyblock/items#NpcSellPrices",new String[]{},true,false);
                         JsonArray items = data.get("items").getAsJsonArray();
                         for (JsonElement item : items) {
                             JsonObject json = item.getAsJsonObject();
