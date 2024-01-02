@@ -27,7 +27,7 @@ public class JerryTimer {
         if(!checkedMayor) {
             checkedMayor = true;
             new Thread(()->{
-                JsonObject mayorResponse = APIUtils.getJSONResponse("https://api.hypixel.net/resources/skyblock/election");
+                JsonObject mayorResponse = APIUtils.getJSONResponse("https://api.hypixel.net/resources/skyblock/election",new String[]{},true,false);
                 String currentMayor = mayorResponse.get("mayor").getAsJsonObject().get("name").getAsString();
                 if(currentMayor.equals("Jerry")) {
                     isJerryMayor = true;
