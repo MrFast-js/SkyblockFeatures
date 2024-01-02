@@ -158,6 +158,8 @@ public class APIUtils {
                 request.setHeader("x-players", nearby.toString());
                 // Send player author for logging past requests
                 request.setHeader("x-request-author", Utils.GetMC().thePlayer.toString());
+                // Send current mod version to server
+                request.setHeader("x-version", SkyblockFeatures.VERSION);
             }
             try (CloseableHttpResponse response = client.execute(request)) {
                 HttpEntity entity = response.getEntity();
