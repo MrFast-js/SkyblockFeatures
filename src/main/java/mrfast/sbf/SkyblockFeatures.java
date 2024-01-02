@@ -226,7 +226,7 @@ public class SkyblockFeatures {
         ClientCommandHandler commandHandler = ClientCommandHandler.instance;
 
         List<ICommand> commands = new ArrayList<>();
-        commands.add(new debugCommand());
+        commands.add(new DebugCommand());
         commands.add(new SkyCommand());
         commands.add(new ConfigCommand());
         commands.add(new TerminalCommand());
@@ -234,9 +234,12 @@ public class SkyblockFeatures {
         commands.add(new FlipsCommand());
         commands.add(new DungeonsCommand());
         commands.add(new RepartyCommand());
-        commands.add(new pingCommand());
+        commands.add(new PingCommand());
         commands.add(new FakePlayerCommand());
         commands.add(new pvCommand());
+        if(Utils.isDeveloper()) {
+            commands.add(new ColorTestCommand());
+        }
 
         for (ICommand command : commands) {
             if (!commandHandler.getCommands().containsValue(command)) {

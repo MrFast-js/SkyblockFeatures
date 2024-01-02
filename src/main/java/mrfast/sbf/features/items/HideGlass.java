@@ -2,7 +2,7 @@ package mrfast.sbf.features.items;
 
 import com.mojang.realmsclient.gui.ChatFormatting;
 import mrfast.sbf.SkyblockFeatures;
-import mrfast.sbf.commands.debugCommand;
+import mrfast.sbf.commands.DebugCommand;
 import mrfast.sbf.core.PricingData;
 import mrfast.sbf.events.GuiContainerEvent;
 import mrfast.sbf.events.SlotClickedEvent;
@@ -57,12 +57,12 @@ public class HideGlass {
                         if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) && Keyboard.isKeyDown(Keyboard.KEY_LCONTROL)) {
                             NBTTagCompound tag = event.itemStack.getTagCompound();
                             if (tag != null) {
-                                event.toolTip.add(i + 1, ChatFormatting.DARK_GRAY + "DATA: " + debugCommand.prettyPrintNBT(tag));
+                                event.toolTip.add(i + 1, ChatFormatting.DARK_GRAY + "DATA: " + DebugCommand.prettyPrintNBT(tag));
                             }
                         } else if (Keyboard.isKeyDown(Keyboard.KEY_LCONTROL)) {
                             NBTTagCompound tag = ItemUtils.getExtraAttributes(event.itemStack);
                             if (tag != null) {
-                                event.toolTip.add(i + 1, ChatFormatting.DARK_GRAY + "DATA: " + debugCommand.prettyPrintNBT(tag));
+                                event.toolTip.add(i + 1, ChatFormatting.DARK_GRAY + "DATA: " + DebugCommand.prettyPrintNBT(tag));
                             }
                         }
                     }

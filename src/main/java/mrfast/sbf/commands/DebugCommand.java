@@ -39,7 +39,7 @@ import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.IChatComponent;
 import net.minecraftforge.common.util.Constants;
 
-public class debugCommand extends CommandBase {
+public class DebugCommand extends CommandBase {
 
 	@Override
     public String getCommandName() {
