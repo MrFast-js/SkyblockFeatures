@@ -1,5 +1,8 @@
 package mrfast.sbf;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.mojang.realmsclient.gui.ChatFormatting;
 import mrfast.sbf.commands.*;
 import mrfast.sbf.core.*;
@@ -37,7 +40,11 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.command.ICommand;
+import net.minecraft.event.HoverEvent;
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.ChatStyle;
 import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.IChatComponent;
 import net.minecraftforge.client.ClientCommandHandler;
 import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.common.MinecraftForge;
@@ -60,6 +67,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 @Mod(modid = SkyblockFeatures.MODID, name = SkyblockFeatures.MOD_NAME, acceptedMinecraftVersions = "[1.8.9]", clientSideOnly = true)
 public class SkyblockFeatures {
@@ -83,6 +91,8 @@ public class SkyblockFeatures {
         ConfigManager.loadConfiguration(config);
     }
 
+    static boolean sendUpdateChangelogs = false;
+
     @Mod.EventHandler
     public void init(FMLInitializationEvent event) {
         // Get player uuid
@@ -91,7 +101,6 @@ public class SkyblockFeatures {
         // Load blacklist
         initBlacklist(playerUUID);
 
-        // Modify configurableClass properties manually or programmatically
 
         // Features to load
         List<Object> features = Arrays.asList(
@@ -199,6 +208,11 @@ public class SkyblockFeatures {
         SkyblockFeatures.config.timeStartedUp++;
         SkyblockFeatures.config.aucFlipperEnabled = false;
 
+        if (!Objects.equals(SkyblockFeatures.config.currentGameVersion, SkyblockFeatures.VERSION)) {
+            SkyblockFeatures.config.currentGameVersion = SkyblockFeatures.VERSION;
+            sendUpdateChangelogs = true;
+        }
+
         ConfigManager.saveConfig();
         System.out.println("You have started Skyblock Features up " + SkyblockFeatures.config.timeStartedUp + " times!");
     }
@@ -237,7 +251,7 @@ public class SkyblockFeatures {
         commands.add(new PingCommand());
         commands.add(new FakePlayerCommand());
         commands.add(new pvCommand());
-        if(Utils.isDeveloper()) {
+        if (Utils.isDeveloper()) {
             commands.add(new ColorTestCommand());
         }
 
@@ -250,16 +264,31 @@ public class SkyblockFeatures {
 
     boolean sentUpdateNotification = false;
     GuiScreen lastOpenContainer = null;
+
     @SubscribeEvent
     public void onTick(TickEvent.ClientTickEvent event) {
         if (event.phase != TickEvent.Phase.START) return;
-        if(Utils.GetMC().thePlayer!=null && SkyblockFeatures.config.updateNotify && !sentUpdateNotification && Utils.inSkyblock) {
+        if (Utils.GetMC().thePlayer != null && SkyblockFeatures.config.updateNotify && !sentUpdateNotification && Utils.inSkyblock) {
             sentUpdateNotification = true;
             VersionManager.silentUpdateCheck();
         }
+        if (Utils.inSkyblock && sendUpdateChangelogs && Utils.GetMC().theWorld!=null) {
+            sendUpdateChangelogs = false;
+            new Thread(() -> {
+                JsonObject currentUpdate = VersionManager.getCurrentGithubVersion();
+                if (currentUpdate != null) {
+                    String body = currentUpdate.get("body").getAsString();
+                    body = body.replaceAll("\r", "").replaceAll("\\n# ", "§e§l").replaceAll("= ", "§7= ").replaceAll("- ", "§c- ").replaceAll("\\+ ", "§a+ ").replaceAll("```diff\\n", "").replaceAll("```", "");
+                    IChatComponent component = new ChatComponentText("§eUpdated to version §6§l" + currentUpdate.get("name").getAsString() + " §r§7(hover)");
+                    component.setChatStyle(component.getChatStyle().setChatHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ChatComponentText(body.trim()))));
+                    Utils.playSound("random.orb", 0.1);
+                    Utils.sendMessage(component);
+                }
+            }).start();
+        }
 
-        if(Utils.GetMC().currentScreen==null && lastOpenContainer instanceof GuiContainer) {
-            MinecraftForge.EVENT_BUS.post(new GuiContainerEvent.CloseWindowEvent((GuiContainer) lastOpenContainer,((GuiContainer) lastOpenContainer).inventorySlots));
+        if (Utils.GetMC().currentScreen == null && lastOpenContainer instanceof GuiContainer) {
+            MinecraftForge.EVENT_BUS.post(new GuiContainerEvent.CloseWindowEvent((GuiContainer) lastOpenContainer, ((GuiContainer) lastOpenContainer).inventorySlots));
         }
         lastOpenContainer = Utils.GetMC().currentScreen;
 
@@ -276,6 +305,7 @@ public class SkyblockFeatures {
     }
 
     private final static KeyBinding toggleSprint = new KeyBinding("Toggle Sprint", 0, "Skyblock Features");
+
     @EventHandler
     public void initKeybinds(FMLInitializationEvent event) {
         MinecraftForge.EVENT_BUS.register(this);
@@ -285,7 +315,7 @@ public class SkyblockFeatures {
     // Stop the escape key from closing the gui if listening for a keybind
     @SubscribeEvent
     public void onGuiKeyEvent(GuiScreenEvent.KeyboardInputEvent.Pre event) {
-        if(ConfigGui.listeningForKeybind && Keyboard.getEventKey() == Keyboard.KEY_ESCAPE) {
+        if (ConfigGui.listeningForKeybind && Keyboard.getEventKey() == Keyboard.KEY_ESCAPE) {
             event.setCanceled(true);
         }
     }
@@ -293,8 +323,9 @@ public class SkyblockFeatures {
     // Send messages to the user from the server for needed announcements or something idk yet
     @SubscribeEvent
     public void onSocketMessage(SocketMessageEvent event) {
-        if(event.type.equals("message")) {
-            if(event.message.contains("Checking for auction flips") && !SkyblockFeatures.config.aucFlipperEnabled) return;
+        if (event.type.equals("message")) {
+            if (event.message.contains("Checking for auction flips") && !SkyblockFeatures.config.aucFlipperEnabled)
+                return;
             Utils.sendMessage(event.message);
         }
     }

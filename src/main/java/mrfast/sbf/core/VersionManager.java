@@ -1,8 +1,12 @@
 package mrfast.sbf.core;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.mojang.realmsclient.gui.ChatFormatting;
 import moe.nea.libautoupdate.*;
 import mrfast.sbf.SkyblockFeatures;
+import mrfast.sbf.utils.APIUtils;
 import mrfast.sbf.utils.Utils;
 import net.minecraft.event.ClickEvent;
 import net.minecraft.event.HoverEvent;
@@ -81,7 +85,7 @@ public class VersionManager {
         });
     }
 
-    private static double getVersionValue(String version) {
+    public static double getVersionValue(String version) {
         String part1 = version.split("-")[0];
         int num1 = Integer.parseInt(part1.replaceAll("[^0-9]", ""));
 
@@ -159,6 +163,21 @@ public class VersionManager {
             FMLCommonHandler.instance().handleExit(-1);
             FMLCommonHandler.instance().expectServerStopped();
         }, 2000);
+    }
+
+    public static JsonArray getGithubVersions() {
+        return APIUtils.getArrayResponse("https://api.github.com/repos/MrFast-js/SkyblockFeatures/releases");
+    }
+
+    public static JsonObject getCurrentGithubVersion() {
+        double currentVersionValue = VersionManager.getVersionValue(SkyblockFeatures.VERSION);
+        for (JsonElement githubVersion : VersionManager.getGithubVersions()) {
+            String tag = githubVersion.getAsJsonObject().get("name").getAsString();
+            if(currentVersionValue == VersionManager.getVersionValue(tag)) {
+                return githubVersion.getAsJsonObject();
+            }
+        }
+        return null;
     }
 
 }

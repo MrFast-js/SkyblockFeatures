@@ -12,10 +12,20 @@ public class Config extends ConfigManager {
             name = "Times Game Restarted",
             description = "",
             category = "General",
-            subcategory = "Reparty",
+            subcategory = "Hidden",
             hidden = true
     )
     public int timeStartedUp = 0;
+
+    @Property(
+            type = PropertyType.TEXT,
+            name = "Current Game Version",
+            description = "",
+            category = "General",
+            subcategory = "Hidden",
+            hidden = true
+    )
+    public String currentGameVersion = "0";
 
     @Property(
             type = PropertyType.TOGGLE,
