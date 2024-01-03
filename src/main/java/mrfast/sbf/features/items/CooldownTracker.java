@@ -39,7 +39,7 @@ public class CooldownTracker {
 
     public static class ItemAbility {
         public int cooldownSeconds;
-        public int currentCount;
+        public double currentCount;
         public boolean counting = false;
         public long usedAt;
         public String itemId;
@@ -50,7 +50,7 @@ public class CooldownTracker {
             this.usedAt=System.currentTimeMillis();
         }
         public void reset() {
-            if(this.cooldownSeconds-this.currentCount==0) {
+            if(this.cooldownSeconds-this.currentCount<=0) {
                 this.currentCount=0;
                 MinecraftForge.EVENT_BUS.post(new UseItemAbilityEvent(this));
             }
@@ -60,7 +60,39 @@ public class CooldownTracker {
     }
     @SubscribeEvent
     public void onTick(TickEvent.ClientTickEvent event) {
-        if(!Utils.inSkyblock || Utils.GetMC().theWorld==null) return;
+        if(event.phase != TickEvent.Phase.START || !Utils.inSkyblock || Utils.GetMC().theWorld==null) return;
+
+        {
+            for (CooldownItem cdItem:activeCooldowns.values()) {
+                updateCooldown(cdItem.rightClick);
+                updateCooldown(cdItem.leftClick);
+                updateCooldown(cdItem.sneakRightClick);
+                updateCooldown(cdItem.sneakLeftClick);
+            }
+            for(ItemAbility ability:endedCooldowns.values()) {
+                CooldownItem item = activeCooldowns.get(ability.itemId);
+
+                if(ability.type.equals("RIGHT")) {
+                    item.rightClick.currentCount=0;
+                    item.rightClick.counting=false;
+                }
+                if(ability.type.equals("SNEAK RIGHT")) {
+                    item.sneakRightClick.currentCount=0;
+                    item.rightClick.counting=false;
+
+                }
+                if(ability.type.equals("LEFT")) {
+                    item.leftClick.currentCount=0;
+                    item.rightClick.counting=false;
+
+                }
+                if(ability.type.equals("SNEAK LEFT")) {
+                    item.sneakLeftClick.currentCount=0;
+                    item.rightClick.counting=false;
+                }
+            }
+            endedCooldowns.clear();
+        }
 
         activeCooldowns.clear();
         for (int i = 0; i < 8; i++) {
@@ -202,7 +234,7 @@ public class CooldownTracker {
                     return;
                 }
                 int currentCooldown = Integer.parseInt(clean.replaceAll("[^0-9]",""));
-                justUsedAbility.currentCount= justUsedAbility.cooldownSeconds-currentCooldown;
+                justUsedAbility.currentCount = justUsedAbility.cooldownSeconds-currentCooldown;
                 CooldownItem item = activeCooldowns.get(justUsedAbility.itemId);
 
                 if(justUsedAbility.type.equals("RIGHT")) item.rightClick=justUsedAbility;
@@ -215,45 +247,11 @@ public class CooldownTracker {
             }
         }
     }
-    @SubscribeEvent
-    public void onSecond(SecondPassedEvent event) {
-        if(!Utils.inSkyblock || Utils.GetMC().theWorld==null) return;
-
-        for (CooldownItem cdItem:activeCooldowns.values()) {
-            updateCooldown(cdItem.rightClick);
-            updateCooldown(cdItem.leftClick);
-            updateCooldown(cdItem.sneakRightClick);
-            updateCooldown(cdItem.sneakLeftClick);
-        }
-        for(ItemAbility ability:endedCooldowns.values()) {
-            CooldownItem item = activeCooldowns.get(ability.itemId);
-
-            if(ability.type.equals("RIGHT")) {
-                item.rightClick.currentCount=0;
-                item.rightClick.counting=false;
-            }
-            if(ability.type.equals("SNEAK RIGHT")) {
-                item.sneakRightClick.currentCount=0;
-                item.rightClick.counting=false;
-
-            }
-            if(ability.type.equals("LEFT")) {
-                item.leftClick.currentCount=0;
-                item.rightClick.counting=false;
-
-            }
-            if(ability.type.equals("SNEAK LEFT")) {
-                item.sneakLeftClick.currentCount=0;
-                item.rightClick.counting=false;
-            }
-        }
-        endedCooldowns.clear();
-    }
 
     private void updateCooldown(ItemAbility cooldownInfo) {
         if(cooldownInfo == null) return;
         if (cooldownInfo.counting) {
-            cooldownInfo.currentCount++;
+            cooldownInfo.currentCount+=0.05;
             if (cooldownInfo.currentCount >= cooldownInfo.cooldownSeconds) {
                 // Remove item from list using the iterator
                 cooldownInfo.counting = false;
@@ -261,11 +259,11 @@ public class CooldownTracker {
         }
     }
 
-    public static String getCount(int max,int count) {
-        if(max-count==0) {
+    public static String getCount(int max,double count) {
+        if(max-count<=0) {
             return ChatFormatting.GREEN+"✔";
         }
-        return (max-count)+"s";
+        return Utils.round(max-count,1)+"s";
     }
 
     static {
