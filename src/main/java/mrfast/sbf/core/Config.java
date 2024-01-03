@@ -1551,25 +1551,6 @@ public class Config extends ConfigManager {
 
     @Property(
             type = PropertyType.TOGGLE,
-            name = "Highlight butterflies",
-            description = "Highlights butterflies in the fairy grotto",
-            category = "Quality of Life",
-            subcategory = "Mining"
-    )
-    public boolean highlightButterfly = false;
-
-    @Property(
-            type = PropertyType.COLOR,
-            name = "Butterfly Color",
-            description = "",
-            category = "Quality of Life",
-            subcategory = "Mining",
-            parentName = "Highlight Placed Cobblestone"
-    )
-    public Color highlightButterflyColor = Color.cyan;
-
-    @Property(
-            type = PropertyType.TOGGLE,
             name = "Crystal Hollows Map",
             description = "Show a map of the crystal hollows",
             category = "Mining",
