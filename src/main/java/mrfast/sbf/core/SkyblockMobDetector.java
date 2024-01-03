@@ -141,6 +141,12 @@ public class SkyblockMobDetector {
                     sbMob.skyblockMobId = matcher.group(1)+" Pest";
                 }
             }
+            // Remove &k obfuscation on mobs that are corrupted
+            String secondChar = sbMob.skyblockMobId.substring(1,2);
+            boolean isUppercase = secondChar.equals(secondChar.toUpperCase());
+            if(sbMob.skyblockMobId.startsWith("a") && isUppercase) {
+                sbMob.skyblockMobId = sbMob.skyblockMobId.substring(1,sbMob.skyblockMobId.length()-2);
+            }
         }
     }
 
