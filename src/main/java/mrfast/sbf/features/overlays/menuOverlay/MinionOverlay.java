@@ -43,7 +43,7 @@ public class MinionOverlay {
 
             String chestName = inv.getDisplayName().getUnformattedText().trim();
             if(chestName.contains(" Minion ") && !chestName.contains("Recipe")) {
-                int secondsPerAction = 0;
+                double secondsPerAction = 0;
                 ItemStack generating = null;
                 for(int slotId = 0;slotId<inv.getSizeInventory();slotId++) {
                     if(inv.getStackInSlot(slotId)==null) continue;
@@ -54,10 +54,7 @@ public class MinionOverlay {
                         for (String s : lore) {
                             String line = Utils.cleanColor(s);
                             if (line.contains("Actions:")) {
-                                secondsPerAction = Integer.parseInt(line.replaceAll("[^0-9]", ""));
-                                if (line.contains(".")) {
-                                    secondsPerAction /= 10;
-                                }
+                                secondsPerAction = Double.parseDouble(line.replaceAll("[^0-9.]", ""));
                             }
                         }
                     }
