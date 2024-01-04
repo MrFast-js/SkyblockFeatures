@@ -626,7 +626,6 @@ public class ConfigGui extends WindowScreen {
                                 String newCurrentKey = "NONE";
                                 if(defaultValue!=-1) newCurrentKey=Keyboard.getKeyName(keycode);
                                 ((UIText) text).setText(newCurrentKey);
-
                             } catch (Exception e) {
                                 Utils.sendMessage(ChatFormatting.RED+"There was a problem resetting this feature! Try again later");
                             }
@@ -712,6 +711,10 @@ public class ConfigGui extends WindowScreen {
                         resetImg.onMouseClickConsumer((event)->{
                             try {
                                 Color defaultValue = (Color) ConfigManager.defaultValues.get(feature.name());
+                                if(defaultValue==null) {
+                                    Utils.sendMessage(ChatFormatting.RED+"There was a problem resetting this color! Try again later");
+                                    return;
+                                }
                                 setVariable(feature.name(), defaultValue);
                                 finalColorPreview.setColor(defaultValue);
                             } catch (Exception e) {

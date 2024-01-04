@@ -39,7 +39,7 @@ public class Nametags {
 
         for (String playerName : playersAndClass.keySet()) {
             for(EntityPlayer player:Utils.GetMC().theWorld.playerEntities) {
-                if(player.getName().equals(playerName)) {
+                if(player.getName().equals(playerName) && !player.equals(Utils.GetMC().thePlayer)) {
                     event.queueEntityToOutline(player,Color.GREEN);
                 }
             }
@@ -63,10 +63,8 @@ public class Nametags {
                 for (String cleanedLine : sidebarLines) {
                     String classTag = getClassTag(cleanedLine);
                     if (classTag != null && cleanedLine.contains("[" + classTag + "] " + cutShort)) {
-                        if(player.equals(Utils.GetMC().thePlayer)) continue;
-
                         playersAndClass.put(player.getName(),classTag);
-                        if(SkyblockFeatures.config.NameTags) {
+                        if(SkyblockFeatures.config.NameTags && !player.equals(Utils.GetMC().thePlayer)) {
                             renderNameTag(player, ChatFormatting.YELLOW + "[" + classTag + "] " + ChatFormatting.GREEN + player.getName(), x, y, z,classTag);
                         }
 

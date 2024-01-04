@@ -1663,12 +1663,54 @@ public class Config extends ConfigManager {
 
     @Property(
             type = PropertyType.TOGGLE,
-            name = "Cooldown Display",
-            description = "Shows a display with your hotbar items cooldowns.",
+            name = "Item Rarity Backgrounds",
+            description = "Shows an items rarity by changin the background of the item",
             category = "Miscellaneous",
-            subcategory = "Items"
+            subcategory = "Items",
+            isParent = true
     )
-    public boolean cooldownDisplay = false;
+    public boolean itemRarityBackground = false;
+
+    @Property(
+            type = PropertyType.TOGGLE,
+            name = "Cooldown Tracker",
+            description = "Shows a display with your hotbar items cooldowns on each item",
+            category = "Miscellaneous",
+            subcategory = "Items",
+            isParent = true
+    )
+    public boolean cooldownTracker = false;
+
+    @Property(
+            type = PropertyType.DROPDOWN,
+            name = "Cooldown Display Type",
+            description = "Draws a square behind items that are currently on\ncooldown",
+            category = "Miscellaneous",
+            subcategory = "Items",
+            parentName = "Cooldown Tracker",
+            options = {"Slot Background", "Item Bar"}
+    )
+    public int cooldownTrackerType = 0;
+
+    @Property(
+            type = PropertyType.COLOR,
+            name = "Background Color",
+            description = "",
+            category = "Miscellaneous",
+            subcategory = "Items",
+            parentName = "Cooldown Tracker"
+    )
+    public Color cooldownTrackerSquareColor = Color.white;
+
+    @Property(
+            type = PropertyType.COLOR,
+            name = "Bar Color",
+            description = "",
+            category = "Miscellaneous",
+            subcategory = "Items",
+            parentName = "Cooldown Tracker"
+    )
+    public Color cooldownTrackerBarColor = Color.cyan;
 
     @Property(
             type = PropertyType.TOGGLE,
