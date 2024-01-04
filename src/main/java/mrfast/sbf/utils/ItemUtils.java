@@ -247,6 +247,17 @@ public class ItemUtils {
         if (display == null || !display.hasKey("Lore")) {
             return ItemRarity.COMMON;
         }
+        NBTTagCompound extraAttributes = ItemUtils.getExtraAttributes(item);
+
+        if (extraAttributes != null && extraAttributes.hasKey("petInfo") ) {
+            String petInfo = extraAttributes.getString("petInfo");
+            String rarity = petInfo.split("tier\\\":\\\"")[1].split("\\\"")[0];
+            for (ItemRarity itemRarity : ItemRarity.values()) {
+                if (rarity.startsWith(itemRarity.getName())) {
+                    return itemRarity;
+                }
+            }
+        }
 
         NBTTagList lore = display.getTagList("Lore", Constants.NBT.TAG_STRING);
 
@@ -360,13 +371,13 @@ public class ItemUtils {
         if (ExtraAttributes.hasKey("polarvoid")) {
             total += PricingData.averageLowestBINs.get("POLARVOID_BOOK").longValue() * ExtraAttributes.getInteger("polarvoid");
         }
-        if(ExtraAttributes.hasKey("runes")) {
+        if (ExtraAttributes.hasKey("runes")) {
             String runeType = Optional.ofNullable(ExtraAttributes.getCompoundTag("runes"))
                     .map(NBTTagCompound::getKeySet)
                     .flatMap(keys -> keys.stream().findFirst())
                     .orElse(null);
             int runeLvl = ExtraAttributes.getCompoundTag("runes").getInteger(runeType);
-            String runeId =runeType+"_RUNE;"+runeLvl;
+            String runeId = runeType + "_RUNE;" + runeLvl;
 
             if (PricingData.lowestBINs.containsKey(runeId)) {
                 total += PricingData.lowestBINs.get(runeId).longValue();
