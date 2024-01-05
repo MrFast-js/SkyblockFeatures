@@ -7,8 +7,6 @@ import java.io.FileWriter;
 import java.util.*;
 
 import mrfast.sbf.utils.GuiUtils;
-import net.minecraft.item.ItemBed;
-import org.lwjgl.input.Keyboard;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -24,18 +22,15 @@ import mrfast.sbf.events.GuiContainerEvent;
 import mrfast.sbf.events.SecondPassedEvent;
 import mrfast.sbf.events.SlotClickedEvent;
 import mrfast.sbf.events.GuiContainerEvent.TitleDrawnEvent;
-import mrfast.sbf.utils.APIUtils;
+import mrfast.sbf.utils.NetworkUtils;
 import mrfast.sbf.utils.ItemUtils;
 import mrfast.sbf.utils.Utils;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.inventory.GuiChest;
 import net.minecraft.inventory.ContainerChest;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
 
@@ -288,7 +283,7 @@ public class AuctionFeatures {
                 if(profitData==null && !gettingData) {
                     gettingData = true;
                     new Thread(()->{
-                        profitData = APIUtils.getJSONResponse("https://sky.coflnet.com/api/flip/stats/player/"+APIUtils.getUUID(Utils.GetMC().thePlayer.getName())+"?days=14");
+                        profitData = NetworkUtils.getJSONResponse("https://sky.coflnet.com/api/flip/stats/player/"+ NetworkUtils.getUUID(Utils.GetMC().thePlayer.getName())+"?days=14");
                     }).start();
                 }
                 if(profitData!=null) {

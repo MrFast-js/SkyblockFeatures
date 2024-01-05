@@ -13,7 +13,7 @@ import mrfast.sbf.events.SocketMessageEvent;
 import mrfast.sbf.features.items.HideGlass;
 import mrfast.sbf.gui.components.Point;
 import mrfast.sbf.gui.components.UIElement;
-import mrfast.sbf.utils.APIUtils;
+import mrfast.sbf.utils.NetworkUtils;
 import mrfast.sbf.utils.GuiUtils;
 import mrfast.sbf.utils.ItemUtils;
 import mrfast.sbf.utils.Utils;
@@ -24,7 +24,6 @@ import net.minecraft.event.ClickEvent;
 import net.minecraft.event.HoverEvent;
 import net.minecraft.inventory.ContainerChest;
 import net.minecraft.inventory.IInventory;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ChatComponentText;
@@ -81,7 +80,7 @@ public class AutoAuctionFlip {
 
             // Check pages for auctions
             for (int b = 0; b < pages; b++) {
-                JsonObject data = APIUtils.getJSONResponse("https://api.hypixel.net/skyblock/auctions?page=" + b, new String[]{}, false, false);
+                JsonObject data = NetworkUtils.getJSONResponse("https://api.hypixel.net/skyblock/auctions?page=" + b, new String[]{}, false, false);
                 if (data != null) {
                     JsonArray products = data.get("auctions").getAsJsonArray();
                     filterAndNotifyProfitableAuctions(products);
@@ -528,7 +527,7 @@ public class AutoAuctionFlip {
             double seconds = Math.floor((System.currentTimeMillis() - startMs) / 1000d);
 
             lines.add(ChatFormatting.GOLD + "Time Elapsed: " + Utils.secondsToTime((int) seconds));
-            String socketDisplay = APIUtils.socketConnected?ChatFormatting.GREEN + "✔ Socket Connected":ChatFormatting.RED+"✘ Socket Offline";
+            String socketDisplay = NetworkUtils.socketConnected?ChatFormatting.GREEN + "✔ Socket Connected":ChatFormatting.RED+"✘ Socket Offline";
             lines.add(socketDisplay);
             lines.add(ChatFormatting.YELLOW + "Flipper Active");
         }

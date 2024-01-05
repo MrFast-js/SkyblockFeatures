@@ -29,21 +29,22 @@ public class QuiverOverlay {
     public static Minecraft mc = Utils.GetMC();
     public static String selectedArrowType = "";
     static HashMap<String, Double> arrowCounts = new HashMap<>();
-
+    static boolean loadedData = false;
     static {
         new quiverDisplay();
     }
 
     @SubscribeEvent
     public void onProfileSwap(ProfileSwapEvent event) {
-        System.out.println("PROFILE SWAP EVENT");
         arrowCounts = (HashMap<String, Double>) DataManager.getProfileDataDefault("arrows", new HashMap<>());
         selectedArrowType = (String) DataManager.getProfileDataDefault("selectedArrowType", "§fFlint Arrow");
+        loadedData = true;
     }
 
     @SubscribeEvent
     public void onWorldLoad(WorldEvent.Load event) {
         readArrowFromSwapper = false;
+        loadedData = false;
         sentLowArrows = false;
     }
 
@@ -60,6 +61,7 @@ public class QuiverOverlay {
                     if (s.startsWith("§aSelected: ")) {
                         readArrowFromSwapper = true;
                         selectedArrowType = s.split("§aSelected: ")[1];
+                        DataManager.saveProfileData("selectedArrowType", selectedArrowType);
                     }
                 }
             }
@@ -141,7 +143,7 @@ public class QuiverOverlay {
 
     public void arrowShot() {
         ItemStack held = Utils.GetMC().thePlayer.getHeldItem();
-        if (held == null || !(held.getItem() instanceof ItemBow) || ItemUtils.getSkyBlockItemID(held) == null) {
+        if (held == null || !(held.getItem() instanceof ItemBow) || ItemUtils.getSkyBlockItemID(held) == null || !loadedData) {
             return;
         }
         double countToRemove = 1;
@@ -151,6 +153,7 @@ public class QuiverOverlay {
             int level = enchants.getInteger("infinite_quiver");
             countToRemove = (1 - level * 0.03);
         }
+
         arrowCounts.put(selectedArrowType, arrowCounts.get(selectedArrowType) - countToRemove);
         if (!sentLowArrows && SkyblockFeatures.config.quiverOverlayLowArrowNotification) {
             if (arrowCounts.get(selectedArrowType) < 128) {

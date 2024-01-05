@@ -5,7 +5,7 @@ import java.net.URI;
 
 import com.mojang.realmsclient.gui.ChatFormatting;
 
-import mrfast.sbf.utils.APIUtils;
+import mrfast.sbf.utils.NetworkUtils;
 import mrfast.sbf.utils.Utils;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
@@ -36,7 +36,7 @@ public class FlipsCommand extends CommandBase {
         } else {
             username = arg1[0];
         }
-        String uuid = APIUtils.getUUID(username);
+        String uuid = NetworkUtils.getUUID(username);
         try {
             Desktop.getDesktop().browse(new URI("https://sky.coflnet.com/player/"+uuid+"/flips"));
         } catch (Exception e) {

@@ -64,4 +64,15 @@ public enum ItemRarity {
         }
         return ItemRarity.COMMON;
     }
+
+    public static int getPetRarity(String tier) {
+        int rarity = 0;
+        if (tier.equals("COMMON")) rarity = 1;
+        if (tier.equals("UNCOMMON")) rarity = 2;
+        if (tier.equals("RARE")) rarity = 3;
+        if (tier.equals("EPIC")) rarity = 4;
+        if (tier.equals("LEGENDARY")) rarity = 5;
+        if (tier.equals("MYTHIC")) rarity = 6;
+        return rarity;
+    }
 }

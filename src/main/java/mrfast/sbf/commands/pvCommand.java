@@ -6,7 +6,7 @@ import com.google.common.collect.Lists;
 import com.mojang.realmsclient.gui.ChatFormatting;
 
 import mrfast.sbf.gui.ProfileViewerGui;
-import mrfast.sbf.utils.APIUtils;
+import mrfast.sbf.utils.NetworkUtils;
 import mrfast.sbf.utils.GuiUtils;
 import mrfast.sbf.utils.Utils;
 import net.minecraft.command.CommandBase;
@@ -49,7 +49,7 @@ public class pvCommand extends CommandBase {
             Utils.sendMessage(ChatFormatting.YELLOW+"Opening "+username+"'s Profile "+ChatFormatting.GRAY+"(This may take a second)");
             GuiUtils.openGui(new ProfileViewerGui(true,username,"auto"));
         } else {
-            String playerUuid = APIUtils.getUUID(args[0],true);
+            String playerUuid = NetworkUtils.getUUID(args[0],true);
             if(playerUuid==null) {
                 Utils.sendMessage(ChatFormatting.RED+"A player with that username doesn't exist");
                 return;

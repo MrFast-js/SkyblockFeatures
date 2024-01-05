@@ -8,7 +8,7 @@ import mrfast.sbf.events.SlotClickedEvent;
 import mrfast.sbf.features.items.HideGlass;
 import mrfast.sbf.gui.components.Point;
 import mrfast.sbf.gui.components.UIElement;
-import mrfast.sbf.utils.APIUtils;
+import mrfast.sbf.utils.NetworkUtils;
 import mrfast.sbf.utils.GuiUtils;
 import mrfast.sbf.utils.ItemUtils;
 import mrfast.sbf.utils.Utils;
@@ -140,14 +140,14 @@ public class PartyFinderFeatures {
     private void showDungeonPlayerInfo(String name) {
         new Thread(() -> {
             // Get UUID for Hypixel API requests
-            String uuid = APIUtils.getUUID(name);
+            String uuid = NetworkUtils.getUUID(name);
 
             // Find stats of latest profile
-            String latestProfile = APIUtils.getLatestProfileID(uuid);
+            String latestProfile = NetworkUtils.getLatestProfileID(uuid);
             if (latestProfile == null) return;
 
             String profileURL = "https://api.hypixel.net/skyblock/profile?profile=" + latestProfile+"#PartyFinderJoinMsg";
-            JsonObject profileResponse = APIUtils.getJSONResponse(profileURL);
+            JsonObject profileResponse = NetworkUtils.getJSONResponse(profileURL);
             if (!profileResponse.get("success").getAsBoolean()) {
                 String reason = profileResponse.get("cause").getAsString();
                 Utils.sendMessage(ChatFormatting.RED + "Failed with reason: " + reason);
@@ -156,7 +156,7 @@ public class PartyFinderFeatures {
 
             String playerURL = "https://api.hypixel.net/player?uuid=" + uuid+"#PartyFinderJoinMsg";
             System.out.println("Fetching player data...");
-            JsonObject playerResponse = APIUtils.getJSONResponse(playerURL);
+            JsonObject playerResponse = NetworkUtils.getJSONResponse(playerURL);
             JsonObject profilePlayerResponse = profileResponse.get("profile").getAsJsonObject().get("members").getAsJsonObject().get(uuid).getAsJsonObject();
 
             if(!playerResponse.get("success").getAsBoolean()){

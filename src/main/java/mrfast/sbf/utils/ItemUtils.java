@@ -128,7 +128,7 @@ public class ItemUtils {
         if (itemDataCache.containsKey(id)) {
             return itemDataCache.get(id).copy();
         }
-        JsonObject itemObj = APIUtils.getJSONResponse("https://raw.githubusercontent.com/NotEnoughUpdates/NotEnoughUpdates-REPO/master/items/" + id + ".json");
+        JsonObject itemObj = NetworkUtils.getJSONResponse("https://raw.githubusercontent.com/NotEnoughUpdates/NotEnoughUpdates-REPO/master/items/" + id + ".json");
         ItemStack stack = parseJsonToItemStack(itemObj.toString());
         itemDataCache.put(id, stack.copy());
         return stack;
@@ -293,7 +293,7 @@ public class ItemUtils {
     public static Long getEstimatedItemValue(NBTTagCompound ExtraAttributes) {
         if (skyhelperItemMap.isEmpty()) {
             new Thread(() -> {
-                JsonArray items = APIUtils.getArrayResponse("https://raw.githubusercontent.com/Altpapier/SkyHelper-Networth/abb278d6be1e13b3204ccb05f47c5e8aaf614733/constants/items.json");
+                JsonArray items = NetworkUtils.getArrayResponse("https://raw.githubusercontent.com/Altpapier/SkyHelper-Networth/abb278d6be1e13b3204ccb05f47c5e8aaf614733/constants/items.json");
                 for (int i = 0; i < items.size(); i++) {
                     JsonObject a = items.get(i).getAsJsonObject();
                     skyhelperItemMap.put(a.get("id").getAsString(), a);

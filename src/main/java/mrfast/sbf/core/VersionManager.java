@@ -6,7 +6,7 @@ import com.google.gson.JsonObject;
 import com.mojang.realmsclient.gui.ChatFormatting;
 import moe.nea.libautoupdate.*;
 import mrfast.sbf.SkyblockFeatures;
-import mrfast.sbf.utils.APIUtils;
+import mrfast.sbf.utils.NetworkUtils;
 import mrfast.sbf.utils.Utils;
 import net.minecraft.event.ClickEvent;
 import net.minecraft.event.HoverEvent;
@@ -166,7 +166,7 @@ public class VersionManager {
     }
 
     public static JsonArray getGithubVersions() {
-        return APIUtils.getArrayResponse("https://api.github.com/repos/MrFast-js/SkyblockFeatures/releases");
+        return NetworkUtils.getArrayResponse("https://api.github.com/repos/MrFast-js/SkyblockFeatures/releases");
     }
 
     public static JsonObject getCurrentGithubVersion() {

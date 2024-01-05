@@ -168,7 +168,14 @@ public class DataManager {
             if(jsonElement.getAsJsonPrimitive().isBoolean()) {
                 return jsonElement.getAsJsonPrimitive().getAsBoolean();
             } else if(jsonElement.getAsJsonPrimitive().isNumber()) {
-                return jsonElement.getAsJsonPrimitive().getAsNumber().doubleValue();
+                String str = jsonElement.getAsJsonPrimitive().getAsString();
+                if(str.contains(".")) {
+                    return jsonElement.getAsJsonPrimitive().getAsNumber().doubleValue();
+                }
+                if(str.length()>10) {
+                    return jsonElement.getAsJsonPrimitive().getAsNumber().longValue();
+                }
+                return jsonElement.getAsJsonPrimitive().getAsNumber().intValue();
             } else {
                 return jsonElement.getAsJsonPrimitive().getAsString();
             }

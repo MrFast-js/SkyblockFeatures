@@ -11,7 +11,7 @@ import mrfast.sbf.SkyblockFeatures;
 import mrfast.sbf.core.PricingData;
 import mrfast.sbf.events.GuiContainerEvent;
 import mrfast.sbf.events.GuiContainerEvent.TitleDrawnEvent;
-import mrfast.sbf.utils.APIUtils;
+import mrfast.sbf.utils.NetworkUtils;
 import mrfast.sbf.utils.GuiUtils;
 import mrfast.sbf.utils.Utils;
 import net.minecraft.client.gui.inventory.GuiChest;
@@ -49,15 +49,15 @@ public class MissingTalismans {
                 thread = true;
                 new Thread(() -> {
                     String username = Utils.GetMC().thePlayer.getName();
-                    String uuid = APIUtils.getUUID(username);
+                    String uuid = NetworkUtils.getUUID(username);
                     // Find stats of latest profile
-                    String latestProfile = APIUtils.getLatestProfileID(uuid);
+                    String latestProfile = NetworkUtils.getLatestProfileID(uuid);
                     if (latestProfile == null) {
                         return;
                     }
 
                     String profileURL = "https://sky.shiiyu.moe/api/v2/profile/"+username+"#accessoriesOverlay";
-                    JsonObject profileResponse = APIUtils.getJSONResponse(profileURL);
+                    JsonObject profileResponse = NetworkUtils.getJSONResponse(profileURL);
                     profileResponse = profileResponse.get("profiles").getAsJsonObject();
                     MissingTalismans = profileResponse.get(latestProfile).getAsJsonObject().get("data").getAsJsonObject().get("missingAccessories").getAsJsonObject().get("missing").getAsJsonArray();
                     thread = false;

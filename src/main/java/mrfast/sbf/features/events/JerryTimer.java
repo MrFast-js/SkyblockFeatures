@@ -5,7 +5,7 @@ import mrfast.sbf.SkyblockFeatures;
 import mrfast.sbf.events.SecondPassedEvent;
 import mrfast.sbf.gui.components.Point;
 import mrfast.sbf.gui.components.UIElement;
-import mrfast.sbf.utils.APIUtils;
+import mrfast.sbf.utils.NetworkUtils;
 import mrfast.sbf.utils.Utils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.EnumChatFormatting;
@@ -27,7 +27,7 @@ public class JerryTimer {
         if(!checkedMayor) {
             checkedMayor = true;
             new Thread(()->{
-                JsonObject mayorResponse = APIUtils.getJSONResponse("https://api.hypixel.net/resources/skyblock/election",new String[]{},true,false);
+                JsonObject mayorResponse = NetworkUtils.getJSONResponse("https://api.hypixel.net/resources/skyblock/election",new String[]{},true,false);
                 String currentMayor = mayorResponse.get("mayor").getAsJsonObject().get("name").getAsString();
                 if(currentMayor.equals("Jerry")) {
                     isJerryMayor = true;

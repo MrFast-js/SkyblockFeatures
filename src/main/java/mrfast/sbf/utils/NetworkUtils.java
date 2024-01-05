@@ -14,7 +14,6 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import com.google.gson.*;
-import io.socket.emitter.Emitter;
 import io.socket.engineio.client.Socket;
 import mrfast.sbf.SkyblockFeatures;
 import mrfast.sbf.events.SocketMessageEvent;
@@ -39,7 +38,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import javax.net.ssl.*;
 
 
-public class APIUtils {
+public class NetworkUtils {
 
     public static CloseableHttpClient client;
 
@@ -47,17 +46,13 @@ public class APIUtils {
         SkyblockFeatures.config.temporaryAuthKey = "";
         SSLContextBuilder builder = new SSLContextBuilder();
         try {
-            builder.loadTrustMaterial(null, new TrustStrategy() {
-                public boolean isTrusted(final X509Certificate[] chain, String authType) throws CertificateException {
-                    return true;
-                }
-            });
+            builder.loadTrustMaterial(null, (chain, authType) -> true);
         } catch (NoSuchAlgorithmException ex) {
             throw new RuntimeException(ex);
         } catch (KeyStoreException ex) {
             throw new RuntimeException(ex);
         }
-        SSLConnectionSocketFactory sslsf = null;
+        SSLConnectionSocketFactory sslsf;
         try {
             sslsf = new SSLConnectionSocketFactory(builder.build());
         } catch (NoSuchAlgorithmException e) {
@@ -206,17 +201,6 @@ public class APIUtils {
         return new JsonObject();
     }
 
-    public static int getPetRarity(String tier) {
-        int rarity = 0;
-        if (tier.equals("COMMON")) rarity = 1;
-        if (tier.equals("UNCOMMON")) rarity = 2;
-        if (tier.equals("RARE")) rarity = 3;
-        if (tier.equals("EPIC")) rarity = 4;
-        if (tier.equals("LEGENDARY")) rarity = 5;
-        if (tier.equals("MYTHIC")) rarity = 6;
-        return rarity;
-    }
-
     // Only used for UUID => Username
     public static JsonArray getArrayResponse(String urlString) {
         try {
@@ -362,7 +346,7 @@ public class APIUtils {
             socket.on(Socket.EVENT_CLOSE, args -> {
                 if(internalClose) return;
                 System.out.println("Lost connection to SBF websocket! Retrying in 5 seconds..");
-                Utils.setTimeout(APIUtils::setupSocket, 5000);
+                Utils.setTimeout(NetworkUtils::setupSocket, 5000);
                 socketConnected = false;
             });
 

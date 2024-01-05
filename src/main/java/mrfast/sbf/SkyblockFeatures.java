@@ -108,7 +108,7 @@ public class SkyblockFeatures {
                 new SkyblockInfo(),
                 new SpamHider(),
                 new PricingData(),
-                new APIUtils(),
+                new NetworkUtils(),
                 new ZealotSpawnLocations(),
                 new ChestProfit(),
                 new DungeonMap(),

@@ -1,12 +1,7 @@
 package mrfast.sbf.core;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.util.*;
 
-import net.minecraft.nbt.CompressedStreamTools;
-import org.apache.commons.codec.binary.Base64InputStream;
 import org.apache.commons.lang3.time.StopWatch;
 
 import com.google.gson.Gson;
@@ -16,7 +11,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import mrfast.sbf.SkyblockFeatures;
-import mrfast.sbf.utils.APIUtils;
+import mrfast.sbf.utils.NetworkUtils;
 import mrfast.sbf.utils.ItemUtils;
 import mrfast.sbf.utils.Utils;
 import net.minecraft.item.ItemStack;
@@ -117,7 +112,7 @@ public class PricingData {
 
             // Load lowest bins - Taken from NotEnoughUpdates
             new Thread(() -> {
-                JsonObject data = APIUtils.getJSONResponse("https://moulberry.codes/lowestbin.json");
+                JsonObject data = NetworkUtils.getJSONResponse("https://moulberry.codes/lowestbin.json");
                 for (Map.Entry<String, JsonElement> items : data.entrySet()) {
                     lowestBINs.put(items.getKey(), Math.floor(items.getValue().getAsDouble()));
                 }
@@ -175,7 +170,7 @@ public class PricingData {
             // Get bazaar prices
             if (bazaarPrices.isEmpty()) {
                 new Thread(() -> {
-                    JsonObject data = APIUtils.getJSONResponse("https://api.hypixel.net/skyblock/bazaar",new String[]{},true,false);
+                    JsonObject data = NetworkUtils.getJSONResponse("https://api.hypixel.net/skyblock/bazaar",new String[]{},true,false);
                     JsonObject products = data.get("products").getAsJsonObject();
                     for (Map.Entry<String, JsonElement> entry : products.entrySet()) {
                         if (entry.getValue().isJsonObject()) {
@@ -192,7 +187,7 @@ public class PricingData {
             if (npcSellPrices.isEmpty()) {
                 Utils.setTimeout(() -> {
                     new Thread(() -> {
-                        JsonObject data = APIUtils.getJSONResponse("https://api.hypixel.net/resources/skyblock/items#NpcSellPrices",new String[]{},true,false);
+                        JsonObject data = NetworkUtils.getJSONResponse("https://api.hypixel.net/resources/skyblock/items#NpcSellPrices",new String[]{},true,false);
                         JsonArray items = data.get("items").getAsJsonArray();
                         for (JsonElement item : items) {
                             JsonObject json = item.getAsJsonObject();

@@ -199,7 +199,7 @@ public class ProfileViewerGui extends WindowScreen {
     public ProfileViewerGui(Boolean doAnimation, String username, String profileString) {
         super(ElementaVersion.V2);
 
-        String uuidString = APIUtils.getUUID(username, true);
+        String uuidString = NetworkUtils.getUUID(username, true);
         if (uuidString == null) return;
         UUID uuid = UUID.fromString(uuidString);
 
@@ -313,15 +313,15 @@ public class ProfileViewerGui extends WindowScreen {
             if (Utils.isDeveloper()) System.out.println("Starting thread ");
 
             hypixelProfilesResponse = null;
-            String latestProfile = APIUtils.getLatestProfileID(playerUuid);
+            String latestProfile = NetworkUtils.getLatestProfileID(playerUuid);
             if (profileString.equals("auto") && latestProfile == null) return;
             String locationURL = "https://api.hypixel.net/status?uuid=" + playerUuid + "#GetLocationPV";
             String profileURL = "https://api.hypixel.net/skyblock/profiles?uuid=" + playerUuid + "#GetProfilePV";
 
             if (Utils.isDeveloper()) System.out.println("Fetching Hypixel profile...");
-            JsonObject profiles = APIUtils.getJSONResponse(profileURL);
+            JsonObject profiles = NetworkUtils.getJSONResponse(profileURL);
 
-            JsonObject locationJson = APIUtils.getJSONResponse(locationURL);
+            JsonObject locationJson = NetworkUtils.getJSONResponse(locationURL);
             boolean playerOnline = locationJson.get("session").getAsJsonObject().get("online").getAsBoolean();
             if (playerOnline) {
                 String location = locationJson.get("session").getAsJsonObject().get("mode").getAsString();
@@ -469,7 +469,7 @@ public class ProfileViewerGui extends WindowScreen {
                 profileUUID = profileObject.get("profile_id").getAsString();
                 if (Utils.isDeveloper()) System.out.println("Adding members..");
                 for (Entry<String, JsonElement> entry : profileObject.get("members").getAsJsonObject().entrySet()) {
-                    String username = APIUtils.getName(entry.getKey());
+                    String username = NetworkUtils.getName(entry.getKey());
                     if (Utils.isDeveloper()) System.out.println("Adding username: " + username);
                     coopMemberList.add(username);
                 }
@@ -501,7 +501,7 @@ public class ProfileViewerGui extends WindowScreen {
 
         new Thread(() -> {
             try {
-                JsonObject json = APIUtils.getJSONResponse("https://soopy.dev/api/v2/player_skyblock/" + playerUuid + "?networth=true#soopyForPV");
+                JsonObject json = NetworkUtils.getJSONResponse("https://soopy.dev/api/v2/player_skyblock/" + playerUuid + "?networth=true#soopyForPV");
                 JsonObject data = json.get("data").getAsJsonObject();
                 soopyProfiles = data.get("profiles").getAsJsonObject();
                 if (Utils.isDeveloper()) System.out.println("got profiles");
@@ -512,7 +512,7 @@ public class ProfileViewerGui extends WindowScreen {
 
         new Thread(() -> {
             try {
-                JsonObject json = APIUtils.getJSONResponse("https://api.hypixel.net/player?uuid=" + playerUuid + "#hypixelStatsForPV");
+                JsonObject json = NetworkUtils.getJSONResponse("https://api.hypixel.net/player?uuid=" + playerUuid + "#hypixelStatsForPV");
                 HypixelPlayerResponse = json.get("player").getAsJsonObject();
                 if (Utils.isDeveloper()) System.out.println("got hypixel player");
             } catch (Exception ignored) {
@@ -798,8 +798,8 @@ public class ProfileViewerGui extends WindowScreen {
             List<String> networthTooltip;
             String networth;
 
-            JsonObject museumResponse = APIUtils.getJSONResponse("https://api.hypixel.net/skyblock/museum?profile=" + profileUUID);
-            JsonObject networthResponse = APIUtils.getNetworth(playerUuid, selectedProfileUUID);
+            JsonObject museumResponse = NetworkUtils.getJSONResponse("https://api.hypixel.net/skyblock/museum?profile=" + profileUUID);
+            JsonObject networthResponse = NetworkUtils.getNetworth(playerUuid, selectedProfileUUID);
 
             JsonObject networthCategories = networthResponse.get("types").getAsJsonObject();
 
@@ -2010,7 +2010,7 @@ public class ProfileViewerGui extends WindowScreen {
             String aRarity = a.get("tier").getAsString();
             String bRarity = b.get("tier").getAsString();
 
-            return APIUtils.getPetRarity(bRarity) - APIUtils.getPetRarity(aRarity);
+            return ItemRarity.getPetRarity(bRarity) - ItemRarity.getPetRarity(aRarity);
         });
         sortedPets.add(0, activePet);
         return sortedPets;
@@ -2025,7 +2025,7 @@ public class ProfileViewerGui extends WindowScreen {
 
         if (collectionsData == null) {
             // Fetch the collections data only if it's not already cached
-            collectionsData = APIUtils.getJSONResponse("https://api.hypixel.net/v2/resources/skyblock/collections#CollectionsForPV",new String[]{},true,false).getAsJsonObject();
+            collectionsData = NetworkUtils.getJSONResponse("https://api.hypixel.net/v2/resources/skyblock/collections#CollectionsForPV",new String[]{},true,false).getAsJsonObject();
         }
 
         statsAreaContainerNew = new UIBlock(Color.red)
@@ -2159,9 +2159,9 @@ public class ProfileViewerGui extends WindowScreen {
 
             for (Entry<String, JsonElement> member : members.entrySet()) {
                 if (!coopNames.containsKey(member.getKey())) {
-                    String name = APIUtils.getName(member.getKey());
+                    String name = NetworkUtils.getName(member.getKey());
                     ChatFormatting color = Objects.equals(name, Utils.GetMC().thePlayer.getName()) ? ChatFormatting.GOLD : ChatFormatting.GREEN;
-                    String formattedName = color + APIUtils.getName(member.getKey());
+                    String formattedName = color + NetworkUtils.getName(member.getKey());
 
                     coopNames.put(member.getKey(), formattedName);
                 }

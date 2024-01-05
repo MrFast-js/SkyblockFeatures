@@ -4,7 +4,6 @@ import java.awt.Color;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Objects;
 
 import com.google.gson.JsonObject;
 import com.mojang.realmsclient.gui.ChatFormatting;
@@ -25,10 +24,6 @@ import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
-import net.minecraft.inventory.ContainerChest;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.item.ItemMonsterPlacer;
 import net.minecraft.item.ItemSkull;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.play.server.S2APacketParticles;
@@ -39,7 +34,6 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
 
 public class MiscFeatures {
     public static HashMap<Entity, EntityVillager> tracker = new HashMap<Entity, EntityVillager>();
@@ -201,16 +195,16 @@ public class MiscFeatures {
                     // Get UUID for Hypixel API requests
                     String username = Utils.cleanColor(profileHead.getDisplayName());
                     if (username.split(" ").length > 1) username = username.split(" ")[1];
-                    String uuid = APIUtils.getUUID(username);
+                    String uuid = NetworkUtils.getUUID(username);
                     // Find stats of latest profile
-                    String latestProfile = APIUtils.getLatestProfileID(uuid);
+                    String latestProfile = NetworkUtils.getLatestProfileID(uuid);
                     if (latestProfile == null) {
                         apiOff = true;
                         return;
                     }
 
                     String profileURL = "https://sky.shiiyu.moe/api/v2/profile/" + username + "#extraProfileInfo";
-                    JsonObject profileResponse = APIUtils.getJSONResponse(profileURL);
+                    JsonObject profileResponse = NetworkUtils.getJSONResponse(profileURL);
                     try {
                         profileResponse = profileResponse.get("profiles").getAsJsonObject();
                         JsonObject a = profileResponse.get(latestProfile).getAsJsonObject().get("data").getAsJsonObject();

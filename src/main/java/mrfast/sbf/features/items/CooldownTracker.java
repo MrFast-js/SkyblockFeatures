@@ -270,7 +270,8 @@ public class CooldownTracker {
             }
             if(cooldownReduction!=-1) {
                 // what the fuck is this math hypixel, i dont even know how i got to this equation.
-                secondsToAdd *= 1d/((cooldownReduction/(1d+cooldownReduction/100d))/100d);
+                secondsToAdd *= (100d+cooldownReduction)/cooldownReduction;
+//                secondsToAdd *= 1d/((cooldownReduction/(1d+cooldownReduction/100d))/100d);
             }
 
             cooldownInfo.currentCount+=secondsToAdd;

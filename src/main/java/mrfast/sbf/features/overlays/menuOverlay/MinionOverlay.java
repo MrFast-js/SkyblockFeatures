@@ -15,8 +15,10 @@ import com.google.gson.JsonObject;
 import com.mojang.realmsclient.gui.ChatFormatting;
 
 import mrfast.sbf.SkyblockFeatures;
+import mrfast.sbf.core.DataManager;
 import mrfast.sbf.core.PricingData;
 import mrfast.sbf.core.SkyblockInfo;
+import mrfast.sbf.events.ProfileSwapEvent;
 import mrfast.sbf.events.SlotClickedEvent;
 import mrfast.sbf.events.GuiContainerEvent.TitleDrawnEvent;
 import mrfast.sbf.utils.*;
@@ -32,7 +34,11 @@ import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class MinionOverlay {
-    static HashMap<String,Long> lastCollected = new HashMap<>();
+    HashMap<String,HashMap> minions = new HashMap<>();
+    @SubscribeEvent
+    public void onProfileSwap(ProfileSwapEvent event) {
+        minions = (HashMap<String,HashMap>) DataManager.getProfileDataDefault("minions", new JsonObject());
+    }
     @SubscribeEvent
     public void onDrawContainerTitle(TitleDrawnEvent event) {
         if (event.gui instanceof GuiChest && SkyblockFeatures.config.minionOverlay) {
@@ -75,13 +81,24 @@ public class MinionOverlay {
                 if(generating != null && ItemUtils.getRarity(generating) == ItemRarity.COMMON) {
                     String identifier = PricingData.getIdentifier(generating);
                     String[] lines;
+                    if(identifier==null && minions.containsKey(closestMinion.getPosition().toString())) {
+                        identifier = (String) minions.get(closestMinion.getPosition().toString()).get("generating");
+                    }
                     if (identifier != null) {
                         Double sellPrice = PricingData.bazaarPrices.get(identifier);
                         if(sellPrice != null) {
                             Double perHour = Math.floor(((double) 3600 /secondsPerAction)*sellPrice);
                             String duration = "Unknown";
-                            if(closestMinion != null && lastCollected.containsKey(closestMinion.getPosition().toString())) {
-                                long timeElapsed = (System.currentTimeMillis()-lastCollected.get(closestMinion.getPosition().toString()))/1000L;
+                            HashMap<String,Object> minion = new HashMap<>();
+                            if(minions.containsKey(closestMinion.getPosition().toString())) {
+                                minion = minions.get(closestMinion.getPosition().toString());
+                            }
+                            long lastCollected = System.currentTimeMillis();
+                            if(minion.containsKey("lastCollected")) {
+                                lastCollected = (long) minion.get("lastCollected");
+                            }
+                            if(closestMinion != null) {
+                                long timeElapsed = (System.currentTimeMillis()-lastCollected)/1000L;
                                 duration = Utils.secondsToTime(timeElapsed);
                             }
                             String fuelRunsOut = "Unlimited";
@@ -101,6 +118,11 @@ public class MinionOverlay {
                                     ChatFormatting.WHITE + " • Total Value: " + ChatFormatting.GOLD + Utils.shortenNumber(totalValue),
                                     ChatFormatting.WHITE + " • Last Collected: " + ChatFormatting.AQUA + duration
                             };
+                            minion.put("generating",identifier);
+                            minion.put("lastCollected",lastCollected);
+
+                            minions.put(closestMinion.getPosition().toString(), minion);
+                            DataManager.saveProfileData("minions",minions);
                         } else {
                             lines = new String[]{
                                     ChatFormatting.RED + "Unable to get item price!",
@@ -136,8 +158,10 @@ public class MinionOverlay {
                         String nameOfItem = Utils.cleanColor(event.slot.getStack().getDisplayName());
                         if(nameOfItem.contains("Collect All") || isSlotFromMinion(event.slot.slotNumber)) {
                             if(closestMinion!=null) {
-                                lastCollected.put(closestMinion.getPosition().toString(), System.currentTimeMillis());
-                                saveConfig();
+                                if(minions.containsKey(closestMinion.getPosition().toString())) {
+                                    minions.get(closestMinion.getPosition().toString()).put("lastCollected",System.currentTimeMillis());
+                                    DataManager.saveProfileData("minions",minions);
+                                }
                             }
                         }
                     }
@@ -155,12 +179,12 @@ public class MinionOverlay {
     @SubscribeEvent
     public void onRecievePacket(RenderWorldLastEvent event) {
         if(Utils.inSkyblock && SkyblockInfo.map.equals("Private Island") && (SkyblockFeatures.config.minionOverlay||SkyblockFeatures.config.minionLastCollected)) {
-            if(lastCollected.isEmpty()) readConfig();
             for(Entity e : Utils.GetMC().theWorld.loadedEntityList){
                 if(e instanceof EntityArmorStand) {
                     if(isMinion((EntityArmorStand) e)) {
-                        if(SkyblockFeatures.config.minionLastCollected && lastCollected.containsKey(e.getPosition().toString()) && Utils.GetMC().thePlayer.getDistanceToEntity(e)<8) {
-                            long timeElapsed = (System.currentTimeMillis()-lastCollected.get(e.getPosition().toString()))/1000L;
+                        if(SkyblockFeatures.config.minionLastCollected && minions.containsKey(e.getPosition().toString()) && Utils.GetMC().thePlayer.getDistanceToEntity(e)<8) {
+                            HashMap minion = minions.get(e.getPosition().toString());
+                            long timeElapsed = (System.currentTimeMillis()-((long) minion.get("lastCollected")))/1000L;
                             String duration = Utils.secondsToTime(timeElapsed);
                             RenderUtil.draw3DStringWithShadow(e.getPositionVector().add(new Vec3(0,1.5,0)),ChatFormatting.YELLOW+"Last Collected: "+ChatFormatting.AQUA+duration,event.partialTicks);
                         }
@@ -189,45 +213,5 @@ public class MinionOverlay {
                 Item.getIdFromItem(e.getCurrentArmor(1).getItem()) == 300 &&
                 Item.getIdFromItem(e.getCurrentArmor(2).getItem()) == 299 &&
                 Item.getIdFromItem(e.getCurrentArmor(3).getItem()) == 397);
-    }
-
-    public MinionOverlay() {
-        saveFile = new File(SkyblockFeatures.modDir, "collectedMinions.json");
-        readConfig();
-    }
-
-    private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
-    private static File saveFile;
-
-    public static void readConfig() {
-        if(Utils.GetMC().thePlayer==null) return;
-        JsonObject file;
-        try (FileReader in = new FileReader(saveFile)) {
-            file = gson.fromJson(in, JsonObject.class);
-            for (Map.Entry<String, JsonElement> e : file.entrySet()) {
-                try {
-                    long a = e.getValue().getAsLong();
-                    lastCollected.put(e.getKey(), a);
-                } catch (Exception exception) {
-                    exception.printStackTrace();
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            lastCollected = new HashMap<>();
-            try (FileWriter writer = new FileWriter(saveFile)) {
-                gson.toJson(lastCollected, writer);
-            } catch (Exception ignored) {
-
-            }
-        }
-    }
-
-    public static void saveConfig() {
-        try (FileWriter writer = new FileWriter(saveFile)) {
-            gson.toJson(lastCollected, writer);
-        } catch (Exception ignored) {
-
-        }
     }
 }
