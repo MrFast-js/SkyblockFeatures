@@ -2041,14 +2041,24 @@ public class Config extends ConfigManager {
     public boolean quiverOverlayOnlyBow = false;
 
     @Property(
-            type = PropertyType.SLIDER,
-            name = "Quiver Overlay Count",
-            description = "Shows the arrows in currently your quiver. §cThis will also estimate the count after arrows are shot",
+            type = PropertyType.TOGGLE,
+            name = "Low Arrow Notification",
+            description = "Shows a popup on your screen if you get below §a128§r arrows.",
             category = "Miscellaneous",
             subcategory = "Overlay",
-            hidden = true
+            parentName = "Quiver Overlay"
     )
-    public int quiverOverlayCount = 0;
+    public boolean quiverOverlayLowArrowNotification = true;
+
+    @Property(
+            type = PropertyType.TOGGLE,
+            name = "Show Arrow Type",
+            description = "Shows the type of arrow selected in the quiver display.",
+            category = "Miscellaneous",
+            subcategory = "Overlay",
+            parentName = "Quiver Overlay"
+    )
+    public boolean quiverOverlayType = false;
 
     @Property(
             type = PropertyType.TOGGLE,
