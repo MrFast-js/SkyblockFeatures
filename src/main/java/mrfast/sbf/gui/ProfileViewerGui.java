@@ -1965,8 +1965,8 @@ public class ProfileViewerGui extends WindowScreen {
                         .setY(new SiblingConstraint(2f));
 
                 ProfileViewerUtils.createTimecharm(spruceLeaves, "Supreme Timecharm", surpremeTimecharm, timecharmContainer);
-                ProfileViewerUtils.createTimecharm(new ItemStack(Item.getItemFromBlock(Blocks.glass)), "Chicken N Egg Timecharm", chickenNEggTimecharm, timecharmContainer);
-                ProfileViewerUtils.createTimecharm(new ItemStack(Item.getItemFromBlock(Blocks.soul_sand)), "mrahcemiT esrevrorriM", mirrorverseTimecharm, timecharmContainer);
+                ProfileViewerUtils.createTimecharm(new ItemStack(Item.getItemFromBlock(Blocks.soul_sand)), "Chicken N Egg Timecharm", chickenNEggTimecharm, timecharmContainer);
+                ProfileViewerUtils.createTimecharm(new ItemStack(Item.getItemFromBlock(Blocks.glass)), "mrahcemiT esrevrorriM", mirrorverseTimecharm, timecharmContainer);
 
                 UIComponent timecharmContainer2 = new UIBlock(clear)
                         .setChildOf(bottomContainer)
