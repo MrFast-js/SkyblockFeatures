@@ -528,6 +528,8 @@ public class AutoAuctionFlip {
             double seconds = Math.floor((System.currentTimeMillis() - startMs) / 1000d);
 
             lines.add(ChatFormatting.GOLD + "Time Elapsed: " + Utils.secondsToTime((int) seconds));
+            String socketDisplay = APIUtils.socketConnected?ChatFormatting.GREEN + "✔ Socket Connected":ChatFormatting.RED+"✘ Socket Offline";
+            lines.add(socketDisplay);
             lines.add(ChatFormatting.YELLOW + "Flipper Active");
         }
 
