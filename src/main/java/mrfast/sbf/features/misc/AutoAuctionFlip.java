@@ -537,15 +537,7 @@ public class AutoAuctionFlip {
             updateLines();
 
             // Calculate the center Y coordinate
-            int centerY = (this.getHeight() - (Utils.GetMC().fontRendererObj.FONT_HEIGHT + 2) * lines.size()) / 2;
-            for (int i = 0; i < lines.size(); i++) {
-                String text = lines.get(i);
-
-                // Calculate the center X coordinate for each line
-                int centerX = (this.getWidth() - Utils.GetMC().fontRendererObj.getStringWidth(text)) / 2;
-
-                GuiUtils.drawText(text, centerX, centerY + i * (Utils.GetMC().fontRendererObj.FONT_HEIGHT + 2), GuiUtils.TextStyle.BLACK_OUTLINE);
-            }
+            GuiUtils.drawCenteredText(this,lines,GuiUtils.TextStyle.BLACK_OUTLINE);
         }
 
         @Override
@@ -553,15 +545,7 @@ public class AutoAuctionFlip {
             // Update the lines dynamically
             updateLines();
 
-            int centerY = (this.getHeight() - (Utils.GetMC().fontRendererObj.FONT_HEIGHT + 2) * lines.size()) / 2;
-            for (int i = 0; i < lines.size(); i++) {
-                String text = lines.get(i);
-
-                // Calculate the center X coordinate for each line
-                int centerX = (this.getWidth() - Utils.GetMC().fontRendererObj.getStringWidth(text)) / 2;
-
-                GuiUtils.drawText(text, centerX, centerY + i * (Utils.GetMC().fontRendererObj.FONT_HEIGHT + 2), GuiUtils.TextStyle.BLACK_OUTLINE);
-            }
+            GuiUtils.drawCenteredText(this,lines, GuiUtils.TextStyle.BLACK_OUTLINE);
         }
 
         @Override

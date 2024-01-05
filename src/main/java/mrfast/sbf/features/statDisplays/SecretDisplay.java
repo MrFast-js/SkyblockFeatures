@@ -36,9 +36,7 @@ public class SecretDisplay {
 
             List<String> text = getSecrets(secrets, maxSecrets);
 
-            for (int i = 0; i < text.size(); i++) {
-                GuiUtils.drawText(text.get(i), ((float) getWidth() /3)*i, i * Utils.GetMC().fontRendererObj.FONT_HEIGHT, GuiUtils.TextStyle.BLACK_OUTLINE);
-            }
+            GuiUtils.drawCenteredText(this,text,GuiUtils.TextStyle.BLACK_OUTLINE);
         }
         @Override
         public void drawElementExample() {
@@ -47,9 +45,7 @@ public class SecretDisplay {
             text.add("§7Secrets");
             text.add("§c1§7/§c9");
 
-            for (int i = 0; i < text.size(); i++) {
-                GuiUtils.drawText(text.get(i), (getWidth()/3)*i, i * Utils.GetMC().fontRendererObj.FONT_HEIGHT);
-            }
+            GuiUtils.drawCenteredText(this,text,GuiUtils.TextStyle.BLACK_OUTLINE);
         }
 
         @Override
