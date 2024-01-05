@@ -103,6 +103,7 @@ public class SkyblockFeatures {
         List<Object> features = Arrays.asList(
                 this,
                 new ChatEventListener(),
+                new DataManager(),
                 GUIMANAGER,
                 new SkyblockInfo(),
                 new SpamHider(),
