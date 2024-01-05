@@ -3,6 +3,7 @@ package mrfast.sbf.utils;
 import com.mojang.realmsclient.gui.ChatFormatting;
 import gg.essential.elementa.components.UIRoundedRectangle;
 import gg.essential.universal.UMatrixStack;
+import mrfast.sbf.gui.components.UIElement;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiScreen;
@@ -14,9 +15,11 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL14;
 import org.lwjgl.util.vector.Vector2f;
+import scala.actors.threadpool.Arrays;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class GuiUtils {
@@ -24,8 +27,20 @@ public class GuiUtils {
     public enum TextStyle {
         DROP_SHADOW(),
         BLACK_OUTLINE();
+    }
+    public static void drawCenteredText(UIElement element,String line,TextStyle style) {
+        drawCenteredText(element, Collections.singletonList(line),style);
+    }
+    public static void drawCenteredText(UIElement element,List<String> lines,TextStyle style) {
+        int centerY = (element.getHeight() - (Utils.GetMC().fontRendererObj.FONT_HEIGHT + 2) * lines.size()) / 2;
+        for (int i = 0; i < lines.size(); i++) {
+            String text = lines.get(i);
 
-        TextStyle() {}
+            // Calculate the center X coordinate for each line
+            int centerX = (element.getWidth() - Utils.GetMC().fontRendererObj.getStringWidth(text)) / 2;
+
+            GuiUtils.drawText(text, centerX, centerY + i * (Utils.GetMC().fontRendererObj.FONT_HEIGHT + 2)+2, style);
+        }
     }
 
     public static void drawText(String text, float x, float y,TextStyle style) {
