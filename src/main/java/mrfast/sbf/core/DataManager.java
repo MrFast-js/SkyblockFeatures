@@ -3,8 +3,10 @@ package mrfast.sbf.core;
 import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
 import mrfast.sbf.SkyblockFeatures;
+import mrfast.sbf.events.ProfileSwapEvent;
 import mrfast.sbf.utils.Utils;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import java.io.*;
@@ -39,22 +41,20 @@ public class DataManager {
         }
     }
 
+    static boolean initialPfId = false;
     @SubscribeEvent
     public void onChat(ClientChatReceivedEvent event) {
-        // Define a regex pattern to match the ID
         String regexPattern = "Profile ID: (\\S+)";
-
-        // Create a Pattern object
         Pattern pattern = Pattern.compile(regexPattern);
-
-        // Create a Matcher object
         Matcher matcher = pattern.matcher(event.message.getUnformattedText());
 
         if (matcher.find()) {
-            // Check if there is a match and retrieve the ID from the captured group
+            if(currentProfileId!=null && currentProfileId.equals(matcher.group(1)) && initialPfId) return;
+
             currentProfileId = matcher.group(1);
             dataJson.addProperty("currentProfileId", currentProfileId);
-            System.out.println("SET PROFILE ID: " + currentProfileId);
+            saveDataToFile();
+            MinecraftForge.EVENT_BUS.post(new ProfileSwapEvent());
         }
     }
 
