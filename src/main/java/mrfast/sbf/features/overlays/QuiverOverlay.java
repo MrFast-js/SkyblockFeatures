@@ -1,5 +1,6 @@
 package mrfast.sbf.features.overlays;
 
+import com.google.gson.JsonObject;
 import mrfast.sbf.SkyblockFeatures;
 import mrfast.sbf.core.DataManager;
 import mrfast.sbf.events.GuiContainerEvent;
@@ -28,7 +29,7 @@ import java.util.HashMap;
 public class QuiverOverlay {
     public static Minecraft mc = Utils.GetMC();
     public static String selectedArrowType = "";
-    static HashMap<String, Double> arrowCounts = new HashMap<>();
+    static JsonObject arrowCounts = new JsonObject();
     static boolean loadedData = false;
     static {
         new quiverDisplay();
@@ -36,7 +37,7 @@ public class QuiverOverlay {
 
     @SubscribeEvent
     public void onProfileSwap(ProfileSwapEvent event) {
-        arrowCounts = (HashMap<String, Double>) DataManager.getProfileDataDefault("arrows", new HashMap<>());
+        arrowCounts = (JsonObject) DataManager.getProfileDataDefault("arrows", new JsonObject());
         selectedArrowType = (String) DataManager.getProfileDataDefault("selectedArrowType", "§fFlint Arrow");
         loadedData = true;
     }
@@ -78,15 +79,15 @@ public class QuiverOverlay {
             DataManager.saveProfileData("selectedArrowType", selectedArrowType);
         }
         if (clean.equals("Cleared your quiver!") || clean.equals("Your quiver is empty!") || clean.startsWith("You don't have any more arrows left in your Quiver!")) {
-            arrowCounts.clear();
+            arrowCounts = new JsonObject();
             DataManager.saveProfileData("arrows", arrowCounts);
         }
         if (clean.startsWith("You filled your quiver with")) {
             double old = Integer.parseInt(clean.replaceAll("[^0-9]", ""));
-            if (arrowCounts.containsKey("§fFlint Arrow")) {
-                old += arrowCounts.get("§fFlint Arrow");
+            if (arrowCounts.has("§fFlint Arrow")) {
+                old += arrowCounts.get("§fFlint Arrow").getAsDouble();
             }
-            arrowCounts.put("§fFlint Arrow", old);
+            arrowCounts.addProperty("§fFlint Arrow", old);
             DataManager.saveProfileData("arrows", arrowCounts);
         }
 
@@ -95,10 +96,10 @@ public class QuiverOverlay {
             int arrowCount = Integer.parseInt(clean.split(" x")[1].split(" ")[0].replaceAll("[^0-9]", ""));
             Utils.sendMessage(ArrowType + " " + arrowCount);
             Double oldCount = (double) arrowCount;
-            if (arrowCounts.containsKey(ArrowType)) {
-                oldCount += arrowCounts.get(ArrowType);
+            if (arrowCounts.has(ArrowType)) {
+                oldCount += arrowCounts.get(ArrowType).getAsDouble();
             }
-            arrowCounts.put(ArrowType, oldCount);
+            arrowCounts.addProperty(ArrowType, oldCount);
             DataManager.saveProfileData("arrows", arrowCounts);
         }
     }
@@ -108,14 +109,13 @@ public class QuiverOverlay {
         if (!SkyblockFeatures.config.quiverOverlay) return;
 
         if (event.displayName.equals("Quiver") && event.chestInventory != null) {
-            HashMap<String, Double> newArrowCount = new HashMap<>();
+            JsonObject newArrowCount = new JsonObject();
             for (int i = 0; i < event.chestInventory.getSizeInventory(); i++) {
                 ItemStack stack = event.chestInventory.getStackInSlot(i);
                 String id = ItemUtils.getSkyBlockItemID(stack);
                 if (stack != null && stack.getItem() != null && id != null) {
                     if (stack.getItem().equals(Items.arrow) && id.contains("ARROW")) {
-                        newArrowCount.putIfAbsent(stack.getDisplayName(), 0d);
-                        newArrowCount.put(stack.getDisplayName(), newArrowCount.get(stack.getDisplayName()) + stack.stackSize);
+                        newArrowCount.addProperty(stack.getDisplayName(), newArrowCount.get(stack.getDisplayName()).getAsDouble() + stack.stackSize);
                     }
                 }
             }
@@ -154,9 +154,9 @@ public class QuiverOverlay {
             countToRemove = (1 - level * 0.03);
         }
 
-        arrowCounts.put(selectedArrowType, arrowCounts.get(selectedArrowType) - countToRemove);
+        arrowCounts.addProperty(selectedArrowType, arrowCounts.get(selectedArrowType).getAsDouble() - countToRemove);
         if (!sentLowArrows && SkyblockFeatures.config.quiverOverlayLowArrowNotification) {
-            if (arrowCounts.get(selectedArrowType) < 128) {
+            if (arrowCounts.get(selectedArrowType).getAsDouble() < 128) {
                 sentLowArrows = true;
                 GuiManager.createTitle("§cRefill Quiver", 20);
             }
@@ -209,8 +209,8 @@ public class QuiverOverlay {
 
     public static String getDisplay() {
         double quiverArrows = -1;
-        if (arrowCounts.containsKey(selectedArrowType)) {
-            quiverArrows = arrowCounts.get(selectedArrowType);
+        if (arrowCounts.has(selectedArrowType)) {
+            quiverArrows = arrowCounts.get(selectedArrowType).getAsDouble();
         }
         quiverArrows = Math.floor(quiverArrows);
 

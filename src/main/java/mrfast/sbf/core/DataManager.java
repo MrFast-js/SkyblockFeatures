@@ -1,21 +1,17 @@
 package mrfast.sbf.core;
 
 import com.google.gson.*;
-import com.google.gson.reflect.TypeToken;
 import mrfast.sbf.SkyblockFeatures;
 import mrfast.sbf.events.ProfileSwapEvent;
-import mrfast.sbf.utils.Utils;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-import java.io.*;
-import java.lang.reflect.Type;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -96,23 +92,7 @@ public class DataManager {
     }
 
     private static JsonElement convertToJsonObject(Object dataValue) {
-        if (dataValue instanceof List) {
-            // Convert List to JSON array
-            JsonArray jsonArray = new JsonArray();
-            for (Object listItem : (List<?>) dataValue) {
-                jsonArray.add(convertToJsonObject(listItem));
-            }
-            return jsonArray;
-        } else if (dataValue instanceof HashMap) {
-            // Convert Map to JSON object
-            JsonObject jsonObject = new JsonObject();
-            for (Map.Entry<?, ?> entry : ((Map<?, ?>) dataValue).entrySet()) {
-                if (entry.getKey() instanceof String) {
-                    jsonObject.add((String) entry.getKey(), convertToJsonObject(entry.getValue()));
-                }
-            }
-            return jsonObject;
-        } else if (dataValue instanceof String) {
+        if (dataValue instanceof String) {
             return new JsonPrimitive(String.valueOf(dataValue));
         } else if (dataValue instanceof Number) {
             return new JsonPrimitive((Number) dataValue);
@@ -180,25 +160,11 @@ public class DataManager {
                 return jsonElement.getAsJsonPrimitive().getAsString();
             }
         } else if (jsonElement.isJsonArray()) {
-            return jsonArrayToList(jsonElement.getAsJsonArray());
+            return jsonElement.getAsJsonArray();
         } else if (jsonElement.isJsonObject()) {
-            return jsonObjectToMap(jsonElement.getAsJsonObject());
+            return jsonElement.getAsJsonObject();
         } else {
             return null; // Unsupported JSON element type
         }
-    }
-
-    private static Map<String, Object> jsonObjectToMap(JsonObject jsonObject) {
-        Map<String, Object> map = new HashMap<>();
-        for (Map.Entry<String, JsonElement> entry : jsonObject.entrySet()) {
-            map.put(entry.getKey(), convertFromJsonElement(entry.getValue()));
-        }
-        return map;
-    }
-
-    private static List<Object> jsonArrayToList(JsonArray jsonArray) {
-        Type listType = new TypeToken<List<Object>>() {
-        }.getType();
-        return new Gson().fromJson(jsonArray, listType);
     }
 }

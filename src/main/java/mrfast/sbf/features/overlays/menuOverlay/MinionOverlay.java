@@ -34,10 +34,10 @@ import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class MinionOverlay {
-    HashMap<String,HashMap> minions = new HashMap<>();
+    JsonObject minions = new JsonObject();
     @SubscribeEvent
     public void onProfileSwap(ProfileSwapEvent event) {
-        minions = (HashMap<String,HashMap>) DataManager.getProfileDataDefault("minions", new JsonObject());
+        minions = (JsonObject) DataManager.getProfileDataDefault("minions", new JsonObject());
     }
     @SubscribeEvent
     public void onDrawContainerTitle(TitleDrawnEvent event) {
@@ -81,21 +81,21 @@ public class MinionOverlay {
                 if(generating != null && ItemUtils.getRarity(generating) == ItemRarity.COMMON) {
                     String identifier = PricingData.getIdentifier(generating);
                     String[] lines;
-                    if(identifier==null && minions.containsKey(closestMinion.getPosition().toString())) {
-                        identifier = (String) minions.get(closestMinion.getPosition().toString()).get("generating");
+                    if(identifier==null && minions.has(closestMinion.getPosition().toString())) {
+                        identifier = minions.get(closestMinion.getPosition().toString()).getAsJsonObject().get("generating").getAsString();
                     }
                     if (identifier != null) {
                         Double sellPrice = PricingData.bazaarPrices.get(identifier);
                         if(sellPrice != null) {
                             Double perHour = Math.floor(((double) 3600 /secondsPerAction)*sellPrice);
                             String duration = "Unknown";
-                            HashMap<String,Object> minion = new HashMap<>();
-                            if(minions.containsKey(closestMinion.getPosition().toString())) {
-                                minion = minions.get(closestMinion.getPosition().toString());
+                            JsonObject minion = new JsonObject();
+                            if(minions.has(closestMinion.getPosition().toString())) {
+                                minion = minions.get(closestMinion.getPosition().toString()).getAsJsonObject();
                             }
                             long lastCollected = System.currentTimeMillis();
-                            if(minion.containsKey("lastCollected")) {
-                                lastCollected = (long) minion.get("lastCollected");
+                            if(minion.has("lastCollected")) {
+                                lastCollected = minion.get("lastCollected").getAsLong();
                             }
                             if(closestMinion != null) {
                                 long timeElapsed = (System.currentTimeMillis()-lastCollected)/1000L;
@@ -118,10 +118,10 @@ public class MinionOverlay {
                                     ChatFormatting.WHITE + " • Total Value: " + ChatFormatting.GOLD + Utils.shortenNumber(totalValue),
                                     ChatFormatting.WHITE + " • Last Collected: " + ChatFormatting.AQUA + duration
                             };
-                            minion.put("generating",identifier);
-                            minion.put("lastCollected",lastCollected);
+                            minion.addProperty("generating",identifier);
+                            minion.addProperty("lastCollected",lastCollected);
 
-                            minions.put(closestMinion.getPosition().toString(), minion);
+                            minions.add(closestMinion.getPosition().toString(), minion);
                             DataManager.saveProfileData("minions",minions);
                         } else {
                             lines = new String[]{
@@ -158,8 +158,8 @@ public class MinionOverlay {
                         String nameOfItem = Utils.cleanColor(event.slot.getStack().getDisplayName());
                         if(nameOfItem.contains("Collect All") || isSlotFromMinion(event.slot.slotNumber)) {
                             if(closestMinion!=null) {
-                                if(minions.containsKey(closestMinion.getPosition().toString())) {
-                                    minions.get(closestMinion.getPosition().toString()).put("lastCollected",System.currentTimeMillis());
+                                if(minions.has(closestMinion.getPosition().toString())) {
+                                    minions.get(closestMinion.getPosition().toString()).getAsJsonObject().addProperty("lastCollected",System.currentTimeMillis());
                                     DataManager.saveProfileData("minions",minions);
                                 }
                             }
@@ -182,9 +182,9 @@ public class MinionOverlay {
             for(Entity e : Utils.GetMC().theWorld.loadedEntityList){
                 if(e instanceof EntityArmorStand) {
                     if(isMinion((EntityArmorStand) e)) {
-                        if(SkyblockFeatures.config.minionLastCollected && minions.containsKey(e.getPosition().toString()) && Utils.GetMC().thePlayer.getDistanceToEntity(e)<8) {
-                            HashMap minion = minions.get(e.getPosition().toString());
-                            long timeElapsed = (System.currentTimeMillis()-((long) minion.get("lastCollected")))/1000L;
+                        if(SkyblockFeatures.config.minionLastCollected && minions.has(e.getPosition().toString()) && Utils.GetMC().thePlayer.getDistanceToEntity(e)<8) {
+                            JsonObject minion = minions.get(e.getPosition().toString()).getAsJsonObject();
+                            long timeElapsed = (System.currentTimeMillis()- minion.get("lastCollected").getAsLong())/1000L;
                             String duration = Utils.secondsToTime(timeElapsed);
                             RenderUtil.draw3DStringWithShadow(e.getPositionVector().add(new Vec3(0,1.5,0)),ChatFormatting.YELLOW+"Last Collected: "+ChatFormatting.AQUA+duration,event.partialTicks);
                         }
