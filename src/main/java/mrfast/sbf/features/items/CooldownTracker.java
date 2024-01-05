@@ -164,6 +164,7 @@ public class CooldownTracker {
     private boolean isMage() {
         if(TabListUtils.getTabEntries()==null) return false;
         for (NetworkPlayerInfo tabEntry : TabListUtils.getTabEntries()) {
+            if(tabEntry==null||tabEntry.getDisplayName()==null) continue;
             if(tabEntry.getDisplayName().getUnformattedText().contains(Utils.GetMC().thePlayer.getName())) {
                 return true;
             }
