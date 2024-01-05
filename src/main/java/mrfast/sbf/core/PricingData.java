@@ -69,7 +69,7 @@ public class PricingData {
             case "PET":
                 if (extraAttr.hasKey("petInfo")) {
                     JsonObject petInfo = gson.fromJson(extraAttr.getString("petInfo"), JsonObject.class);
-                    if (petInfo.has("type") && petInfo.has("tier")) {
+                    if (petInfo !=null && petInfo.has("type") && petInfo.has("tier")) {
                         id = petInfo.get("type").getAsString() + ";" + getTier(petInfo.get("tier").getAsString());
                     }
                 }
