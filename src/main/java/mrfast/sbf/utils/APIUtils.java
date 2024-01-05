@@ -335,7 +335,7 @@ public class APIUtils {
 
     public static Socket socket;
     static boolean internalClose = false;
-
+    public static boolean socketConnected = true;
     public static void setupSocket() {
         System.out.println("Attempting connection to SBF websocket!");
         try {
@@ -347,6 +347,7 @@ public class APIUtils {
             socket = new Socket("ws://app.mrfast-developer.com:1512");
             socket.on(Socket.EVENT_OPEN, args -> {
                 System.out.println("Opened connection to SBF websocket!");
+                socketConnected = true;
                 internalClose = false;
             });
 
@@ -362,6 +363,7 @@ public class APIUtils {
                 if(internalClose) return;
                 System.out.println("Lost connection to SBF websocket! Retrying in 5 seconds..");
                 Utils.setTimeout(APIUtils::setupSocket, 5000);
+                socketConnected = false;
             });
 
             socket.open();
