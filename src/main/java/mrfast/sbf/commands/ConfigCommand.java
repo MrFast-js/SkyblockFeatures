@@ -1,12 +1,7 @@
 package mrfast.sbf.commands;
 
-import java.util.List;
-import java.util.Locale;
-import java.util.Objects;
-
 import com.google.common.collect.Lists;
 import com.mojang.realmsclient.gui.ChatFormatting;
-
 import mrfast.sbf.SkyblockFeatures;
 import mrfast.sbf.core.VersionManager;
 import mrfast.sbf.gui.ConfigGui;
@@ -21,6 +16,10 @@ import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.ChatComponentText;
+
+import java.util.List;
+import java.util.Locale;
+import java.util.Objects;
 
 public class ConfigCommand extends CommandBase {
 
@@ -53,7 +52,6 @@ public class ConfigCommand extends CommandBase {
     public void processCommand(ICommandSender sender, String[] args) throws CommandException {
         EntityPlayerSP player = (EntityPlayerSP) sender;
         if (args.length == 0) {
-            // GuiUtil.open(Objects.requireNonNull(skyblockfeatures.config.gui()));
             GuiUtils.openGui(new ConfigGui(true));
             return;
         }
