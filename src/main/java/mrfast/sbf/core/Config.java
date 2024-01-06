@@ -636,6 +636,24 @@ public class Config extends ConfigManager {
 
     @Property(
             type = PropertyType.TOGGLE,
+            name = "Health Bar",
+            description = "Moveable Health Bar that adjusts depending on absorption and damage taken",
+            category = "General",
+            subcategory = "Health & Mana Bars"
+    )
+    public boolean HealthBar = false;
+
+    @Property(
+            type = PropertyType.TOGGLE,
+            name = "Mana Bar",
+            description = "Moveable Mana Bar that adjusts depending on abilities and overflow mana",
+            category = "General",
+            subcategory = "Health & Mana Bars"
+    )
+    public boolean ManaBar = false;
+
+    @Property(
+            type = PropertyType.TOGGLE,
             name = "Health Display",
             description = "Movable health display",
             category = "General",

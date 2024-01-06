@@ -9,7 +9,6 @@ import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
-import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class DamageOverlays {
@@ -18,7 +17,7 @@ public class DamageOverlays {
         if (event.type == RenderGameOverlayEvent.ElementType.HEALTH && Utils.inSkyblock && SkyblockFeatures.config.damagetint && Utils.GetMC().thePlayer!=null) {
             try {
                 GlStateManager.pushMatrix();
-                renderTint(Utils.Health, new ScaledResolution(Utils.GetMC())); 
+                renderTint(Utils.health, new ScaledResolution(Utils.GetMC()));
                 GlStateManager.popMatrix();
             } catch (Exception e) {
                 // TODO: handle exception

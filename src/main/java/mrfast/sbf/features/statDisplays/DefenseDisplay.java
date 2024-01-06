@@ -25,11 +25,11 @@ public class DefenseDisplay {
 
         @Override
         public void drawElement() {
-            GuiUtils.drawText("§a"+Utils.Defense, 0, 0, GuiUtils.TextStyle.BLACK_OUTLINE);
+            GuiUtils.drawText("§a"+Utils.nf.format(Utils.Defense), 0, 0, GuiUtils.TextStyle.BLACK_OUTLINE);
         }
         @Override
         public void drawElementExample() {
-            display="§a"+Utils.Defense;
+            display="§a"+Utils.nf.format(Utils.Defense);
             GuiUtils.drawText(display, 0, 0, GuiUtils.TextStyle.BLACK_OUTLINE);
         }
 

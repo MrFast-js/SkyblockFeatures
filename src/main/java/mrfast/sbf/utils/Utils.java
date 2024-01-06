@@ -1,6 +1,5 @@
 package mrfast.sbf.utils;
 
-import java.awt.*;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -29,11 +28,11 @@ public class Utils {
 
     public static boolean inSkyblock = false;
     public static boolean inDungeons = false;
-    public static int Health;
-    public static int maxHealth;
-
-    public static int Mana;
-    public static int maxMana;
+    public static int health=0;
+    public static int maxHealth=0;
+    public static int mana=0;
+    public static int maxMana=0;
+    public static int overflowMana=0;
 
     public static int Defense;
     public static final NumberFormat nf = NumberFormat.getInstance(Locale.US);
