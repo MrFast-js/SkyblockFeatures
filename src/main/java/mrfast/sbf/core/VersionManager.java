@@ -98,6 +98,11 @@ public class VersionManager {
         } else {
             num1+=1;
         }
+
+        if(num1==12912) {
+            return 129.7;
+        }
+
         return num1;
     }
 
