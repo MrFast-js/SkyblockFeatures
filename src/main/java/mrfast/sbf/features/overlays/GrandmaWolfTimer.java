@@ -4,7 +4,9 @@ import java.util.List;
 import com.mojang.realmsclient.gui.ChatFormatting;
 
 import mrfast.sbf.SkyblockFeatures;
+import mrfast.sbf.core.DataManager;
 import mrfast.sbf.events.GuiContainerEvent;
+import mrfast.sbf.events.ProfileSwapEvent;
 import mrfast.sbf.events.SkyblockMobEvent;
 import mrfast.sbf.gui.components.Point;
 import mrfast.sbf.gui.components.UIElement;
@@ -23,13 +25,25 @@ import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
 public class GrandmaWolfTimer {
     public static Minecraft mc = Utils.GetMC();
     public static double SecondsRemaining = 0;
-    public static double fiveComboSeconds = 0;
-    public double TenComboSeconds = 0;
-    public double FifteenComboSeconds = 0;
-    public double TwentyComboSeconds = 0;
-    public double TwentyFiveComboSeconds = 0;
-    public double ThirtyComboSeconds = 0;
-    public double currentCombo = 0;
+    public static double FiveComboSeconds = 0;
+    public static double TenComboSeconds = 0;
+    public static double FifteenComboSeconds = 0;
+    public static double TwentyComboSeconds = 0;
+    public static double TwentyFiveComboSeconds = 0;
+    public static double ThirtyComboSeconds = 0;
+    public static double currentCombo = 0;
+
+    @SubscribeEvent
+    public void onProfileSwap(ProfileSwapEvent event) {
+        FiveComboSeconds = (double) DataManager.getProfileDataDefault("grandmaWolfTimes.FiveComboSeconds", 0d);
+        TenComboSeconds = (double) DataManager.getProfileDataDefault("grandmaWolfTimes.TenComboSeconds", 0d);
+        FifteenComboSeconds = (double) DataManager.getProfileDataDefault("grandmaWolfTimes.FifteenComboSeconds", 0d);
+        TwentyComboSeconds = (double) DataManager.getProfileDataDefault("grandmaWolfTimes.TwentyComboSeconds", 0d);
+        TwentyFiveComboSeconds = (double) DataManager.getProfileDataDefault("grandmaWolfTimes.TwentyFiveComboSeconds", 0d);
+        ThirtyComboSeconds = (double) DataManager.getProfileDataDefault("grandmaWolfTimes.ThirtyComboSeconds", 0d);
+    }
+
+
     @SubscribeEvent
     public void onEntityDeath(SkyblockMobEvent.Death event) {
         if(!SkyblockFeatures.config.GrandmaWolfTimer) return;
@@ -74,18 +88,16 @@ public class GrandmaWolfTimer {
                                 TenComboSeconds=secondsDelay;
                             }
                             else if(raw.contains("5 Combo")) {
-                                fiveComboSeconds=secondsDelay;
+                                FiveComboSeconds =secondsDelay;
                             }
                         }
-                        if(((int) (fiveComboSeconds*10))!=SkyblockFeatures.config.gMaWolf5Second) {
-                            Utils.sendMessage(ChatFormatting.GREEN+"Updated Grandma Wolf combo times");
-                        }
-                        SkyblockFeatures.config.gMaWolf5Second=(int) (fiveComboSeconds*10);
-                        SkyblockFeatures.config.gMaWolf10Second=(int) (TenComboSeconds*10);
-                        SkyblockFeatures.config.gMaWolf15Second=(int) (FifteenComboSeconds*10);
-                        SkyblockFeatures.config.gMaWolf20Second=(int) (TwentyComboSeconds*10);
-                        SkyblockFeatures.config.gMaWolf25Second=(int) (TwentyFiveComboSeconds*10);
-                        SkyblockFeatures.config.gMaWolf30Second=(int) (ThirtyComboSeconds*10);
+
+                        DataManager.saveProfileData("grandmaWolfTimes.FiveComboSeconds",FiveComboSeconds);
+                        DataManager.saveProfileData("grandmaWolfTimes.TenComboSeconds",TenComboSeconds);
+                        DataManager.saveProfileData("grandmaWolfTimes.FifteenComboSeconds",FifteenComboSeconds);
+                        DataManager.saveProfileData("grandmaWolfTimes.TwentyComboSeconds",TwentyComboSeconds);
+                        DataManager.saveProfileData("grandmaWolfTimes.TwentyFiveComboSeconds",TwentyFiveComboSeconds);
+                        DataManager.saveProfileData("grandmaWolfTimes.ThirtyComboSeconds",ThirtyComboSeconds);
                     }
                 }
             }
@@ -94,15 +106,6 @@ public class GrandmaWolfTimer {
     @SubscribeEvent
     public void onTick(ClientTickEvent event) {
         if(!SkyblockFeatures.config.GrandmaWolfTimer || Utils.GetMC().theWorld==null) return;
-
-        if(fiveComboSeconds==0 && SkyblockFeatures.config.gMaWolf5Second!=0) {
-            fiveComboSeconds= (double) SkyblockFeatures.config.gMaWolf5Second /10;
-            TenComboSeconds= (double) SkyblockFeatures.config.gMaWolf10Second /10;
-            FifteenComboSeconds= (double) SkyblockFeatures.config.gMaWolf15Second /10;
-            TwentyComboSeconds= (double) SkyblockFeatures.config.gMaWolf20Second /10;
-            TwentyFiveComboSeconds= (double) SkyblockFeatures.config.gMaWolf25Second /10;
-            ThirtyComboSeconds= (double) SkyblockFeatures.config.gMaWolf30Second /10;
-        }
         
         if(SecondsRemaining>0.05) SecondsRemaining-=0.05/2;
     }
@@ -117,8 +120,8 @@ public class GrandmaWolfTimer {
             currentCombo=0;
         }
         if(raw.contains("+5 Kill Combo")) {
-            SecondsRemaining=fiveComboSeconds;
-            currentCombo = fiveComboSeconds;
+            SecondsRemaining= FiveComboSeconds;
+            currentCombo = FiveComboSeconds;
         }
         if(raw.contains("+10 Kill Combo")) {
             SecondsRemaining=TenComboSeconds;
@@ -158,7 +161,7 @@ public class GrandmaWolfTimer {
             String time = (remaining+"").length()==3?remaining+"0":remaining+"";
             if(SecondsRemaining>0.05) {
                 GuiUtils.drawText(ChatFormatting.GREEN+time+"s",0,0, GuiUtils.TextStyle.BLACK_OUTLINE);
-            }  else if(fiveComboSeconds==0) {
+            }  else if(FiveComboSeconds ==0) {
                 GuiUtils.drawText(ChatFormatting.RED+"Open Pets Menu",0,0, GuiUtils.TextStyle.BLACK_OUTLINE);
             }
         }

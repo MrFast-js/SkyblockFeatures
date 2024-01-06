@@ -45,7 +45,6 @@ public class QuiverOverlay {
     @SubscribeEvent
     public void onWorldLoad(WorldEvent.Load event) {
         readArrowFromSwapper = false;
-        loadedData = false;
         sentLowArrows = false;
     }
 
