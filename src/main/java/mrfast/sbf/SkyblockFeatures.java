@@ -203,16 +203,25 @@ public class SkyblockFeatures {
             }
         }
 
-        SkyblockFeatures.config.timeStartedUp++;
-        SkyblockFeatures.config.aucFlipperEnabled = false;
 
-        if (!Objects.equals(SkyblockFeatures.config.currentGameVersion, SkyblockFeatures.VERSION)) {
-            SkyblockFeatures.config.currentGameVersion = SkyblockFeatures.VERSION;
-            sendUpdateChangelogs = true;
+        int timestarted = 0;
+        if(DataManager.dataJson.has("timesStartedUp")) {
+            timestarted = (int) DataManager.getData("timesStartedUp");
         }
 
+        DataManager.saveData("timesStartedUp",timestarted+1);
+        System.out.println("You have started Skyblock Features up " + timestarted + " times!");
+
+        if(DataManager.dataJson.has("lastStartedVersion")) {
+            if (!((String) DataManager.getData("lastStartedVersion")).equals(SkyblockFeatures.VERSION)) {
+                sendUpdateChangelogs = true;
+            }
+        }
+        DataManager.saveData("lastStartedVersion",SkyblockFeatures.VERSION);
+
+
+        SkyblockFeatures.config.aucFlipperEnabled = false;
         ConfigManager.saveConfig();
-        System.out.println("You have started Skyblock Features up " + SkyblockFeatures.config.timeStartedUp + " times!");
     }
 
     /*
