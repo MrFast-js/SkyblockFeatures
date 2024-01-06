@@ -17,7 +17,7 @@ public class EffectiveHealthDisplay {
     }
 
     public static int getEffectiveHealth() {
-        return Math.round(Utils.Health * (1f+ (Utils.Defense / 100f) ));
+        return Math.round(Utils.health * (1f+ (Utils.Defense / 100f) ));
     }
     public static class EffectiveHealthDisplayGUI extends UIElement {
         public EffectiveHealthDisplayGUI() {
@@ -27,11 +27,11 @@ public class EffectiveHealthDisplay {
 
         @Override
         public void drawElement() {
-            GuiUtils.drawText("§2"+getEffectiveHealth(), 0, 0, GuiUtils.TextStyle.BLACK_OUTLINE);
+            GuiUtils.drawText("§2"+Utils.nf.format(getEffectiveHealth()), 0, 0, GuiUtils.TextStyle.BLACK_OUTLINE);
         }
         @Override
         public void drawElementExample() {
-            GuiUtils.drawText("§2"+getEffectiveHealth(), 0, 0, GuiUtils.TextStyle.BLACK_OUTLINE);
+            GuiUtils.drawText("§2"+Utils.nf.format(getEffectiveHealth()), 0, 0, GuiUtils.TextStyle.BLACK_OUTLINE);
         }
 
         @Override

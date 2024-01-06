@@ -5,7 +5,6 @@ import mrfast.sbf.gui.components.Point;
 import mrfast.sbf.gui.components.UIElement;
 import mrfast.sbf.utils.GuiUtils;
 import mrfast.sbf.utils.Utils;
-import net.minecraft.client.Minecraft;
 
 
 public class ManaDisplay {
@@ -14,7 +13,7 @@ public class ManaDisplay {
         new ManaDisplayGUI();
     }
 
-    static String display = Utils.Mana+"/"+Utils.maxMana;
+    static String display = Utils.mana +"/"+Utils.maxMana;
     public static class ManaDisplayGUI extends UIElement {
         public ManaDisplayGUI() {
             super("Mana Display", new Point(0.47864583f, 0.80324066f));
@@ -23,11 +22,11 @@ public class ManaDisplay {
 
         @Override
         public void drawElement() {
-            GuiUtils.drawText("§9"+Utils.Mana+"/"+Utils.maxMana, 0, 0, GuiUtils.TextStyle.BLACK_OUTLINE);
+            GuiUtils.drawText("§9"+Utils.nf.format(Utils.mana) +"/"+Utils.nf.format(Utils.maxMana), 0, 0, GuiUtils.TextStyle.BLACK_OUTLINE);
         }
         @Override
         public void drawElementExample() {
-            display="§9"+Utils.Mana+"/"+Utils.maxMana;
+            display="§9"+Utils.nf.format(Utils.mana) +"/"+Utils.nf.format(Utils.maxMana);
             GuiUtils.drawText(display, 0, 0, GuiUtils.TextStyle.BLACK_OUTLINE);
         }
 

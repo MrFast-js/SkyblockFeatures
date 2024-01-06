@@ -16,7 +16,7 @@ public class HealthDisplay {
         new HealthDisplayGUI();
     }
 
-    static String display = Utils.Health+"/"+Utils.maxHealth;
+    static String display = Utils.health +"/"+Utils.maxHealth;
     public static class HealthDisplayGUI extends UIElement {
         public HealthDisplayGUI() {
             super("Health Display", new Point(0.39878336f, 0.8029036f));
@@ -25,11 +25,16 @@ public class HealthDisplay {
 
         @Override
         public void drawElement() {
-            GuiUtils.drawText("§c"+Utils.Health+"/"+Utils.maxHealth, 0, 0, GuiUtils.TextStyle.BLACK_OUTLINE);
+            display = "§c"+Utils.nf.format(Utils.health)+"/"+Utils.nf.format(Utils.maxHealth);
+            if(Utils.health >Utils.maxHealth) display="§6"+Utils.nf.format(Utils.health)+"§c/"+Utils.nf.format(Utils.maxHealth);
+
+            GuiUtils.drawText(display, 0, 0, GuiUtils.TextStyle.BLACK_OUTLINE);
         }
         @Override
         public void drawElementExample() {
-            display = "§c"+Utils.Health+"/"+Utils.maxHealth;
+            display = "§c"+Utils.nf.format(Utils.health)+"/"+Utils.nf.format(Utils.maxHealth);
+            if(Utils.health >Utils.maxHealth) display="§6"+Utils.nf.format(Utils.health)+"§c/"+Utils.nf.format(Utils.maxHealth);
+
             GuiUtils.drawText(display, 0, 0, GuiUtils.TextStyle.BLACK_OUTLINE);
         }
 
