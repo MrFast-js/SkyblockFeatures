@@ -17,7 +17,7 @@ import java.util.regex.Pattern;
 
 public class DataManager {
     static File dataFile = new File(SkyblockFeatures.modDir, "data.json");
-    static JsonObject dataJson = new JsonObject();
+    public static JsonObject dataJson = new JsonObject();
     static String currentProfileId;
 
     static {
@@ -25,13 +25,13 @@ public class DataManager {
         if (dataJson.has("currentProfileId")) {
             currentProfileId = dataJson.get("currentProfileId").getAsString();
         }
+        MinecraftForge.EVENT_BUS.post(new ProfileSwapEvent());
     }
 
     public static void loadDataFromFile() {
         try {
             String jsonContent = new String(Files.readAllBytes(Paths.get(dataFile.getPath())));
             dataJson = new JsonParser().parse(jsonContent).getAsJsonObject();
-            System.out.println("Loaded Profile From Data " + dataJson.toString());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -54,22 +54,28 @@ public class DataManager {
         }
     }
 
+    public static void saveData(String dataName, Object dataValue) {
+        dataJson.add(dataName,convertToJsonObject(dataValue));
+        saveDataToFile();
+    }
 
+    public static Object getData(String dataName) {
+        return convertFromJsonElement(dataJson.get(dataName));
+    }
+
+
+    // Works with datanames such as "subset1.list.option2" or even just "option2"
     public static void saveProfileData(String dataName, Object dataValue) {
         if (currentProfileId == null) return;
-        // Get the JSON object for the current profile ID
         JsonObject profileJson = dataJson.getAsJsonObject(currentProfileId);
 
-        // If the profileJson is null, create a new JsonObject for the profile
         if (profileJson == null) {
             profileJson = new JsonObject();
             dataJson.add(currentProfileId, profileJson);
         }
 
-        // Split the dataName into parts based on the dot
         String[] parts = dataName.split("\\.");
 
-        // Traverse through the parts and create nested JSON objects as needed
         for (int i = 0; i < parts.length - 1; i++) {
             if (!profileJson.has(parts[i]) || !profileJson.get(parts[i]).isJsonObject()) {
                 profileJson.add(parts[i], new JsonObject());
@@ -77,7 +83,6 @@ public class DataManager {
             profileJson = profileJson.getAsJsonObject(parts[i]);
         }
 
-        // Add the final dataValue to the last nested JSON object
         profileJson.add(parts[parts.length - 1], convertToJsonObject(dataValue));
         saveDataToFile();
     }
@@ -113,33 +118,28 @@ public class DataManager {
 
 
     public static Object getProfileData(String dataName) {
-        // Get the JSON object for the current profile ID
         JsonObject profileJson = dataJson.getAsJsonObject(currentProfileId);
 
-        // If the profileJson is null, return null
         if (profileJson == null) {
             return null;
         }
 
-        // Split the dataName into parts based on the dot
         String[] parts = dataName.split("\\.");
 
-        // Traverse through the parts to find the nested JSON object
         for (int i = 0; i < parts.length - 1; i++) {
             JsonElement element = profileJson.get(parts[i]);
             if (element != null && element.isJsonObject()) {
                 profileJson = element.getAsJsonObject();
             } else {
-                return null; // Key doesn't exist or is not a JsonObject
+                return null;
             }
         }
 
-        // Get the final dataValue from the last nested JSON object
         JsonElement lastElement = profileJson.get(parts[parts.length - 1]);
         if (lastElement != null) {
             return convertFromJsonElement(lastElement);
         } else {
-            return null; // Key doesn't exist
+            return null;
         }
     }
 
