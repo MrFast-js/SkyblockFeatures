@@ -95,6 +95,8 @@ public class VersionManager {
             int num2 = Integer.parseInt(part2.replaceAll("[^0-9]", ""));
 
             return num1 + ((double) num2 / 100);
+        } else {
+            num1+=1;
         }
         return num1;
     }
