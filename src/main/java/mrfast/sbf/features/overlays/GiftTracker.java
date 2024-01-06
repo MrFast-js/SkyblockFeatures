@@ -1,11 +1,14 @@
 package mrfast.sbf.features.overlays;
 
+import com.google.gson.JsonObject;
 import com.mojang.realmsclient.gui.ChatFormatting;
 import mrfast.sbf.SkyblockFeatures;
 import mrfast.sbf.core.ConfigManager;
+import mrfast.sbf.core.DataManager;
 import mrfast.sbf.events.CheckRenderEntityEvent;
 import mrfast.sbf.events.GuiContainerEvent;
 import mrfast.sbf.events.PacketEvent;
+import mrfast.sbf.events.ProfileSwapEvent;
 import mrfast.sbf.gui.components.Point;
 import mrfast.sbf.gui.components.UIElement;
 import mrfast.sbf.utils.GuiUtils;
@@ -40,6 +43,13 @@ import java.util.Map;
 
 public class GiftTracker {
     public static ArrayList<Entity> saintJerryGifts = new ArrayList<Entity>();
+    static int uniqueGiftsGiven = 0;
+    static int winterYear = 0;
+    @SubscribeEvent
+    public void onProfileSwap(ProfileSwapEvent event) {
+        uniqueGiftsGiven = (int) DataManager.getProfileDataDefault("winter.uniqueGiftsGiven", 0);
+        winterYear = (int) DataManager.getProfileDataDefault("winter.winterYear", 0);
+    }
 
     @SubscribeEvent
     public void onAttack(AttackEntityEvent event) {
@@ -64,12 +74,15 @@ public class GiftTracker {
     public void onWorldChange(WorldEvent.Load event) {
         gifts.clear();
         // Reset unique gifts given next time the event comes next year
-        if (SkyblockFeatures.config.winterYear == 0) {
-            SkyblockFeatures.config.winterYear = Year.now().getValue();
+        if (winterYear == 0) {
+            winterYear = Year.now().getValue();
+            DataManager.saveProfileData("winter.winterYear",winterYear);
         } else {
-            if (Year.now().getValue() != SkyblockFeatures.config.winterYear) {
-                SkyblockFeatures.config.uniqueGiftsGiven = 0;
-                SkyblockFeatures.config.winterYear = Year.now().getValue();
+            if (Year.now().getValue() != winterYear) {
+                uniqueGiftsGiven = 0;
+                DataManager.saveProfileData("winter.uniqueGiftsGiven",uniqueGiftsGiven);
+                winterYear = Year.now().getValue();
+                DataManager.saveProfileData("winter.winterYear",winterYear);
             }
         }
     }
@@ -99,8 +112,8 @@ public class GiftTracker {
 
         String clean = Utils.cleanColor(event.message.getUnformattedText());
         if (clean.startsWith("+1 Unique Gift given!")) {
-            SkyblockFeatures.config.uniqueGiftsGiven++;
-            ConfigManager.saveConfig();
+            uniqueGiftsGiven++;
+            DataManager.saveProfileData("winter.uniqueGiftsGiven",uniqueGiftsGiven);
         }
     }
 
@@ -114,9 +127,9 @@ public class GiftTracker {
                 for (String line : ItemUtils.getItemLore(giftStack)) {
                     line = Utils.cleanColor(line);
                     if (line.startsWith("Unique Players Gifted:")) {
-                        int gifts = Integer.parseInt(line.replaceAll("[^0-9]", ""));
-                        SkyblockFeatures.config.uniqueGiftsGiven = gifts;
-                        ConfigManager.saveConfig();
+                        uniqueGiftsGiven = Integer.parseInt(line.replaceAll("[^0-9]", ""));
+                        DataManager.saveProfileData("winter.uniqueGiftsGiven",uniqueGiftsGiven);
+
                         break;
                     }
                 }
@@ -327,10 +340,10 @@ public class GiftTracker {
 
         @Override
         public void drawElement() {
-            int milestone = getGiftMilestone(SkyblockFeatures.config.uniqueGiftsGiven);
+            int milestone = getGiftMilestone(uniqueGiftsGiven);
             String[] lines = {
                     "§e§lGifting Info",
-                    " §f" + SkyblockFeatures.config.uniqueGiftsGiven + "§7/600 §6Unique Gifts ",
+                    " §f" + uniqueGiftsGiven + "§7/600 §6Unique Gifts ",
                     " §aMilestone §b" + milestone,
             };
             GuiUtils.drawTextLines(Arrays.asList(lines), 0, 0, GuiUtils.TextStyle.DROP_SHADOW);
@@ -338,10 +351,10 @@ public class GiftTracker {
 
         @Override
         public void drawElementExample() {
-            int milestone = getGiftMilestone(SkyblockFeatures.config.uniqueGiftsGiven);
+            int milestone = getGiftMilestone(uniqueGiftsGiven);
             String[] lines = {
                     "§e§lGifting Info",
-                    " §f" + SkyblockFeatures.config.uniqueGiftsGiven + "§7/600 §6Unique Gifts",
+                    " §f" + uniqueGiftsGiven + "§7/600 §6Unique Gifts",
                     " §aMilestone §b" + milestone,
             };
             GuiUtils.drawTextLines(Arrays.asList(lines), 0, 0, GuiUtils.TextStyle.DROP_SHADOW);
