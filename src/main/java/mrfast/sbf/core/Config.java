@@ -7,25 +7,6 @@ import org.lwjgl.input.Keyboard;
 import java.awt.*;
 
 public class Config extends ConfigManager {
-    @Property(
-            type = PropertyType.NUMBER,
-            name = "Times Game Restarted",
-            description = "",
-            category = "General",
-            subcategory = "Hidden",
-            hidden = true
-    )
-    public int timeStartedUp = 0;
-
-    @Property(
-            type = PropertyType.TEXT,
-            name = "Current Game Version",
-            description = "",
-            category = "General",
-            subcategory = "Hidden",
-            hidden = true
-    )
-    public String currentGameVersion = "0";
 
     @Property(
             type = PropertyType.TOGGLE,
@@ -60,16 +41,6 @@ public class Config extends ConfigManager {
             subcategory = "Mod"
     )
     public boolean riskyFeatures = true;
-
-    @Property(
-            type = PropertyType.TOGGLE,
-            name = "First Launch",
-            description = "Used to see if the user is a new user of skyblockfeatures.",
-            category = "General",
-            subcategory = "Other",
-            hidden = true
-    )
-    public boolean firstLaunch = true;
 
     @Property(
             type = PropertyType.TOGGLE,
@@ -394,25 +365,6 @@ public class Config extends ConfigManager {
             subcategory = "Jerrys Workshop"
     )
     public boolean showGiftingInfo = false;
-
-    @Property(
-            type = PropertyType.NUMBER,
-            name = "Unique Gifts Given",
-            description = "",
-            category = "§1§rEvents",
-            subcategory = "Jerrys Workshop",
-            hidden = true
-    )
-    public int uniqueGiftsGiven = 0;
-    @Property(
-            type = PropertyType.NUMBER,
-            name = "December Hypixel Winter Events",
-            description = "Tracks the year that the event was happening last, and if its different than this year than reset",
-            category = "§1§rEvents",
-            subcategory = "Jerrys Workshop",
-            hidden = true
-    )
-    public int winterYear = 0;
 
     @Property(
             type = PropertyType.TOGGLE,
@@ -875,7 +827,7 @@ public class Config extends ConfigManager {
             subcategory = "Highlights",
             parentName = "Fairy Soul Helper"
     )
-    public Color fairySoulUnFound = Color.magenta;
+    public Color fairySoulUnfound = Color.magenta;
     @Property(
             type = PropertyType.COLOR,
             name = "§1§rCollected Color",
@@ -888,6 +840,16 @@ public class Config extends ConfigManager {
 
     @Property(
             type = PropertyType.TOGGLE,
+            name = "Highlight Odanta",
+            description = "Highlights nearby odanta's in the Rift",
+            category = "The Rift",
+            subcategory = "General",
+            isParent = true
+    )
+    public boolean highlightOdanta = false;
+
+    @Property(
+            type = PropertyType.TOGGLE,
             name = "Rift Enigma Soul Helper",
             description = "Highlights nearby Enigma souls using waypoints in the Rift",
             category = "The Rift",
@@ -897,16 +859,16 @@ public class Config extends ConfigManager {
     public boolean riftSouls = false;
     @Property(
             type = PropertyType.COLOR,
-            name = "Uncollected Color",
+            name = "Enigma Uncollected Color",
             description = "",
             category = "The Rift",
             subcategory = "General",
             parentName = "Rift Enigma Soul Helper"
     )
-    public Color riftSoulUnFound = Color.magenta;
+    public Color riftSoulUnfound = Color.magenta;
     @Property(
             type = PropertyType.COLOR,
-            name = "Collected Color",
+            name = "Enigma Collected Color",
             description = "",
             category = "The Rift",
             subcategory = "General",
@@ -2089,15 +2051,6 @@ public class Config extends ConfigManager {
 
     @Property(
             type = PropertyType.TOGGLE,
-            name = "Show Extra Profile Info",
-            description = "Shows a a players networth,discord,weight, and skill avg when you right click on someone",
-            category = "Miscellaneous",
-            subcategory = "Overlay"
-    )
-    public boolean extraProfileInfo = false;
-
-    @Property(
-            type = PropertyType.TOGGLE,
             name = "Highlight Auction Flips",
             description = "Highlights auctions that have a certain amount of profit or more.",
             category = "§1§rAuction house",
@@ -2409,66 +2362,6 @@ public class Config extends ConfigManager {
             hidden = true
     )
     public boolean toggleSprint = false;
-
-    @Property(
-            type = PropertyType.NUMBER,
-            name = "gMaWolf5Second",
-            description = "",
-            category = "General",
-            subcategory = "Item Fov",
-            hidden = true
-    )
-    public int gMaWolf5Second = 0;
-
-    @Property(
-            type = PropertyType.NUMBER,
-            name = "gMaWolf10Second",
-            description = "",
-            category = "General",
-            subcategory = "Item Fov",
-            hidden = true
-    )
-    public int gMaWolf10Second = 0;
-
-    @Property(
-            type = PropertyType.NUMBER,
-            name = "gMaWolf15Second",
-            description = "",
-            category = "General",
-            subcategory = "Item Fov",
-            hidden = true
-    )
-    public int gMaWolf15Second = 0;
-
-    @Property(
-            type = PropertyType.NUMBER,
-            name = "gMaWolf20Second",
-            description = "",
-            category = "General",
-            subcategory = "Item Fov",
-            hidden = true
-    )
-    public int gMaWolf20Second = 0;
-
-    @Property(
-            type = PropertyType.NUMBER,
-            name = "gMaWolf25Second",
-            description = "",
-            category = "General",
-            subcategory = "Item Fov",
-            hidden = true
-    )
-    public int gMaWolf25Second = 0;
-
-    @Property(
-            type = PropertyType.NUMBER,
-            name = "gMaWolf30Second",
-            description = "",
-            category = "General",
-            subcategory = "Item Fov",
-            hidden = true
-    )
-    public int gMaWolf30Second = 0;
 
     @Property(
             type = PropertyType.NUMBER,
