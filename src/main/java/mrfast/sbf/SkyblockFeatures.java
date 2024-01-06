@@ -8,17 +8,9 @@ import mrfast.sbf.events.*;
 import mrfast.sbf.features.dungeons.*;
 import mrfast.sbf.features.dungeons.solvers.*;
 import mrfast.sbf.features.dungeons.solvers.terminals.ClickInOrderSolver;
-import mrfast.sbf.features.events.JerryTimer;
-import mrfast.sbf.features.events.MayorJerry;
-import mrfast.sbf.features.events.MythologicalEvent;
-import mrfast.sbf.features.items.CooldownTracker;
-import mrfast.sbf.features.items.FireVeilTimer;
-import mrfast.sbf.features.items.HideGlass;
-import mrfast.sbf.features.items.ItemFeatures;
-import mrfast.sbf.features.mining.CommisionsTracker;
-import mrfast.sbf.features.mining.HighlightCobblestone;
-import mrfast.sbf.features.mining.MetalDetectorSolver;
-import mrfast.sbf.features.mining.MiningFeatures;
+import mrfast.sbf.features.events.*;
+import mrfast.sbf.features.items.*;
+import mrfast.sbf.features.mining.*;
 import mrfast.sbf.features.misc.*;
 import mrfast.sbf.features.overlays.*;
 import mrfast.sbf.features.overlays.maps.CrimsonMap;
@@ -27,6 +19,8 @@ import mrfast.sbf.features.overlays.maps.DwarvenMap;
 import mrfast.sbf.features.overlays.menuOverlay.*;
 import mrfast.sbf.features.render.*;
 import mrfast.sbf.features.statDisplays.*;
+import mrfast.sbf.features.statDisplays.bars.HealthBar;
+import mrfast.sbf.features.statDisplays.bars.ManaBar;
 import mrfast.sbf.features.termPractice.TerminalManager;
 import mrfast.sbf.features.trackers.*;
 import mrfast.sbf.gui.ConfigGui;
@@ -131,6 +125,7 @@ public class SkyblockFeatures {
                 new SecretDisplay(),
                 new CryptDisplay(),
                 new DefenseDisplay(),
+                new OverflowManaDisplay(),
                 new ActionBarListener(),
                 new CommisionsTracker(),
                 new FairySoulWaypoints(),
@@ -177,6 +172,8 @@ public class SkyblockFeatures {
                 new CrimsonMap(),
                 new EntityOutlineRenderer(),
                 new RiftFeatures(),
+                new HealthBar(),
+                new ManaBar(),
                 new FinalDestinationOverlay(),
                 new BlazeSolver(),
                 new ThreeWeirdosSolver(),

@@ -11,6 +11,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import java.awt.*;
 import java.io.*;
+import java.util.ConcurrentModificationException;
 import java.util.List;
 import java.io.*;
 import java.nio.file.*;
@@ -127,11 +128,15 @@ public class TrashHighlighter {
 
         if(SkyblockFeatures.config.highlightTrash && n != null) {
             boolean trash = false;
-            for (String s : trashList) {
-                if (n.contains(s)) {
-                    trash = true;
-                    break;
+            try {
+                for (String s : trashList) {
+                    if (n.contains(s)) {
+                        trash = true;
+                        break;
+                    }
                 }
+            } catch (ConcurrentModificationException ignored) {
+
             }
             if(trash) {
                 Gui.drawRect(x, y, x + 16, y + 1, new Color(255, 0, 0, 255).getRGB());

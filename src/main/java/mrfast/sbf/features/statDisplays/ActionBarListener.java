@@ -37,14 +37,16 @@ public class ActionBarListener {
 
                 if(trimmed.isEmpty()) continue;
 				String shortString = colorsStripped.substring(0, colorsStripped.length() - 1).replaceAll(",", "");
-				if(trimmed.endsWith("❤")) {
+				if(colorsStripped.endsWith("❤")) {
 					parseAndSetHealth(shortString);
-				} else if(trimmed.endsWith("❈")) {
+				} else if(colorsStripped.endsWith("❈")) {
 					parseAndSetDefense(shortString);
-				} else if(trimmed.endsWith("✎")) {
+				} else if(colorsStripped.endsWith("✎")) {
 					parseAndSetMana(shortString);
+				} else if(colorsStripped.endsWith("ʬ")) {
+					parseAndSetOverflow(shortString);
 				}
-				
+
 				actionBar = actionBar.trim();
 
 				event.message = new ChatComponentText(actionBar);
@@ -83,7 +85,7 @@ public class ActionBarListener {
 		String[] split = actionBarSegment.split("/", 2);
 		int currentHealth = Integer.parseInt(split[0]);
 		int maxHealth = Integer.parseInt(split[1]);
-		Utils.Health = currentHealth;
+		Utils.health = currentHealth;
 		Utils.maxHealth = maxHealth;
 	}
 
@@ -95,7 +97,11 @@ public class ActionBarListener {
 		String[] split = actionBarSegment.split("/", 2);
 		int currentMana = Integer.parseInt(split[0]);
 		int maxMana = Integer.parseInt(split[1]);
-		Utils.Mana = currentMana;
+		Utils.mana = currentMana;
 		Utils.maxMana = maxMana;
+	}
+
+	private void parseAndSetOverflow(String actionBarSegment) throws NumberFormatException {
+		Utils.overflowMana = Integer.parseInt(actionBarSegment);
 	}
 }
