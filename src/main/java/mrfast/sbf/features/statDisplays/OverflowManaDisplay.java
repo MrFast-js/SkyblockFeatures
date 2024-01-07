@@ -34,7 +34,7 @@ public class OverflowManaDisplay {
 
         @Override
         public boolean getToggled() {
-            return SkyblockFeatures.config.DefenseDisplay;
+            return SkyblockFeatures.config.overFlowManaDisplay;
         }
 
         @Override
