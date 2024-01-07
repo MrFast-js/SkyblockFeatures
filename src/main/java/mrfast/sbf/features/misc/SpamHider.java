@@ -32,6 +32,11 @@ public class SpamHider {
                     event.setCanceled(true);
                 }
             }
+            if(SkyblockFeatures.config.hideSlowdownCommandWarning) {
+                if(u.startsWith("You are sending commands too fast! Please slow down.")) {
+                    event.setCanceled(true);
+                }
+            }
             if(SkyblockFeatures.config.hideAdvertisements) {
                 if (u.contains("/visit") || u.contains("lowballing") || u.contains("selling") || u.contains("buying") || u.contains("visit") || u.contains("ah") || u.contains("auction") || u.contains("guild")) {
                     // Dont remove messages from the auction house
