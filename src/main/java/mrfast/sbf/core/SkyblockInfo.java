@@ -107,7 +107,7 @@ public class SkyblockInfo {
             } else if (entry.contains("ф")) {
                 location = entry.substring(2);
             }
-            localLocation=location.replaceAll("[^a-zA-Z0-9\\s]", "").replaceAll("[^\\x00-\\x7F]", "");
+            localLocation=location.replaceAll("[^a-zA-Z0-9\\s]", "").replaceAll("[^\\x00-\\x7F]", "").trim();
         }
     }
 
