@@ -598,7 +598,15 @@ public class ProfileViewerGui extends WindowScreen {
 
         String pattern = "MMMM d yyyy";
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
-        long joinedDate = ProfilePlayerResponse.get("first_join").getAsLong();
+        long joinedDate = ProfileResponse.get("created_at").getAsLong();
+
+        if(ProfilePlayerResponse.has("first_join")) {
+            joinedDate = ProfilePlayerResponse.get("first_join").getAsLong();
+        }
+        if(ProfilePlayerResponse.has("coop_invitation")) {
+            joinedDate = ProfilePlayerResponse.get("coop_invitation").getAsJsonObject().get("timestamp").getAsLong();
+        }
+
         String joinedString = simpleDateFormat.format(new Date(joinedDate));
         String profileType = ChatFormatting.GREEN + bold + "Classic";
 
