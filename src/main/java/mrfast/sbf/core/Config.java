@@ -1993,6 +1993,15 @@ public class Config extends ConfigManager {
 
     @Property(
             type = PropertyType.TOGGLE,
+            name = "Show Total Minion Coins Per Day",
+            description = "§cRequires you to open all minions on island at least once",
+            category = "Miscellaneous",
+            subcategory = "Minion"
+    )
+    public boolean showMinionsTotalCoinsPerDay = false;
+
+    @Property(
+            type = PropertyType.TOGGLE,
             name = "Show Last Collected Above Minion",
             description = "Shows when the minion was last collected above the minions head",
             category = "Miscellaneous",
@@ -2339,7 +2348,7 @@ public class Config extends ConfigManager {
             name = "Ad Blocker",
             description = "Hides auction/lowballing advertisements in chat",
             category = "General",
-            subcategory = "Other"
+            subcategory = "§1§rChat"
     )
     public boolean hideAdvertisements = false;
 
@@ -2348,9 +2357,18 @@ public class Config extends ConfigManager {
             name = "Hide Anita Artifact Notification",
             description = "Stops '§rYour §6Anita's Artifact§r is giving you blah blah' from appearing",
             category = "General",
-            subcategory = "Other"
+            subcategory = "§1§rChat"
     )
     public boolean hideAnitaArtifactNotification = false;
+
+    @Property(
+            type = PropertyType.TOGGLE,
+            name = "Hide Command Cooldown Warning",
+            description = "Stops '§cYou are sending commands too fast!' from appearing",
+            category = "General",
+            subcategory = "§1§rChat"
+    )
+    public boolean hideSlowdownCommandWarning = false;
 
     @Property(
             type = PropertyType.TOGGLE,
@@ -2366,7 +2384,7 @@ public class Config extends ConfigManager {
             name = "Auto Party Chat",
             description = "Auto sends §a/chat p§r after joining a party §cWarning Use At Own Risk",
             category = "General",
-            subcategory = "Other",
+            subcategory = "§1§rChat",
             risky = true
     )
     public boolean autoPartyChat = false;

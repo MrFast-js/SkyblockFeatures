@@ -1,15 +1,9 @@
 package mrfast.sbf.features.overlays.menuOverlay;
 
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.mojang.realmsclient.gui.ChatFormatting;
@@ -21,6 +15,8 @@ import mrfast.sbf.core.SkyblockInfo;
 import mrfast.sbf.events.ProfileSwapEvent;
 import mrfast.sbf.events.SlotClickedEvent;
 import mrfast.sbf.events.GuiContainerEvent.TitleDrawnEvent;
+import mrfast.sbf.gui.components.Point;
+import mrfast.sbf.gui.components.UIElement;
 import mrfast.sbf.utils.*;
 import net.minecraft.client.gui.inventory.GuiChest;
 import net.minecraft.entity.Entity;
@@ -30,18 +26,29 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Vec3;
+import net.minecraftforge.client.event.ClientChatReceivedEvent;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class MinionOverlay {
-    JsonObject minions = new JsonObject();
+    static JsonObject minions = new JsonObject();
     @SubscribeEvent
     public void onProfileSwap(ProfileSwapEvent event) {
         minions = (JsonObject) DataManager.getProfileDataDefault("minions", new JsonObject());
     }
+
+    @SubscribeEvent
+    public void onChat(ClientChatReceivedEvent event) {
+        if(event.message.getUnformattedText().startsWith("You picked up a minion! You currently have")) {
+            if(minions.has(closestMinion.getPosition().toString())) {
+                minions.remove(closestMinion.getPosition().toString());
+            }
+        }
+    }
+
     @SubscribeEvent
     public void onDrawContainerTitle(TitleDrawnEvent event) {
-        if (event.gui instanceof GuiChest && SkyblockFeatures.config.minionOverlay) {
+        if (event.gui instanceof GuiChest && SkyblockFeatures.config.showMinionsTotalCoinsPerDay) {
             GuiChest gui = (GuiChest) event.gui;
             ContainerChest chest = (ContainerChest) gui.inventorySlots;
             IInventory inv = chest.getLowerChestInventory();
@@ -87,18 +94,22 @@ public class MinionOverlay {
                     if (identifier != null) {
                         Double sellPrice = PricingData.bazaarPrices.get(identifier);
                         if(sellPrice != null) {
-                            Double perHour = Math.floor(((double) 3600 /secondsPerAction)*sellPrice);
                             String duration = "Unknown";
                             JsonObject minion = new JsonObject();
                             if(minions.has(closestMinion.getPosition().toString())) {
                                 minion = minions.get(closestMinion.getPosition().toString()).getAsJsonObject();
                             }
                             long lastCollected = System.currentTimeMillis();
+
                             if(minion.has("lastCollected")) {
                                 lastCollected = minion.get("lastCollected").getAsLong();
                             }
+
+
+                            Double perHour = -1d;
                             if(closestMinion != null) {
                                 long timeElapsed = (System.currentTimeMillis()-lastCollected)/1000L;
+                                perHour = Math.floor((totalValue/timeElapsed)*60d*60d); // coins per second
                                 duration = Utils.secondsToTime(timeElapsed);
                             }
                             String fuelRunsOut = "Unlimited";
@@ -116,10 +127,11 @@ public class MinionOverlay {
                                     ChatFormatting.WHITE + " • Fuel Duration: " + ChatFormatting.YELLOW + fuelRunsOut,
                                     ChatFormatting.WHITE + " • Coins Per Hour: " + ChatFormatting.GOLD + Utils.nf.format(perHour),
                                     ChatFormatting.WHITE + " • Total Value: " + ChatFormatting.GOLD + Utils.shortenNumber(totalValue),
-                                    ChatFormatting.WHITE + " • Last Collected: " + ChatFormatting.AQUA + duration
+                                    ChatFormatting.WHITE + " • Last Collected: " + ChatFormatting.AQUA + duration,
                             };
                             minion.addProperty("generating",identifier);
                             minion.addProperty("lastCollected",lastCollected);
+                            minion.addProperty("coinsPerHour",perHour);
 
                             minions.add(closestMinion.getPosition().toString(), minion);
                             DataManager.saveProfileData("minions",minions);
@@ -142,7 +154,7 @@ public class MinionOverlay {
     }
     @SubscribeEvent
     public void onSlotClick(SlotClickedEvent event) {
-        if(SkyblockFeatures.config.minionOverlay) {
+        if(SkyblockFeatures.config.showMinionsTotalCoinsPerDay) {
             GuiChest gui = event.chest;
             ContainerChest chest;
             if(gui!=null && gui.inventorySlots!=null) {
@@ -156,7 +168,8 @@ public class MinionOverlay {
                 if(chestName.contains(" Minion ") && !chestName.contains("Recipe")) {
                     if(event.slot.getHasStack()) {
                         String nameOfItem = Utils.cleanColor(event.slot.getStack().getDisplayName());
-                        if(nameOfItem.contains("Collect All") || isSlotFromMinion(event.slot.slotNumber)) {
+                        if(nameOfItem.startsWith("Collect All") || isSlotFromMinion(event.slot.slotNumber)) {
+                            if(nameOfItem.startsWith("Storage unlocked at tier")) return;
                             if(closestMinion!=null) {
                                 if(minions.has(closestMinion.getPosition().toString())) {
                                     minions.get(closestMinion.getPosition().toString()).getAsJsonObject().addProperty("lastCollected",System.currentTimeMillis());
@@ -178,7 +191,7 @@ public class MinionOverlay {
     Entity closestMinion = null;
     @SubscribeEvent
     public void onRecievePacket(RenderWorldLastEvent event) {
-        if(Utils.inSkyblock && SkyblockInfo.map.equals("Private Island") && (SkyblockFeatures.config.minionOverlay||SkyblockFeatures.config.minionLastCollected)) {
+        if(Utils.inSkyblock && SkyblockInfo.map.equals("Private Island") && (SkyblockFeatures.config.showMinionsTotalCoinsPerDay ||SkyblockFeatures.config.minionLastCollected)) {
             for(Entity e : Utils.GetMC().theWorld.loadedEntityList){
                 if(e instanceof EntityArmorStand) {
                     if(isMinion((EntityArmorStand) e)) {
@@ -213,5 +226,58 @@ public class MinionOverlay {
                 Item.getIdFromItem(e.getCurrentArmor(1).getItem()) == 300 &&
                 Item.getIdFromItem(e.getCurrentArmor(2).getItem()) == 299 &&
                 Item.getIdFromItem(e.getCurrentArmor(3).getItem()) == 397);
+    }
+
+    static {
+        new MinionCoinsPerDay();
+    }
+
+    static String display = "§aTotal Minion Coins Per Day: §6";
+    public static class MinionCoinsPerDay extends UIElement {
+        public MinionCoinsPerDay() {
+            super("Minion Coins Per Day Display", new Point(0.40972087f, 0.1964221f));
+            SkyblockFeatures.GUIMANAGER.registerElement(this);
+        }
+
+        @Override
+        public void drawElement() {
+            drawCoinsPerDay();
+        }
+        @Override
+        public void drawElementExample() {
+            drawCoinsPerDay();
+        }
+
+        private void drawCoinsPerDay() {
+            long estimatedCoinsPerDay = 0;
+            for (Map.Entry<String, JsonElement> stringJsonElementEntry : minions.entrySet()) {
+                JsonObject minion = stringJsonElementEntry.getValue().getAsJsonObject();
+                if(minion.has("coinsPerHour")) {
+                    estimatedCoinsPerDay += minion.get("coinsPerHour").getAsLong()*24;
+                }
+            }
+            display = "§aTotal Minion Coins Per Day: §6"+ Utils.nf.format(estimatedCoinsPerDay);
+
+            GuiUtils.drawText(display, 0, 0, GuiUtils.TextStyle.BLACK_OUTLINE);
+        }
+
+        @Override
+        public boolean getToggled() {
+            return SkyblockFeatures.config.showMinionsTotalCoinsPerDay;
+        }
+
+        @Override
+        public boolean getRequirement() {
+            return Utils.inSkyblock && SkyblockInfo.map.equals("Private Island");
+        }
+        @Override
+        public int getHeight() {
+            return Utils.GetMC().fontRendererObj.FONT_HEIGHT;
+        }
+
+        @Override
+        public int getWidth() {
+            return Utils.GetMC().fontRendererObj.getStringWidth(display);
+        }
     }
 }
