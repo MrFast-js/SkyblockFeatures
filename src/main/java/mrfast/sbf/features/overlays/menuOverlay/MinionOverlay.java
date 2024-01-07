@@ -105,13 +105,13 @@ public class MinionOverlay {
                                 lastCollected = minion.get("lastCollected").getAsLong();
                             }
 
-
                             Double perHour = -1d;
                             if(closestMinion != null) {
                                 long timeElapsed = (System.currentTimeMillis()-lastCollected)/1000L;
                                 perHour = Math.floor((totalValue/timeElapsed)*60d*60d); // coins per second
                                 duration = Utils.secondsToTime(timeElapsed);
                             }
+
                             String fuelRunsOut = "Unlimited";
                             for(String line:ItemUtils.getItemLore(inv.getStackInSlot(19))) {
                                 line = Utils.cleanColor(line);
@@ -169,13 +169,14 @@ public class MinionOverlay {
                     if(event.slot.getHasStack()) {
                         String nameOfItem = Utils.cleanColor(event.slot.getStack().getDisplayName());
                         if(nameOfItem.startsWith("Collect All") || isSlotFromMinion(event.slot.slotNumber)) {
-                            if(nameOfItem.startsWith("Storage unlocked at tier")) return;
-                            if(closestMinion!=null) {
-                                if(minions.has(closestMinion.getPosition().toString())) {
-                                    minions.get(closestMinion.getPosition().toString()).getAsJsonObject().addProperty("lastCollected",System.currentTimeMillis());
-                                    DataManager.saveProfileData("minions",minions);
+                            Utils.setTimeout(()-> {
+                                if (closestMinion != null && (isMinionCollected(inv)|| nameOfItem.startsWith("Collect All"))) {
+                                    if (minions.has(closestMinion.getPosition().toString())) {
+                                        minions.get(closestMinion.getPosition().toString()).getAsJsonObject().addProperty("lastCollected", System.currentTimeMillis());
+                                        DataManager.saveProfileData("minions", minions);
+                                    }
                                 }
-                            }
+                            },400);
                         }
                     }
                 }
@@ -185,13 +186,27 @@ public class MinionOverlay {
         }
     }
 
+    List<Integer> minionSlots = Arrays.asList(21,22,23,24,25,
+                                              30,31,32,33,34,
+                                              39,40,41,42,43);
     private boolean isSlotFromMinion(int i) {
-        return i == 21||i == 22||i == 23||i == 24||i == 25||i == 30||i == 31||i == 32||i == 33||i == 34||i == 39||i == 40||i == 41||i == 42||i == 43;
+        return minionSlots.contains(i);
+    }
+    private boolean isMinionCollected(IInventory inv) {
+        for (Integer minionSlot : minionSlots) {
+            if(inv.getStackInSlot(minionSlot)!=null) {
+                String nameOfItem = Utils.cleanColor(inv.getStackInSlot(minionSlot).getDisplayName());
+                if(!nameOfItem.startsWith("Storage unlocked at tier")) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
     Entity closestMinion = null;
     @SubscribeEvent
     public void onRecievePacket(RenderWorldLastEvent event) {
-        if(Utils.inSkyblock && SkyblockInfo.map.equals("Private Island") && (SkyblockFeatures.config.showMinionsTotalCoinsPerDay ||SkyblockFeatures.config.minionLastCollected)) {
+        if(Utils.inSkyblock && SkyblockInfo.localLocation.equals("Your Island") && (SkyblockFeatures.config.showMinionsTotalCoinsPerDay ||SkyblockFeatures.config.minionLastCollected)) {
             for(Entity e : Utils.GetMC().theWorld.loadedEntityList){
                 if(e instanceof EntityArmorStand) {
                     if(isMinion((EntityArmorStand) e)) {
@@ -252,8 +267,10 @@ public class MinionOverlay {
             long estimatedCoinsPerDay = 0;
             for (Map.Entry<String, JsonElement> stringJsonElementEntry : minions.entrySet()) {
                 JsonObject minion = stringJsonElementEntry.getValue().getAsJsonObject();
-                if(minion.has("coinsPerHour")) {
-                    estimatedCoinsPerDay += minion.get("coinsPerHour").getAsLong()*24;
+                if(minion.has("coinsPerHour") && !minion.get("coinsPerHour").isJsonNull()) {
+                    try {
+                        estimatedCoinsPerDay += minion.get("coinsPerHour").getAsLong() * 24;
+                    } catch (Exception ignored){}
                 }
             }
             display = "§aTotal Minion Coins Per Day: §6"+ Utils.nf.format(estimatedCoinsPerDay);
@@ -268,7 +285,7 @@ public class MinionOverlay {
 
         @Override
         public boolean getRequirement() {
-            return Utils.inSkyblock && SkyblockInfo.map.equals("Private Island");
+            return Utils.inSkyblock && SkyblockInfo.localLocation.equals("Your Island");
         }
         @Override
         public int getHeight() {
