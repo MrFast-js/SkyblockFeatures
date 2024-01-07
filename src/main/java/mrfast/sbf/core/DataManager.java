@@ -3,8 +3,11 @@ package mrfast.sbf.core;
 import com.google.gson.*;
 import mrfast.sbf.SkyblockFeatures;
 import mrfast.sbf.events.ProfileSwapEvent;
+import mrfast.sbf.utils.NetworkUtils;
+import mrfast.sbf.utils.Utils;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import java.io.File;
@@ -37,7 +40,24 @@ public class DataManager {
         }
     }
 
-    static boolean initialPfId = false;
+    @SubscribeEvent
+    public void onWorldLoad(WorldEvent.Load event) {
+        pfidSentInChat = false;
+        // Use api request to get profile id because no Profile Id message is sent if one profile
+        Utils.setTimeout(()->{
+            if(!pfidSentInChat) {
+                pfidSentInChat = true;
+                if (currentProfileId == null) {
+                    currentProfileId = NetworkUtils.getLatestProfileID(Utils.GetMC().thePlayer.getUniqueID().toString());
+                    dataJson.addProperty("currentProfileId", currentProfileId);
+                    saveDataToFile();
+                    MinecraftForge.EVENT_BUS.post(new ProfileSwapEvent());
+                }
+                MinecraftForge.EVENT_BUS.post(new ProfileSwapEvent());
+            }
+        },7000);
+    }
+    boolean pfidSentInChat = false;
     @SubscribeEvent
     public void onChat(ClientChatReceivedEvent event) {
         String regexPattern = "Profile ID: (\\S+)";
@@ -45,12 +65,14 @@ public class DataManager {
         Matcher matcher = pattern.matcher(event.message.getUnformattedText());
 
         if (matcher.find()) {
-            if(currentProfileId!=null && currentProfileId.equals(matcher.group(1)) && initialPfId) return;
-
-            currentProfileId = matcher.group(1);
-            dataJson.addProperty("currentProfileId", currentProfileId);
-            saveDataToFile();
-            MinecraftForge.EVENT_BUS.post(new ProfileSwapEvent());
+            pfidSentInChat = true;
+            // Dont update if its the same
+//            if(currentProfileId!=null && currentProfileId.equals(matcher.group(1))) return;
+//
+//            currentProfileId = matcher.group(1);
+//            dataJson.addProperty("currentProfileId", currentProfileId);
+//            saveDataToFile();
+//            MinecraftForge.EVENT_BUS.post(new ProfileSwapEvent());
         }
     }
 
@@ -62,7 +84,6 @@ public class DataManager {
     public static Object getData(String dataName) {
         return convertFromJsonElement(dataJson.get(dataName));
     }
-
 
     // Works with datanames such as "subset1.list.option2" or even just "option2"
     public static void saveProfileData(String dataName, Object dataValue) {
