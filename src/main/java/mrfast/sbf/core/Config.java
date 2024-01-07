@@ -690,6 +690,15 @@ public class Config extends ConfigManager {
 
     @Property(
             type = PropertyType.TOGGLE,
+            name = "Overflow Mana Display",
+            description = "Movable overflow mana display",
+            category = "General",
+            subcategory = "Health & Mana Bars"
+    )
+    public boolean overFlowManaDisplay = false;
+
+    @Property(
+            type = PropertyType.TOGGLE,
             name = "Defense Display",
             description = "Movable defense display",
             category = "General",
