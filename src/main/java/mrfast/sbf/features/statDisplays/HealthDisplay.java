@@ -10,8 +10,6 @@ import net.minecraft.client.Minecraft;
 
 public class HealthDisplay {
 
-    private static final Minecraft mc = Minecraft.getMinecraft();
-
     static {
         new HealthDisplayGUI();
     }
