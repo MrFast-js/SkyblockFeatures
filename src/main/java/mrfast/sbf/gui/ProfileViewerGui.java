@@ -199,112 +199,113 @@ public class ProfileViewerGui extends WindowScreen {
     public ProfileViewerGui(Boolean doAnimation, String username, String profileString) {
         super(ElementaVersion.V2);
 
-        String uuidString = NetworkUtils.getUUID(username, true);
-        if (uuidString == null) return;
-        UUID uuid = UUID.fromString(uuidString);
-
-        if (doAnimation) mrfast.sbf.utils.GuiUtils.saveGuiScale();
-
         screenHeight = Utils.GetMC().currentScreen.height;
         fontScale = (screenHeight / 540d);
-
-        profile = new GameProfile(uuid, username);
         selectedCategory = "";
 
-        // This sets the skin from the uuid
-        Utils.GetMC().getSessionService().fillProfileProperties(profile, true);
+        new Thread(() -> {
+            String uuidString = NetworkUtils.getUUID(username, true);
+            if (uuidString == null) return;
+            UUID uuid = UUID.fromString(uuidString);
 
-        playerUuid = uuidString.replaceAll("-", "");
-        {
-            box = new UIRoundedRectangle(10f)
-                    .setX(new CenterConstraint())
-                    .setY(new CenterConstraint())
-                    .setWidth(new RelativeConstraint(0.70f))
-                    .setHeight(new RelativeConstraint(0.70f))
-                    .setChildOf(getWindow())
-                    .enableEffect(new ScissorEffect())
-                    .setColor(mainBackground);
-            float guiWidth = box.getWidth();
-            float guiHeight = box.getHeight();
-            new ShadowIcon(new ResourceImageFactory("/assets/skyblockfeatures/gui/largeOutline.png", false), false).setChildOf(box)
-                    .setX(new PixelConstraint(0f))
-                    .setY(new PixelConstraint(0f))
-                    .setWidth(new RelativeConstraint(1f))
-                    .setHeight(new RelativeConstraint(1f));
+            if (doAnimation) mrfast.sbf.utils.GuiUtils.saveGuiScale();
 
-            UIComponent titleArea = new UIBlock().setColor(clear).setChildOf(box)
-                    .setX(new CenterConstraint())
-                    .setWidth(new PixelConstraint(guiWidth))
-                    .setHeight(new PixelConstraint(0.15f * guiHeight))
-                    .enableEffect(new ScissorEffect());
+            profile = new GameProfile(uuid, username);
 
-            // Subtitle
-            UIComponent subtitle = new UIText("Skyblock Features Profile Viewer")
-                    .setColor(Color.gray)
-                    .setChildOf(titleArea)
-                    .setX(new CenterConstraint())
-                    .setY(new PixelConstraint(3f, true))
-                    .enableEffect(new ScissorEffect())
-                    .setTextScale(new PixelConstraint(((float) fontScale)));
+            // This sets the skin from the uuid
+            Utils.GetMC().getSessionService().fillProfileProperties(profile, true);
 
-            // Title text
-            UIComponent titleText = new UIText(username)
-                    .setColor(titleColor)
-                    .setChildOf(titleArea)
-                    .setX(new CenterConstraint())
-                    .setY(new CenterConstraint())
-                    .enableEffect(new ScissorEffect())
-                    .setTextScale(new PixelConstraint((float) (doAnimation ? 1 * fontScale : 3 * fontScale)));
-
-            if(Utils.isDeveloper() && SkyblockFeatures.config.showInspector) {
-                new Inspector(getWindow()).setChildOf(getWindow());
-            }
-
-            // Gray horizontal line 1px from bottom of the title area
-            new UIBlock().setChildOf(titleArea)
-                    .setWidth(new PixelConstraint(guiWidth - 2))
-                    .setHeight(new PixelConstraint(1f))
-                    .setX(new CenterConstraint())
-                    .setY(new PixelConstraint(titleArea.getHeight() - 1))
-                    .setColor(guiLines);
-
-            new Thread(() -> {
-                UIComponent loadingText = new UIText(ChatFormatting.RED + "Loading")
-                        .setTextScale(new PixelConstraint(2f))
-                        .setChildOf(box)
+            playerUuid = uuidString.replaceAll("-", "");
+            {
+                box = new UIRoundedRectangle(10f)
                         .setX(new CenterConstraint())
-                        .setY(new CenterConstraint());
+                        .setY(new CenterConstraint())
+                        .setWidth(new RelativeConstraint(0.70f))
+                        .setHeight(new RelativeConstraint(0.70f))
+                        .setChildOf(getWindow())
+                        .enableEffect(new ScissorEffect())
+                        .setColor(mainBackground);
+                float guiWidth = box.getWidth();
+                float guiHeight = box.getHeight();
+                new ShadowIcon(new ResourceImageFactory("/assets/skyblockfeatures/gui/largeOutline.png", false), false).setChildOf(box)
+                        .setX(new PixelConstraint(0f))
+                        .setY(new PixelConstraint(0f))
+                        .setWidth(new RelativeConstraint(1f))
+                        .setHeight(new RelativeConstraint(1f));
 
-                double loadingIndex = 0;
-                while (ProfilePlayerResponse == null) {
-                    try {
-                        ((UIText) loadingText).setText(loadingStages[(int) Math.floor(loadingIndex)]);
-                        loadingIndex+=0.5;
-                        loadingIndex %= 3;
-                        Thread.sleep(100);
-                    } catch (Exception ignored) {
-                    }
+                UIComponent titleArea = new UIBlock().setColor(clear).setChildOf(box)
+                        .setX(new CenterConstraint())
+                        .setWidth(new PixelConstraint(guiWidth))
+                        .setHeight(new PixelConstraint(0.15f * guiHeight))
+                        .enableEffect(new ScissorEffect());
+
+                // Subtitle
+                UIComponent subtitle = new UIText("Skyblock Features Profile Viewer")
+                        .setColor(Color.gray)
+                        .setChildOf(titleArea)
+                        .setX(new CenterConstraint())
+                        .setY(new PixelConstraint(3f, true))
+                        .enableEffect(new ScissorEffect())
+                        .setTextScale(new PixelConstraint(((float) fontScale)));
+
+                // Title text
+                UIComponent titleText = new UIText(username)
+                        .setColor(titleColor)
+                        .setChildOf(titleArea)
+                        .setX(new CenterConstraint())
+                        .setY(new CenterConstraint())
+                        .enableEffect(new ScissorEffect())
+                        .setTextScale(new PixelConstraint((float) (doAnimation ? 1 * fontScale : 3 * fontScale)));
+
+                if (Utils.isDeveloper() && SkyblockFeatures.config.showInspector) {
+                    new Inspector(getWindow()).setChildOf(getWindow());
                 }
-            }).start();
 
-            box.addChild(titleArea);
-//            box.addChild(sidebarSeperator);
+                // Gray horizontal line 1px from bottom of the title area
+                new UIBlock().setChildOf(titleArea)
+                        .setWidth(new PixelConstraint(guiWidth - 2))
+                        .setHeight(new PixelConstraint(1f))
+                        .setX(new CenterConstraint())
+                        .setY(new PixelConstraint(titleArea.getHeight() - 1))
+                        .setColor(guiLines);
 
-            if (doAnimation) {
-                box.setWidth(new PixelConstraint(0f));
+                new Thread(() -> {
+                    UIComponent loadingText = new UIText(ChatFormatting.RED + "Loading")
+                            .setTextScale(new PixelConstraint(2f))
+                            .setChildOf(box)
+                            .setX(new CenterConstraint())
+                            .setY(new CenterConstraint());
 
-                AnimatingConstraints anim = box.makeAnimation();
-                anim.setWidthAnimation(Animations.OUT_EXP, 0.5f, new RelativeConstraint(0.70f));
-                box.animateTo(anim);
+                    double loadingIndex = 0;
+                    while (ProfilePlayerResponse == null) {
+                        try {
+                            ((UIText) loadingText).setText(loadingStages[(int) Math.floor(loadingIndex)]);
+                            loadingIndex += 0.5;
+                            loadingIndex %= 3;
+                            Thread.sleep(100);
+                        } catch (Exception ignored) {
+                        }
+                    }
+                }).start();
 
-                AnimatingConstraints animation = titleText.makeAnimation();
-                animation.setTextScaleAnimation(Animations.OUT_EXP, 0.5f, new PixelConstraint((float) (3.0 * fontScale)));
-                titleText.animateTo(animation);
+                box.addChild(titleArea);
+
+                if (doAnimation) {
+                    box.setWidth(new PixelConstraint(0f));
+
+                    AnimatingConstraints anim = box.makeAnimation();
+                    anim.setWidthAnimation(Animations.OUT_EXP, 0.5f, new RelativeConstraint(0.70f));
+                    box.animateTo(anim);
+
+                    AnimatingConstraints animation = titleText.makeAnimation();
+                    animation.setTextScaleAnimation(Animations.OUT_EXP, 0.5f, new PixelConstraint((float) (3.0 * fontScale)));
+                    titleText.animateTo(animation);
+                }
             }
-        }
 
-        Thread profileThread = getProfileThread(profileString);
-        profileThread.start();
+            Thread profileThread = getProfileThread(profileString);
+            profileThread.start();
+        }).start();
     }
 
     @NotNull
@@ -598,12 +599,16 @@ public class ProfileViewerGui extends WindowScreen {
 
         String pattern = "MMMM d yyyy";
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
-        long joinedDate = ProfileResponse.get("created_at").getAsLong();
+        long joinedDate = 0l;
 
-        if(ProfilePlayerResponse.has("first_join")) {
+        if (ProfileResponse.has("created_at")) {
+            joinedDate = ProfileResponse.get("created_at").getAsLong();
+        }
+
+        if (ProfilePlayerResponse.has("first_join")) {
             joinedDate = ProfilePlayerResponse.get("first_join").getAsLong();
         }
-        if(ProfilePlayerResponse.has("coop_invitation")) {
+        if (ProfilePlayerResponse.has("coop_invitation")) {
             joinedDate = ProfilePlayerResponse.get("coop_invitation").getAsJsonObject().get("timestamp").getAsLong();
         }
 
@@ -1374,7 +1379,7 @@ public class ProfileViewerGui extends WindowScreen {
 
                     try {
                         ((UIText) loadingText).setText(loadingStages[(int) Math.floor(loadingIndex)]);
-                        loadingIndex+=0.5;
+                        loadingIndex += 0.5;
                         loadingIndex %= 3;
                         Thread.sleep(100);
                     } catch (Exception ignored) {
@@ -1393,7 +1398,10 @@ public class ProfileViewerGui extends WindowScreen {
                     JsonObject floorStats = dungeons.get("floorStats").getAsJsonObject();
 
                     Integer secrets = 0;
-                    try{secrets=HypixelPlayerResponse.get("achievements").getAsJsonObject().get("skyblock_treasure_hunter").getAsInt();} catch (Exception ignored) {}
+                    try {
+                        secrets = HypixelPlayerResponse.get("achievements").getAsJsonObject().get("skyblock_treasure_hunter").getAsInt();
+                    } catch (Exception ignored) {
+                    }
 
                     String selectedClass = ProfileViewerUtils.formatTitle(dungeons.get("selected_class").getAsString());
 
@@ -1616,7 +1624,7 @@ public class ProfileViewerGui extends WindowScreen {
                 while (soopyProfiles.entrySet().isEmpty()) {
                     try {
                         ((UIText) loadingText).setText(loadingStages[(int) Math.floor(loadingIndex)]);
-                        loadingIndex+=0.5;
+                        loadingIndex += 0.5;
                         loadingIndex %= 3;
                         Thread.sleep(100);
                     } catch (Exception ignored) {
@@ -1731,10 +1739,15 @@ public class ProfileViewerGui extends WindowScreen {
                 int secondsSitting = 0;
                 int foundEnigmaSouls = 0;
                 int eyesUnlocked = 0;
+                int burgerStacks = 0;
                 JsonObject katObj = null;
 
                 try {
                     foundEnigmaSouls = riftObj.get("enigma").getAsJsonObject().get("found_souls").getAsJsonArray().size();
+                } catch (Exception ignored) {
+                }
+                try {
+                    burgerStacks = riftObj.get("castle").getAsJsonObject().get("grubber_stacks").getAsInt();
                 } catch (Exception ignored) {
                 }
                 try {
@@ -1770,6 +1783,7 @@ public class ProfileViewerGui extends WindowScreen {
                 new UIText(ChatFormatting.GRAY + "Mote Orbs Collected: " + ChatFormatting.YELLOW + ChatFormatting.BOLD + Utils.nf.format(moteOrbsCollected)).setY(new SiblingConstraint(2f)).setChildOf(left);
 
                 new UIText(ChatFormatting.GOLD + "Enigma Souls: " + ChatFormatting.LIGHT_PURPLE + ChatFormatting.BOLD + foundEnigmaSouls + " / 42").setY(new SiblingConstraint(10f)).setChildOf(left);
+                new UIText(ChatFormatting.GOLD + "Burgers: " + ChatFormatting.LIGHT_PURPLE + ChatFormatting.BOLD + burgerStacks + "/5").setY(new SiblingConstraint(2f)).setChildOf(left);
                 new UIText(ChatFormatting.GOLD + "Seconds Sitting : " + ChatFormatting.YELLOW + Utils.secondsToTime(secondsSitting)).setY(new SiblingConstraint(2f)).setChildOf(left);
                 new UIText(ChatFormatting.GOLD + "Porhtal Eyes Unlocked: " + ChatFormatting.YELLOW + eyesUnlocked).setY(new SiblingConstraint(2f)).setChildOf(left);
 
@@ -1812,10 +1826,10 @@ public class ProfileViewerGui extends WindowScreen {
                     if (inventory.has("ender_chest_contents")) {
                         String inventoryBase64 = inventory.get("ender_chest_contents").getAsJsonObject().get("data").getAsString();
                         Inventory items = new Inventory(inventoryBase64);
-                        List<ItemStack> a = ItemUtils.decodeInventory(items, true);
-                        Collections.reverse(a);
+                        List<ItemStack> a = ItemUtils.decodeInventory(items, false);
 
                         int index = 0;
+                        // Handle differently because rift is weird af
                         for (ItemStack item : a) {
                             if (index < 45) {
                                 enderChest.setInventorySlotContents(index, item);
@@ -2033,7 +2047,7 @@ public class ProfileViewerGui extends WindowScreen {
 
         if (collectionsData == null) {
             // Fetch the collections data only if it's not already cached
-            collectionsData = NetworkUtils.getJSONResponse("https://api.hypixel.net/v2/resources/skyblock/collections#CollectionsForPV",new String[]{},true,false).getAsJsonObject();
+            collectionsData = NetworkUtils.getJSONResponse("https://api.hypixel.net/v2/resources/skyblock/collections#CollectionsForPV", new String[]{}, true, false).getAsJsonObject();
         }
 
         statsAreaContainerNew = new UIBlock(Color.red)
@@ -2107,7 +2121,7 @@ public class ProfileViewerGui extends WindowScreen {
                 } else {
                     try {
                         ((UIText) loadingText).setText(loadingStages[(int) Math.floor(loadingIndex)]);
-                        loadingIndex+=0.5;
+                        loadingIndex += 0.5;
                         loadingIndex %= 3;
                         Thread.sleep(100);
                     } catch (Exception ignored) {
