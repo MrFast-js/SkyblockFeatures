@@ -266,15 +266,19 @@ public class SkyblockFeatures {
         }
     }
 
-    boolean sentUpdateNotification = false;
+    public static boolean sentUpdateNotification = false;
+    public static boolean updateChecked = false;
     GuiScreen lastOpenContainer = null;
 
     @SubscribeEvent
     public void onTick(TickEvent.ClientTickEvent event) {
         if (event.phase != TickEvent.Phase.START) return;
         if (Utils.GetMC().thePlayer != null && SkyblockFeatures.config.updateNotify && !sentUpdateNotification && Utils.inSkyblock) {
-            sentUpdateNotification = true;
-            VersionManager.silentUpdateCheck();
+            if(!updateChecked) {
+                System.out.println("Silenting checking for SBF update");
+                VersionManager.silentUpdateCheck();
+                updateChecked = true;
+            }
         }
         if (Utils.inSkyblock && sendUpdateChangelogs && Utils.GetMC().theWorld!=null) {
             sendUpdateChangelogs = false;

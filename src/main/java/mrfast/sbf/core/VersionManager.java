@@ -29,10 +29,13 @@ public class VersionManager {
             );
 
     public static void silentUpdateCheck() {
+        System.out.println("Checking for SBF updates: "+getUpdatePreference());
         context.checkUpdate(getUpdatePreference()).thenAcceptAsync((update)->{
             if (update != null) {
+                System.out.println("Found potential SBF update!");
                 potentialUpdate = update;
                 if(isClientOutdated()) {
+                    System.out.println("Found outdated SBF client sending update!");
                     String updatePreference = getUpdatePreference();
                     String updateVersion = "v"+potentialUpdate.getUpdate().getVersionName().split("v")[1].trim();
                     IChatComponent notificationText = new ChatComponentText(
@@ -42,7 +45,7 @@ public class VersionManager {
                             .setChatStyle(new ChatStyle()
                                     .setChatClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/sf update " + updatePreference))
                                     .setChatHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ChatComponentText(ChatFormatting.GREEN+"Click to update"))));
-
+                    SkyblockFeatures.sentUpdateNotification=true;
                     Utils.setTimeout(()->{
                         Utils.playSound("random.orb", 0.1);
                         Utils.sendMessage(notificationText);
@@ -78,7 +81,6 @@ public class VersionManager {
                 if(checkIfNeedUpdate() || force) {
                     doUpdate();
                 }
-
             } else {
                 Utils.sendMessage("No updates available. You are already using the latest version.");
             }
@@ -138,6 +140,7 @@ public class VersionManager {
                 Utils.sendMessage(ChatFormatting.YELLOW + "Preparing update...");
                 potentialUpdate.prepareUpdate();
             } catch (IOException e) {
+                e.printStackTrace();
                 throw new RuntimeException(e);
             }
             return null;
@@ -159,6 +162,7 @@ public class VersionManager {
                 notificationText.appendSibling(closeGame);
                 Utils.sendMessage(notificationText);
             } catch (IOException e) {
+                e.printStackTrace();
                 throw new RuntimeException(e);
             }
         });
