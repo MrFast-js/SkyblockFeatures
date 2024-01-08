@@ -230,15 +230,18 @@ public class InstallerFrame extends JFrame {
         try {
             URL downloadUrl = getDownloadUrl(version);
             if (downloadUrl != null) {
-                System.out.println("DWONALODAING "+downloadUrl);
+                System.out.println("DWONALODAING "+downloadUrl+" as "+downloadUrl.toString().split("/")[downloadUrl.toString().split("/").length-1]+" "+destinationFolder);
                 String fileName = downloadUrl.toString().split("/")[downloadUrl.toString().split("/").length-1];
                 Path destinationPath = destinationFolder.toPath().resolve(fileName);
+                Files.createDirectories(destinationFolder.toPath());
                 Files.copy(downloadUrl.openStream(), destinationPath, StandardCopyOption.REPLACE_EXISTING);
+
                 showMessage("Installation successful!");
             } else {
                 showMessage("Failed to get download URL. Installation aborted.");
             }
         } catch (IOException e) {
+            e.printStackTrace();
             showMessage("Error copying file: " + e.getMessage());
         }
     }
@@ -276,9 +279,9 @@ public class InstallerFrame extends JFrame {
     private File getDefaultFolder(String option, String userHome) {
         switch (option) {
             case "Feather":
-                return new File(userHome + "\\.feather\\user-mods\\1.8.9");
+                return new File(userHome + "\\AppData\\Roaming\\.feather\\user-mods\\1.8.9");
             case "Forge":
-                return new File(userHome + "\\.minecraft\\mods");
+                return new File(userHome + "\\AppData\\Roaming\\.minecraft\\mods");
             case "Custom":
                 JFileChooser fileChooser = new JFileChooser(userHome);
                 fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
