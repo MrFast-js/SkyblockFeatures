@@ -365,6 +365,9 @@ public class ItemUtils {
         if (ExtraAttributes.hasKey("art_of_war_count")) {
             total += PricingData.bazaarPrices.get("THE_ART_OF_WAR").longValue();
         }
+        if (ExtraAttributes.hasKey("dye_item")) {
+            total += PricingData.averageLowestBINs.get(ExtraAttributes.getString("dye_item")).longValue();
+        }
         if (ExtraAttributes.hasKey("stats_book")) {
             total += PricingData.bazaarPrices.get("BOOK_OF_STATS").longValue();
         }

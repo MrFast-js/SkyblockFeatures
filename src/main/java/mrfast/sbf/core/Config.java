@@ -94,12 +94,43 @@ public class Config extends ConfigManager {
 
     @Property(
             type = PropertyType.TOGGLE,
+            name = "Floor 2 Spawn Timers",
+            description = "Adds timers in the world that show when the servents will spawn.",
+            category = "§1§rDungeons",
+            subcategory = "Floor 2"
+    )
+    public boolean floor2SpawnTimers = false;
+
+    @Property(
+            type = PropertyType.TOGGLE,
+            name = "Floor 3 Fire Freeze Helper",
+            description = "Adds tools that make it easier to use the §5Fire Freeze Staff§r on M3/F3",
+            category = "§1§rDungeons",
+            subcategory = "Floor 3",
+            isParent = true
+    )
+    public boolean fireFreezeHelper = false;
+
+    @Property(
+            type = PropertyType.TOGGLE,
             name = "Floor 3 Fire Freeze Timer",
             description = "Shows a timer of when to use the §5Fire Freeze Staff",
             category = "§1§rDungeons",
-            subcategory = "Items"
+            subcategory = "Floor 3",
+            parentName = "Floor 3 Fire Freeze Helper"
     )
-    public boolean fireFreezeTimer = false;
+    public boolean fireFreezeTimer = true;
+
+    @Property(
+            type = PropertyType.TOGGLE,
+            name = "Block Early Fire Freeze",
+            description = "Prevent using the §5Fire Freeze Staff§r ability before its the best time to use it.",
+            category = "§1§rDungeons",
+            subcategory = "Floor 3",
+            parentName = "Floor 3 Fire Freeze Helper",
+            risky = true
+    )
+    public boolean blockEarlyFireFreeze = false;
 
     @Property(
             type = PropertyType.TOGGLE,
@@ -2357,9 +2388,30 @@ public class Config extends ConfigManager {
             name = "Ad Blocker",
             description = "Hides auction/lowballing advertisements in chat",
             category = "General",
-            subcategory = "§1§rChat"
+            subcategory = "§1§rChat",
+            isParent = true
     )
     public boolean hideAdvertisements = false;
+
+    @Property(
+            type = PropertyType.TOGGLE,
+            name = "Hide Almost All Ads",
+            description = "",
+            category = "General",
+            subcategory = "§1§rChat",
+            parentName = "Ad Blocker"
+    )
+    public boolean hideAdvertisementsAll = true;
+
+    @Property(
+            type = PropertyType.TOGGLE,
+            name = "Hide Lowballing Ads",
+            description = "",
+            category = "General",
+            subcategory = "§1§rChat",
+            parentName = "Ad Blocker"
+    )
+    public boolean hideAdvertisementsLowball = true;
 
     @Property(
             type = PropertyType.TOGGLE,

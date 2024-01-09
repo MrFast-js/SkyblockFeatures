@@ -21,9 +21,10 @@ public class FireVeilTimer {
 
     @SubscribeEvent
     public void onTick(TickEvent.ClientTickEvent event) {
-        if(!SkyblockFeatures.config.fireVeilTimer) return;
+        if(!SkyblockFeatures.config.fireVeilTimer || event.phase != TickEvent.Phase.START) return;
+
         if(startCounting) {
-            time+=0.025;
+            time+=0.05;
             if (time<=5d) {
                 GuiManager.createTitle(ChatFormatting.RED+Utils.round(5d-time,1)+"s",1,false);
             } else {
