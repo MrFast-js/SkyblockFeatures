@@ -109,7 +109,7 @@ public class PartyFinderFeatures {
         if(partyFinderJoin && SkyblockFeatures.config.partyFinderJoinMessages) {
             String playerName = Utils.cleanColor(message.split(" ")[3]);
             if(playerName.contains(Minecraft.getMinecraft().thePlayer.getName())) return;
-            showDungeonPlayerInfo(playerName);
+            showDungeonPlayerInfo(playerName,true);
         }
         if(!SkyblockFeatures.config.dungeonPartyDisplay) return;
 
