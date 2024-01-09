@@ -138,7 +138,7 @@ public class PartyFinderFeatures {
         }
     }
 
-    private void showDungeonPlayerInfo(String name) {
+    public void showDungeonPlayerInfo(String name) {
         new Thread(() -> {
             // Get UUID for Hypixel API requests
             String uuid = NetworkUtils.getUUID(name);
@@ -168,9 +168,11 @@ public class PartyFinderFeatures {
 
             JsonObject dungeonsObject = profilePlayerResponse.getAsJsonObject().get("dungeons").getAsJsonObject();
             JsonObject catacombsObject = dungeonsObject.get("dungeon_types").getAsJsonObject().get("catacombs").getAsJsonObject();
+            JsonObject masterCatacombsObject = dungeonsObject.get("dungeon_types").getAsJsonObject().get("master_catacombs").getAsJsonObject();
             double catacombs = Utils.xpToDungeonsLevel(catacombsObject.get("experience").getAsDouble());
             int secrets = playerResponse.get("player").getAsJsonObject().get("achievements").getAsJsonObject().get("skyblock_treasure_hunter").getAsInt();
-
+            int catacombsWatcherKills = profilePlayerResponse.getAsJsonObject().get("stats").getAsJsonObject().get("kills_watcher_summon_undead") == null ? 0 : profilePlayerResponse.getAsJsonObject().get("stats").getAsJsonObject().get("kills_watcher_summon_undead").getAsInt();
+            int masterWatcherKills = profilePlayerResponse.getAsJsonObject().get("stats").getAsJsonObject().get("kills_master_watcher_summon_undead") == null ? 0 : profilePlayerResponse.getAsJsonObject().get("stats").getAsJsonObject().get("kills_master_watcher_summon_undead").getAsInt();
             String armourBase64 = profilePlayerResponse.getAsJsonObject().get("inv_armor").getAsJsonObject().get("data").getAsString();
             InputStream armourStream = new ByteArrayInputStream(Base64.getDecoder().decode(armourBase64));
 
@@ -287,25 +289,48 @@ public class PartyFinderFeatures {
 
                 bootComponent.setChatStyle(bootComponent.getChatStyle().setChatHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ChatComponentText(bootsLore))));
 
-                StringBuilder completionsHoverString = new StringBuilder();
-                int highestFloor = catacombsObject.get("highest_tier_completed").getAsInt();
+                StringBuilder catacombsCompletionsHoverString = new StringBuilder();
+                int highestCatacombsFloor = catacombsObject.get("highest_tier_completed").getAsInt();
                 JsonObject completionObj = catacombsObject.get("tier_completions").getAsJsonObject();
                 int totalRuns = 1;
-                for (int i = 0; i <= highestFloor; i++) {
-                    completionsHoverString
+                for (int i = 0; i <= highestCatacombsFloor; i++) {
+                    catacombsCompletionsHoverString
                             .append(ChatFormatting.AQUA)
                             .append(i == 0 ? "Entrance: " : "Floor " + i + ": ")
                             .append(ChatFormatting.YELLOW)
                             .append(completionObj.get(String.valueOf(i)).getAsInt())
-                            .append(i < highestFloor ? "\n": "");
+                            .append(i < highestCatacombsFloor ? "\n": "");
 
                     totalRuns = totalRuns + completionObj.get(String.valueOf(i)).getAsInt();
                 }
-                completionsHoverString.append("\n" + ChatFormatting.GOLD + "Total: " + ChatFormatting.RESET).append(totalRuns);
+                catacombsCompletionsHoverString.append("\n" + ChatFormatting.GOLD + "Total: " + ChatFormatting.RESET).append(totalRuns);
 
                 ChatComponentText completions = new ChatComponentText(ChatFormatting.AQUA + " Floor Completions: "+ChatFormatting.GRAY+"(Hover)");
 
-                completions.setChatStyle(completions.getChatStyle().setChatHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ChatComponentText(completionsHoverString.toString()))));
+                completions.setChatStyle(completions.getChatStyle().setChatHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ChatComponentText(catacombsCompletionsHoverString.toString()))));
+
+                StringBuilder masterCompletionsHoverString = new StringBuilder();
+                int highestMasterFloor = masterCatacombsObject.get("highest_tier_completed").getAsInt();
+                JsonObject masterCompletionObj = masterCatacombsObject.get("tier_completions").getAsJsonObject();
+                int totalMasterRuns = 1;
+                for (int i = 1; i <= highestMasterFloor; i++) {
+                    System.out.println(i);
+                    masterCompletionsHoverString
+                            .append(ChatFormatting.AQUA)
+                            .append(i == 0 ? "Entrance: " : "Master Floor " + i + ": ")
+                            .append(ChatFormatting.YELLOW)
+                            .append(masterCompletionObj.get(String.valueOf(i)).getAsInt())
+                            .append(i < highestCatacombsFloor ? "\n": "");
+
+                    totalMasterRuns = totalMasterRuns +  masterCompletionObj.get(String.valueOf(i)).getAsInt();
+                }
+                masterCompletionsHoverString.append("\n" + ChatFormatting.GOLD + "Total: " + ChatFormatting.RESET).append(totalMasterRuns);
+
+                ChatComponentText masterCompletions = new ChatComponentText(ChatFormatting.RED + " Master Floor Completions: "+ChatFormatting.GRAY+"(Hover)");
+
+                masterCompletions.setChatStyle(masterCompletions.getChatStyle().setChatHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ChatComponentText(masterCompletionsHoverString.toString()))));
+
+
                 String delimiter = ChatFormatting.RED.toString() + ChatFormatting.STRIKETHROUGH + ChatFormatting.BOLD + "---------------------------";
 
                 Utils.sendMessage(
@@ -314,7 +339,8 @@ public class PartyFinderFeatures {
                                 .appendSibling(nameComponent)
                                 .appendText(ChatFormatting.GREEN+"☠ Cata Level: "+ChatFormatting.YELLOW+catacombs+"\n")
                                 .appendText(ChatFormatting.GREEN+" • Total Secrets Found: "+ChatFormatting.YELLOW+secrets+"\n")
-                                .appendText(ChatFormatting.GREEN+" • Average Secrets: "+ChatFormatting.YELLOW+((secrets/totalRuns))+"\n")
+                                .appendText(ChatFormatting.GREEN+" • Average Secrets: "+ChatFormatting.YELLOW+((secrets/(totalRuns + totalMasterRuns)))+"\n")
+                                .appendText(ChatFormatting.GREEN+" • Watcher Kills: "+ChatFormatting.YELLOW+(catacombsWatcherKills + masterWatcherKills)+"\n")
                                 .appendText(ChatFormatting.GRAY+" • Magic Power: "+ChatFormatting.GOLD+magicPower+"\n\n")
                                 .appendSibling(helmetComponent)
                                 .appendSibling(chestComponent)
@@ -323,6 +349,7 @@ public class PartyFinderFeatures {
                                 .appendSibling(weaponComponent)
                                 .appendText("\n")
                                 .appendSibling(completions)
+                                .appendSibling(masterCompletions)
                                 .appendText("\n")
                                 .appendSibling(new ChatComponentText(delimiter))
                                 .appendSibling(kickComponent)
