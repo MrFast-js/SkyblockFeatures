@@ -138,7 +138,7 @@ public class PartyFinderFeatures {
         }
     }
 
-    public void showDungeonPlayerInfo(String name) {
+    public void showDungeonPlayerInfo(String name,Boolean showKick) {
         new Thread(() -> {
             // Get UUID for Hypixel API requests
             String uuid = NetworkUtils.getUUID(name);
@@ -273,7 +273,7 @@ public class PartyFinderFeatures {
                 armourStream.close();
 
                 ChatComponentText nameComponent = new ChatComponentText(ChatFormatting.AQUA+" Data For: " +ChatFormatting.YELLOW+ name + "\n ");
-                ChatComponentText kickComponent = new ChatComponentText("\n"+ChatFormatting.GREEN+"Click here to remove "+ChatFormatting.LIGHT_PURPLE+name+ChatFormatting.GREEN+" from the party");
+                ChatComponentText kickComponent = new ChatComponentText(showKick?"\n"+ChatFormatting.GREEN+"Click here to remove "+ChatFormatting.LIGHT_PURPLE+name+ChatFormatting.GREEN+" from the party":"");
                 ChatComponentText weaponComponent = new ChatComponentText(ChatFormatting.DARK_AQUA + weapon + "\n ");
                 ChatComponentText helmetComponent = new ChatComponentText(" "+ChatFormatting.DARK_AQUA + helmet + "\n ");
                 ChatComponentText chestComponent = new ChatComponentText(ChatFormatting.DARK_AQUA + chest + "\n ");
@@ -284,8 +284,10 @@ public class PartyFinderFeatures {
                 helmetComponent.setChatStyle(helmetComponent.getChatStyle().setChatHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ChatComponentText(helmetLore))));
                 chestComponent.setChatStyle(chestComponent.getChatStyle().setChatHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ChatComponentText(chestLore))));
                 legComponent.setChatStyle(legComponent.getChatStyle().setChatHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ChatComponentText(legsLore))));
+                if(showKick) {
                 kickComponent.setChatStyle(kickComponent.getChatStyle().setChatClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND,"/p kick "+name)));
                 kickComponent.setChatStyle(kickComponent.getChatStyle().setChatHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,new ChatComponentText(ChatFormatting.YELLOW+"/p kick "+name))));
+                }
 
                 bootComponent.setChatStyle(bootComponent.getChatStyle().setChatHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ChatComponentText(bootsLore))));
 
@@ -314,7 +316,6 @@ public class PartyFinderFeatures {
                 JsonObject masterCompletionObj = masterCatacombsObject.get("tier_completions").getAsJsonObject();
                 int totalMasterRuns = 1;
                 for (int i = 1; i <= highestMasterFloor; i++) {
-                    System.out.println(i);
                     masterCompletionsHoverString
                             .append(ChatFormatting.RED)
                             .append(i == 0 ? "Entrance: " : "Master Floor " + i + ": ")
