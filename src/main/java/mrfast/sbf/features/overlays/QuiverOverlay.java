@@ -114,6 +114,9 @@ public class QuiverOverlay {
                 String id = ItemUtils.getSkyBlockItemID(stack);
                 if (stack != null && stack.getItem() != null && id != null) {
                     if (stack.getItem().equals(Items.arrow) && id.contains("ARROW")) {
+                        if(!newArrowCount.has(stack.getDisplayName())) {
+                            newArrowCount.addProperty(stack.getDisplayName(),0);
+                        }
                         newArrowCount.addProperty(stack.getDisplayName(), newArrowCount.get(stack.getDisplayName()).getAsDouble() + stack.stackSize);
                     }
                 }
