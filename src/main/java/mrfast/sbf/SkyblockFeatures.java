@@ -252,6 +252,7 @@ public class SkyblockFeatures {
         commands.add(new FlipsCommand());
         commands.add(new DungeonsCommand());
         commands.add(new RepartyCommand());
+        commands.add(new DungeonPlayerInfoCommand());
         commands.add(new PingCommand());
         commands.add(new FakePlayerCommand());
         commands.add(new pvCommand());
