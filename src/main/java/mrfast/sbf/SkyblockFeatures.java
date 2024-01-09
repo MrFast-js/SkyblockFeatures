@@ -180,6 +180,7 @@ public class SkyblockFeatures {
                 new SkyblockInfo(),
                 new GlowingItems(),
                 new Reparty(),
+                new F2SpawnTimers(),
                 new ProfileViewerUtils(),
                 new SalvageProtection(),
                 new QuiverOverlay(),

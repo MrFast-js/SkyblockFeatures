@@ -94,10 +94,19 @@ public class Config extends ConfigManager {
 
     @Property(
             type = PropertyType.TOGGLE,
+            name = "Floor 2 Spawn Timers",
+            description = "Adds timers in the world that show when the servents will spawn.",
+            category = "§1§rDungeons",
+            subcategory = "Floor 2"
+    )
+    public boolean floor2SpawnTimers = false;
+
+    @Property(
+            type = PropertyType.TOGGLE,
             name = "Floor 3 Fire Freeze Helper",
             description = "Adds tools that make it easier to use the §5Fire Freeze Staff§r on M3/F3",
             category = "§1§rDungeons",
-            subcategory = "Items",
+            subcategory = "Floor 3",
             isParent = true
     )
     public boolean fireFreezeHelper = false;
@@ -107,7 +116,7 @@ public class Config extends ConfigManager {
             name = "Floor 3 Fire Freeze Timer",
             description = "Shows a timer of when to use the §5Fire Freeze Staff",
             category = "§1§rDungeons",
-            subcategory = "Items",
+            subcategory = "Floor 3",
             parentName = "Floor 3 Fire Freeze Helper"
     )
     public boolean fireFreezeTimer = true;
@@ -117,7 +126,7 @@ public class Config extends ConfigManager {
             name = "Block Early Fire Freeze",
             description = "Prevent using the §5Fire Freeze Staff§r ability before its the best time to use it.",
             category = "§1§rDungeons",
-            subcategory = "Items",
+            subcategory = "Floor 3",
             parentName = "Floor 3 Fire Freeze Helper",
             risky = true
     )

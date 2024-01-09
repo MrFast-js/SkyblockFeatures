@@ -84,7 +84,6 @@ public class GuiManager {
 
     public static void saveConfig() {
         for (Map.Entry<String, UIElement> e : names.entrySet()) {
-            // System.out.println("Saving "+e.getKey()+" "+e.getValue().getPos().getX()+" "+e.getValue().getPos().getY());
             GuiPositions.put(e.getKey(), e.getValue().getPos());
         }
         try (FileWriter writer = new FileWriter(positionFile)) {
