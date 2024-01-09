@@ -142,7 +142,7 @@ public class PartyFinderFeatures {
         new Thread(() -> {
             // Get UUID for Hypixel API requests
             String uuid = NetworkUtils.getUUID(name);
-
+            if (uuid == null) return;
             // Find stats of latest profile
             String latestProfile = NetworkUtils.getLatestProfileID(uuid);
             if (latestProfile == null) return;
