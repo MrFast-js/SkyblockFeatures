@@ -1512,8 +1512,11 @@ public class ProfileViewerGui extends WindowScreen {
                 JsonObject miningCore = ProfilePlayerResponse.get("mining_core").getAsJsonObject();
 
                 int hotmExperience = Utils.safeGetInt(miningCore, "experience");
-                int mithrilPowder = Utils.safeGetInt(miningCore, "powder_mithril");
-                int gemstonePowder = Utils.safeGetInt(miningCore, "powder_gemstone");
+                int mithrilPowderAvailable = Utils.safeGetInt(miningCore, "powder_mithril");
+                int mithrilPowderSpent = Utils.safeGetInt(miningCore, "powder_spent_mithril");
+                int gemstonePowderAvailable = Utils.safeGetInt(miningCore, "powder_gemstone");
+                int gemstonePowderSpent = Utils.safeGetInt(miningCore, "powder_spent_gemstone");
+
 
 
                 JsonArray tutorial = ProfilePlayerResponse.get("tutorial").getAsJsonArray();
@@ -1561,8 +1564,8 @@ public class ProfileViewerGui extends WindowScreen {
                 new UIText(g + "Tier: " + bold + hotmTier + "/7").setY(new SiblingConstraint(2f)).setChildOf(left);
                 new UIText(g + "Token Of The Mountain: " + bold + (tokensSpent) + "/17").setY(new SiblingConstraint(2f)).setChildOf(left);
                 new UIText(g + "Peak Of The Mountain: " + bold + potm + "/7").setY(new SiblingConstraint(2f)).setChildOf(left);
-                new UIText(g + "Mithril Powder: " + ChatFormatting.DARK_GREEN + ChatFormatting.BOLD + nf.format(mithrilPowder)).setY(new SiblingConstraint(2f)).setChildOf(left);
-                new UIText(g + "Gemstone Powder: " + ChatFormatting.LIGHT_PURPLE + ChatFormatting.BOLD + nf.format(gemstonePowder)).setY(new SiblingConstraint(2f)).setChildOf(left);
+                new UIText(g + "Mithril Powder: " + ChatFormatting.DARK_GREEN + ChatFormatting.BOLD + nf.format(mithrilPowderAvailable) + "/" + nf.format(mithrilPowderAvailable + mithrilPowderSpent)).setY(new SiblingConstraint(2f)).setChildOf(left);
+                new UIText(g + "Gemstone Powder: " + ChatFormatting.LIGHT_PURPLE + ChatFormatting.BOLD + nf.format(gemstonePowderAvailable) + "/" + nf.format(gemstonePowderAvailable + gemstonePowderSpent)).setY(new SiblingConstraint(2f)).setChildOf(left);
 
                 String pickaxeAbility = "None";
                 try {
