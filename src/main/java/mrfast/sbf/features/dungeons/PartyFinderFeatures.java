@@ -109,7 +109,7 @@ public class PartyFinderFeatures {
         if(partyFinderJoin && SkyblockFeatures.config.partyFinderJoinMessages) {
             String playerName = Utils.cleanColor(message.split(" ")[3]);
             if(playerName.contains(Minecraft.getMinecraft().thePlayer.getName())) return;
-            showDungeonPlayerInfo(playerName,true);
+            showDungeonPlayerInfo(playerName, true);
         }
         if(!SkyblockFeatures.config.dungeonPartyDisplay) return;
 
@@ -138,7 +138,7 @@ public class PartyFinderFeatures {
         }
     }
 
-    public void showDungeonPlayerInfo(String name,Boolean showKick) {
+    public void showDungeonPlayerInfo(String name, boolean kickCommand) {
         new Thread(() -> {
             // Get UUID for Hypixel API requests
             String uuid = NetworkUtils.getUUID(name);
@@ -165,23 +165,42 @@ public class PartyFinderFeatures {
                 Utils.sendMessage(ChatFormatting.RED + "Failed with reason: " + reason);
                 return;
             }
-
+            if(!profilePlayerResponse.has("dungeons")){
+                Utils.sendMessage(ChatFormatting.RED + "This player has not played dungeons!");
+                return;
+            }
             JsonObject dungeonsObject = profilePlayerResponse.getAsJsonObject().get("dungeons").getAsJsonObject();
             JsonObject catacombsObject = dungeonsObject.get("dungeon_types").getAsJsonObject().get("catacombs").getAsJsonObject();
-            JsonObject masterCatacombsObject = dungeonsObject.get("dungeon_types").getAsJsonObject().get("master_catacombs").getAsJsonObject();
+            boolean hasMasterCatacombs = false;
+            JsonObject masterCatacombsObject = null;
+            try {
+                masterCatacombsObject = dungeonsObject.get("dungeon_types").getAsJsonObject().get("master_catacombs").getAsJsonObject();
+                hasMasterCatacombs = true;
+            } catch (Exception e) {
+                // No master catacombs
+            }
             double catacombs = Utils.xpToDungeonsLevel(catacombsObject.get("experience").getAsDouble());
             int secrets = playerResponse.get("player").getAsJsonObject().get("achievements").getAsJsonObject().get("skyblock_treasure_hunter").getAsInt();
             int catacombsWatcherKills = profilePlayerResponse.getAsJsonObject().get("stats").getAsJsonObject().get("kills_watcher_summon_undead") == null ? 0 : profilePlayerResponse.getAsJsonObject().get("stats").getAsJsonObject().get("kills_watcher_summon_undead").getAsInt();
             int masterWatcherKills = profilePlayerResponse.getAsJsonObject().get("stats").getAsJsonObject().get("kills_master_watcher_summon_undead") == null ? 0 : profilePlayerResponse.getAsJsonObject().get("stats").getAsJsonObject().get("kills_master_watcher_summon_undead").getAsInt();
-            String armourBase64 = profilePlayerResponse.getAsJsonObject().get("inv_armor").getAsJsonObject().get("data").getAsString();
-            InputStream armourStream = new ByteArrayInputStream(Base64.getDecoder().decode(armourBase64));
+            InputStream armourStream = null;
+            try{
+                if (!profilePlayerResponse.getAsJsonObject().has("inv_armor")) {
+                    Utils.sendMessage(ChatFormatting.RED + "This player has there API disabled!");
+                    throw new Exception();
+                }
+                String armourBase64 = profilePlayerResponse.getAsJsonObject().get("inv_armor").getAsJsonObject().get("data").getAsString();
+                armourStream = new ByteArrayInputStream(Base64.getDecoder().decode(armourBase64));
+            } catch (Exception e) {
+                // No armor API
+            }
 
             try {
-                String inventoryBase64 = profilePlayerResponse.getAsJsonObject().get("inv_contents").getAsJsonObject().get("data").getAsString();
-                InputStream inventoryStream = new ByteArrayInputStream(Base64.getDecoder().decode(inventoryBase64));
+                if(!profilePlayerResponse.getAsJsonObject().has("inv_contents")) {
+                    Utils.sendMessage(ChatFormatting.RED + "This player has there API disabled!");
+                }
 
-                NBTTagCompound armour = CompressedStreamTools.readCompressed(armourStream);
-                NBTTagList armourList = armour.getTagList("i", 10);
+
 
                 String weapon = ChatFormatting.RED + "None";
                 String weaponLore = ChatFormatting.RED + "None";
@@ -190,6 +209,8 @@ public class PartyFinderFeatures {
                     weapon = ChatFormatting.RED+"This player has there API disabled!";
                     weaponLore = ChatFormatting.RED+"This player has there API disabled!";
                 } else {
+                    String inventoryBase64 = profilePlayerResponse.getAsJsonObject().get("inv_contents").getAsJsonObject().get("data").getAsString();
+                    InputStream inventoryStream = new ByteArrayInputStream(Base64.getDecoder().decode(inventoryBase64));
                     NBTTagCompound inventory = CompressedStreamTools.readCompressed(inventoryStream);
                     NBTTagList inventoryList = inventory.getTagList("i", 10);
 
@@ -230,66 +251,74 @@ public class PartyFinderFeatures {
                 String chestLore = ChatFormatting.RED + "None";
                 String legsLore = ChatFormatting.RED + "None";
                 String bootsLore = ChatFormatting.RED + "None";
-                // Loop through armour
-                for (int i = 0; i < armourList.tagCount(); i++) {
-                    NBTTagCompound armourPiece = armourList.getCompoundTagAt(i);
-                    if (armourPiece.hasNoTags()) continue;
-                    NBTTagCompound display = armourPiece.getCompoundTag("tag").getCompoundTag("display");
-                    String armourPieceName = armourPiece.getCompoundTag("tag").getCompoundTag("display").getString("Name");
-                    String armourPieceLore = "";
-                    if (display.hasKey("Lore", ItemUtils.NBT_LIST)) {
-                        NBTTagList lore = display.getTagList("Lore", ItemUtils.NBT_STRING);
+                // Loop through armour,
+                if(armourStream != null) {
+                    NBTTagCompound armour = CompressedStreamTools.readCompressed(armourStream);
+                    NBTTagList armourList = armour.getTagList("i", 10);
+                    for (int i = 0; i < armourList.tagCount(); i++) {
+                        NBTTagCompound armourPiece = armourList.getCompoundTagAt(i);
+                        if (armourPiece.hasNoTags()) continue;
+                        NBTTagCompound display = armourPiece.getCompoundTag("tag").getCompoundTag("display");
+                        String armourPieceName = armourPiece.getCompoundTag("tag").getCompoundTag("display").getString("Name");
+                        String armourPieceLore = "";
+                        if (display.hasKey("Lore", ItemUtils.NBT_LIST)) {
+                            NBTTagList lore = display.getTagList("Lore", ItemUtils.NBT_STRING);
 
-                        List<String> loreAsList = new ArrayList<>();
-                        for (int lineNumber = 0; lineNumber < lore.tagCount(); lineNumber++) {
-                            loreAsList.add(lore.getStringTagAt(lineNumber));
+                            List<String> loreAsList = new ArrayList<>();
+                            for (int lineNumber = 0; lineNumber < lore.tagCount(); lineNumber++) {
+                                loreAsList.add(lore.getStringTagAt(lineNumber));
+                            }
+
+                            armourPieceLore = armourPieceName + "\n" + String.join("\n", Collections.unmodifiableList(loreAsList));
                         }
-
-                        armourPieceLore = armourPieceName+"\n"+String.join("\n",Collections.unmodifiableList(loreAsList));
+                        // NBT is served boots -> helmet
+                        switch (i) {
+                            case 0:
+                                boots = armourPieceName;
+                                bootsLore = armourPieceLore;
+                                break;
+                            case 1:
+                                legs = armourPieceName;
+                                legsLore = armourPieceLore;
+                                break;
+                            case 2:
+                                chest = armourPieceName;
+                                chestLore = armourPieceLore;
+                                break;
+                            case 3:
+                                helmet = armourPieceName;
+                                helmetLore = armourPieceLore;
+                                break;
+                            default:
+                                System.err.println("An error has occurred.");
+                                break;
+                        }
                     }
-                    // NBT is served boots -> helmet
-                    switch (i) {
-                        case 0:
-                            boots = armourPieceName;
-                            bootsLore = armourPieceLore;
-                            break;
-                        case 1:
-                            legs = armourPieceName;
-                            legsLore = armourPieceLore;
-                            break;
-                        case 2:
-                            chest = armourPieceName;
-                            chestLore = armourPieceLore;
-                            break;
-                        case 3:
-                            helmet = armourPieceName;
-                            helmetLore = armourPieceLore;
-                            break;
-                        default:
-                            System.err.println("An error has occurred.");
-                            break;
-                    }
+                    armourStream.close();
                 }
-                armourStream.close();
-
                 ChatComponentText nameComponent = new ChatComponentText(ChatFormatting.AQUA+" Data For: " +ChatFormatting.YELLOW+ name + "\n ");
-                ChatComponentText kickComponent = new ChatComponentText(showKick?"\n"+ChatFormatting.GREEN+"Click here to remove "+ChatFormatting.LIGHT_PURPLE+name+ChatFormatting.GREEN+" from the party":"");
+                ChatComponentText kickComponent = new ChatComponentText("\n"+ChatFormatting.GREEN+"Click here to remove "+ChatFormatting.LIGHT_PURPLE+name+ChatFormatting.GREEN+" from the party");
                 ChatComponentText weaponComponent = new ChatComponentText(ChatFormatting.DARK_AQUA + weapon + "\n ");
-                ChatComponentText helmetComponent = new ChatComponentText(" "+ChatFormatting.DARK_AQUA + helmet + "\n ");
-                ChatComponentText chestComponent = new ChatComponentText(ChatFormatting.DARK_AQUA + chest + "\n ");
-                ChatComponentText legComponent = new ChatComponentText(ChatFormatting.DARK_AQUA + legs + "\n ");
-                ChatComponentText bootComponent = new ChatComponentText(ChatFormatting.DARK_AQUA + boots + "\n ");
+                ChatComponentText helmetComponent = new ChatComponentText(ChatFormatting.RED + "");
+                ChatComponentText chestComponent = new ChatComponentText("");
+                ChatComponentText legComponent = new ChatComponentText("");
+                ChatComponentText bootComponent = new ChatComponentText("");
+                if (armourStream != null) {
+                    helmetComponent = new ChatComponentText(" "+ChatFormatting.DARK_AQUA + helmet + "\n ");
+                    chestComponent = new ChatComponentText(ChatFormatting.DARK_AQUA + chest + "\n ");
+                    legComponent = new ChatComponentText(ChatFormatting.DARK_AQUA + legs + "\n ");
+                    bootComponent = new ChatComponentText(ChatFormatting.DARK_AQUA + boots + "\n ");
+                    helmetComponent.setChatStyle(helmetComponent.getChatStyle().setChatHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ChatComponentText(helmetLore))));
+                    chestComponent.setChatStyle(chestComponent.getChatStyle().setChatHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ChatComponentText(chestLore))));
+                    legComponent.setChatStyle(legComponent.getChatStyle().setChatHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ChatComponentText(legsLore))));
+                    bootComponent.setChatStyle(bootComponent.getChatStyle().setChatHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ChatComponentText(bootsLore))));
+                }
+
 
                 weaponComponent.setChatStyle(weaponComponent.getChatStyle().setChatHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ChatComponentText(weaponLore))));
-                helmetComponent.setChatStyle(helmetComponent.getChatStyle().setChatHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ChatComponentText(helmetLore))));
-                chestComponent.setChatStyle(chestComponent.getChatStyle().setChatHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ChatComponentText(chestLore))));
-                legComponent.setChatStyle(legComponent.getChatStyle().setChatHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ChatComponentText(legsLore))));
-                if(showKick) {
+
                 kickComponent.setChatStyle(kickComponent.getChatStyle().setChatClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND,"/p kick "+name)));
                 kickComponent.setChatStyle(kickComponent.getChatStyle().setChatHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,new ChatComponentText(ChatFormatting.YELLOW+"/p kick "+name))));
-                }
-
-                bootComponent.setChatStyle(bootComponent.getChatStyle().setChatHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ChatComponentText(bootsLore))));
 
                 StringBuilder catacombsCompletionsHoverString = new StringBuilder();
                 int highestCatacombsFloor = catacombsObject.get("highest_tier_completed").getAsInt();
@@ -311,25 +340,30 @@ public class PartyFinderFeatures {
 
                 completions.setChatStyle(completions.getChatStyle().setChatHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ChatComponentText(catacombsCompletionsHoverString.toString()))));
 
-                StringBuilder masterCompletionsHoverString = new StringBuilder();
-                int highestMasterFloor = masterCatacombsObject.get("highest_tier_completed").getAsInt();
-                JsonObject masterCompletionObj = masterCatacombsObject.get("tier_completions").getAsJsonObject();
-                int totalMasterRuns = 1;
-                for (int i = 1; i <= highestMasterFloor; i++) {
-                    masterCompletionsHoverString
-                            .append(ChatFormatting.RED)
-                            .append(i == 0 ? "Entrance: " : "Master Floor " + i + ": ")
-                            .append(ChatFormatting.YELLOW)
-                            .append(masterCompletionObj.get(String.valueOf(i)).getAsInt())
-                            .append("\n");
+                ChatComponentText masterCompletions = new ChatComponentText("");
+                if(hasMasterCatacombs){
+                    StringBuilder masterCompletionsHoverString = new StringBuilder();
+                    int highestMasterFloor = masterCatacombsObject.get("highest_tier_completed").getAsInt();
+                    JsonObject masterCompletionObj = masterCatacombsObject.get("tier_completions").getAsJsonObject();
+                    int totalMasterRuns = 1;
+                    for (int i = 1; i <= highestMasterFloor; i++) {
+                        System.out.println(i);
+                        masterCompletionsHoverString
+                                .append(ChatFormatting.RED)
+                                .append(i == 0 ? "Entrance: " : "Master Floor " + i + ": ")
+                                .append(ChatFormatting.YELLOW)
+                                .append(masterCompletionObj.get(String.valueOf(i)).getAsInt())
+                                .append("\n");
 
-                    totalMasterRuns = totalMasterRuns +  masterCompletionObj.get(String.valueOf(i)).getAsInt();
+                        totalMasterRuns = totalMasterRuns +  masterCompletionObj.get(String.valueOf(i)).getAsInt();
+                        totalRuns = totalRuns + masterCompletionObj.get(String.valueOf(i)).getAsInt();
+                    }
+                    masterCompletionsHoverString.append("\n" + ChatFormatting.GOLD + "Total: " + ChatFormatting.RESET).append(totalMasterRuns);
+
+                    masterCompletions = new ChatComponentText(ChatFormatting.RED + " Master Floor Completions: "+ChatFormatting.GRAY+"(Hover)");
+
+                    masterCompletions.setChatStyle(masterCompletions.getChatStyle().setChatHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ChatComponentText(masterCompletionsHoverString.toString()))));
                 }
-                masterCompletionsHoverString.append("\n" + ChatFormatting.GOLD + "Total: " + ChatFormatting.RESET).append(totalMasterRuns);
-
-                ChatComponentText masterCompletions = new ChatComponentText(ChatFormatting.RED + " Master Floor Completions: "+ChatFormatting.GRAY+"(Hover)");
-
-                masterCompletions.setChatStyle(masterCompletions.getChatStyle().setChatHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ChatComponentText(masterCompletionsHoverString.toString()))));
 
 
                 String delimiter = ChatFormatting.RED.toString() + ChatFormatting.STRIKETHROUGH + ChatFormatting.BOLD + "---------------------------";
@@ -340,7 +374,7 @@ public class PartyFinderFeatures {
                                 .appendSibling(nameComponent)
                                 .appendText(ChatFormatting.GREEN+"☠ Cata Level: "+ChatFormatting.YELLOW+catacombs+"\n")
                                 .appendText(ChatFormatting.GREEN+" • Total Secrets Found: "+ChatFormatting.YELLOW+secrets+"\n")
-                                .appendText(ChatFormatting.GREEN+" • Average Secrets: "+ChatFormatting.YELLOW+((secrets/(totalRuns + totalMasterRuns)))+"\n")
+                                .appendText(ChatFormatting.GREEN+" • Average Secrets: "+ChatFormatting.YELLOW+((secrets/totalRuns))+"\n")
                                 .appendText(ChatFormatting.GREEN+" • Watcher Kills: "+ChatFormatting.YELLOW+(catacombsWatcherKills + masterWatcherKills)+"\n")
                                 .appendText(ChatFormatting.GRAY+" • Magic Power: "+ChatFormatting.GOLD+magicPower+"\n\n")
                                 .appendSibling(helmetComponent)
@@ -353,7 +387,7 @@ public class PartyFinderFeatures {
                                 .appendSibling(masterCompletions)
                                 .appendText("\n")
                                 .appendSibling(new ChatComponentText(delimiter))
-                                .appendSibling(kickComponent)
+                                .appendSibling(kickCommand ? kickComponent : new ChatComponentText(""))
                 );
             } catch (IOException ex) {
                 Utils.sendMessage(ChatFormatting.RED+"Error! This player may not have there API on.");
