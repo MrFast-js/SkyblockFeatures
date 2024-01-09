@@ -1144,6 +1144,20 @@ public class ProfileViewerGui extends WindowScreen {
                     InventoryBasic wardrobePage1 = new InventoryBasic("Test#1", true, 36);
                     InventoryBasic wardrobePage2 = new InventoryBasic("Test#1", true, 36);
 
+                    InventoryBasic vault = new InventoryBasic("Test#1", true, 27);
+                    if (ProfilePlayerResponse.has("personal_vault_contents")){
+                        String inventoryBase64 = ProfilePlayerResponse.get("personal_vault_contents").getAsJsonObject().get("data").getAsString();
+                        Inventory items = new Inventory(inventoryBase64);
+                        List<ItemStack> a = ItemUtils.decodeInventory(items, true);
+
+                        int index = 0;
+                        for (ItemStack item : a) {
+                            vault.setInventorySlotContents(index, item);
+                            index++;
+                        }
+
+                    }
+
                     if (ProfilePlayerResponse.has("wardrobe_contents")) {
                         String inventoryBase64 = ProfilePlayerResponse.get("wardrobe_contents").getAsJsonObject().get("data").getAsString();
                         Inventory items = new Inventory(inventoryBase64);
@@ -1165,9 +1179,10 @@ public class ProfileViewerGui extends WindowScreen {
 
                     UIComponent container = new UIBlock(clear)
                             .setWidth(new RelativeConstraint(1f))
-                            .setY(new SiblingConstraint(10f))
+                            .setX(new PixelConstraint(0f))
+                            .setY(new SiblingConstraint(5f))
                             .setChildOf(statsAreaContainer)
-                            .setHeight(new RelativeConstraint(0.25f));
+                            .setHeight(new RelativeConstraint(0.33f));
 
                     new InventoryComponent(inv, "Inventory")
                             .setChildOf(container)
@@ -1178,6 +1193,11 @@ public class ProfileViewerGui extends WindowScreen {
                     new InventoryComponent(wardrobePage2, "Wardrobe Page 2")
                             .setX(new SiblingConstraint(10f))
                             .setChildOf(container);
+
+                    new InventoryComponent(vault, "Personal Vault")
+                            .setChildOf(container)
+                            .setX(new PixelConstraint(0f))
+                            .setY(new SiblingConstraint(10f));
                 }
 
                 { // Talisman Bag, 3 pages
@@ -1492,8 +1512,11 @@ public class ProfileViewerGui extends WindowScreen {
                 JsonObject miningCore = ProfilePlayerResponse.get("mining_core").getAsJsonObject();
 
                 int hotmExperience = Utils.safeGetInt(miningCore, "experience");
-                int mithrilPowder = Utils.safeGetInt(miningCore, "powder_mithril");
-                int gemstonePowder = Utils.safeGetInt(miningCore, "powder_gemstone");
+                int mithrilPowderAvailable = Utils.safeGetInt(miningCore, "powder_mithril");
+                int mithrilPowderSpent = Utils.safeGetInt(miningCore, "powder_spent_mithril");
+                int gemstonePowderAvailable = Utils.safeGetInt(miningCore, "powder_gemstone");
+                int gemstonePowderSpent = Utils.safeGetInt(miningCore, "powder_spent_gemstone");
+
 
 
                 JsonArray tutorial = ProfilePlayerResponse.get("tutorial").getAsJsonArray();
@@ -1541,8 +1564,8 @@ public class ProfileViewerGui extends WindowScreen {
                 new UIText(g + "Tier: " + bold + hotmTier + "/7").setY(new SiblingConstraint(2f)).setChildOf(left);
                 new UIText(g + "Token Of The Mountain: " + bold + (tokensSpent) + "/17").setY(new SiblingConstraint(2f)).setChildOf(left);
                 new UIText(g + "Peak Of The Mountain: " + bold + potm + "/7").setY(new SiblingConstraint(2f)).setChildOf(left);
-                new UIText(g + "Mithril Powder: " + ChatFormatting.DARK_GREEN + ChatFormatting.BOLD + nf.format(mithrilPowder)).setY(new SiblingConstraint(2f)).setChildOf(left);
-                new UIText(g + "Gemstone Powder: " + ChatFormatting.LIGHT_PURPLE + ChatFormatting.BOLD + nf.format(gemstonePowder)).setY(new SiblingConstraint(2f)).setChildOf(left);
+                new UIText(g + "Mithril Powder: " + ChatFormatting.DARK_GREEN + ChatFormatting.BOLD + nf.format(mithrilPowderAvailable) + "/" + nf.format(mithrilPowderAvailable + mithrilPowderSpent)).setY(new SiblingConstraint(2f)).setChildOf(left);
+                new UIText(g + "Gemstone Powder: " + ChatFormatting.LIGHT_PURPLE + ChatFormatting.BOLD + nf.format(gemstonePowderAvailable) + "/" + nf.format(gemstonePowderAvailable + gemstonePowderSpent)).setY(new SiblingConstraint(2f)).setChildOf(left);
 
                 String pickaxeAbility = "None";
                 try {

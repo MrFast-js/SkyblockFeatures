@@ -291,11 +291,11 @@ public class ProfileViewerUtils {
         Map<Integer, Integer> hotmXp = new HashMap<>();
         hotmXp.put(1, 0);
         hotmXp.put(2, 3000);
-        hotmXp.put(3, 9000);
-        hotmXp.put(4, 25000);
-        hotmXp.put(5, 60000);
-        hotmXp.put(6, 100000);
-        hotmXp.put(7, 150000);
+        hotmXp.put(3, 12000);
+        hotmXp.put(4, 37000);
+        hotmXp.put(5, 97000);
+        hotmXp.put(6, 197000);
+        hotmXp.put(7, 347000);
 
         return determineLevel(hotmXp, xp);
     }
