@@ -1144,6 +1144,20 @@ public class ProfileViewerGui extends WindowScreen {
                     InventoryBasic wardrobePage1 = new InventoryBasic("Test#1", true, 36);
                     InventoryBasic wardrobePage2 = new InventoryBasic("Test#1", true, 36);
 
+                    InventoryBasic vault = new InventoryBasic("Test#1", true, 27);
+                    if (ProfilePlayerResponse.has("personal_vault_contents")){
+                        String inventoryBase64 = ProfilePlayerResponse.get("personal_vault_contents").getAsJsonObject().get("data").getAsString();
+                        Inventory items = new Inventory(inventoryBase64);
+                        List<ItemStack> a = ItemUtils.decodeInventory(items, true);
+
+                        int index = 0;
+                        for (ItemStack item : a) {
+                            vault.setInventorySlotContents(index, item);
+                            index++;
+                        }
+
+                    }
+
                     if (ProfilePlayerResponse.has("wardrobe_contents")) {
                         String inventoryBase64 = ProfilePlayerResponse.get("wardrobe_contents").getAsJsonObject().get("data").getAsString();
                         Inventory items = new Inventory(inventoryBase64);
@@ -1165,9 +1179,10 @@ public class ProfileViewerGui extends WindowScreen {
 
                     UIComponent container = new UIBlock(clear)
                             .setWidth(new RelativeConstraint(1f))
-                            .setY(new SiblingConstraint(10f))
+                            .setX(new PixelConstraint(0f))
+                            .setY(new SiblingConstraint(5f))
                             .setChildOf(statsAreaContainer)
-                            .setHeight(new RelativeConstraint(0.25f));
+                            .setHeight(new RelativeConstraint(0.33f));
 
                     new InventoryComponent(inv, "Inventory")
                             .setChildOf(container)
@@ -1178,6 +1193,11 @@ public class ProfileViewerGui extends WindowScreen {
                     new InventoryComponent(wardrobePage2, "Wardrobe Page 2")
                             .setX(new SiblingConstraint(10f))
                             .setChildOf(container);
+
+                    new InventoryComponent(vault, "Personal Vault")
+                            .setChildOf(container)
+                            .setX(new PixelConstraint(0f))
+                            .setY(new SiblingConstraint(10f));
                 }
 
                 { // Talisman Bag, 3 pages
