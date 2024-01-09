@@ -26,7 +26,7 @@ public class FireFreezeTimer {
 
         if(event.action.equals(PlayerInteractEvent.Action.RIGHT_CLICK_AIR) || event.action.equals(PlayerInteractEvent.Action.RIGHT_CLICK_BLOCK)) {
             ItemStack held = Utils.GetMC().thePlayer.getHeldItem();
-            if(!shouldFireFreeze && held != null) {
+            if(!shouldFireFreeze && held != null && !DungeonsFeatures.dungeonStarted) {
                 String id = ItemUtils.getSkyBlockItemID(held);
                 if(id.equals("FIRE_FREEZE_STAFF")) {
                     event.setCanceled(true);
