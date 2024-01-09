@@ -108,6 +108,7 @@ public class PartyFinderFeatures {
         boolean partyFinderJoin = message.startsWith("Party Finder > ") && message.contains(" joined the dungeon group! (");
         if(partyFinderJoin && SkyblockFeatures.config.partyFinderJoinMessages) {
             String playerName = Utils.cleanColor(message.split(" ")[3]);
+            if(playerName.contains(Minecraft.getMinecraft().thePlayer.getName())) return;
             showDungeonPlayerInfo(playerName);
         }
         if(!SkyblockFeatures.config.dungeonPartyDisplay) return;
