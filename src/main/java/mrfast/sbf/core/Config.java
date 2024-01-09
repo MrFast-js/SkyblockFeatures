@@ -94,12 +94,34 @@ public class Config extends ConfigManager {
 
     @Property(
             type = PropertyType.TOGGLE,
+            name = "Floor 3 Fire Freeze Helper",
+            description = "Adds tools that make it easier to use the §5Fire Freeze Staff§r on M3/F3",
+            category = "§1§rDungeons",
+            subcategory = "Items",
+            isParent = true
+    )
+    public boolean fireFreezeHelper = false;
+
+    @Property(
+            type = PropertyType.TOGGLE,
             name = "Floor 3 Fire Freeze Timer",
             description = "Shows a timer of when to use the §5Fire Freeze Staff",
             category = "§1§rDungeons",
-            subcategory = "Items"
+            subcategory = "Items",
+            parentName = "Floor 3 Fire Freeze Helper"
     )
-    public boolean fireFreezeTimer = false;
+    public boolean fireFreezeTimer = true;
+
+    @Property(
+            type = PropertyType.TOGGLE,
+            name = "Block Early Fire Freeze",
+            description = "Prevent using the §5Fire Freeze Staff§r ability before its the best time to use it.",
+            category = "§1§rDungeons",
+            subcategory = "Items",
+            parentName = "Floor 3 Fire Freeze Helper",
+            risky = true
+    )
+    public boolean blockEarlyFireFreeze = false;
 
     @Property(
             type = PropertyType.TOGGLE,

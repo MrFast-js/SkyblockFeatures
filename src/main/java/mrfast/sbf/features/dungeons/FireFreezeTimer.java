@@ -4,10 +4,13 @@ import mrfast.sbf.SkyblockFeatures;
 import mrfast.sbf.gui.components.Point;
 import mrfast.sbf.gui.components.UIElement;
 import mrfast.sbf.utils.GuiUtils;
+import mrfast.sbf.utils.ItemUtils;
 import mrfast.sbf.utils.Utils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -17,18 +20,35 @@ public class FireFreezeTimer {
     String bossDialogue = "[BOSS] The Professor: Oh? You found my Guardians' one weakness?";
 
     static String display = "";
-    private static final Minecraft mc = Minecraft.getMinecraft();
+    @SubscribeEvent
+    public void onPlayerInteract(PlayerInteractEvent event) {
+        if (!Utils.inDungeons || !SkyblockFeatures.config.fireFreezeHelper || !SkyblockFeatures.config.blockEarlyFireFreeze) return;
 
+        if(event.action.equals(PlayerInteractEvent.Action.RIGHT_CLICK_AIR) || event.action.equals(PlayerInteractEvent.Action.RIGHT_CLICK_BLOCK)) {
+            ItemStack held = Utils.GetMC().thePlayer.getHeldItem();
+            if(!shouldFireFreeze && held != null) {
+                String id = ItemUtils.getSkyBlockItemID(held);
+                if(id.equals("FIRE_FREEZE_STAFF")) {
+                    event.setCanceled(true);
+                }
+            }
+        }
+    }
+    static boolean shouldFireFreeze = false;
     @SubscribeEvent(priority = EventPriority.HIGHEST, receiveCanceled = true)
     public void onChatMessage(ClientChatReceivedEvent event) {
-        if (!Utils.inDungeons || event.type == 2) return;
+        if (!Utils.inDungeons || event.type == 2 || !SkyblockFeatures.config.fireFreezeHelper || !SkyblockFeatures.config.fireFreezeTimer) return;
         String text = event.message.getUnformattedText();
-        if(text.startsWith(bossDialogue) && SkyblockFeatures.config.fireFreezeTimer) {
+        if(text.startsWith(bossDialogue)) {
             for(int i=1; i<=8;i++) {
-                String count = (i == 7) ? "§aFire Freeze Now!" : (i == 6) ? "§aFire Freeze Now!" : (i < 6) ? "§cFire Freeze in " + (6 - i) + " seconds" : "";
+                String count = i >= 6 ? "§aFire Freeze Now!" : "§cFire Freeze in " + (6 - i) + " seconds";
 
+                int a = i;
                 Utils.setTimeout(()->{
                     display = count;
+
+                    if(a == 6) shouldFireFreeze = true;
+                    if(a == 8) display = "";
                 },i*860);
             }
         }
@@ -37,6 +57,7 @@ public class FireFreezeTimer {
     @SubscribeEvent
     public void onLoad(WorldEvent.Load event) {
         display = "";
+        shouldFireFreeze = false;
     }
 
     static {
