@@ -299,7 +299,7 @@ public class PartyFinderFeatures {
                             .append(i == 0 ? "Entrance: " : "Floor " + i + ": ")
                             .append(ChatFormatting.YELLOW)
                             .append(completionObj.get(String.valueOf(i)).getAsInt())
-                            .append(i < highestCatacombsFloor ? "\n": "");
+                            .append("\n");
 
                     totalRuns = totalRuns + completionObj.get(String.valueOf(i)).getAsInt();
                 }
@@ -316,11 +316,11 @@ public class PartyFinderFeatures {
                 for (int i = 1; i <= highestMasterFloor; i++) {
                     System.out.println(i);
                     masterCompletionsHoverString
-                            .append(ChatFormatting.AQUA)
+                            .append(ChatFormatting.RED)
                             .append(i == 0 ? "Entrance: " : "Master Floor " + i + ": ")
                             .append(ChatFormatting.YELLOW)
                             .append(masterCompletionObj.get(String.valueOf(i)).getAsInt())
-                            .append(i < highestCatacombsFloor ? "\n": "");
+                            .append("\n");
 
                     totalMasterRuns = totalMasterRuns +  masterCompletionObj.get(String.valueOf(i)).getAsInt();
                 }
