@@ -38,8 +38,17 @@ public class SpamHider {
                 }
             }
             if (SkyblockFeatures.config.hideAdvertisements) {
-                if (unformatted.startsWith("[Auction]") || unformatted.contains("claimed") || unformatted.contains("Bid of") || unformatted.contains("created a") || unformatted.contains("Auction started") || unformatted.startsWith("From") || unformatted.startsWith("To") || unformatted.startsWith("-----------------------------------------------------"))
+                if (unformatted.startsWith("[Auction]") ||
+                        unformatted.contains("collected an auction for") ||
+                        unformatted.startsWith("You claimed") ||
+                        unformatted.contains("Bid of") ||
+                        unformatted.contains("created a") ||
+                        unformatted.contains("Auction started") ||
+                        unformatted.startsWith("From") ||
+                        unformatted.startsWith("To") ||
+                        unformatted.startsWith("-----------------------------------------------------"))
                     return;
+
                 if (SkyblockFeatures.config.hideAdvertisementsLowball && (u.contains("percent") || (u.contains("low") || u.contains("ball")))) {
                     cancelChatPacket(event);
                 }
