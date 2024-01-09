@@ -2388,9 +2388,30 @@ public class Config extends ConfigManager {
             name = "Ad Blocker",
             description = "Hides auction/lowballing advertisements in chat",
             category = "General",
-            subcategory = "§1§rChat"
+            subcategory = "§1§rChat",
+            isParent = true
     )
     public boolean hideAdvertisements = false;
+
+    @Property(
+            type = PropertyType.TOGGLE,
+            name = "Hide Almost All Ads",
+            description = "",
+            category = "General",
+            subcategory = "§1§rChat",
+            parentName = "Ad Blocker"
+    )
+    public boolean hideAdvertisementsAll = true;
+
+    @Property(
+            type = PropertyType.TOGGLE,
+            name = "Hide Lowballing Ads",
+            description = "",
+            category = "General",
+            subcategory = "§1§rChat",
+            parentName = "Ad Blocker"
+    )
+    public boolean hideAdvertisementsLowball = true;
 
     @Property(
             type = PropertyType.TOGGLE,

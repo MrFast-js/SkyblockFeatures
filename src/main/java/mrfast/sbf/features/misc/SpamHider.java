@@ -24,25 +24,38 @@ public class SpamHider {
         S02PacketChat packet = (S02PacketChat) event.packet;
         if (packet.getType() == 2) return;
         String unformatted = Utils.cleanColor(packet.getChatComponent().getUnformattedText());
-        
+
         try {
             String u = unformatted.toLowerCase();
-            if(SkyblockFeatures.config.hideAnitaArtifactNotification) {
-                if(u.startsWith("[NPC] Jacob: Your Anita's Artifact is giving you")) {
+            if (SkyblockFeatures.config.hideAnitaArtifactNotification) {
+                if (u.startsWith("[NPC] Jacob: Your Anita's Artifact is giving you")) {
                     event.setCanceled(true);
                 }
             }
-            if(SkyblockFeatures.config.hideSlowdownCommandWarning) {
-                if(u.startsWith("You are sending commands too fast! Please slow down.")) {
+            if (SkyblockFeatures.config.hideSlowdownCommandWarning) {
+                if (u.startsWith("You are sending commands too fast! Please slow down.")) {
                     event.setCanceled(true);
                 }
             }
-            if(SkyblockFeatures.config.hideAdvertisements) {
-                if (u.contains("/visit") || u.contains("lowballing") || u.contains("selling") || u.contains("buying") || u.contains("visit") || u.contains("ah") || u.contains("auction") || u.contains("guild")) {
-                    // Dont remove messages from the auction house
-                    if (unformatted.contains("[Auction]") || unformatted.contains("claimed") || unformatted.contains("Bid of") || unformatted.contains("created a") || unformatted.contains("Auction started"))
-                        return;
-
+            if (SkyblockFeatures.config.hideAdvertisements) {
+                if (unformatted.startsWith("[Auction]") || unformatted.contains("claimed") || unformatted.contains("Bid of") || unformatted.contains("created a") || unformatted.contains("Auction started") || unformatted.startsWith("From") || unformatted.startsWith("To") || unformatted.startsWith("-----------------------------------------------------"))
+                    return;
+                if (SkyblockFeatures.config.hideAdvertisementsLowball && (u.contains("percent") || (u.contains("low") || u.contains("ball")))) {
+                    cancelChatPacket(event);
+                }
+                if (SkyblockFeatures.config.hideAdvertisementsAll && (
+                        u.contains("/visit") ||
+                        u.contains("selling") ||
+                        u.contains("buying") ||
+                        u.contains("visit") ||
+                        u.contains("ah") ||
+                        u.contains("auction") ||
+                        u.contains("guild") ||
+                        u.contains("can buy") ||
+                        u.contains("/p me") ||
+                        u.contains("free") ||
+                        u.contains("carry") ||
+                        u.contains("carries"))) {
                     cancelChatPacket(event);
                 }
             }
