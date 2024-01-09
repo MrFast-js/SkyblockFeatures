@@ -1,6 +1,7 @@
 package mrfast.sbf.features.dungeons;
 
 import mrfast.sbf.SkyblockFeatures;
+import mrfast.sbf.core.SkyblockInfo;
 import mrfast.sbf.gui.components.Point;
 import mrfast.sbf.gui.components.UIElement;
 import mrfast.sbf.utils.GuiUtils;
@@ -22,7 +23,7 @@ public class FireFreezeTimer {
     static String display = "";
     @SubscribeEvent
     public void onPlayerInteract(PlayerInteractEvent event) {
-        if (!Utils.inDungeons || !SkyblockFeatures.config.fireFreezeHelper || !SkyblockFeatures.config.blockEarlyFireFreeze) return;
+        if (!Utils.inDungeons || !SkyblockFeatures.config.fireFreezeHelper || !SkyblockFeatures.config.blockEarlyFireFreeze || !SkyblockInfo.localLocation.contains("3")) return;
 
         if(event.action.equals(PlayerInteractEvent.Action.RIGHT_CLICK_AIR) || event.action.equals(PlayerInteractEvent.Action.RIGHT_CLICK_BLOCK)) {
             ItemStack held = Utils.GetMC().thePlayer.getHeldItem();
@@ -37,7 +38,7 @@ public class FireFreezeTimer {
     static boolean shouldFireFreeze = false;
     @SubscribeEvent(priority = EventPriority.HIGHEST, receiveCanceled = true)
     public void onChatMessage(ClientChatReceivedEvent event) {
-        if (!Utils.inDungeons || event.type == 2 || !SkyblockFeatures.config.fireFreezeHelper || !SkyblockFeatures.config.fireFreezeTimer) return;
+        if (!Utils.inDungeons || event.type == 2 || !SkyblockFeatures.config.fireFreezeHelper || !SkyblockFeatures.config.fireFreezeTimer || !SkyblockInfo.localLocation.contains("3")) return;
         String text = event.message.getUnformattedText();
         if(text.startsWith(bossDialogue)) {
             for(int i=1; i<=8;i++) {
