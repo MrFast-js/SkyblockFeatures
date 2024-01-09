@@ -28,12 +28,18 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.Vec3;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
+import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class MinionOverlay {
     static JsonObject minions = new JsonObject();
     @SubscribeEvent
     public void onProfileSwap(ProfileSwapEvent event) {
+        minions = (JsonObject) DataManager.getProfileDataDefault("minions", new JsonObject());
+    }
+
+    @SubscribeEvent
+    public void onLoad(WorldEvent.Load event) {
         minions = (JsonObject) DataManager.getProfileDataDefault("minions", new JsonObject());
     }
 
