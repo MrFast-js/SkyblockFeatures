@@ -27,7 +27,7 @@ public class DungeonPlayerInfoCommand  extends  CommandBase{
     @Override
     public void processCommand(ICommandSender arg0, String[] arg1) throws CommandException {
         PartyFinderFeatures instance = new PartyFinderFeatures();
-        if(arg1.length == 0) instance.showDungeonPlayerInfo(Minecraft.getMinecraft().thePlayer.getName());
-        if(arg1.length ==1) instance.showDungeonPlayerInfo(arg1[0]);
+        if(arg1.length == 0) instance.showDungeonPlayerInfo(Minecraft.getMinecraft().thePlayer.getName(),false);
+        if(arg1.length ==1) instance.showDungeonPlayerInfo(arg1[0],false);
     }
 }
