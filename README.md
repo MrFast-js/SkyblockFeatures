@@ -101,6 +101,7 @@
     <ul>
         <li>Small Items</li>
         <li>Glowing Items based on rarity</li>
+        <li>Bestiary Mob Tracker (can glow any mob)
         <li>Glowing Zealots</li>
         <li>Highlight Slayers</li>
         <li>Ad Blocker (Hides people advertising in chat)</li>
