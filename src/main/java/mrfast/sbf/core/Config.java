@@ -1482,7 +1482,7 @@ public class Config extends ConfigManager {
     @Property(
             type = PropertyType.TOGGLE,
             name = "Glowing Dungeon Teammates",
-            description = "Make your teamates glow based on there class in dungeons.",
+            description = "Make your teamates glow based on their class in dungeons.",
             category = "Render",
             subcategory = "1.9 Glow Effect"
     )

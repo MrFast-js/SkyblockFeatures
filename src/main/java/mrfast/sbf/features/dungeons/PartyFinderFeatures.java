@@ -186,7 +186,7 @@ public class PartyFinderFeatures {
             InputStream armourStream = null;
             try{
                 if (!profilePlayerResponse.getAsJsonObject().has("inv_armor")) {
-                    Utils.sendMessage(ChatFormatting.RED + "This player has there API disabled!");
+                    Utils.sendMessage(ChatFormatting.RED + "This player has their API disabled!");
                     throw new Exception();
                 }
                 String armourBase64 = profilePlayerResponse.getAsJsonObject().get("inv_armor").getAsJsonObject().get("data").getAsString();
@@ -197,7 +197,7 @@ public class PartyFinderFeatures {
 
             try {
                 if(!profilePlayerResponse.getAsJsonObject().has("inv_contents")) {
-                    Utils.sendMessage(ChatFormatting.RED + "This player has there API disabled!");
+                    Utils.sendMessage(ChatFormatting.RED + "This player has their API disabled!");
                 }
 
 
@@ -206,8 +206,8 @@ public class PartyFinderFeatures {
                 String weaponLore = ChatFormatting.RED + "None";
 
                 if(!profilePlayerResponse.getAsJsonObject().has("inv_contents")) {
-                    weapon = ChatFormatting.RED+"This player has there API disabled!";
-                    weaponLore = ChatFormatting.RED+"This player has there API disabled!";
+                    weapon = ChatFormatting.RED+"This player has their API disabled!";
+                    weaponLore = ChatFormatting.RED+"This player has their API disabled!";
                 } else {
                     String inventoryBase64 = profilePlayerResponse.getAsJsonObject().get("inv_contents").getAsJsonObject().get("data").getAsString();
                     InputStream inventoryStream = new ByteArrayInputStream(Base64.getDecoder().decode(inventoryBase64));
@@ -390,7 +390,7 @@ public class PartyFinderFeatures {
                                 .appendSibling(kickCommand ? kickComponent : new ChatComponentText(""))
                 );
             } catch (IOException ex) {
-                Utils.sendMessage(ChatFormatting.RED+"Error! This player may not have there API on.");
+                Utils.sendMessage(ChatFormatting.RED+"Error! This player may not have their API on.");
             }
         }).start();
     }
