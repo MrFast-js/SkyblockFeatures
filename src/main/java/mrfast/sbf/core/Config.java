@@ -1683,16 +1683,6 @@ public class Config extends ConfigManager {
 
     @Property(
             type = PropertyType.TOGGLE,
-            name = "Item Rarity Backgrounds",
-            description = "Shows an items rarity by changin the background of the item",
-            category = "Miscellaneous",
-            subcategory = "Items",
-            isParent = true
-    )
-    public boolean itemRarityBackground = false;
-
-    @Property(
-            type = PropertyType.TOGGLE,
             name = "Cooldown Tracker",
             description = "Shows a display with your hotbar items cooldowns on each item",
             category = "Miscellaneous",
