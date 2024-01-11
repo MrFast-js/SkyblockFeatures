@@ -347,7 +347,6 @@ public class PartyFinderFeatures {
                     JsonObject masterCompletionObj = masterCatacombsObject.get("tier_completions").getAsJsonObject();
                     int totalMasterRuns = 1;
                     for (int i = 1; i <= highestMasterFloor; i++) {
-                        System.out.println(i);
                         masterCompletionsHoverString
                                 .append(ChatFormatting.RED)
                                 .append(i == 0 ? "Entrance: " : "Master Floor " + i + ": ")
