@@ -1182,14 +1182,16 @@ public class ProfileViewerGui extends WindowScreen {
                             .setX(new PixelConstraint(0f))
                             .setY(new SiblingConstraint(5f))
                             .setChildOf(statsAreaContainer)
-                            .setHeight(new RelativeConstraint(0.33f));
+                            .setHeight(new RelativeConstraint(0.48f));
 
                     new InventoryComponent(inv, "Inventory")
                             .setChildOf(container)
                             .setX(new PixelConstraint(0f));
+
                     new InventoryComponent(wardrobePage1, "Wardrobe Page 1")
                             .setX(new SiblingConstraint(10f))
                             .setChildOf(container);
+
                     new InventoryComponent(wardrobePage2, "Wardrobe Page 2")
                             .setX(new SiblingConstraint(10f))
                             .setChildOf(container);
@@ -1197,7 +1199,7 @@ public class ProfileViewerGui extends WindowScreen {
                     new InventoryComponent(vault, "Personal Vault")
                             .setChildOf(container)
                             .setX(new PixelConstraint(0f))
-                            .setY(new SiblingConstraint(10f));
+                            .setY(new SiblingConstraint(17f));
                 }
 
                 { // Talisman Bag, 3 pages
