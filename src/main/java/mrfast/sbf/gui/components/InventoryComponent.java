@@ -12,6 +12,7 @@ import gg.essential.elementa.constraints.PixelConstraint;
 import gg.essential.elementa.state.BasicState;
 import gg.essential.elementa.state.State;
 import gg.essential.universal.UMatrixStack;
+import mrfast.sbf.utils.Utils;
 import net.minecraft.inventory.InventoryBasic;
 import net.minecraft.item.ItemStack;
 
@@ -24,9 +25,10 @@ public class InventoryComponent extends UIComponent {
         InventoryBasic inventory = state.get();
         int verticalSlots = (int) (double) (inventory.getSizeInventory() / 9);
         int horizontalSlots = 9;
-
-        if(getWidth()==0) setWidth(new PixelConstraint(horizontalSlots*17f));
-        if(getHeight()==0) setHeight(new PixelConstraint(verticalSlots*17f));
+        int screenHeight = Utils.GetMC().currentScreen.height;
+        double fontScale = screenHeight / 540d;
+        if(getWidth()==0) setWidth(new PixelConstraint((float) (horizontalSlots*17f*fontScale)));
+        if(getHeight()==0) setHeight(new PixelConstraint((float) (verticalSlots*17f*fontScale)));
 
         new UIText(ChatFormatting.YELLOW+invName.get()).setX(new CenterConstraint()).setChildOf(this);
         boolean stopped = false;
@@ -42,10 +44,10 @@ public class InventoryComponent extends UIComponent {
                 }
 
                 UIComponent backgroundSlot = new UIRoundedRectangle(3f)
-                    .setHeight(new PixelConstraint(16f))
-                    .setWidth(new PixelConstraint(16f))
-                    .setX(new PixelConstraint(x*17f))
-                    .setY(new PixelConstraint(y*17f+10+topMargin))
+                    .setHeight(new PixelConstraint((float) (16f*fontScale)))
+                    .setWidth(new PixelConstraint((float) (16f*fontScale)))
+                    .setX(new PixelConstraint((float) ((x*17f) * fontScale)))
+                    .setY(new PixelConstraint((float) ((y*17f+10+topMargin)*fontScale)))
                     .setColor(new Color(100,100,100,200));
                 
                 new ItemStackComponent(item)

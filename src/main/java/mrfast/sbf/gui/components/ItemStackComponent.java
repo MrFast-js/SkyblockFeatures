@@ -36,16 +36,18 @@ public class ItemStackComponent extends UIComponent {
 
         beforeDraw(matrixStack);
         super.draw(matrixStack);
-
-        if (getWidth() == 0) setWidth(new PixelConstraint(16f));
-        if (getHeight() == 0) setHeight(new PixelConstraint(16f));
+        int screenHeight = Utils.GetMC().currentScreen.height;
+        float fontScale = (float) (screenHeight / 540d);
+        if (getWidth() == 0) setWidth(new PixelConstraint(16f*fontScale));
+        if (getHeight() == 0) setHeight(new PixelConstraint(16f*fontScale));
 
         matrixStack.push();
+
         matrixStack.translate(getLeft(), getTop(), 100f);
-        matrixStack.scale(getWidth() / 16f, getHeight() / 16f, 1f);
+        matrixStack.scale(getWidth() / (16f*fontScale), getHeight() / (16f*fontScale), 1f);
         UGraphics.color4f(1f, 1f, 1f, 1f);
         matrixStack.runWithGlobalState(() -> {
-            RenderUtil.renderItemStackOnScreen(item, 0, 0, 16, 16);
+            RenderUtil.renderItemStackOnScreen(item, 0, 0, (16f*fontScale), (16f*fontScale));
         });
         matrixStack.pop();
         UGraphics.disableLighting();
