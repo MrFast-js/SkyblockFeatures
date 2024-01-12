@@ -231,17 +231,29 @@ public class NetworkUtils {
         return new JsonArray();
     }
 
+    private static final HashMap<String, String> nameCache = new HashMap<>();
     public static String getUUID(String username) {
         return getUUID(username, false);
     }
 
     public static String getUUID(String username, boolean formatted) {
+        if(nameCache.containsValue(username.toLowerCase())) {
+            System.out.println("Found cached UUID for " + username);
+            for(Map.Entry<String,String> entry : nameCache.entrySet()) {
+                if(entry.getValue().equals(username)) {
+                    return formatted ? formatUUID(entry.getKey()) : entry.getKey();
+                }
+            }
+        }
+        System.out.println("Getting UUID for " + username);
         try {
             JsonObject uuidResponse = getJSONResponse("https://api.mojang.com/users/profiles/minecraft/" + username);
             String out = uuidResponse.get("id").getAsString();
+            nameCache.put(out, uuidResponse.get("name").getAsString().toLowerCase());
             return formatted ? formatUUID(out) : out;
         } catch (Exception e) {
             // TODO: handle exception
+            e.printStackTrace();
         }
         return null;
     }
@@ -250,15 +262,12 @@ public class NetworkUtils {
         return input.replaceAll("(.{8})(.{4})(.{4})(.{4})(.{12})", "$1-$2-$3-$4-$5");
     }
 
-    private static final HashMap<String, String> nameCache = new HashMap<>();
-
     public static String getName(String uuid) {
         if (nameCache.containsKey(uuid)) return nameCache.get(uuid);
         try {
             JsonObject json = getJSONResponse("https://api.mojang.com/user/profile/" + uuid);
             if (json.has("error")) return null;
-
-            nameCache.put(uuid, json.get("name").getAsString());
+            nameCache.put(uuid, json.get("name").getAsString().toLowerCase());
             return json.get("name").getAsString();
         } catch (Exception e) {
             return null;
