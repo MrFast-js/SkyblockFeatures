@@ -2,6 +2,7 @@ package mrfast.sbf;
 
 import com.google.gson.JsonObject;
 import com.mojang.realmsclient.gui.ChatFormatting;
+import mrfast.sbf.API.ItemAbilityAPI;
 import mrfast.sbf.commands.*;
 import mrfast.sbf.core.*;
 import mrfast.sbf.events.*;
@@ -58,7 +59,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 
 @Mod(modid = SkyblockFeatures.MODID, name = SkyblockFeatures.MOD_NAME, acceptedMinecraftVersions = "[1.8.9]", clientSideOnly = true)
 public class SkyblockFeatures {
@@ -115,7 +115,7 @@ public class SkyblockFeatures {
                 new DamageOverlays(),
                 new Nametags(),
                 new SkyblockMobDetector(),
-                new CooldownTracker(),
+                new ItemAbilityAPI(),
                 new FireVeilTimer(),
                 new TrashHighlighter(),
                 new SpeedDisplay(),
@@ -182,6 +182,7 @@ public class SkyblockFeatures {
                 new Reparty(),
                 new F2SpawnTimers(),
                 new ProfileViewerUtils(),
+                new GloomlockProtection(),
                 new SalvageProtection(),
                 new QuiverOverlay(),
                 new PartyFinderFeatures(),

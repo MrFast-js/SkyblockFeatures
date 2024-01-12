@@ -1,15 +1,20 @@
 package mrfast.sbf.events;
 
-import mrfast.sbf.features.items.CooldownTracker;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.util.BlockPos;
+import mrfast.sbf.API.ItemAbilityAPI;
+import net.minecraftforge.fml.common.eventhandler.Cancelable;
 import net.minecraftforge.fml.common.eventhandler.Event;
 
+@Cancelable
 public class UseItemAbilityEvent extends Event {
 
-    public CooldownTracker.ItemAbility ability;
+    public ItemAbilityAPI.ItemAbility ability;
 
-    public UseItemAbilityEvent(CooldownTracker.ItemAbility ability) {
+    public UseItemAbilityEvent(ItemAbilityAPI.ItemAbility ability) {
         this.ability = ability;
+    }
+
+    @Override
+    public boolean isCancelable() {
+        return true;
     }
 }

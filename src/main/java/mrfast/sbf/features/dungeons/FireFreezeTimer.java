@@ -2,6 +2,7 @@ package mrfast.sbf.features.dungeons;
 
 import mrfast.sbf.SkyblockFeatures;
 import mrfast.sbf.core.SkyblockInfo;
+import mrfast.sbf.events.UseItemAbilityEvent;
 import mrfast.sbf.gui.components.Point;
 import mrfast.sbf.gui.components.UIElement;
 import mrfast.sbf.utils.GuiUtils;
@@ -22,16 +23,13 @@ public class FireFreezeTimer {
 
     static String display = "";
     @SubscribeEvent
-    public void onPlayerInteract(PlayerInteractEvent event) {
+    public void onPlayerInteract(UseItemAbilityEvent event) {
         if (!Utils.inDungeons || !SkyblockFeatures.config.fireFreezeHelper || !SkyblockFeatures.config.blockEarlyFireFreeze || !SkyblockInfo.localLocation.contains("3")) return;
 
-        if(event.action.equals(PlayerInteractEvent.Action.RIGHT_CLICK_AIR) || event.action.equals(PlayerInteractEvent.Action.RIGHT_CLICK_BLOCK)) {
+        if(event.ability.itemId.equals("FIRE_FREEZE_STAFF")) {
             ItemStack held = Utils.GetMC().thePlayer.getHeldItem();
             if(!shouldFireFreeze && held != null && !DungeonsFeatures.dungeonStarted) {
-                String id = ItemUtils.getSkyBlockItemID(held);
-                if(id.equals("FIRE_FREEZE_STAFF")) {
-                    event.setCanceled(true);
-                }
+                event.setCanceled(true);
             }
         }
     }

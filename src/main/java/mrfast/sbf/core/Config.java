@@ -2529,6 +2529,15 @@ public class Config extends ConfigManager {
 
     @Property(
             type = PropertyType.TOGGLE,
+            name = "Show item abilities",
+            category = "§eDeveloper",
+            description = "Shows when a skyblock item uses its ability, used to create features with listening for item abilities",
+            subcategory = "Settings"
+    )
+    public boolean showItemAbilities = false;
+
+    @Property(
+            type = PropertyType.TOGGLE,
             name = "Show Inspector in Guis",
             category = "§eDeveloper",
             description = "",

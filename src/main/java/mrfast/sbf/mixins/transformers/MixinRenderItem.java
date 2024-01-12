@@ -1,10 +1,8 @@
 package mrfast.sbf.mixins.transformers;
 
 import mrfast.sbf.SkyblockFeatures;
-import mrfast.sbf.features.items.CooldownTracker;
-import mrfast.sbf.utils.ItemRarity;
+import mrfast.sbf.API.ItemAbilityAPI;
 import mrfast.sbf.utils.ItemUtils;
-import mrfast.sbf.utils.Utils;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.GlStateManager;
@@ -27,8 +25,8 @@ public abstract class MixinRenderItem {
     private void onRenderItemOverlayIntoGUI(FontRenderer fr, ItemStack stack, int xPosition, int yPosition, String text, CallbackInfo info) {
         if (stack != null && SkyblockFeatures.config.cooldownTracker) {
             String id = ItemUtils.getSkyBlockItemID(stack);
-            if(id!=null && CooldownTracker.activeCooldowns.containsKey(id)) {
-                CooldownTracker.CooldownItem cooldownItem = CooldownTracker.activeCooldowns.get(id);
+            if(id!=null && ItemAbilityAPI.activeCooldowns.containsKey(id)) {
+                ItemAbilityAPI.CooldownItem cooldownItem = ItemAbilityAPI.activeCooldowns.get(id);
                 double fillPercent = getFillPercent(cooldownItem);
                 int type = SkyblockFeatures.config.cooldownTrackerType;
                 if(fillPercent>1) return;
@@ -59,7 +57,7 @@ public abstract class MixinRenderItem {
     }
 
     @Unique
-    private static double getFillPercent(CooldownTracker.CooldownItem cooldownItem) {
+    private static double getFillPercent(ItemAbilityAPI.CooldownItem cooldownItem) {
         double fillPercent = 0;
         if(cooldownItem.leftClick!=null) {
             fillPercent = cooldownItem.leftClick.currentCount/ cooldownItem.leftClick.cooldownSeconds;

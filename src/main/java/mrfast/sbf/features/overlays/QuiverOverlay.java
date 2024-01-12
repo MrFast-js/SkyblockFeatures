@@ -156,7 +156,11 @@ public class QuiverOverlay {
             countToRemove = (1 - level * 0.03);
         }
 
-        arrowCounts.addProperty(selectedArrowType, arrowCounts.get(selectedArrowType).getAsDouble() - countToRemove);
+
+        arrowCounts.addProperty(
+                selectedArrowType,
+                arrowCounts.get(selectedArrowType).getAsDouble()
+                        - countToRemove);
         if (!sentLowArrows && SkyblockFeatures.config.quiverOverlayLowArrowNotification) {
             if (arrowCounts.get(selectedArrowType).getAsDouble() < 128) {
                 sentLowArrows = true;
