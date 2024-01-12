@@ -1666,7 +1666,7 @@ public class Config extends ConfigManager {
     @Property(
             type = PropertyType.TOGGLE,
             name = "Prevent §5Gloomlock Grimoire§r Death",
-            description = "Stops the §5Gloomlock Grimoire's§r ability from killing the player by blocking the ability §cHealth < 25%",
+            description = "Stops the §5Gloomlock Grimoire's§r ability from killing the player by blocking the ability if §cPlayer Health < 25%",
             category = "Miscellaneous",
             subcategory = "Items"
     )
