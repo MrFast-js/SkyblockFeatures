@@ -349,7 +349,7 @@ public class PartyFinderFeatures {
                     for (int i = 1; i <= highestMasterFloor; i++) {
                         masterCompletionsHoverString
                                 .append(ChatFormatting.RED)
-                                .append(i == 0 ? "Entrance: " : "Master Floor " + i + ": ")
+                                .append("Master Floor " + i + ": ")
                                 .append(ChatFormatting.YELLOW)
                                 .append(masterCompletionObj.get(String.valueOf(i)).getAsInt())
                                 .append("\n");
@@ -359,7 +359,7 @@ public class PartyFinderFeatures {
                     }
                     masterCompletionsHoverString.append("\n" + ChatFormatting.GOLD + "Total: " + ChatFormatting.RESET).append(totalMasterRuns);
 
-                    masterCompletions = new ChatComponentText(ChatFormatting.RED + " Master Floor Completions: " + ChatFormatting.GRAY + "(Hover)");
+                    masterCompletions = new ChatComponentText(ChatFormatting.RED + " MM Completions: " + ChatFormatting.GRAY + "(Hover)");
 
                     masterCompletions.setChatStyle(masterCompletions.getChatStyle().setChatHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ChatComponentText(masterCompletionsHoverString.toString()))));
                 }
