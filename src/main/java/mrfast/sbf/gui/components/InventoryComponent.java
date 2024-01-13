@@ -28,7 +28,7 @@ public class InventoryComponent extends UIComponent {
         int screenHeight = Utils.GetMC().currentScreen.height;
         double fontScale = screenHeight / 540d;
         if(getWidth()==0) setWidth(new PixelConstraint((float) (horizontalSlots*17f*fontScale)));
-        if(getHeight()==0) setHeight(new PixelConstraint((float) (verticalSlots*17f*fontScale)));
+        if(getHeight()==0) setHeight(new PixelConstraint((float) (verticalSlots*17f*fontScale)+8f));
 
         new UIText(ChatFormatting.YELLOW+invName.get()).setX(new CenterConstraint()).setChildOf(this);
         boolean stopped = false;
