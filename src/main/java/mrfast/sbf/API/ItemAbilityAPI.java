@@ -272,10 +272,14 @@ public class ItemAbilityAPI {
                 justUsedAbility.currentCount = justUsedAbility.cooldownSeconds - currentCooldown;
                 CooldownItem item = activeCooldowns.get(justUsedAbility.itemId);
 
-                if (justUsedAbility.type.equals("RIGHT")) item.rightClick = justUsedAbility;
-                if (justUsedAbility.type.equals("SNEAK RIGHT")) item.sneakRightClick = justUsedAbility;
-                if (justUsedAbility.type.equals("LEFT")) item.leftClick = justUsedAbility;
-                if (justUsedAbility.type.equals("SNEAK LEFT")) item.sneakLeftClick = justUsedAbility;
+                try {
+                    if (justUsedAbility.type.equals("RIGHT")) item.rightClick = justUsedAbility;
+                    if (justUsedAbility.type.equals("SNEAK RIGHT")) item.sneakRightClick = justUsedAbility;
+                    if (justUsedAbility.type.equals("LEFT")) item.leftClick = justUsedAbility;
+                    if (justUsedAbility.type.equals("SNEAK LEFT")) item.sneakLeftClick = justUsedAbility;
+                } catch (Exception ignored) {
+
+                }
 
                 activeCooldowns.put(justUsedAbility.itemId, item);
             }
