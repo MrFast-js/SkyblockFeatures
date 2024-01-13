@@ -1145,7 +1145,7 @@ public class ProfileViewerGui extends WindowScreen {
                     InventoryBasic wardrobePage2 = new InventoryBasic("Test#1", true, 36);
 
                     InventoryBasic vault = new InventoryBasic("Test#1", true, 27);
-                    if (ProfilePlayerResponse.has("personal_vault_contents")){
+                    if (ProfilePlayerResponse.has("personal_vault_contents")) {
                         String inventoryBase64 = ProfilePlayerResponse.get("personal_vault_contents").getAsJsonObject().get("data").getAsString();
                         Inventory items = new Inventory(inventoryBase64);
                         List<ItemStack> a = ItemUtils.decodeInventory(items, true);
@@ -1520,7 +1520,6 @@ public class ProfileViewerGui extends WindowScreen {
                 int gemstonePowderSpent = Utils.safeGetInt(miningCore, "powder_spent_gemstone");
 
 
-
                 JsonArray tutorial = ProfilePlayerResponse.get("tutorial").getAsJsonArray();
                 int commisionsMilestone = 0;
 
@@ -1566,8 +1565,8 @@ public class ProfileViewerGui extends WindowScreen {
                 new UIText(g + "Tier: " + bold + hotmTier + "/7").setY(new SiblingConstraint(2f)).setChildOf(left);
                 new UIText(g + "Token Of The Mountain: " + bold + (tokensSpent) + "/17").setY(new SiblingConstraint(2f)).setChildOf(left);
                 new UIText(g + "Peak Of The Mountain: " + bold + potm + "/7").setY(new SiblingConstraint(2f)).setChildOf(left);
-                new UIText(g + "Mithril Powder: " + ChatFormatting.DARK_GREEN + ChatFormatting.BOLD + nf.format(mithrilPowderAvailable) + "/" + nf.format(mithrilPowderAvailable + mithrilPowderSpent)).setY(new SiblingConstraint(2f)).setChildOf(left);
-                new UIText(g + "Gemstone Powder: " + ChatFormatting.LIGHT_PURPLE + ChatFormatting.BOLD + nf.format(gemstonePowderAvailable) + "/" + nf.format(gemstonePowderAvailable + gemstonePowderSpent)).setY(new SiblingConstraint(2f)).setChildOf(left);
+                new UIText(g + "Mithril Powder: " + ChatFormatting.GREEN + ChatFormatting.BOLD + nf.format(mithrilPowderAvailable) + ChatFormatting.DARK_GREEN + ChatFormatting.BOLD+ " / " + nf.format(mithrilPowderAvailable + mithrilPowderSpent)).setY(new SiblingConstraint(2f)).setChildOf(left);
+                new UIText(g + "Gemstone Powder: " + ChatFormatting.LIGHT_PURPLE + ChatFormatting.BOLD + nf.format(gemstonePowderAvailable) + ChatFormatting.DARK_PURPLE + ChatFormatting.BOLD+ " / " + nf.format(gemstonePowderAvailable + gemstonePowderSpent)).setY(new SiblingConstraint(2f)).setChildOf(left);
 
                 String pickaxeAbility = "None";
                 try {
