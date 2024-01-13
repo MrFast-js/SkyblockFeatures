@@ -600,6 +600,7 @@ public class ConfigGui extends WindowScreen {
                                             // Reset if ESCAPE is pressed
                                             if(i==1) {
                                                 ((UIText) text).setText("NONE");
+                                                listeningForKeybind = false;
                                                 break;
                                             }
                                             ((UIText) text).setText(newKeyName);
