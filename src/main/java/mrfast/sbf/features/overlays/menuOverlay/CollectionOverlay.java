@@ -5,10 +5,8 @@ import java.util.HashMap;
 
 import mrfast.sbf.SkyblockFeatures;
 import mrfast.sbf.events.GuiContainerEvent.TitleDrawnEvent;
-import mrfast.sbf.features.dungeons.Reparty;
 import mrfast.sbf.utils.GuiUtils;
 import mrfast.sbf.utils.ItemUtils;
-import mrfast.sbf.utils.Utils;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
@@ -17,7 +15,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 public class CollectionOverlay {
     @SubscribeEvent
     public void titleDrawnEvent(TitleDrawnEvent event) {
-        if(!SkyblockFeatures.config.collecitonsLeaderboard || !event.displayName.contains("Collections") || !event.displayName.contains(" ")) return;
+        if(!SkyblockFeatures.config.collectionsLeaderboard || !event.displayName.contains("Collections") || !event.displayName.contains(" ")) return;
         HashMap<String,Integer> topCollectors = new HashMap<>();
 
         for (Slot slot : event.container.inventorySlots) {

@@ -99,7 +99,7 @@ public class Config extends ConfigManager {
             category = "§1§rDungeons",
             subcategory = "Floor 2"
     )
-    public boolean floor2SpawnTimers = false;
+    public boolean floor2SpawnTimers = true;
 
     @Property(
             type = PropertyType.TOGGLE,
@@ -109,7 +109,7 @@ public class Config extends ConfigManager {
             subcategory = "Floor 3",
             isParent = true
     )
-    public boolean fireFreezeHelper = false;
+    public boolean fireFreezeHelper = true;
 
     @Property(
             type = PropertyType.TOGGLE,
@@ -140,7 +140,7 @@ public class Config extends ConfigManager {
             subcategory = "Items",
             isParent = true
     )
-    public boolean salvageProtection = false;
+    public boolean salvageProtection = true;
 
     @Property(
             type = PropertyType.NUMBER,
@@ -335,7 +335,7 @@ public class Config extends ConfigManager {
             subcategory = "Jerrys Workshop",
             isParent = true
     )
-    public boolean presentWaypoints = false;
+    public boolean presentWaypoints = true;
 
     @Property(
             type = PropertyType.COLOR,
@@ -404,7 +404,7 @@ public class Config extends ConfigManager {
             category = "§1§rEvents",
             subcategory = "Jerrys Workshop"
     )
-    public boolean IceTreasureTracker = false;
+    public boolean IceTreasureTracker = true;
 
     @Property(
             type = PropertyType.TOGGLE,
@@ -432,7 +432,7 @@ public class Config extends ConfigManager {
             subcategory = "Highlight Slayers",
             isParent = true
     )
-    public boolean highlightSlayers = false;
+    public boolean highlightSlayers = true;
     @Property(
             type = PropertyType.COLOR,
             name = "Slayer Color",
@@ -450,7 +450,7 @@ public class Config extends ConfigManager {
             subcategory = "Highlight Slayers",
             parentName = "Highlight Slayers"
     )
-    public boolean highlightSlayerMiniboss = false;
+    public boolean highlightSlayerMiniboss = true;
     @Property(
             type = PropertyType.COLOR,
             name = "Miniboss Color",
@@ -744,7 +744,7 @@ public class Config extends ConfigManager {
             category = "§1§rDungeons",
             subcategory = "Miscellaneous"
     )
-    public boolean SecretsDisplay = false;
+    public boolean SecretsDisplay = true;
 
     @Property(
             type = PropertyType.TOGGLE,
@@ -819,7 +819,7 @@ public class Config extends ConfigManager {
             category = "§1§rDungeons",
             subcategory = "Party Finder"
     )
-    public boolean partyFinderJoinMessages = false;
+    public boolean partyFinderJoinMessages = true;
 
     @Property(
             type = PropertyType.TOGGLE,
@@ -857,7 +857,7 @@ public class Config extends ConfigManager {
             subcategory = "Miscellaneous",
             isParent = true
     )
-    public boolean highlightCorrectLivid = false;
+    public boolean highlightCorrectLivid = true;
     @Property(
             type = PropertyType.COLOR,
             name = "Livid Highlight Color",
@@ -971,7 +971,7 @@ public class Config extends ConfigManager {
             subcategory = "General",
             isParent = true
     )
-    public boolean larvaSilkDisplay = false;
+    public boolean larvaSilkDisplay = true;
 
     @Property(
             type = PropertyType.COLOR,
@@ -981,7 +981,7 @@ public class Config extends ConfigManager {
             subcategory = "General",
             parentName = "Larva Silk Display"
     )
-    public Color larvaSilkBlockColor = Color.GREEN;
+    public Color larvaSilkBlockColor = Color.ORANGE;
 
     @Property(
             type = PropertyType.COLOR,
@@ -1228,9 +1228,8 @@ public class Config extends ConfigManager {
             category = "§1§rEvents",
             subcategory = "Diana",
             isParent = true
-
     )
-    public boolean MythologicalHelper = false;
+    public boolean MythologicalHelper = true;
 
     @Property(
             type = PropertyType.COLOR,
@@ -1341,7 +1340,7 @@ public class Config extends ConfigManager {
             category = "General",
             subcategory = "Other"
     )
-    public boolean trevorHelper = false;
+    public boolean trevorHelper = true;
 
     @Property(
             type = PropertyType.TOGGLE,
@@ -1385,7 +1384,7 @@ public class Config extends ConfigManager {
             category = "§1§rDungeons",
             subcategory = "Miscellaneous"
     )
-    public boolean NameTags = false;
+    public boolean NameTags = true;
 
     @Property(
             type = PropertyType.TOGGLE,
@@ -1395,7 +1394,7 @@ public class Config extends ConfigManager {
             subcategory = "Miscellaneous",
             isParent = true
     )
-    public boolean highlightTrash = false;
+    public boolean highlightTrash = true;
 
     @Property(
             type = PropertyType.BUTTON,
@@ -1504,7 +1503,7 @@ public class Config extends ConfigManager {
             category = "§1§rEvents",
             subcategory = "Mayor Jerry"
     )
-    public boolean hiddenJerryAlert = false;
+    public boolean hiddenJerryAlert = true;
 
     @Property(
             type = PropertyType.TOGGLE,
@@ -1558,7 +1557,7 @@ public class Config extends ConfigManager {
             category = "Quality of Life",
             subcategory = "Mining"
     )
-    public boolean CommisionsTracker = false;
+    public boolean CommisionsTracker = true;
 
     @Property(
             type = PropertyType.TOGGLE,
@@ -1670,7 +1669,7 @@ public class Config extends ConfigManager {
             category = "Miscellaneous",
             subcategory = "Items"
     )
-    public boolean gloomlockGrimoireProtection = false;
+    public boolean gloomlockGrimoireProtection = true;
 
     @Property(
             type = PropertyType.TOGGLE,
@@ -1698,7 +1697,7 @@ public class Config extends ConfigManager {
             subcategory = "Items",
             isParent = true
     )
-    public boolean cooldownTracker = false;
+    public boolean cooldownTracker = true;
 
     @Property(
             type = PropertyType.DROPDOWN,
@@ -1748,7 +1747,7 @@ public class Config extends ConfigManager {
             subcategory = "§1§rChat",
             isParent = true
     )
-    public boolean betterTrading = false;
+    public boolean betterTrading = true;
 
     @Property(
             type = PropertyType.TOGGLE,
@@ -1795,7 +1794,7 @@ public class Config extends ConfigManager {
             category = "§1§rThe End",
             subcategory = "Zealots"
     )
-    public boolean showZealotSpawnAreas = false;
+    public boolean showZealotSpawnAreas = true;
 
     @Property(
             type = PropertyType.TOGGLE,
@@ -1805,7 +1804,7 @@ public class Config extends ConfigManager {
             subcategory = "Armor",
             isParent = true
     )
-    public boolean finalDestinationArmorDisplay = false;
+    public boolean finalDestinationArmorDisplay = true;
 
     @Property(
             type = PropertyType.TOGGLE,
@@ -1815,7 +1814,7 @@ public class Config extends ConfigManager {
             subcategory = "Armor",
             parentName = "Final Destination Armor Display"
     )
-    public boolean finalDestinationArmorDisplayKills = false;
+    public boolean finalDestinationArmorDisplayKills = true;
 
     @Property(
             type = PropertyType.TOGGLE,
@@ -1825,7 +1824,7 @@ public class Config extends ConfigManager {
             subcategory = "Highlights",
             isParent = true
     )
-    public boolean advancedDragonHitbox = false;
+    public boolean advancedDragonHitbox = true;
 
     @Property(
             type = PropertyType.COLOR,
@@ -1992,7 +1991,7 @@ public class Config extends ConfigManager {
             category = "Miscellaneous",
             subcategory = "Item Price Info"
     )
-    public boolean showEstimatedPrice = false;
+    public boolean showEstimatedPrice = true;
 
     @Property(
             type = PropertyType.TOGGLE,
@@ -2010,7 +2009,7 @@ public class Config extends ConfigManager {
             category = "§1§rAuction house",
             subcategory = "Auction Utils"
     )
-    public boolean auctionGuis = false;
+    public boolean auctionGuis = true;
 
     @Property(
             type = PropertyType.TOGGLE,
@@ -2095,7 +2094,7 @@ public class Config extends ConfigManager {
             category = "Miscellaneous",
             subcategory = "Overlay"
     )
-    public boolean collecitonsLeaderboard = false;
+    public boolean collectionsLeaderboard = false;
 
     @Property(
             type = PropertyType.TOGGLE,
@@ -2142,7 +2141,7 @@ public class Config extends ConfigManager {
             subcategory = "Auction Utils",
             isParent = true
     )
-    public boolean highlightAuctionStatus = false;
+    public boolean highlightAuctionStatus = true;
 
     @Property(
             type = PropertyType.COLOR,
@@ -2280,15 +2279,6 @@ public class Config extends ConfigManager {
             subcategory = "Flipper Settings"
     )
     public boolean autoAuctionFlipSetPurse = false;
-
-//    @Property(
-//        type = PropertyType.TOGGLE,
-//        name = "Change Item Estimation",
-//        description = "Include stars and enchants into item value estimation. §cNot 100% accurate",
-//        category = "§1§rAuction Flipper",
-//        subcategory = "Flipper Settings"
-//    )
-//    public boolean autoFlipAddEnchAndStar = false;
 
     @Property(
             type = PropertyType.TOGGLE,
@@ -2428,7 +2418,7 @@ public class Config extends ConfigManager {
             category = "General",
             subcategory = "§1§rChat"
     )
-    public boolean hideSlowdownCommandWarning = false;
+    public boolean hideSlowdownCommandWarning = true;
 
     @Property(
             type = PropertyType.TOGGLE,
@@ -2571,7 +2561,7 @@ public class Config extends ConfigManager {
             subcategory = "Bestiary",
             isParent = true
     )
-    public boolean highlightBestiaryMobs = false;
+    public boolean highlightBestiaryMobs = true;
 
     @Property(
             type = PropertyType.TOGGLE,
@@ -2581,7 +2571,7 @@ public class Config extends ConfigManager {
             subcategory = "Bestiary",
             parentName = "Highlight Selected Bestiary Mobs"
     )
-    public boolean highlightBestiaryMobsMidClick = false;
+    public boolean highlightBestiaryMobsMidClick = true;
 
     @Property(
             type = PropertyType.COLOR,

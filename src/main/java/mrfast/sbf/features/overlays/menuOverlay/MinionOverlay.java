@@ -54,7 +54,7 @@ public class MinionOverlay {
 
     @SubscribeEvent
     public void onDrawContainerTitle(TitleDrawnEvent event) {
-        if (event.gui instanceof GuiChest && SkyblockFeatures.config.showMinionsTotalCoinsPerDay) {
+        if (event.gui instanceof GuiChest && (SkyblockFeatures.config.minionLastCollected || SkyblockFeatures.config.minionOverlay || SkyblockFeatures.config.showMinionsTotalCoinsPerDay)) {
             GuiChest gui = (GuiChest) event.gui;
             ContainerChest chest = (ContainerChest) gui.inventorySlots;
             IInventory inv = chest.getLowerChestInventory();

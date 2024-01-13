@@ -32,11 +32,10 @@ public abstract class MixinRenderItem {
                 if(fillPercent>1) return;
                 if(type==0) {
                     Color backgroundColor = new Color(SkyblockFeatures.config.cooldownTrackerSquareColor.getRed(), SkyblockFeatures.config.cooldownTrackerSquareColor.getGreen(), SkyblockFeatures.config.cooldownTrackerSquareColor.getBlue(), 100);
-                    Gui.drawRect(xPosition, (int) (yPosition + (16 * fillPercent)), xPosition + 16, yPosition + 16, backgroundColor.getRGB());
+                    Gui.drawRect(xPosition, Math.max(yPosition,(int) (yPosition + (16 * fillPercent))), xPosition + 16, yPosition + 16, backgroundColor.getRGB());
                 }
                 if(type==1) {
                     int j = (int) Math.round(13.0 - (1 - fillPercent) * 13.0);
-                    int i = (int) Math.round(255.0 - (1 - fillPercent) * 255.0);
                     GlStateManager.disableLighting();
                     GlStateManager.disableDepth();
                     GlStateManager.disableTexture2D();
