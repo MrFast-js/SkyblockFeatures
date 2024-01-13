@@ -6,18 +6,15 @@ import mrfast.sbf.events.UseItemAbilityEvent;
 import mrfast.sbf.gui.components.Point;
 import mrfast.sbf.gui.components.UIElement;
 import mrfast.sbf.utils.GuiUtils;
-import mrfast.sbf.utils.ItemUtils;
 import mrfast.sbf.utils.Utils;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-public class FireFreezeTimer {
+public class FireFreezeHelper {
 
     String bossDialogue = "[BOSS] The Professor: Oh? You found my Guardians' one weakness?";
 
@@ -48,7 +45,7 @@ public class FireFreezeTimer {
 
                     if(a == 6) shouldFireFreeze = true;
                     if(a == 8) display = "";
-                },i*860);
+                },i*880);
             }
         }
     }

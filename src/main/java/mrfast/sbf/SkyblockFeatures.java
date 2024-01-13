@@ -188,7 +188,7 @@ public class SkyblockFeatures {
                 new PartyFinderFeatures(),
                 new CollectionOverlay(),
                 new RenderFeatures(),
-                new FireFreezeTimer(),
+                new FireFreezeHelper(),
                 new BestiaryHelper()
         );
         features.forEach(MinecraftForge.EVENT_BUS::register);
