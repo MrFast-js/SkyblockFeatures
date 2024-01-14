@@ -20,6 +20,8 @@ public class ClickInOrderSolver {
 
     @SubscribeEvent
     public void onSlotClick(SlotClickedEvent event) {
+        if (!(Minecraft.getMinecraft().currentScreen instanceof GuiChest) || !SkyblockFeatures.config.clickInOrderSolver) return;
+
         if (event.chestName.contains("Click in order")) {
             if(event.slot.getStack()==null) return;
 
@@ -42,6 +44,8 @@ public class ClickInOrderSolver {
 
     @SubscribeEvent
     public void onSlotDraw(GuiContainerEvent.DrawSlotEvent.Pre event) {
+        if (!(Minecraft.getMinecraft().currentScreen instanceof GuiChest) || !SkyblockFeatures.config.clickInOrderSolver) return;
+
         if(event.chestName==null) return;
         if(event.chestName.contains("Click in order")) {
             if(!event.slot.getHasStack()) return;
@@ -54,7 +58,7 @@ public class ClickInOrderSolver {
 
     @SubscribeEvent
     public void onScreenDraw(GuiContainerEvent.TitleDrawnEvent event) {
-        if (!(Minecraft.getMinecraft().currentScreen instanceof GuiChest)) return;
+        if (!(Minecraft.getMinecraft().currentScreen instanceof GuiChest) || !SkyblockFeatures.config.clickInOrderSolver) return;
 
         GuiChest chest = (GuiChest) Minecraft.getMinecraft().currentScreen;
         ContainerChest cont = (ContainerChest) chest.inventorySlots;
