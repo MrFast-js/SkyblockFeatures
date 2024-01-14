@@ -60,6 +60,8 @@ public class TradingOverlay {
                     } else {
                         if(id==null) continue;
                     }
+                    int stackSize = inv.getStackInSlot(slotId).stackSize;
+                    String stackSizePrefix = ChatFormatting.DARK_GRAY+""+stackSize+"x ";
                     if(coins) {
                         String line = Utils.cleanColor(inv.getStackInSlot(slotId).getDisplayName());
                         line = line.replace("k", "000").replace("M", "000000").replace("B", "000000000");
@@ -73,18 +75,18 @@ public class TradingOverlay {
                         }
                     }
                     else if(PricingData.bazaarPrices.containsKey(id)) {
-                        value = PricingData.bazaarPrices.get(id);
+                        value = PricingData.bazaarPrices.get(id)*stackSize;
                     }
                     else if(PricingData.lowestBINs.containsKey(id)) {
-                        value = ItemUtils.getEstimatedItemValue(inv.getStackInSlot(slotId))*inv.getStackInSlot(slotId).stackSize;
+                        value = ItemUtils.getEstimatedItemValue(inv.getStackInSlot(slotId))*stackSize;
                     }
                     if(selfSlots.contains(slotId)) {
                         totalSelf+=value*(coins?1:inv.getStackInSlot(slotId).stackSize);
-                        selfItemsAndValues.put(inv.getStackInSlot(slotId).getDisplayName(), value);
+                        selfItemsAndValues.put(stackSizePrefix+inv.getStackInSlot(slotId).getDisplayName(), value);
                     }
                     if(otherSlots.contains(slotId)) {
                         totalOther+=value*(coins?1:inv.getStackInSlot(slotId).stackSize);
-                        otherItemsAndValues.put(inv.getStackInSlot(slotId).getDisplayName(), value);
+                        otherItemsAndValues.put(stackSizePrefix+inv.getStackInSlot(slotId).getDisplayName(), value);
                     }
                 }
 
