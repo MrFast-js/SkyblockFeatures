@@ -336,6 +336,7 @@ public class SkyblockFeatures {
     @SubscribeEvent
     public void onSocketMessage(SocketMessageEvent event) {
         if (event.type.equals("message")) {
+            event.message = event.message.replaceAll("�","§");
             if (event.message.contains("Checking for auction flips") && !SkyblockFeatures.config.aucFlipperEnabled)
                 return;
             Utils.sendMessage(event.message);
