@@ -48,7 +48,7 @@ public class ConfigGui extends WindowScreen {
     public static HashMap<String,Boolean> expandedFeatures = new HashMap<>();
     public static HashMap<Property, Object> valueMap = new HashMap<>();
     public static String selectedCategory = "General";
-    public String searchQuery = "";
+    public static String searchQuery = "";
     static Boolean furfSkyThemed = false;
     static boolean quickSwapping = false;
     public static boolean listeningForKeybind = false;
@@ -148,7 +148,9 @@ public class ConfigGui extends WindowScreen {
             .setWidth(new PixelConstraint(80))
             .setHeight(new PixelConstraint(15f))
             .setY(new PixelConstraint(3f));
-
+        if(!searchQuery.isEmpty()) {
+            input.setText(searchQuery);
+        }
         titleArea.onMouseClickConsumer((event)->{
             input.grabWindowFocus();
         });

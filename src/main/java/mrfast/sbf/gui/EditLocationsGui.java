@@ -3,14 +3,14 @@ package mrfast.sbf.gui;
 import java.awt.*;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
+import java.util.List;
 
 import com.mojang.realmsclient.gui.ChatFormatting;
 import net.minecraft.client.Minecraft;
+import net.minecraftforge.fml.client.config.GuiUtils;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
-import org.lwjgl.opengl.Display;
 
 import mrfast.sbf.SkyblockFeatures;
 import mrfast.sbf.gui.components.MoveableFeature;
@@ -23,10 +23,11 @@ import net.minecraft.client.renderer.GlStateManager;
 
 public class EditLocationsGui extends GuiScreen {
 
-    private float xOffset;
-    private float yOffset;
-    int screenWidth = Utils.GetMC().displayWidth/2;
-    int screenHeight = Utils.GetMC().displayHeight/2;
+    private float lastMouseX, lastMouseY, xOffset, yOffset;
+    private final int screenWidth = Utils.GetMC().displayWidth / 2;
+    private final int screenHeight = Utils.GetMC().displayHeight / 2;
+    private static boolean copyingPos, isMouseMoving = false;
+    private static MoveableFeature hoveredFeature;
     private UIElement dragging;
     private final Map<UIElement, MoveableFeature> MoveableFeatures = new HashMap<>();
 
@@ -43,63 +44,91 @@ public class EditLocationsGui extends GuiScreen {
             this.buttonList.add(lb);
             this.MoveableFeatures.put(e.getValue(), lb);
         }
-        this.buttonList.add(new GuiButton(6969, this.width / 2 - 60, 0, 120, 20, getLabel()));
+        this.buttonList.add(new GuiButton(6969, this.width / 2 - 60, 0, 120, 20, getButtonLabel()));
+        hoveredFeature = null;
     }
 
-    public String getLabel() {
-        if(GuiManager.showAllEnabledElements) {
+    public String getButtonLabel() {
+        if (GuiManager.showAllEnabledElements) {
             return "§e§lShow Active Only";
         } else {
             return "§e§lShow All Enabled";
         }
     }
-    public static boolean copyingPos = false;
+
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
         onMouseMove();
         this.drawGradientRect(0, 0, this.width, this.height, new Color(0, 0, 0, 50).getRGB(), new Color(0, 0, 0, 200).getRGB());
         for (GuiButton button : this.buttonList) {
             if (button instanceof MoveableFeature) {
-                if (((MoveableFeature) button).element.getToggled()) {
-                    MoveableFeature moveableFeature = (MoveableFeature) button;
-                    if(moveableFeature.hovered && Utils.isDeveloper()) {
-                        if(Keyboard.isKeyDown(Keyboard.KEY_LCONTROL) && Keyboard.isKeyDown(Keyboard.KEY_C)) {
-                            if(!copyingPos) {
-                                Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-                                String point = "new Point(" + moveableFeature.x + "f, " + moveableFeature.y + "f)";
-                                StringSelection stringSelection = new StringSelection(point);
+                if (!((MoveableFeature) button).element.getToggled()) continue;
+                MoveableFeature moveableFeature = (MoveableFeature) button;
+                if (moveableFeature.hovered) {
+                    // Debug tool to copy elements position to clipboard
+                    if (Utils.isDeveloper()) {
+                        if (Keyboard.isKeyDown(Keyboard.KEY_LCONTROL) && Keyboard.isKeyDown(Keyboard.KEY_C)) {
+                            if (copyingPos) continue;
 
-                                // Set the StringSelection as the clipboard content
-                                clipboard.setContents(stringSelection, null);
-                                copyingPos = true;
-                                Utils.sendMessage(ChatFormatting.GREEN + "Copied hovered element position: "+ChatFormatting.YELLOW+point);
-                            }
+                            Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+                            String point = "new Point(" + moveableFeature.relativeX + "f, " + moveableFeature.relativeY + "f)";
+                            clipboard.setContents(new StringSelection("new Point(" + moveableFeature.relativeX + "f, " + moveableFeature.relativeY + "f)"), null);
+
+                            copyingPos = true;
+                            Utils.sendMessage(ChatFormatting.GREEN + "Copied hovered element position: " + ChatFormatting.YELLOW + point);
                         } else {
                             copyingPos = false;
                         }
                     }
-                    ScaledResolution scaledResolution = new ScaledResolution(Minecraft.getMinecraft());
-                    float guiScaleFactor = (1f/scaledResolution.getScaleFactor())*2;
-
-                    GlStateManager.pushMatrix();
-                    GlStateManager.scale(guiScaleFactor, guiScaleFactor, 1.0f); // Apply the GUI scale factor
-                    GlStateManager.translate(moveableFeature.x * screenWidth, moveableFeature.y * screenHeight, 0);
-
-                    button.drawButton(this.mc, mouseX, mouseY);
-                    GlStateManager.popMatrix();
-
+                    hoveredFeature = moveableFeature;
                 }
+                ScaledResolution scaledResolution = new ScaledResolution(Minecraft.getMinecraft());
+                float guiScaleFactor = (1f / scaledResolution.getScaleFactor()) * 2;
+
+                GlStateManager.pushMatrix();
+                GlStateManager.scale(guiScaleFactor, guiScaleFactor, 1.0f); // Apply the GUI scale factor
+                GlStateManager.translate(moveableFeature.relativeX * screenWidth, moveableFeature.relativeY * screenHeight, 0);
+
+                button.drawButton(this.mc, mouseX, mouseY);
+                GlStateManager.popMatrix();
             } else {
                 button.drawButton(this.mc, mouseX, mouseY);
             }
+        }
+
+        if (hoveredFeature != null && !isMouseMoving) {
+            List<String> renderTooltip = new ArrayList<>(Arrays.asList(
+                    "§a§l" + hoveredFeature.getElement().getName(),
+                    "§7X: §e" + Math.round(hoveredFeature.actualX) + " §7Y: §e" + Math.round(hoveredFeature.actualY),
+                    "§eRClICK to open config"));
+
+            int tooltipWidth = Utils.GetMC().fontRendererObj.getStringWidth(renderTooltip.get(0));
+            int tooltipHeight = renderTooltip.size() * Utils.GetMC().fontRendererObj.FONT_HEIGHT;
+
+            int adjustedX = Math.max(0,mouseX - 3);
+
+            if (adjustedX + tooltipWidth > screenWidth) {
+                adjustedX = screenWidth - tooltipWidth;
+            }
+
+            if (mouseY + tooltipHeight > screenHeight) {
+                mouseY = Math.max(screenHeight - tooltipHeight, mouseY - tooltipHeight - 12);
+            }
+
+            if(Mouse.isButtonDown(1)) {
+                ConfigGui.searchQuery = hoveredFeature.getElement().getName();
+                mrfast.sbf.utils.GuiUtils.openGui(new ConfigGui(true));
+            }
+
+            GuiUtils.drawHoveringText(renderTooltip, adjustedX, mouseY, screenWidth, screenHeight, -1, Utils.GetMC().fontRendererObj);
         }
     }
 
     @Override
     public void actionPerformed(GuiButton button) {
         if (button instanceof MoveableFeature) {
-            MoveableFeature lb = (MoveableFeature) button;
-            dragging = lb.getElement();
+            MoveableFeature currentlyDraggedFeature = (MoveableFeature) button;
+            dragging = currentlyDraggedFeature.getElement();
 
             float floatMouseX = Mouse.getX() * 0.5f;
             float floatMouseY = (mc.displayHeight - Mouse.getY()) * 0.5f;
@@ -107,47 +136,43 @@ public class EditLocationsGui extends GuiScreen {
             xOffset = floatMouseX - dragging.getX() * screenWidth;
             yOffset = floatMouseY - dragging.getY() * screenHeight;
         }
-        if(button.id==6969) {
-            GuiManager.showAllEnabledElements=!GuiManager.showAllEnabledElements;
-            button.displayString = getLabel();
+        if (button.id == 6969) {
+            GuiManager.showAllEnabledElements = !GuiManager.showAllEnabledElements;
+            button.displayString = getButtonLabel();
         }
     }
+
+    private long lastMoveTime = System.currentTimeMillis();
 
     protected void onMouseMove() {
         float floatMouseX = Mouse.getX() * 0.5f;
         float floatMouseY = (mc.displayHeight - Mouse.getY()) * 0.5f;
-        
+
         if (dragging != null) {
-            MoveableFeature lb = MoveableFeatures.get(dragging);
-            if (lb == null) {
-                return;
-            }
-            float x = floatMouseX-xOffset;
-            float y = floatMouseY-yOffset;
-            float x2 = (floatMouseX - xOffset+dragging.getWidth());
-            float y2 = (floatMouseY - yOffset+dragging.getHeight());
+            MoveableFeature currentlyDraggedFeature = MoveableFeatures.get(dragging);
+            if (currentlyDraggedFeature == null) return;
+            float x = Math.max(2, Math.min(floatMouseX - xOffset, screenWidth - dragging.getWidth() - 2));
+            float y = Math.max(2, Math.min(floatMouseY - yOffset, screenHeight - dragging.getHeight() - 2));
 
-            if(x<2) x = 2;
-            if(y<2) y = 2;
-            if(x2+2>screenWidth) x = screenWidth-dragging.getWidth()-2;
-            if(y2+2>screenHeight) y = screenHeight-dragging.getHeight()-2;
-
-            dragging.setPos(x/screenWidth, y/screenHeight);
+            dragging.setPos(x / screenWidth, y / screenHeight);
         }
+
+        long currentTime = System.currentTimeMillis();
+        if (lastMouseX != floatMouseX || lastMouseY != floatMouseY) {
+            lastMoveTime = currentTime;
+        }
+        isMouseMoving = currentTime - lastMoveTime < 500;
+
+        lastMouseX = floatMouseX;
+        lastMouseY = floatMouseY;
     }
 
-    /**
-     * Reset the dragged feature when the mouse is released.
-     */
     @Override
     protected void mouseReleased(int mouseX, int mouseY, int state) {
         super.mouseReleased(mouseX, mouseY, state);
         dragging = null;
     }
 
-    /**
-     * Saves the positions when the gui is closed
-     */
     @Override
     public void onGuiClosed() {
         GuiManager.saveConfig();
