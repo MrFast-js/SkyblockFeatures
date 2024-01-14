@@ -24,7 +24,7 @@ public class FireFreezeDisplay {
     public void onRenderWorld(RenderWorldLastEvent event) {
         if(activatedPos!=null && SkyblockFeatures.config.fireFreezeStaffFreezeTimer) {
             String seconds = Utils.msToSeconds(5000-(System.currentTimeMillis()-activatedAt),1);
-            RenderUtil.renderWaypointText(new BlockPos(activatedPos).up(1), ChatFormatting.YELLOW+seconds);
+            RenderUtil.draw3DStringWithShadow(activatedPos.addVector(0,1,0), ChatFormatting.YELLOW+seconds,event.partialTicks);
 
             if(System.currentTimeMillis()-activatedAt>5000) {
                 activatedAt = null;

@@ -1674,7 +1674,7 @@ public class Config extends ConfigManager {
     @Property(
             type = PropertyType.TOGGLE,
             name = "Show §5Fire Freeze Staff§r Freeze Timer",
-            description = "Shows §5Fire Freeze Staff§r ",
+            description = "Shows a timer in the world for when the §5Fire Freeze Staff's§r ability will freeze",
             category = "Miscellaneous",
             subcategory = "Items"
     )
