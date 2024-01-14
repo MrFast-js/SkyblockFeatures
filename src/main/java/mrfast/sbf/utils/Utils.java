@@ -224,12 +224,15 @@ public class Utils {
     
         return time.trim();
     }
+    public static String msToSeconds(long ms,int precision) {
+        return Utils.round(ms/1000d,precision)+"s";
+    }
 
     // Precision is # of decimal places
     public static String round(double value, int precision) {
         double scale = Math.pow(10, precision);
         double roundedValue = Math.round(value * scale) / scale;
-        return String.valueOf(roundedValue);
+        return String.format("%." + precision + "f", roundedValue);
     }
 
     public static String[] getListOfPlayerUsernames() {
