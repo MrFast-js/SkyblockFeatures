@@ -28,7 +28,7 @@ public class SpamHider {
         try {
             String u = unformatted.toLowerCase();
             if (SkyblockFeatures.config.hideAnitaArtifactNotification) {
-                if (unformatted.startsWith("[NPC] Jacob: Your Anita's Artifact is giving you") || unformatted.equals("[NPC] Jacob: My contest has started!")) {
+                if (unformatted.startsWith("[NPC] Jacob: Your Anita's") || unformatted.equals("[NPC] Jacob: My contest has started!")) {
                     cancelChatPacket(event);
                 }
             }
