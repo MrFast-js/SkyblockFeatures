@@ -164,6 +164,7 @@ public class SkyblockFeatures {
                 new DynamicFullbright(),
                 new GardenFeatures(),
                 new HighlightCropArea(),
+                new FireFreezeDisplay(),
                 new MythologicalEvent(),
                 new TeleportPadSolver(),
                 new WaterBoardSolver(),

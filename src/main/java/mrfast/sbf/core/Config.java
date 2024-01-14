@@ -1673,6 +1673,15 @@ public class Config extends ConfigManager {
 
     @Property(
             type = PropertyType.TOGGLE,
+            name = "Show §5Fire Freeze Staff§r Freeze Timer",
+            description = "Shows §5Fire Freeze Staff§r ",
+            category = "Miscellaneous",
+            subcategory = "Items"
+    )
+    public boolean fireFreezeStaffFreezeTimer = true;
+
+    @Property(
+            type = PropertyType.TOGGLE,
             name = "Show Prehistoric Egg Distance Counter",
             description = "Shows the blocks walked on the prehistoric egg item",
             category = "Miscellaneous",

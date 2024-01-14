@@ -1,9 +1,7 @@
-package mrfast.sbf.features.overlays;
+package mrfast.sbf.features.events;
 
-import com.google.gson.JsonObject;
 import com.mojang.realmsclient.gui.ChatFormatting;
 import mrfast.sbf.SkyblockFeatures;
-import mrfast.sbf.core.ConfigManager;
 import mrfast.sbf.core.DataManager;
 import mrfast.sbf.events.CheckRenderEntityEvent;
 import mrfast.sbf.events.GuiContainerEvent;
@@ -45,6 +43,7 @@ public class GiftTracker {
     public static ArrayList<Entity> saintJerryGifts = new ArrayList<Entity>();
     static int uniqueGiftsGiven = 0;
     static int winterYear = 0;
+
     @SubscribeEvent
     public void onProfileSwap(ProfileSwapEvent event) {
         uniqueGiftsGiven = (int) DataManager.getProfileDataDefault("winter.uniqueGiftsGiven", 0);
@@ -76,13 +75,13 @@ public class GiftTracker {
         // Reset unique gifts given next time the event comes next year
         if (winterYear == 0) {
             winterYear = Year.now().getValue();
-            DataManager.saveProfileData("winter.winterYear",winterYear);
+            DataManager.saveProfileData("winter.winterYear", winterYear);
         } else {
             if (Year.now().getValue() != winterYear) {
                 uniqueGiftsGiven = 0;
-                DataManager.saveProfileData("winter.uniqueGiftsGiven",uniqueGiftsGiven);
+                DataManager.saveProfileData("winter.uniqueGiftsGiven", uniqueGiftsGiven);
                 winterYear = Year.now().getValue();
-                DataManager.saveProfileData("winter.winterYear",winterYear);
+                DataManager.saveProfileData("winter.winterYear", winterYear);
             }
         }
     }
@@ -113,7 +112,7 @@ public class GiftTracker {
         String clean = Utils.cleanColor(event.message.getUnformattedText());
         if (clean.startsWith("+1 Unique Gift given!")) {
             uniqueGiftsGiven++;
-            DataManager.saveProfileData("winter.uniqueGiftsGiven",uniqueGiftsGiven);
+            DataManager.saveProfileData("winter.uniqueGiftsGiven", uniqueGiftsGiven);
         }
     }
 
@@ -128,7 +127,7 @@ public class GiftTracker {
                     line = Utils.cleanColor(line);
                     if (line.startsWith("Unique Players Gifted:")) {
                         uniqueGiftsGiven = Integer.parseInt(line.replaceAll("[^0-9]", ""));
-                        DataManager.saveProfileData("winter.uniqueGiftsGiven",uniqueGiftsGiven);
+                        DataManager.saveProfileData("winter.uniqueGiftsGiven", uniqueGiftsGiven);
 
                         break;
                     }
@@ -235,7 +234,7 @@ public class GiftTracker {
                 }
             }
             if (inGlacialCave && SkyblockFeatures.config.icecaveHighlight) {
-                if(SkyblockFeatures.config.icecaveHighlightWalls) {
+                if (SkyblockFeatures.config.icecaveHighlightWalls) {
                     GlStateManager.disableDepth();
                 }
                 Block blockState = mc.theWorld.getBlockState(entity.getPosition().up()).getBlock();
