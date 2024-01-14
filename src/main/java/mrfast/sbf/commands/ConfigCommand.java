@@ -44,11 +44,6 @@ public class ConfigCommand extends CommandBase {
     }
 
     @Override
-    public List<String> addTabCompletionOptions(ICommandSender sender, String[] args, BlockPos pos) {
-        return (args.length >= 1) ? getListOfStringsMatchingLastWord(args, Utils.getListOfPlayerUsernames()) : null;
-    }
-
-    @Override
     public void processCommand(ICommandSender sender, String[] args) throws CommandException {
         EntityPlayerSP player = (EntityPlayerSP) sender;
         if (args.length == 0) {
@@ -90,7 +85,7 @@ public class ConfigCommand extends CommandBase {
                 Utils.sendMessage("Gui Positions Reset!");
                 break;
             case "config":
-//                GuiUtils.openGui(new ConfigGui(true));
+                GuiUtils.openGui(new ConfigGui(true));
                 break;
             case "help":
                 String helpMessage = "§eSkyblock Features Commands and Info\n"
@@ -114,7 +109,8 @@ public class ConfigCommand extends CommandBase {
                 GuiUtils.openGui(new EditLocationsGui());
                 break;
             default:
-                player.addChatMessage(new ChatComponentText("§bSBF ➜ §cThis command doesn't exist!\n  §cUse §b/sbf help§c for a full list of commands"));
+                ConfigGui.searchQuery = String.join(" ",args);
+                GuiUtils.openGui(new ConfigGui(true));
         }
     }
 }
