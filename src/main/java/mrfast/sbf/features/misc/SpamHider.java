@@ -28,13 +28,13 @@ public class SpamHider {
         try {
             String u = unformatted.toLowerCase();
             if (SkyblockFeatures.config.hideAnitaArtifactNotification) {
-                if (unformatted.startsWith("[NPC] Jacob: Your Anita's Artifact is giving you")) {
-                    event.setCanceled(true);
+                if (unformatted.startsWith("[NPC] Jacob: Your Anita's Artifact is giving you") || unformatted.equals("[NPC] Jacob: My contest has started!")) {
+                    cancelChatPacket(event);
                 }
             }
             if (SkyblockFeatures.config.hideSlowdownCommandWarning) {
                 if (unformatted.startsWith("You are sending commands too fast! Please slow down.")) {
-                    event.setCanceled(true);
+                    cancelChatPacket(event);
                 }
             }
             if (SkyblockFeatures.config.hideAdvertisements) {
