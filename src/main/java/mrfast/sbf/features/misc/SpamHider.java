@@ -57,7 +57,7 @@ public class SpamHider {
                         u.contains("selling") ||
                         u.contains("buying") ||
                         u.contains("visit") ||
-                        u.contains("ah") ||
+                        u.contains(" ah") ||
                         u.contains("auction") ||
                         u.contains("guild") ||
                         u.contains("can buy") ||
