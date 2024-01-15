@@ -52,13 +52,18 @@ public class GiftTracker {
 
     @SubscribeEvent
     public void onAttack(AttackEntityEvent event) {
-        if (event.target instanceof EntityArmorStand && ((EntityArmorStand) event.target).getCurrentArmor(3) != null && ((EntityArmorStand) event.target).getCurrentArmor(3).serializeNBT().getCompoundTag("tag").getCompoundTag("SkullOwner").getCompoundTag("Properties").toString().contains("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMTBmNTM5ODUxMGIxYTA1YWZjNWIyMDFlYWQ4YmZjNTgzZTU3ZDcyMDJmNTE5M2IwYjc2MWZjYmQwYWUyIn19fQ=") && !saintJerryGifts.contains(event.target)) {
+        if (event.target instanceof EntityArmorStand && ((EntityArmorStand) event.target).getCurrentArmor(3) != null &&
+                ((EntityArmorStand) event.target).getCurrentArmor(3).serializeNBT()
+                        .getCompoundTag("tag").getCompoundTag("ExtraAttributes").getString("id")
+                        .equals("WHITE_GIFT") &&
+                !saintJerryGifts.contains(event.target)) {
             // If this is false its a player gift
-            if (event.target.lastTickPosX == event.target.posX && event.target.lastTickPosY == event.target.posY && event.target.lastTickPosZ == event.target.posZ) {
+            if (!isPlayerPresent((EntityArmorStand) event.target)) {
                 saintJerryGifts.add(event.target);
             }
         }
     }
+
 
     private static class Gift {
         Boolean giftToSelf = false;
@@ -194,33 +199,39 @@ public class GiftTracker {
     public boolean isPlayerPresent(EntityArmorStand entity) {
         if (gifts.containsKey(entity)) return true;
         if (entity.getCurrentArmor(3) == null) return false;
-        if (ItemUtils.getSkyBlockItemID(entity.getCurrentArmor(3)) != null) {
-            return ItemUtils.getSkyBlockItemID(entity.getCurrentArmor(3)).contains("_GIFT");
-        }
         boolean isMoving = (entity.lastTickPosX != entity.posX || entity.lastTickPosY != entity.posY || entity.lastTickPosZ != entity.posZ || entity.prevRotationPitch != entity.rotationPitch || entity.prevRotationYaw != entity.rotationYaw);
         return isMoving;
     }
 
     @SubscribeEvent
     public void onRender(RenderWorldLastEvent event) {
-        Minecraft mc = Minecraft.getMinecraft();
-        if (mc.theWorld == null || Utils.inDungeons || !Utils.inSkyblock) return;
+        if (Utils.GetMC().theWorld == null || Utils.inDungeons || !Utils.inSkyblock) return;
+
         AxisAlignedBB glacialCaveBounds = new AxisAlignedBB(105, 72, 113, 33, 85, 19);
         boolean inGlacialCave = glacialCaveBounds.isVecInside(Utils.GetMC().thePlayer.getPositionVector());
 
         if (SkyblockFeatures.config.highlightSelfGifts) {
             for (Gift gift : gifts.values()) {
                 if (!gift.giftToSelf) continue;
-                highlightBlock(SkyblockFeatures.config.selfGiftHighlightColor, gift.entity.posX - 0.5, gift.entity.posY + 1.5, gift.entity.posZ - 0.5, 1.0D, event.partialTicks);
+                highlightBlock(SkyblockFeatures.config.selfGiftHighlightColor,
+                        gift.entity.posX - 0.5,
+                        gift.entity.posY + 1.5,
+                        gift.entity.posZ - 0.5,
+                        1.0D,
+                        event.partialTicks);
             }
         }
 
         if (!(SkyblockFeatures.config.icecaveHighlight || SkyblockFeatures.config.presentWaypoints)) return;
 
-        for (Entity entity : mc.theWorld.loadedEntityList) {
-            if (SkyblockFeatures.config.presentWaypoints && entity instanceof EntityArmorStand && !inGlacialCave && ((EntityArmorStand) entity).getCurrentArmor(3) != null && ((EntityArmorStand) entity).getCurrentArmor(3).serializeNBT().getCompoundTag("tag").getCompoundTag("SkullOwner").getCompoundTag("Properties").toString().contains("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMTBmNTM5ODUxMGIxYTA1YWZjNWIyMDFlYWQ4YmZjNTgzZTU3ZDcyMDJmNTE5M2IwYjc2MWZjYmQwYWUyIn19fQ=")) {
+        for (Entity entity : Utils.GetMC().theWorld.loadedEntityList) {
+            if (SkyblockFeatures.config.presentWaypoints && entity instanceof EntityArmorStand && !inGlacialCave &&
+                    ((EntityArmorStand) entity).getCurrentArmor(3) != null &&
+                    ((EntityArmorStand) entity).getCurrentArmor(3).serializeNBT()
+                            .getCompoundTag("tag").getCompoundTag("ExtraAttributes").getString("id")
+                            .equals("WHITE_GIFT")) {
                 boolean isPlayerGift = false;
-                for (Entity otherEntity : mc.theWorld.loadedEntityList) {
+                for (Entity otherEntity : Utils.GetMC().theWorld.loadedEntityList) {
                     if (otherEntity instanceof EntityArmorStand && otherEntity.getDistanceToEntity(entity) < 0.5 && otherEntity.getName().contains("From: ")) {
                         isPlayerGift = true;
                     }
@@ -228,16 +239,21 @@ public class GiftTracker {
                 if (isPlayerPresent((EntityArmorStand) entity)) {
                     isPlayerGift = true;
                 }
-                if (!saintJerryGifts.contains(entity) && !isPlayerGift) {
+                if (!isPlayerGift && !saintJerryGifts.contains(entity)) {
                     GlStateManager.disableDepth();
-                    highlightBlock(SkyblockFeatures.config.presentWaypointsColor, entity.posX - 0.5, entity.posY + 1.5, entity.posZ - 0.5, 1.0D, event.partialTicks);
+                    highlightBlock(SkyblockFeatures.config.presentWaypointsColor,
+                            entity.posX - 0.5,
+                            entity.posY + 1.5,
+                            entity.posZ - 0.5,
+                            1.0D,
+                            event.partialTicks);
                 }
             }
             if (inGlacialCave && SkyblockFeatures.config.icecaveHighlight) {
                 if (SkyblockFeatures.config.icecaveHighlightWalls) {
                     GlStateManager.disableDepth();
                 }
-                Block blockState = mc.theWorld.getBlockState(entity.getPosition().up()).getBlock();
+                Block blockState = Utils.GetMC().theWorld.getBlockState(entity.getPosition().up()).getBlock();
                 if (SkyblockFeatures.config.icecaveHighlight && (blockState instanceof BlockIce || blockState instanceof BlockPackedIce) && entity instanceof EntityArmorStand && ((EntityArmorStand) entity).getCurrentArmor(3) != null) {
                     String itemName = ((EntityArmorStand) entity).getCurrentArmor(3).serializeNBT().getCompoundTag("tag").getCompoundTag("display").getString("Name");
                     Vec3 StringPos = new Vec3(entity.posX, entity.posY + 3, entity.posZ);
@@ -308,8 +324,8 @@ public class GiftTracker {
 
     }
 
-    public static void highlightBlock(Color c, double d, double d1, double d2, double size, float ticks) {
-        RenderUtil.drawOutlinedFilledBoundingBox(new AxisAlignedBB(d, d1, d2, d + size, d1 + size, d2 + size), c, ticks);
+    public static void highlightBlock(Color c, double x, double y, double z, double size, float ticks) {
+        RenderUtil.drawOutlinedFilledBoundingBox(new AxisAlignedBB(x, y, z, x + size, y + size, z + size), c, ticks);
     }
 
     static {
