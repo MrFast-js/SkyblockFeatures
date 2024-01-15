@@ -153,8 +153,12 @@ public class ItemAbilityAPI {
     private Integer getCooldownReduction() {
         for (String sidebarLine : ScoreboardUtil.getSidebarLines(true)) {
             if (sidebarLine.contains(Utils.GetMC().thePlayer.getName())) {
-                int mageLvl = Integer.parseInt(sidebarLine.split(" ")[2].replaceAll("[^0-9]", ""));
-                return (int) Math.floor((double) mageLvl / 2);
+                try {
+                    int mageLvl = Integer.parseInt(sidebarLine.split(" ")[2].replaceAll("[^0-9]", ""));
+                    return (int) Math.floor((double) mageLvl / 2);
+                } catch (Exception ignored) {
+
+                }
             }
         }
         return 0;
