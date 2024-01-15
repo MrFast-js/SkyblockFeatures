@@ -15,17 +15,13 @@ import org.jetbrains.annotations.NotNull;
 
 
 public class SecretDisplay {
-
-    private static final Minecraft mc = Minecraft.getMinecraft();
-
     static {
-        new SecretDisplayGUI();
+        new SecretDisplayGui();
     }
 
-    public static class SecretDisplayGUI extends UIElement {
-
-        public SecretDisplayGUI() {
-            super("Secret Display", new Point(0.59876317f, 0.9574074f));
+    public static class SecretDisplayGui extends UIElement {
+        public SecretDisplayGui() {
+            super("Dungeon Secret", new Point(0.59876317f, 0.9574074f));
             SkyblockFeatures.GUIMANAGER.registerElement(this);
         }
 

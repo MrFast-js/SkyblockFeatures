@@ -250,13 +250,13 @@ public class MinionOverlay {
     }
 
     static {
-        new MinionCoinsPerDay();
+        new MinionCoinsPerDayGui();
     }
 
     static String display = "§aTotal Minion Coins Per Day: §6";
-    public static class MinionCoinsPerDay extends UIElement {
-        public MinionCoinsPerDay() {
-            super("Minion Coins Per Day Display", new Point(0.40972087f, 0.1964221f));
+    public static class MinionCoinsPerDayGui extends UIElement {
+        public MinionCoinsPerDayGui() {
+            super("Minion Coins Per Day", new Point(0.40972087f, 0.1964221f));
             SkyblockFeatures.GUIMANAGER.registerElement(this);
         }
 

@@ -7,7 +7,6 @@ import mrfast.sbf.core.SkyblockInfo;
 import mrfast.sbf.core.SkyblockMobDetector;
 import mrfast.sbf.events.CheckRenderEntityEvent;
 import mrfast.sbf.events.RenderEntityOutlineEvent;
-import mrfast.sbf.gui.GuiManager;
 import mrfast.sbf.utils.*;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import org.lwjgl.input.Mouse;
@@ -15,24 +14,20 @@ import org.lwjgl.input.Mouse;
 import com.mojang.realmsclient.gui.ChatFormatting;
 
 import mrfast.sbf.SkyblockFeatures;
-import mrfast.sbf.events.GuiContainerEvent;
 import mrfast.sbf.events.PacketEvent;
 import mrfast.sbf.gui.components.Point;
 import mrfast.sbf.gui.components.UIElement;
 import net.minecraft.block.BlockSkull;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiPlayerTabOverlay;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.inventory.GuiChest;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.passive.EntityBat;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.event.ClickEvent;
 import net.minecraft.event.HoverEvent;
 import net.minecraft.inventory.ContainerChest;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.play.server.S29PacketSoundEffect;
 import net.minecraft.tileentity.TileEntity;
@@ -248,12 +243,12 @@ public class DungeonsFeatures {
     }
 
     static {
-        new BlessingViewer();
+        new BlessingViewerGui();
     }
     
-    public static class BlessingViewer extends UIElement {
+    public static class BlessingViewerGui extends UIElement {
   
-        public BlessingViewer() {
+        public BlessingViewerGui() {
             super("Blessings Viewer", new Point(0.2f, 0.0f));
             SkyblockFeatures.GUIMANAGER.registerElement(this);
         }

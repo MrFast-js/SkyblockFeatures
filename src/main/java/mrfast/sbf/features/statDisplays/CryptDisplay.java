@@ -26,7 +26,7 @@ public class CryptDisplay {
     public static class cryptDisplayGUI extends UIElement {
 
         public cryptDisplayGUI() {
-            super("Crypt Display", new Point(0.2f, 0.0f));
+            super("Crypt Display", new Point(0.0f, 0.24930556f));
             SkyblockFeatures.GUIMANAGER.registerElement(this);
         }
 

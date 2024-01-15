@@ -10,41 +10,41 @@ import java.awt.*;
 
 public class ManaBar {
     static {
-        new ManaBarGUI();
+        new ManaBarGui();
     }
 
-    public static class ManaBarGUI extends UIElement {
-
-        public ManaBarGUI() {
+    public static class ManaBarGui extends UIElement {
+        public ManaBarGui() {
             super("Mana Bar", new Point(0.50865895f, 0.9157407f));
             SkyblockFeatures.GUIMANAGER.registerElement(this);
         }
 
         @Override
         public void drawElement() {
-            drawHealthBar();
-        }
-        @Override
-        public void drawElementExample() {
-            drawHealthBar();
+            drawManaBar();
         }
 
-        private void drawHealthBar() {
+        @Override
+        public void drawElementExample() {
+            drawManaBar();
+        }
+
+        private void drawManaBar() {
             int max = Utils.maxMana;
             int mana = Utils.mana;
             int overflow = Utils.overflowMana;
-            int total = (max+overflow);
+            int total = (max + overflow);
             double manaFillPerc = (double) mana / total;
             double overflowFillPerc = (double) overflow / total;
 
             Color manaColor = new Color(0x5555FF);
             Color overflowColor = new Color(0x55FFFF);
-            Gui.drawRect(0, 0,80, 10, Color.black.getRGB());
+            Gui.drawRect(0, 0, 80, 10, Color.black.getRGB());
 
-            Gui.drawRect(2, 2,(int)(78d*manaFillPerc), 8, manaColor.getRGB());
-            if(overflow!=0) {
-                int fillPixels = (int)(78d*overflowFillPerc)+3;
-                Gui.drawRect(Math.min(76,2+(78-fillPixels)), 2, 78, 8, overflowColor.getRGB());
+            Gui.drawRect(2, 2, (int) (78d * manaFillPerc), 8, manaColor.getRGB());
+            if (overflow != 0) {
+                int fillPixels = (int) (78d * overflowFillPerc) + 3;
+                Gui.drawRect(Math.min(76, Math.max(2, 2 + (78 - fillPixels))), 2, 78, 8, overflowColor.getRGB());
             }
         }
 

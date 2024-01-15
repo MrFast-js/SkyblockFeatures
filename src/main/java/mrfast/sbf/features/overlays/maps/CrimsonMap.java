@@ -51,11 +51,11 @@ public class CrimsonMap {
     static double lastPlayerR = 0;
 
     static {
-        new CrimsonIslesMap();
+        new CrimsonIslesMapGui();
     }   
-    public static class CrimsonIslesMap extends UIElement {
-        public CrimsonIslesMap() {
-            super("Crimson Isles Map", new Point(0.0020833334f, 0.0037037036f));
+    public static class CrimsonIslesMapGui extends UIElement {
+        public CrimsonIslesMapGui() {
+            super("Crimson Isles Map", new Point(0.0f, 0.0037037036f));
             SkyblockFeatures.GUIMANAGER.registerElement(this);
         }
 

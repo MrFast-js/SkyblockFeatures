@@ -396,12 +396,12 @@ public class PartyFinderFeatures {
 
 
     static {
-        new PartyDisplayGUI();
+        new PartyDisplayGui();
     }
 
-    public static class PartyDisplayGUI extends UIElement {
-        public PartyDisplayGUI() {
-            super("Dungeon Party Display", new Point(0.0020833334f, 0.3941395f));
+    public static class PartyDisplayGui extends UIElement {
+        public PartyDisplayGui() {
+            super("Dungeon Party Display", new Point(0.0f, 0.3941395f));
             SkyblockFeatures.GUIMANAGER.registerElement(this);
         }
 

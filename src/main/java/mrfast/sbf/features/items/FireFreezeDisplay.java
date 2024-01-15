@@ -5,7 +5,6 @@ import mrfast.sbf.SkyblockFeatures;
 import mrfast.sbf.events.UseItemAbilityEvent;
 import mrfast.sbf.utils.RenderUtil;
 import mrfast.sbf.utils.Utils;
-import net.minecraft.util.BlockPos;
 import net.minecraft.util.Vec3;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;

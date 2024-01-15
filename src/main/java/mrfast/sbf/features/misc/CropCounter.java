@@ -65,11 +65,11 @@ public class CropCounter {
     }
     
     static {
-        new CropCounterGUI();
+        new CropCounterGui();
     }   
-    public static class CropCounterGUI extends UIElement {
-        public CropCounterGUI() {
-            super("CropCounter", new Point(0.43951935f, 0.6869489f));
+    public static class CropCounterGui extends UIElement {
+        public CropCounterGui() {
+            super("Crop Counter", new Point(0.43951935f, 0.6869489f));
             SkyblockFeatures.GUIMANAGER.registerElement(this);
         }
 

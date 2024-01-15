@@ -21,12 +21,12 @@ public class CommisionsTracker {
     private static final Minecraft mc = Minecraft.getMinecraft();
 
     static {
-        new CommisionsTrackerGUI();
+        new CommissionsTrackerGui();
     }
 
-    public static class CommisionsTrackerGUI extends UIElement {
+    public static class CommissionsTrackerGui extends UIElement {
 
-        public CommisionsTrackerGUI() {
+        public CommissionsTrackerGui() {
             super("Commissions Tracker", new Point(0.6484375f, 0.0037037036f));
             SkyblockFeatures.GUIMANAGER.registerElement(this);
         }

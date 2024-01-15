@@ -79,8 +79,10 @@ public class ConfigCommand extends CommandBase {
                 break;
             case "resetgui":
                 GuiManager.GuiPositions.forEach((name,point)->{
-                    Point pnt = GuiManager.names.get(name).getPos();
-                    GuiManager.GuiPositions.put(name, pnt);
+                    try {
+                        Point pnt = GuiManager.names.get(name).getPos();
+                        GuiManager.GuiPositions.put(name, pnt);
+                    } catch (Exception ignored) {}
                 });
                 Utils.sendMessage("Gui Positions Reset!");
                 break;

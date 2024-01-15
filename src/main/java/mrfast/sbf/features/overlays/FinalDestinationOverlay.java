@@ -16,11 +16,11 @@ import java.util.regex.Pattern;
 
 public class FinalDestinationOverlay {
     static {
-        new FinalDestinationOverlayElement();
+        new FinalDestinationOverlayGui();
     }
-    public static class FinalDestinationOverlayElement extends UIElement {
-        public FinalDestinationOverlayElement() {
-            super("finalDestinationOverlay", new Point(0.0020833334f, 0.26018518f));
+    public static class FinalDestinationOverlayGui extends UIElement {
+        public FinalDestinationOverlayGui() {
+            super("Final Destination Armor Display", new Point(0.0f, 0.26018518f));
             SkyblockFeatures.GUIMANAGER.registerElement(this);
         }
         @Override

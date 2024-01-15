@@ -416,13 +416,13 @@ public class DungeonMap {
     private static final Minecraft mc = Minecraft.getMinecraft();
 
     static {
-        new DungeonMapMove();
+        new DungeonMapGui();
     }
 
-    public static class DungeonMapMove extends UIElement {
+    public static class DungeonMapGui extends UIElement {
 
-        public DungeonMapMove() {
-            super("DungeonMap", new Point(0.0020833334f, 0.0037037036f));
+        public DungeonMapGui() {
+            super("Dungeon Map", new Point(0.0f, 0.0037037036f));
             SkyblockFeatures.GUIMANAGER.registerElement(this);
         }
 

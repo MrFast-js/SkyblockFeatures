@@ -388,6 +388,7 @@ public class ConfigGui extends WindowScreen {
         boolean ignoreFeature = true;
 
         String parentName = feature.parentName();
+        String[] args = searchQuery.split(" ");
 
         // Check if the parent element exists
         if (parentElements.containsKey(parentName)) {

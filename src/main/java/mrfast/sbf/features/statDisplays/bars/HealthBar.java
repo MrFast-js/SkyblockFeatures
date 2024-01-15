@@ -10,12 +10,12 @@ import java.awt.*;
 
 public class HealthBar {
     static {
-        new HealthBarGUI();
+        new HealthBarGui();
     }
 
-    public static class HealthBarGUI extends UIElement {
+    public static class HealthBarGui extends UIElement {
 
-        public HealthBarGUI() {
+        public HealthBarGui() {
             super("Health Bar", new Point(0.40605482f, 0.9166667f));
             SkyblockFeatures.GUIMANAGER.registerElement(this);
         }
@@ -24,6 +24,7 @@ public class HealthBar {
         public void drawElement() {
             drawHealthBar();
         }
+
         @Override
         public void drawElementExample() {
             drawHealthBar();
@@ -33,23 +34,23 @@ public class HealthBar {
             int max = Utils.maxHealth;
             int health = Utils.health;
             int absorbtion = 0;
-            if(health>max) {
-                absorbtion=health-max;
-                health=max;
+            if (health > max) {
+                absorbtion = health - max;
+                health = max;
             }
-            int total = (max+absorbtion);
-            double healthFillPerc = (double) health /total;
-            double absorbFillPerc = (double) absorbtion /total;
+            int total = (max + absorbtion);
+            double healthFillPerc = (double) health / total;
+            double absorbFillPerc = (double) absorbtion / total;
 
             Color HealthColor = Color.RED;
             Color AbsorbColor = new Color(0xFFAA00);
 
-            Gui.drawRect(0, 0,80, 10, Color.black.getRGB());
+            Gui.drawRect(0, 0, 80, 10, Color.black.getRGB());
 
-            Gui.drawRect(2, 2,(int)(78d*healthFillPerc), 8, HealthColor.getRGB());
-            if(absorbtion!=0) {
-                int fillPixels = (int)(78d*absorbFillPerc)+3;
-                Gui.drawRect(Math.min(76,2+(78-fillPixels)), 2, 78, 8, AbsorbColor.getRGB());
+            Gui.drawRect(2, 2, (int) (78d * healthFillPerc), 8, HealthColor.getRGB());
+            if (absorbtion != 0) {
+                int fillPixels = (int) (78d * absorbFillPerc) + 3;
+                Gui.drawRect(Math.min(76, Math.max(2, 2 + (78 - fillPixels))), 2, 78, 8, AbsorbColor.getRGB());
             }
         }
 

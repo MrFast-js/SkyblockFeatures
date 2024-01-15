@@ -60,6 +60,7 @@ public class EditLocationsGui extends GuiScreen {
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
         onMouseMove();
         this.drawGradientRect(0, 0, this.width, this.height, new Color(0, 0, 0, 50).getRGB(), new Color(0, 0, 0, 200).getRGB());
+        MoveableFeature temp = null;
         for (GuiButton button : this.buttonList) {
             if (button instanceof MoveableFeature) {
                 if (!((MoveableFeature) button).element.getToggled()) continue;
@@ -80,7 +81,7 @@ public class EditLocationsGui extends GuiScreen {
                             copyingPos = false;
                         }
                     }
-                    hoveredFeature = moveableFeature;
+                    temp = moveableFeature;
                 }
                 ScaledResolution scaledResolution = new ScaledResolution(Minecraft.getMinecraft());
                 float guiScaleFactor = (1f / scaledResolution.getScaleFactor()) * 2;
@@ -95,12 +96,13 @@ public class EditLocationsGui extends GuiScreen {
                 button.drawButton(this.mc, mouseX, mouseY);
             }
         }
+        hoveredFeature = temp;
 
         if (hoveredFeature != null && !isMouseMoving) {
             List<String> renderTooltip = new ArrayList<>(Arrays.asList(
                     "§a§l" + hoveredFeature.getElement().getName(),
                     "§7X: §e" + Math.round(hoveredFeature.actualX) + " §7Y: §e" + Math.round(hoveredFeature.actualY),
-                    "§eRClICK to open config"));
+                    "§3R-CLICK to open config"));
 
             int tooltipWidth = Utils.GetMC().fontRendererObj.getStringWidth(renderTooltip.get(0));
             int tooltipHeight = renderTooltip.size() * Utils.GetMC().fontRendererObj.FONT_HEIGHT;

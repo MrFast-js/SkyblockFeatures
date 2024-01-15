@@ -57,12 +57,12 @@ public class FireFreezeHelper {
     }
 
     static {
-        new fireFreezeGUI();
+        new FireFreezeGUI();
     }
 
-    public static class fireFreezeGUI extends UIElement {
+    public static class FireFreezeGUI extends UIElement {
 
-        public fireFreezeGUI() {
+        public FireFreezeGUI() {
             super("Fire Freeze Timer", new Point(0.37552083f, 0.6f));
             SkyblockFeatures.GUIMANAGER.registerElement(this);
         }

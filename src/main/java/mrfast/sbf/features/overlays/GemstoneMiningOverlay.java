@@ -9,7 +9,6 @@ import com.mojang.realmsclient.gui.ChatFormatting;
 
 import mrfast.sbf.SkyblockFeatures;
 import mrfast.sbf.core.PricingData;
-import mrfast.sbf.core.SkyblockInfo;
 import mrfast.sbf.events.SecondPassedEvent;
 import mrfast.sbf.features.overlays.maps.CrystalHollowsMap;
 import mrfast.sbf.gui.components.Point;
@@ -77,12 +76,12 @@ public class GemstoneMiningOverlay {
     }
 
     static {
-        new GemstoneMiningGUI();
+        new GemstoneTrackerGui();
     }
 
-    public static class GemstoneMiningGUI extends UIElement {
-        public GemstoneMiningGUI() {
-            super("Gemstone GUI", new Point(0.2f, 0.0f));
+    public static class GemstoneTrackerGui extends UIElement {
+        public GemstoneTrackerGui() {
+            super("Gemstone Tracker", new Point(0.0f, 0.26296297f));
             SkyblockFeatures.GUIMANAGER.registerElement(this);
         }
 

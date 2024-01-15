@@ -313,7 +313,7 @@ public class GiftTracker {
     }
 
     static {
-        new GiftingOverlay();
+        new GiftingInfoOverlay();
     }
 
     public static int getGiftMilestone(int gifts) {
@@ -331,9 +331,9 @@ public class GiftTracker {
         }
     }
 
-    public static class GiftingOverlay extends UIElement {
-        public GiftingOverlay() {
-            super("giftingOverlay", new Point(0f, 0f));
+    public static class GiftingInfoOverlay extends UIElement {
+        public GiftingInfoOverlay() {
+            super("Gifting Info", new Point(0f, 0f));
             SkyblockFeatures.GUIMANAGER.registerElement(this);
         }
 

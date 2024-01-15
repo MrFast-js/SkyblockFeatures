@@ -112,12 +112,12 @@ public class AutomatonTracker {
         }
     }
     static {
-        new AutomatonTrackerGUI();
+        new AutomatonTrackerGui();
     }
 
-    public static class AutomatonTrackerGUI extends UIElement {
-        public AutomatonTrackerGUI() {
-            super("Automaton Tracker", new Point(0.2f, 0.0f));
+    public static class AutomatonTrackerGui extends UIElement {
+        public AutomatonTrackerGui() {
+            super("Automaton Loot Tracker", new Point(0.0f, 0.49722221f));
             SkyblockFeatures.GUIMANAGER.registerElement(this);
         }
 

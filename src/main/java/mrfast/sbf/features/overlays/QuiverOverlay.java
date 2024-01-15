@@ -22,9 +22,6 @@ import net.minecraft.network.play.server.S29PacketSoundEffect;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import scala.Int;
-
-import java.util.HashMap;
 
 public class QuiverOverlay {
     public static Minecraft mc = Utils.GetMC();
@@ -32,7 +29,7 @@ public class QuiverOverlay {
     static JsonObject arrowCounts = new JsonObject();
     static boolean loadedData = false;
     static {
-        new quiverDisplay();
+        new QuiverOverlayGui();
     }
 
     @SubscribeEvent
@@ -170,9 +167,9 @@ public class QuiverOverlay {
         DataManager.saveProfileData("arrows", arrowCounts);
     }
 
-    public static class quiverDisplay extends UIElement {
-        public quiverDisplay() {
-            super("quiverDisplay", new Point(0.47239587f, 0.8342593f));
+    public static class QuiverOverlayGui extends UIElement {
+        public QuiverOverlayGui() {
+            super("Quiver Overlay", new Point(0.47239587f, 0.8342593f));
             SkyblockFeatures.GUIMANAGER.registerElement(this);
         }
 

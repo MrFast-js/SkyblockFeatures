@@ -739,7 +739,7 @@ public class Config extends ConfigManager {
 
     @Property(
             type = PropertyType.TOGGLE,
-            name = "Secrets Display",
+            name = "Dungeon Secrets Display",
             description = "Movable Secrets display",
             category = "§1§rDungeons",
             subcategory = "Miscellaneous"
@@ -1128,7 +1128,7 @@ public class Config extends ConfigManager {
 
     @Property(
             type = PropertyType.TOGGLE,
-            name = "Onscreen Clock",
+            name = "On-Screen Clock",
             description = "Display a clock",
             category = "Miscellaneous",
             subcategory = "Visual"
@@ -2190,7 +2190,7 @@ public class Config extends ConfigManager {
 
     @Property(
             type = PropertyType.TOGGLE,
-            name = "Flipper Active",
+            name = "Auction Flipper Active",
             description = "Enables or disables the flipper with its current settings.\n§cDo not put 100% trust in the mod, it can and probably will make mistakes.",
             category = "§1§rAuction Flipper",
             subcategory = "Flipper Settings",
@@ -2204,7 +2204,7 @@ public class Config extends ConfigManager {
             description = "Keybind used to toggle the flipper on/off",
             category = "§1§rAuction Flipper",
             subcategory = "Flipper Settings",
-            parentName = "Flipper Active"
+            parentName = "Auction Flipper Active"
     )
     public int aucFlipperKeybind = -1;
 

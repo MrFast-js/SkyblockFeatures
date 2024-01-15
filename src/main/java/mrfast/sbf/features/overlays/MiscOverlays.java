@@ -6,33 +6,20 @@ import java.util.*;
 import com.mojang.realmsclient.gui.ChatFormatting;
 
 import mrfast.sbf.SkyblockFeatures;
-import mrfast.sbf.core.SkyblockInfo;
-import mrfast.sbf.events.GuiContainerEvent;
-import mrfast.sbf.events.PacketEvent;
 import mrfast.sbf.features.overlays.maps.CrystalHollowsMap;
 import mrfast.sbf.gui.components.Point;
 import mrfast.sbf.gui.components.UIElement;
 import mrfast.sbf.utils.GuiUtils;
-import mrfast.sbf.utils.ItemUtils;
-import mrfast.sbf.utils.RenderUtil;
 import mrfast.sbf.utils.Utils;
 import net.minecraft.client.Minecraft;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.Slot;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemBow;
-import net.minecraft.item.ItemStack;
-import net.minecraft.network.play.server.S29PacketSoundEffect;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class MiscOverlays {
     public static Minecraft mc = Utils.GetMC();
     static {
-        new timeOverlay();
-        new dayCounter();
+        new OnScreenClockGui();
+        new DayTrackerGui();
     }
 
     @SubscribeEvent
@@ -52,9 +39,9 @@ public class MiscOverlays {
     public static String getTime() {
         return new SimpleDateFormat("hh:mm:ss").format(new Date());
     }
-    public static class timeOverlay extends UIElement {
-        public timeOverlay() {
-            super("timeOverlay", new Point(0f,0f));
+    public static class OnScreenClockGui extends UIElement {
+        public OnScreenClockGui() {
+            super("On-Screen Clock", new Point(0f,0f));
             SkyblockFeatures.GUIMANAGER.registerElement(this);
         }
 
@@ -89,9 +76,9 @@ public class MiscOverlays {
         }
     }
 
-    public static class dayCounter extends UIElement {
-        public dayCounter() {
-            super("dayCounter", new Point(0.2f, 0.0f));
+    public static class DayTrackerGui extends UIElement {
+        public DayTrackerGui() {
+            super("Day Tracker", new Point(0.2f, 0.0f));
             SkyblockFeatures.GUIMANAGER.registerElement(this);
         }
 

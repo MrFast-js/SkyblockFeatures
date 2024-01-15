@@ -114,12 +114,12 @@ public class GhostTracker {
         }
     }
     static {
-        new GhostTrackerGUI();
+        new GhostTrackerGui();
     }
 
-    public static class GhostTrackerGUI extends UIElement {
-        public GhostTrackerGUI() {
-            super("Ghost Tracker", new Point(0.2f, 0.0f));
+    public static class GhostTrackerGui extends UIElement {
+        public GhostTrackerGui() {
+            super("Ghost Tracker", new Point(0.0f, 0.34351853f));
             SkyblockFeatures.GUIMANAGER.registerElement(this);
         }
 

@@ -68,12 +68,12 @@ public class PowderTracker {
     }
 
     static {
-        new EnderNodeGui();
+        new PowderTrackerGui();
     }
 
-    public static class EnderNodeGui extends UIElement {
-        public EnderNodeGui() {
-            super("Powder Tracker", new Point(0.2f, 0.0f));
+    public static class PowderTrackerGui extends UIElement {
+        public PowderTrackerGui() {
+            super("Powder Mining Tracker", new Point(0.00f, 0.34166667f));
             SkyblockFeatures.GUIMANAGER.registerElement(this);
         }
 
@@ -129,7 +129,7 @@ public class PowderTracker {
 
         @Override
         public int getHeight() {
-            return Utils.GetMC().fontRendererObj.FONT_HEIGHT*8;
+            return Utils.GetMC().fontRendererObj.FONT_HEIGHT*9;
         }
 
         @Override

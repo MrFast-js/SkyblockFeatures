@@ -49,10 +49,10 @@ public class DwarvenMap {
     static double lastPlayerR = 0;
 
     static {
-        new DwarvenMinesMap();
+        new DwarvenMinesMapGui();
     }   
-    public static class DwarvenMinesMap extends UIElement {
-        public DwarvenMinesMap() {
+    public static class DwarvenMinesMapGui extends UIElement {
+        public DwarvenMinesMapGui() {
             super("Dwarven Mines Map", new Point(0.86041665f, 0.0f));
             SkyblockFeatures.GUIMANAGER.registerElement(this);
         }

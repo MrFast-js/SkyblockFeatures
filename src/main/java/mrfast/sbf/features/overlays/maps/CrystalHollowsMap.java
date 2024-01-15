@@ -118,11 +118,11 @@ public class CrystalHollowsMap {
     static double lastPlayerR = 0;
 
     static {
-        new CrystalHollowsMapElement();
+        new CrystalHollowsMapGui();
     }   
-    public static class CrystalHollowsMapElement extends UIElement {
-        public CrystalHollowsMapElement() {
-            super("CrystalHollowsMap", new Point(0.86041665f, 0.0f));
+    public static class CrystalHollowsMapGui extends UIElement {
+        public CrystalHollowsMapGui() {
+            super("Crystal Hollows Map", new Point(0.86041665f, 0.0f));
             SkyblockFeatures.GUIMANAGER.registerElement(this);
         }
 
