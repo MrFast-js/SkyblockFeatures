@@ -227,7 +227,7 @@ public class ProfileViewerGui extends WindowScreen {
                         .setColor(mainBackground);
                 float guiWidth = box.getWidth();
                 float guiHeight = box.getHeight();
-                new ShadowIcon(new ResourceImageFactory("/assets/skyblockfeatures/gui/largeOutline.png", false), false).setChildOf(box)
+                new ShadowIcon(new ResourceImageFactory("/assets/skyblockfeatures/gui/largeOutline.png", true), false).setChildOf(box)
                         .setX(new PixelConstraint(0f))
                         .setY(new PixelConstraint(0f))
                         .setWidth(new RelativeConstraint(1f))
@@ -391,7 +391,7 @@ public class ProfileViewerGui extends WindowScreen {
                 .setHeight(new RelativeConstraint(0.70f))
                 .setChildOf(getWindow())
                 .setColor(clear);
-        new ShadowIcon(new ResourceImageFactory("/assets/skyblockfeatures/gui/largeOutline.png", false), false).setChildOf(box)
+        new ShadowIcon(new ResourceImageFactory("/assets/skyblockfeatures/gui/largeOutline.png", true), false).setChildOf(box)
                 .setX(new PixelConstraint(0f))
                 .setY(new PixelConstraint(0f))
                 .setWidth(new RelativeConstraint(1f))
@@ -430,9 +430,9 @@ public class ProfileViewerGui extends WindowScreen {
                 drawSideButton(sideButtonContainer, "General", () -> loadCategory("General"));
                 drawSideButton(sideButtonContainer, "Inventories", () -> loadCategory("Inventories"));
                 drawSideButton(sideButtonContainer, "Pets", () -> {
-                    Utils.sendMessage(ChatFormatting.RED + "Currently Disabled");
+//                    Utils.sendMessage(ChatFormatting.RED + "Currently Disabled");
 
-//                    loadCategory("Pets")
+                    loadCategory("Pets");
                 });
                 drawSideButton(sideButtonContainer, "Skills", () -> loadCategory("Skills"));
                 drawSideButton(sideButtonContainer, "Dungeons", () -> loadCategory("Dungeons"));
@@ -1645,7 +1645,9 @@ public class ProfileViewerGui extends WindowScreen {
             new Thread(() -> {
                 // Wait for soopy before displaying the page
                 double loadingIndex = 0;
-                while (soopyProfiles.entrySet().isEmpty()) {
+                JsonObject SkycryptProfiles = NetworkUtils.getJSONResponse("https://sky.shiiyu.moe/api/v2/profile/"+NetworkUtils.getName(playerUuid)).get("profiles").getAsJsonObject();
+
+                while (SkycryptProfiles.entrySet().isEmpty()) {
                     try {
                         ((UIText) loadingText).setText(loadingStages[(int) Math.floor(loadingIndex)]);
                         loadingIndex += 0.5;
@@ -1654,23 +1656,24 @@ public class ProfileViewerGui extends WindowScreen {
                     } catch (Exception ignored) {
                     }
                 }
-
+                System.out.println(selectedProfileUUID+" ");
+                for (Entry<String, JsonElement> stringJsonElementEntry : SkycryptProfiles.entrySet()) {
+                    System.out.println(stringJsonElementEntry.getKey());
+                }
+                JsonObject skycryptPetsObject = SkycryptProfiles.get(selectedProfileUUID).getAsJsonObject()
+                        .get("data").getAsJsonObject()
+                        .get("pets").getAsJsonObject();
+                JsonArray skycryptPetList = skycryptPetsObject.get("pets").getAsJsonArray();
                 loadingText.parent.removeChild(loadingText);
-
-                String id = ProfileResponse.get("profile_id").toString().replaceAll("\"", "").replace("-", "");
-                JsonObject profile = soopyProfiles.get(id).getAsJsonObject();
-                JsonObject members = profile.get("members").getAsJsonObject();
-                JsonObject player = members.get(playerUuid).getAsJsonObject();
-                JsonArray pets = player.get("pets").getAsJsonArray();
 
                 float index = -1;
 
                 UIComponent otherPetsContainer = new UIBlock(clear).setY(new SiblingConstraint(10f)).setHeight(new ChildBasedSizeConstraint()).setWidth(new RelativeConstraint(1f)).setChildOf(statsAreaContainer);
                 new UIText(bold + "Active Pet").setChildOf(otherPetsContainer).setY(new PixelConstraint(2f)).setX(new PixelConstraint(1f)).setTextScale(new PixelConstraint((float) (1f * fontScale)));
 
-                List<JsonObject> sortedPets = getJsonObjects(pets);
-                for (JsonObject pet : sortedPets) {
-                    if (pet == null) continue;
+                for (JsonElement petElement : skycryptPetList) {
+                    if (petElement == null) continue;
+                    JsonObject pet = petElement.getAsJsonObject();
                     String texturePath = pet.get("texture_path").getAsString();
                     CompletableFuture<BufferedImage> imageFuture = new CompletableFuture<>();
                     List<String> tooltip = parseLore(pet.get("lore").getAsString());
@@ -1692,7 +1695,7 @@ public class ProfileViewerGui extends WindowScreen {
 
                     String name = pet.get("display_name").getAsString();
                     int lvl = pet.get("level").getAsJsonObject().get("level").getAsInt();
-                    String coloredName = "AA";
+                    String coloredName = ChatFormatting.GRAY+"[Lvl 0] Unknown Pet";
                     String tier = pet.get("tier").getAsString();
                     try {
                         coloredName = ChatFormatting.GRAY + "[Lvl " + lvl + "] " + ItemRarity.getRarityFromName(tier).getBaseColor() + name;
