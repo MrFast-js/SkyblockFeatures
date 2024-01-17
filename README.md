@@ -61,6 +61,7 @@
         <li>Crypt Display</li>
         <li>Hide Non-Starred Mobs</li>
         <li>Glowing Starred Mobs</li>
+        <li>F3/M3 Fire freeze timer</li>
         <li>Highlight Dungeon Bats</li>
         <li>Dungeon Party Display</li>
         <li>Better Dungeon Nametags</li>
