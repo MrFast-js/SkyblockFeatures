@@ -76,11 +76,8 @@ public class EditLocationsGui extends GuiScreen {
                     if (Utils.isDeveloper()) {
                         if (Keyboard.isKeyDown(Keyboard.KEY_LCONTROL) && Keyboard.isKeyDown(Keyboard.KEY_C)) {
                             if (copyingPos) continue;
-
-                            Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
                             String point = "new Point(" + moveableFeature.relativeX + "f, " + moveableFeature.relativeY + "f)";
-                            clipboard.setContents(new StringSelection("new Point(" + moveableFeature.relativeX + "f, " + moveableFeature.relativeY + "f)"), null);
-
+                            Utils.copyToClipboard(point);
                             copyingPos = true;
                             Utils.sendMessage(ChatFormatting.GREEN + "Copied hovered element position: " + ChatFormatting.YELLOW + point);
                         } else {
