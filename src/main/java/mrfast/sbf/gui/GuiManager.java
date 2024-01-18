@@ -21,7 +21,12 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
-
+/**
+ * Modified from Skytils 0.x under GNU Affero General Public License v3.0
+ * https://github.com/Skytils/SkytilsMod/tree/0.x
+ *
+ * @author Sychic
+ */
 public class GuiManager {
     private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
     private static File positionFile;

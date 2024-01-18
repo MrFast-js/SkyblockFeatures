@@ -21,6 +21,12 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
 
+/**
+ * Modified from Skytils 0.x under GNU Affero General Public License v3.0
+ * https://github.com/Skytils/SkytilsMod/tree/0.x
+ *
+ * @author Sychic
+ */
 public class EditLocationsGui extends GuiScreen {
 
     private float lastMouseX, lastMouseY, xOffset, yOffset;
