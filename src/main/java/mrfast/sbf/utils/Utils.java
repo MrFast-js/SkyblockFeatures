@@ -1,5 +1,8 @@
 package mrfast.sbf.utils;
 
+import java.awt.*;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.StringSelection;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -98,6 +101,11 @@ public class Utils {
             e.printStackTrace();
             return false;
         }
+    }
+
+    static Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+    public static void copyToClipboard(String text) {
+        clipboard.setContents(new StringSelection(text), null);
     }
 
     /*
