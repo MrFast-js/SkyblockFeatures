@@ -2,6 +2,12 @@ package mrfast.sbf.gui.components;
 
 import mrfast.sbf.gui.GuiManager;
 
+/**
+ * Modified from Skytils 0.x under GNU Affero General Public License v3.0
+ * https://github.com/Skytils/SkytilsMod/tree/0.x
+ *
+ * @author Sychic
+ */
 public abstract class UIElement {
     String name;
     Point pos;
