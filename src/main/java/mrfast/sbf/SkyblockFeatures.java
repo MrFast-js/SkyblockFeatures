@@ -129,6 +129,7 @@ public class SkyblockFeatures {
                 new ActionBarListener(),
                 new CommisionsTracker(),
                 new FairySoulWaypoints(),
+                new AuctionSellingOverlay(),
                 new JerryTimer(),
                 new GiftTracker(),
                 new CropCounter(),
@@ -205,19 +206,19 @@ public class SkyblockFeatures {
 
 
         int timestarted = 0;
-        if(DataManager.dataJson.has("timesStartedUp")) {
+        if (DataManager.dataJson.has("timesStartedUp")) {
             timestarted = (int) DataManager.getData("timesStartedUp");
         }
 
-        DataManager.saveData("timesStartedUp",timestarted+1);
+        DataManager.saveData("timesStartedUp", timestarted + 1);
         System.out.println("You have started Skyblock Features up " + timestarted + " times!");
 
-        if(DataManager.dataJson.has("lastStartedVersion")) {
+        if (DataManager.dataJson.has("lastStartedVersion")) {
             if (!((String) DataManager.getData("lastStartedVersion")).equals(SkyblockFeatures.VERSION)) {
                 sendUpdateChangelogs = true;
             }
         }
-        DataManager.saveData("lastStartedVersion",SkyblockFeatures.VERSION);
+        DataManager.saveData("lastStartedVersion", SkyblockFeatures.VERSION);
 
 
         SkyblockFeatures.config.aucFlipperEnabled = false;
@@ -278,13 +279,13 @@ public class SkyblockFeatures {
     public void onTick(TickEvent.ClientTickEvent event) {
         if (event.phase != TickEvent.Phase.START) return;
         if (Utils.GetMC().thePlayer != null && SkyblockFeatures.config.updateNotify && !sentUpdateNotification && Utils.inSkyblock) {
-            if(!updateChecked) {
+            if (!updateChecked) {
                 System.out.println("Silenting checking for SBF update");
                 VersionManager.silentUpdateCheck();
                 updateChecked = true;
             }
         }
-        if (Utils.inSkyblock && sendUpdateChangelogs && Utils.GetMC().theWorld!=null) {
+        if (Utils.inSkyblock && sendUpdateChangelogs && Utils.GetMC().theWorld != null) {
             sendUpdateChangelogs = false;
             new Thread(() -> {
                 JsonObject currentUpdate = VersionManager.getCurrentGithubVersion();
@@ -336,7 +337,7 @@ public class SkyblockFeatures {
     @SubscribeEvent
     public void onSocketMessage(SocketMessageEvent event) {
         if (event.type.equals("message")) {
-            event.message = event.message.replaceAll("�","§");
+            event.message = event.message.replaceAll("�", "§");
             if (event.message.contains("Checking for auction flips") && !SkyblockFeatures.config.aucFlipperEnabled)
                 return;
             Utils.sendMessage(event.message);
