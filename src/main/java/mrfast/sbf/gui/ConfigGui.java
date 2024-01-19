@@ -246,24 +246,14 @@ public class ConfigGui extends WindowScreen {
             });
         }
 
-        UIComponent editGuiButton;
-
+        String buttonTexture = furfSkyThemed?"/assets/skyblockfeatures/gui/button.png":"/assets/skyblockfeatures/gui/default_button.png";
         // Check if the image should be used or not
-        if (furfSkyThemed) {
-            editGuiButton = new ShadowIcon(new ResourceImageFactory("/assets/skyblockfeatures/gui/button.png", true), false)
-                    .setChildOf(sidebarArea)
-                    .setX(new RelativeConstraint(0.04f))
-                    .setWidth(new PixelConstraint(118f))
-                    .setHeight(new PixelConstraint(32f))
-                    .setY(new RelativeConstraint(0.88f));
-        } else {
-            editGuiButton = new ShadowIcon(new ResourceImageFactory("/assets/skyblockfeatures/gui/default_button.png", true), false)
-                    .setChildOf(sidebarArea)
-                    .setX(new RelativeConstraint(0.04f))
-                    .setWidth(new PixelConstraint(118f))
-                    .setHeight(new PixelConstraint(32f))
-                    .setY(new RelativeConstraint(0.88f));
-        }
+        UIComponent editGuiButton = new ShadowIcon(new ResourceImageFactory(buttonTexture, true), false)
+                .setChildOf(sidebarArea)
+                .setX(new RelativeConstraint(0.04f))
+                .setWidth(new RelativeConstraint(0.18f))
+                .setHeight(new RelativeConstraint(0.08f))
+                .setY(new RelativeConstraint(0.88f));
 
         new UIText("Edit Gui Locations").setColor(editGuiText).setChildOf(editGuiButton)
             .setTextScale(new PixelConstraint((float) fontScale))
