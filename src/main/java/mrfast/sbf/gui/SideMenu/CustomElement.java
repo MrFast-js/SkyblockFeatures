@@ -6,11 +6,14 @@ import net.minecraftforge.fml.client.config.GuiUtils;
 import org.lwjgl.input.Mouse;
 
 import java.util.Arrays;
-import java.util.Collections;
 
-public class CustomElement {
+public abstract class CustomElement {
     protected int x, y, width, height, orginX, orginY;
     public static boolean beingClicked = false;
+    public static CustomElement focusedElement;
+    public boolean isFocused() {
+        return this.equals(focusedElement);
+    }
     private String hoverText;
     private Runnable onClickAction;
     SideMenu parent;
@@ -32,6 +35,10 @@ public class CustomElement {
 
     }
 
+    public void onKeyTyped(char character,int key) {
+
+    }
+
     public void doHoverRender(int mouseX, int mouseY, GuiContainerAccessor gui) {
         this.x = (this.orginX + gui.getGuiLeft() + gui.getWidth() + parent.x);
         this.y = (this.orginY + gui.getGuiTop() + parent.y);
@@ -40,10 +47,17 @@ public class CustomElement {
         // Handle hover and click events
         if (isHovered) {
             onHover(mouseX, mouseY);
-            if (onClickAction != null && Mouse.isButtonDown(0) && !beingClicked) {
-                onClick();
+            if (Mouse.isButtonDown(0) && !beingClicked) {
+                focusedElement = this;
+                onClick(mouseX,mouseY,0);
             }
             beingClicked = Mouse.isButtonDown(0);
+        } else {
+            if(Mouse.isButtonDown(0)) {
+                if(this instanceof TextInputElement) {
+                    ((TextInputElement) this).textField.setFocused(false);
+                }
+            }
         }
     }
 
@@ -54,7 +68,7 @@ public class CustomElement {
         }
     }
 
-    private void onClick() {
+    public void onClick(int mouseX, int mouseY, int mouseButton) {
         // Perform click action
         if (onClickAction != null) {
             onClickAction.run();
