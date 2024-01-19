@@ -1995,8 +1995,8 @@ public class Config extends ConfigManager {
 
     @Property(
             type = PropertyType.TOGGLE,
-            name = "Show Estimated Price",
-            description = "Shows the estimated price for various items in Skyblock. Calculates using things like enchants and stars",
+            name = "Show Estimated Value",
+            description = "Shows the Estimated Value for various items in Skyblock. Calculates using things like enchants and stars",
             category = "Miscellaneous",
             subcategory = "Item Price Info"
     )
@@ -2108,7 +2108,7 @@ public class Config extends ConfigManager {
     @Property(
             type = PropertyType.TOGGLE,
             name = "SBF Trade Gui",
-            description = "Shows extra information inside the trade gui, including estimated prices",
+            description = "Shows extra information inside the trade gui, including Estimated Values",
             category = "Miscellaneous",
             subcategory = "Overlay"
     )

@@ -67,7 +67,7 @@ public class ItemFeatures {
 
                 if (SkyblockFeatures.config.showEstimatedPrice && valuePer != null) {
                     long total = ItemUtils.getEstimatedItemValue(item);//Math.floor(valuePer+starValue+enchantValue) * item.stackSize;
-                    event.toolTip.add("§bEstimated Price: §6" + Utils.nf.format(total * item.stackSize));
+                    event.toolTip.add("§bEstimated Value: §6" + Utils.nf.format(total * item.stackSize));
                 }
 
                 if (SkyblockFeatures.config.showLowestBINPrice && valuePer != null) {
