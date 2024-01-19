@@ -3,6 +3,7 @@ package mrfast.sbf.gui.SideMenu;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.util.ResourceLocation;
+import org.lwjgl.opengl.GL11;
 
 import java.awt.*;
 
@@ -20,6 +21,8 @@ public class CustomButtonElement extends CustomElement {
     @Override
     public void render(int x, int y) {
         super.render(x, y);
+        GL11.glColor4f(1f,1f,1f,1f);
+
         // Draw button background (customize as needed)
         Minecraft.getMinecraft().getTextureManager().bindTexture(buttonTexture);
 
