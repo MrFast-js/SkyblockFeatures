@@ -428,50 +428,6 @@ public class AuctionFeatures {
                 }
             }
 
-            if(chestName.contains("Create")) {
-                boolean alreadyGotIt = false;
-                for(Slot slot:gui.inventorySlots.inventorySlots) {
-                    if (slot.getHasStack() && slot.getSlotIndex() == 13 && !alreadyGotIt) {
-                        alreadyGotIt = true;
-                        ItemStack stack = slot.getStack();
-                        String auctionIdentifier = PricingData.getIdentifier(stack);
-                        if (auctionIdentifier != null) {
-                            Double lowestBin = PricingData.lowestBINs.get(auctionIdentifier);
-                            Double avgBin = PricingData.averageLowestBINs.get(auctionIdentifier);
-                            String avgBinString = ChatFormatting.RED+"Unknown";
-                            if(avgBin!=null) avgBinString = ChatFormatting.GOLD+Utils.nf.format(avgBin*stack.stackSize);
-
-                            String lowestBinString = ChatFormatting.RED+"Unknown";
-                            if(lowestBin!=null) lowestBinString = ChatFormatting.GOLD+Utils.nf.format(lowestBin*stack.stackSize);
-
-                            Float priceToSellAt = 0f;
-                            if(lowestBin!=null&&avgBin!=null) priceToSellAt = (float) Math.round(((lowestBin*0.6+avgBin*0.4))*0.99);
-
-                            JsonObject auctionData = PricingData.getItemAuctionInfo(auctionIdentifier);
-                            if(auctionData==null) continue;
-                            int volume = auctionData.get("sales").getAsInt();
-                            int sellingFor = 0;
-                            try {
-                                sellingFor = Integer.parseInt(Utils.cleanColor(inv.getStackInSlot(31).getDisplayName()).split(" ")[2].replaceAll("[^0-9]", ""));
-                            } catch (Exception e) {
-                                // TODO: handle exception
-                            }
-                            // Estimating time to sell based on the price and average sales
-                            double salesPerHour = Math.max(((24d/volume)*(sellingFor/lowestBin))*60*60,20);
-
-                            String[] lines = {
-                                ChatFormatting.WHITE+"Lowest BIN: "+lowestBinString,
-                                ChatFormatting.WHITE+"Average BIN: "+avgBinString,
-                                ChatFormatting.WHITE+"Suggested Listing Price: "+ChatFormatting.GOLD+Utils.nf.format(priceToSellAt),
-                                ChatFormatting.WHITE+"Estimated Time To Sell: "+ChatFormatting.GREEN+Utils.secondsToTime((int) salesPerHour),
-                            };
-                            GuiUtils.drawSideMenu(Arrays.asList(lines), GuiUtils.TextStyle.DROP_SHADOW);
-                            currentlySellingStack = stack;
-                        }
-                    }
-                }
-            }
-            
             if(chestName.contains("Manage Auctions")) {
                 int unclaimed = 0;
                 int expired = 0;
