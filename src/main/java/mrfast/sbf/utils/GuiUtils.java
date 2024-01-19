@@ -195,8 +195,10 @@ public class GuiUtils {
     }
 
     public static void drawGraySquareWithBorder(int x,int y,int width,int height) {
-        UIRoundedRectangle.Companion.drawRoundedRectangle(new UMatrixStack(),x, y, x+width, height+2, 5, new Color(0,0,0,125));
-        UIRoundedRectangle.Companion.drawRoundedRectangle(new UMatrixStack(),x-2, y-2, x+width+2, height+2+2, 5, new Color(55,55,55,125));
+        GlStateManager.translate(x,y,0);
+        UIRoundedRectangle.Companion.drawRoundedRectangle(new UMatrixStack(),0, 0, width, height+2, 5, new Color(0,0,0,125));
+        UIRoundedRectangle.Companion.drawRoundedRectangle(new UMatrixStack(),-2, -2, width+2, height+2+2, 5, new Color(55,55,55,125));
+        GlStateManager.translate(-x,-y,0);
     }
     public static void drawGraySquare(int x,int y,int width,int height, boolean hovered) {
         int backgroundColor = new Color(25, 25, 25, hovered ? 200 : 159).getRGB();
