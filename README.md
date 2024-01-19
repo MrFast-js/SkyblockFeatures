@@ -175,10 +175,11 @@
 
 ## Cool Commands:
 - **/terminal** (*Allows you to practice an f7 dungeon terminal*)
-- **/sky** \<name\> (*gives the link for someone's skyleamoe*)
+- **/sky** \<name\> (*gives the link for someone's [skycrypt](https://sky.shiiyu.moe/)*)
 - **/pv** \<name\> || **/sfpv** \<name\> (*Opens a player in the [Profile Viewer](https://github.com/MrFast-js/SkyblockFeatures#profile-viewer)*)
 - **/shrug** \<msg\> (*Sends a message followed by a "¯\\_(ツ)_/¯"*)
 - **/flips** \<name\> (*Shows a players auction flipping info*) *Provided by [Cofl](https://sky.coflnet.com/)*
+- **/sfcata** \<name\> (*Shows a players dungeon stats*)
 
 <div align="center"><img src='https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png'/></div>
 
