@@ -26,7 +26,8 @@ import mrfast.sbf.events.SlotClickedEvent;
 @Mixin(GuiContainer.class)
 public abstract class MixinGuiContainer extends GuiScreen {
 
-    @Shadow public Container inventorySlots;
+    @Shadow
+    public Container inventorySlots;
 
     private final GuiContainer that = (GuiContainer) (Object) this;
 
@@ -59,16 +60,17 @@ public abstract class MixinGuiContainer extends GuiScreen {
     @Inject(method = "drawSlot", at = @At("HEAD"), cancellable = true)
     private void onDrawSlot(Slot slot, CallbackInfo ci) {
         try {
-            if (MinecraftForge.EVENT_BUS.post(new GuiContainerEvent.DrawSlotEvent.Pre(that, inventorySlots, slot))) ci.cancel();
+            if (MinecraftForge.EVENT_BUS.post(new GuiContainerEvent.DrawSlotEvent.Pre(that, inventorySlots, slot)))
+                ci.cancel();
         } catch (Throwable e) {
             e.printStackTrace();
         }
     }
 
     @Inject(
-        method = "handleMouseClick",
-        at = @At("HEAD"),
-        cancellable = true
+            method = "handleMouseClick",
+            at = @At("HEAD"),
+            cancellable = true
     )
     private void onSlotClick(Slot slotIn, int slotId, int clickedButton, int clickType, CallbackInfo ci) {
         GuiContainer container = (GuiContainer) (Object) this;
