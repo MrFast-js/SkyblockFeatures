@@ -29,13 +29,15 @@ public class TextInputElement extends CustomElement {
     }
     int updateCheck = 0;
     @Override
-    public void render(int x, int y) {
+    public void render() {
+        GL11.glColor4f(1f,1f,1f,1f);
         textField.xPosition = this.x;
         textField.yPosition = this.y;
-        GlStateManager.pushMatrix();
-        GL11.glColor4f(1f,1f,1f,1f);
+
+        // Handle this differently because it wont draw at 0,0 for some reason
+        GlStateManager.translate(-this.parent.x,-this.parent.y,0);
         textField.drawTextBox();
-        GlStateManager.popMatrix();
+        GlStateManager.translate(this.parent.x,this.parent.y,0);
 
         updateCheck++;
         if(updateCheck%15==0) {
