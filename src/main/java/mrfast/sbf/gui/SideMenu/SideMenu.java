@@ -2,11 +2,9 @@ package mrfast.sbf.gui.SideMenu;
 
 import mrfast.sbf.mixins.transformers.GuiContainerAccessor;
 import mrfast.sbf.utils.GuiUtils;
-import mrfast.sbf.utils.Utils;
-import net.minecraft.client.gui.Gui;
+import net.minecraft.client.renderer.GlStateManager;
 import org.lwjgl.opengl.GL11;
 
-import java.awt.*;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -38,16 +36,15 @@ public class SideMenu {
         int guiWidth = gui.getWidth();
         int guiHeight = gui.getHeight();
         int maxWidth = 0;
-        int totalHeight = 0;
         for (CustomElement element : elements.values()) {
             if(element.width>maxWidth) maxWidth=element.width;
-            totalHeight += element.height;
         }
-        GuiUtils.drawGraySquareWithBorder(x+guiLeft+guiWidth,y+guiTop,maxWidth+8,totalHeight+8);
-        // Sets the elements positions relative to the parents
+        GlStateManager.translate(0,0,340f);
+        GuiUtils.drawGraySquareWithBorder(x+guiLeft+guiWidth,y+guiTop,maxWidth+8,height);
         for (CustomElement element : elements.values()) {
             element.render(x,y);
         }
+        GlStateManager.translate(0,0,-340f);
     }
 }
 
