@@ -235,9 +235,14 @@ public class AuctionSellingOverlay {
 
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(customPrice);
-        if(matcher.find()) {
+        if (matcher.find()) {
             // Check if price input: 10,000 10k == 10k  or    check if prices are 98% similar
-            if (Utils.shortenNumber(sellingPrice).equals(customPrice) || Utils.expandShortenedNumber(customPrice) == sellingPrice) {
+            float customPriceNum = 0;
+            try {
+                customPriceNum = Float.parseFloat(customPrice.replaceAll("[^0-9]", ""));
+            } catch (NumberFormatException ignored) {
+            }
+            if (Utils.shortenNumber(sellingPrice).equals(customPrice) || Utils.expandShortenedNumber(customPrice) == sellingPrice || sellingPrice == customPriceNum) {
                 return new CustomTextElement(0, 0, "", null, null);
             }
 
