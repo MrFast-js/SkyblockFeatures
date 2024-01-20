@@ -2,6 +2,7 @@ package mrfast.sbf.features.overlays.menuOverlay;
 
 import com.google.gson.JsonObject;
 import com.mojang.realmsclient.gui.ChatFormatting;
+import mrfast.sbf.SkyblockFeatures;
 import mrfast.sbf.core.PricingData;
 import mrfast.sbf.gui.SideMenu.*;
 import mrfast.sbf.mixins.transformers.GuiContainerAccessor;
@@ -26,6 +27,8 @@ public class AuctionSellingOverlay {
 
     @SubscribeEvent
     public void onGuiBackgroundDrawn(GuiScreenEvent.BackgroundDrawnEvent event) {
+        if (!SkyblockFeatures.config.auctionGuis && !SkyblockFeatures.config.customCreateAuctionGui) return;
+
         if (event.gui instanceof GuiChest) {
             SideMenu sidebar = SideMenuManager.getOrCreateSidebar((GuiContainer) event.gui);
             GuiChest gui = (GuiChest) event.gui;
@@ -36,6 +39,7 @@ public class AuctionSellingOverlay {
             if (chestName.startsWith("Auction Duration")) {
                 CustomElement.lastMouseState = false;
             }
+
             if (chestName.contains("Create")) {
                 sellingType = chestName.contains("BIN") ? "BIN" : "AUC";
                 // Draw sidebar background
@@ -48,7 +52,12 @@ public class AuctionSellingOverlay {
                     if (slot.getHasStack() && slot.getSlotIndex() == 13) {
                         ItemStack stack = slot.getStack();
                         String auctionIdentifier = PricingData.getIdentifier(stack);
-                        if (auctionIdentifier != null) {
+                        Slot priceSlot = gui.inventorySlots.inventorySlots.get(31);
+                        long currentSellingPrice = 0;
+                        if (priceSlot.getHasStack()) {
+                            currentSellingPrice = Long.parseLong(Utils.cleanColor(priceSlot.getStack().getDisplayName()).replaceAll("[^0-9]", ""));
+                        }
+                        if (SkyblockFeatures.config.auctionGuis && auctionIdentifier != null) {
                             Double lowestBin = PricingData.lowestBINs.get(auctionIdentifier);
                             Double avgBin = PricingData.averageLowestBINs.get(auctionIdentifier);
                             String avgBinString = ChatFormatting.RED + "Unknown";
@@ -69,14 +78,8 @@ public class AuctionSellingOverlay {
                             JsonObject auctionData = PricingData.getItemAuctionInfo(auctionIdentifier);
                             if (auctionData == null) continue;
                             int volume = auctionData.get("sales").getAsInt();
-                            int sellingFor = 0;
-                            try {
-                                sellingFor = Integer.parseInt(Utils.cleanColor(inv.getStackInSlot(31).getDisplayName()).split(" ")[2].replaceAll("[^0-9]", ""));
-                            } catch (Exception e) {
-                            }
-
                             // Estimating time to sell based on the price and average sales
-                            double salesPerHour = Math.max(((24d / volume) * (sellingFor / lowestBin)) * 60 * 60, 20);
+                            double salesPerHour = Math.max(((24d / volume) * (currentSellingPrice / lowestBin)) * 60 * 60, 20);
 
                             // Add button and text elements to the sidebar
                             sidebar.addOrUpdateElement("1", createLowestBinElement(lowestBinString));
@@ -84,25 +87,21 @@ public class AuctionSellingOverlay {
                             sidebar.addOrUpdateElement("3", createSugListElement(priceToSellAt));
                             sidebar.addOrUpdateElement("4", createSellTimeElement(Utils.secondsToTime((int) salesPerHour)));
                         }
+                        if (SkyblockFeatures.config.customCreateAuctionGui) {
+                            String actualItemName = getActualItemName(stack);
+                            if (priceInput == null || !sellingItemName.equals(actualItemName)) {
+                                priceInput = createSellInputElement(currentSellingPrice);
+                                sellingItemName = actualItemName;
+                            }
 
-                        Slot priceSlot = gui.inventorySlots.inventorySlots.get(31);
-                        long currentSellingPrice = 0;
-                        if (priceSlot.getHasStack()) {
-                            currentSellingPrice = Long.parseLong(Utils.cleanColor(priceSlot.getStack().getDisplayName()).replaceAll("[^0-9]", ""));
+                            sidebar.addOrUpdateElement("5", priceInput);
+                            sidebar.addOrUpdateElement("6", createSellButtonElement(priceSlot));
+                            sidebar.addOrUpdateElement("7", createItemNameElement((GuiContainerAccessor) event.gui, actualItemName));
+                            sidebar.addOrUpdateElement("8", createCreateElement(gui.inventorySlots.inventorySlots.get(29)));
+                            sidebar.addOrUpdateElement("9", createDurationElement(gui.inventorySlots.inventorySlots.get(33)));
+                            sidebar.addOrUpdateElement("10", createBackElement(gui.inventorySlots.inventorySlots.get(49)));
+                            sidebar.addOrUpdateElement("11", createAucTypeElement(gui.inventorySlots.inventorySlots.get(48)));
                         }
-                        String actualItemName = getActualItemName(stack);
-                        if(priceInput==null || !sellingItemName.equals(actualItemName)) {
-                            priceInput = createSellInputElement(currentSellingPrice);
-                            sellingItemName = actualItemName;
-                        }
-                        sidebar.addOrUpdateElement("5", priceInput);
-
-                        sidebar.addOrUpdateElement("6", createSellButtonElement(priceSlot));
-                        sidebar.addOrUpdateElement("7", createItemNameElement((GuiContainerAccessor) event.gui, actualItemName));
-                        sidebar.addOrUpdateElement("8", createCreateElement(gui.inventorySlots.inventorySlots.get(29)));
-                        sidebar.addOrUpdateElement("9", createDurationElement(gui.inventorySlots.inventorySlots.get(33)));
-                        sidebar.addOrUpdateElement("10", createBackElement(gui.inventorySlots.inventorySlots.get(49)));
-                        sidebar.addOrUpdateElement("11", createAucTypeElement(gui.inventorySlots.inventorySlots.get(48)));
                         break;
                     }
                 }
@@ -111,7 +110,7 @@ public class AuctionSellingOverlay {
     }
 
     private String getActualItemName(ItemStack stack) {
-        if(ItemUtils.getItemLore(stack).size()>1) {
+        if (ItemUtils.getItemLore(stack).size() > 1) {
             return ItemUtils.getItemLore(stack).get(1);
         }
         return "";

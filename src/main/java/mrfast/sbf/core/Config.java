@@ -2031,6 +2031,15 @@ public class Config extends ConfigManager {
 
     @Property(
             type = PropertyType.TOGGLE,
+            name = "Custom Create Auction Gui",
+            description = "Shows custom buttons, and inputs when selling an auction to create a better user experience.",
+            category = "§1§rAuction house",
+            subcategory = "Auction Utils"
+    )
+    public boolean customCreateAuctionGui = true;
+
+    @Property(
+            type = PropertyType.TOGGLE,
             name = "Condense Item Price Info",
             description = "Only shows the things like Average BIN, Lowest BIN, Sales/Day when the Shift key is held",
             category = "Miscellaneous",
