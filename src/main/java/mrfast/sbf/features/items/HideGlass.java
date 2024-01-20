@@ -71,7 +71,7 @@ public class HideGlass {
             }
         }
 
-        if (Utils.inSkyblock && isEmptyGlassPane(event.itemStack)) {
+        if (Utils.inSkyblock && isEmptyGlassPane(event.itemStack) && SkyblockFeatures.config.hideMenuGlass) {
             event.toolTip.clear();
         }
     }
@@ -83,6 +83,10 @@ public class HideGlass {
 
     @SubscribeEvent
     public void onSlotClick(SlotClickedEvent event) {
+        if (event.slot != null && Utils.inSkyblock && isEmptyGlassPane(event.slot.getStack()) && SkyblockFeatures.config.hideMenuGlass) {
+            event.setCanceled(true);
+        }
+
         if (Utils.isDeveloper()) {
             if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) && Keyboard.isKeyDown(Keyboard.KEY_LCONTROL)) {
                 event.setCanceled(true);
