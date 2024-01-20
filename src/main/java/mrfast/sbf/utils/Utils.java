@@ -65,10 +65,10 @@ public class Utils {
     }
 
     public static float expandShortenedNumber(String shortenedNumber) {
-        if(shortenedNumber.isEmpty()) return 0;
+        if (shortenedNumber.isEmpty()) return 0;
         char lastChar = shortenedNumber.charAt(shortenedNumber.length() - 1);
         float number = 0;
-        try{number = Float.parseFloat(shortenedNumber.substring(0, shortenedNumber.length() - 1));} catch (NumberFormatException ignored) {}
+        try {number = Float.parseFloat(shortenedNumber.substring(0, shortenedNumber.length() - 1));} catch (NumberFormatException ignored) {}
 
         switch (lastChar) {
             case 'k':
@@ -80,7 +80,7 @@ public class Utils {
             case 't':
                 return number * 1_000_000_000_000.0f;
             default:
-                return Float.parseFloat(shortenedNumber);
+                return number;
         }
     }
 
