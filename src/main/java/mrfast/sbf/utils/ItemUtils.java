@@ -25,6 +25,8 @@ public class ItemUtils {
     public static final int NBT_STRING = 8;
     public static final int NBT_LIST = 9;
     public static final int NBT_COMPOUND = 10;
+    public static ItemStack menuGlass = new ItemStack(Blocks.stained_glass_pane, 1, 15).setStackDisplayName(" ");
+
 
     /**
      * Returns the display name of a given item
