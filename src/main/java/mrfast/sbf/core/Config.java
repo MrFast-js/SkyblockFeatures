@@ -2031,7 +2031,7 @@ public class Config extends ConfigManager {
 
     @Property(
             type = PropertyType.TOGGLE,
-            name = "Custom Create Auction Gui",
+            name = "Custom Auction Selling Menu",
             description = "Shows custom buttons, and inputs when selling an auction to create a better user experience.",
             category = "§1§rAuction house",
             subcategory = "Auction Utils"
