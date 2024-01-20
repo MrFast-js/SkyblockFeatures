@@ -67,12 +67,12 @@ public class DataManager {
         if (matcher.find()) {
             pfidSentInChat = true;
             // Dont update if its the same
-//            if(currentProfileId!=null && currentProfileId.equals(matcher.group(1))) return;
-//
-//            currentProfileId = matcher.group(1);
-//            dataJson.addProperty("currentProfileId", currentProfileId);
-//            saveDataToFile();
-//            MinecraftForge.EVENT_BUS.post(new ProfileSwapEvent());
+            if(currentProfileId!=null && currentProfileId.equals(matcher.group(1))) return;
+
+            currentProfileId = matcher.group(1);
+            dataJson.addProperty("currentProfileId", currentProfileId);
+            saveDataToFile();
+            MinecraftForge.EVENT_BUS.post(new ProfileSwapEvent());
         }
     }
 
