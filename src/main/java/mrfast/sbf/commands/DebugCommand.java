@@ -41,7 +41,7 @@ import net.minecraftforge.common.util.Constants;
 
 public class DebugCommand extends CommandBase {
 
-	@Override
+    @Override
     public String getCommandName() {
         return "debug";
     }
@@ -50,83 +50,89 @@ public class DebugCommand extends CommandBase {
     public String getCommandUsage(ICommandSender sender) {
         return "/debug";
     }
-    static List<String> arguments = Arrays.asList("mobs","tiles","entities","item","sidebar","tab");
+
+    static List<String> arguments = Arrays.asList("mobs", "tiles", "entities", "item", "sidebar", "tab");
+
     @Override
     public List<String> addTabCompletionOptions(ICommandSender sender, String[] args, BlockPos pos) {
         return arguments;
     }
 
-	@Override
-	public int getRequiredPermissionLevel() {
-		return 0;
-	}
+    @Override
+    public int getRequiredPermissionLevel() {
+        return 0;
+    }
 
-	@Override
-	public void processCommand(ICommandSender arg0, String[] args) throws CommandException {
-        if(args.length==0) {
+    @Override
+    public void processCommand(ICommandSender arg0, String[] args) throws CommandException {
+        if (args.length == 0) {
             invalidUsage();
             return;
         }
 
         int dist = 5;
         try {
-            if(args.length>1) {
-                dist = Integer.parseInt(args[1].replaceAll("[^0-9]",""));
+            if (args.length > 1) {
+                dist = Integer.parseInt(args[1].replaceAll("[^0-9]", ""));
             }
         } catch (Exception ignored) {
 
         }
+        boolean upload = false;
+        if (args.toString().contains("-upload")) {
+            upload = true;
+        }
 
         switch (args[0]) {
             case "mobs":
-                getMobData(false,true,dist);
+                getMobData(false, true, dist, upload);
                 break;
             case "tiles":
-                getMobData(true,false,dist);
+                getMobData(true, false, dist, upload);
                 break;
             case "sock":
                 NetworkUtils.setupSocket();
                 break;
             case "location":
             case "loc":
-                Utils.sendMessage(ChatFormatting.GRAY+"Local:'"+ SkyblockInfo.localLocation+"' Map:"+SkyblockInfo.map+" Location:'"+SkyblockInfo.location+"'");
+                Utils.sendMessage(ChatFormatting.GRAY + "Local:'" + SkyblockInfo.localLocation + "' Map:" + SkyblockInfo.map + " Location:'" + SkyblockInfo.location + "'");
                 break;
             case "entities":
-                getMobData(true,true,dist);
+                getMobData(true, true, dist, upload);
                 break;
             case "item":
                 ItemStack heldItem = Utils.GetMC().thePlayer.getHeldItem();
-                if(heldItem != null) {
-                    getItemData(heldItem);
+                if (heldItem != null) {
+                    getItemData(heldItem, upload);
                 } else {
                     Utils.sendMessage(ChatFormatting.RED + "You must be holding an item!");
                 }
                 break;
             case "sidebar":
-                getSidebarData();
+                getSidebarData(upload);
                 break;
             case "log":
-                uploadLog();
+                uploadLog(upload);
                 break;
             case "tablist":
             case "tab":
-                getTablistData();
+                getTablistData(upload);
                 break;
             default:
                 invalidUsage();
                 break;
         }
-	}
+    }
 
     public static void invalidUsage() {
         StringBuilder usage = new StringBuilder(ChatFormatting.RED + "Invalid Usage! " + ChatFormatting.YELLOW + "/debug ");
-        for(String arg:arguments) {
+        for (String arg : arguments) {
             usage.append(arg).append(" ");
         }
         Utils.sendMessage(usage.toString());
     }
 
-    public static void getSidebarData() {
+    public static void getSidebarData(boolean upload) {
         StringBuilder output = new StringBuilder();
         List<String> lines = ScoreboardUtil.getSidebarLines(true);
         lines.add("==== Raw ====");
@@ -136,47 +142,48 @@ public class DebugCommand extends CommandBase {
             output.append(line).append("\n");
         }
 
-        uploadData(output.toString());
+        uploadData(output.toString(), upload);
     }
-    public static void getTablistData() {
+
+    public static void getTablistData(boolean upload) {
         StringBuilder output = new StringBuilder();
         int count = 0;
         for (NetworkPlayerInfo pi : TabListUtils.getTabEntries()) {
             count++;
             output.append(count).append(": ").append(Utils.GetMC().ingameGUI.getTabList().getPlayerName(pi)).append("\n");
         }
-        uploadData(output.toString());
+        uploadData(output.toString(), upload);
     }
 
-    public static void uploadLog() {
-        File log = new File(new File(Utils.GetMC().mcDataDir,"logs"), "latest.log");
+    public static void uploadLog(boolean upload) {
+        File log = new File(new File(Utils.GetMC().mcDataDir, "logs"), "latest.log");
         try {
             List<String> lines = Files.readAllLines(log.toPath(), StandardCharsets.UTF_8);
-            uploadData(lines.stream().collect(Collectors.joining(System.lineSeparator())));
+            uploadData(lines.stream().collect(Collectors.joining(System.lineSeparator())), upload);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public static void getItemData(ItemStack item) {
-        uploadData(prettyPrintNBT(item.serializeNBT()));
+    public static void getItemData(ItemStack item, boolean upload) {
+        uploadData(prettyPrintNBT(item.serializeNBT()), upload);
     }
 
-    public static void getMobData(boolean tileEntities, boolean mobs, int distance) {
+    public static void getMobData(boolean tileEntities, boolean mobs, int distance, boolean upload) {
         EntityPlayerSP player = Utils.GetMC().thePlayer;
         StringBuilder stringBuilder = new StringBuilder();
 
-        if(mobs) {
-            stringBuilder.append(copyMobEntities(player,distance));
+        if (mobs) {
+            stringBuilder.append(copyMobEntities(player, distance));
         }
-        if(tileEntities) {
-            stringBuilder.append(copyTileEntities(player,distance));
+        if (tileEntities) {
+            stringBuilder.append(copyTileEntities(player, distance));
         }
 
-        uploadData(stringBuilder.toString());
+        uploadData(stringBuilder.toString(), upload);
     }
 
-    public static String copyMobEntities(EntityPlayerSP player,int distance) {
+    public static String copyMobEntities(EntityPlayerSP player, int distance) {
         StringBuilder stringBuilder = new StringBuilder();
         List<Entity> loadedEntitiesCopy = new LinkedList<>(Utils.GetMC().theWorld.loadedEntityList);
         ListIterator<Entity> loadedEntitiesCopyIterator;
@@ -188,7 +195,7 @@ public class DebugCommand extends CommandBase {
         while (loadedEntitiesCopyIterator.hasNext()) {
             Entity entity = loadedEntitiesCopyIterator.next();
             NBTTagCompound entityData = new NBTTagCompound();
-            if(entity.equals(player)) continue;
+            if (entity.equals(player)) continue;
 
             stringBuilder.append("Class: ").append(entity.getClass().getSimpleName()).append(System.lineSeparator());
             stringBuilder.append("ID: ").append(entity.getEntityId()).append(System.lineSeparator());
@@ -208,13 +215,13 @@ public class DebugCommand extends CommandBase {
         return stringBuilder.toString();
     }
 
-    public static String copyTileEntities(EntityPlayerSP player,int distance) {
+    public static String copyTileEntities(EntityPlayerSP player, int distance) {
         StringBuilder stringBuilder = new StringBuilder();
 
         List<TileEntity> loadedTileEntitiesCopy = new LinkedList<>(Utils.GetMC().theWorld.loadedTileEntityList);
         ListIterator<TileEntity> loadedTileEntitiesCopyIterator;
 
-        loadedTileEntitiesCopy.removeIf(entity -> player.getPosition().distanceSq(entity.getPos()) > Math.pow(distance,2));
+        loadedTileEntitiesCopy.removeIf(entity -> player.getPosition().distanceSq(entity.getPos()) > Math.pow(distance, 2));
         loadedTileEntitiesCopyIterator = loadedTileEntitiesCopy.listIterator();
 
         // Copy the NBT data from the loaded entities.
@@ -235,7 +242,7 @@ public class DebugCommand extends CommandBase {
         }
         return stringBuilder.toString();
     }
-    
+
     public static String prettyPrintNBT(NBTBase nbt) {
         final String INDENT = "    ";
 
@@ -295,7 +302,7 @@ public class DebugCommand extends CommandBase {
             NBTTagCompound nbtTagCompound = (NBTTagCompound) nbt;
 
             stringBuilder.append('{');
-             if (!nbtTagCompound.hasNoTags()) {
+            if (!nbtTagCompound.hasNoTags()) {
                 Iterator<String> iterator = nbtTagCompound.getKeySet().iterator();
 
                 stringBuilder.append(System.lineSeparator());
@@ -327,43 +334,48 @@ public class DebugCommand extends CommandBase {
         return stringBuilder.toString();
     }
 
-    public static void uploadData(String text) {
-        Utils.sendMessage(ChatFormatting.GRAY+"Uploading data...");
-        new Thread(()-> {
-            try {
-                URL url = new URL("https://hst.sh/documents");
-                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+    public static void uploadData(String text, boolean upload) {
+        if (upload) {
+            Utils.sendMessage(ChatFormatting.GRAY + "Uploading data...");
+            new Thread(() -> {
+                try {
+                    URL url = new URL("https://hst.sh/documents");
+                    HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 
-                connection.setRequestMethod("POST");
-                connection.setRequestProperty("Content-Type", "text/plain");
-                connection.setRequestProperty("User-Agent", "Insomnia/2023.5.7");
-                connection.setDoOutput(true);
+                    connection.setRequestMethod("POST");
+                    connection.setRequestProperty("Content-Type", "text/plain");
+                    connection.setRequestProperty("User-Agent", "Insomnia/2023.5.7");
+                    connection.setDoOutput(true);
 
-                try (OutputStream os = connection.getOutputStream()) {
-                    os.write(text.getBytes());
+                    try (OutputStream os = connection.getOutputStream()) {
+                        os.write(text.getBytes());
+                    }
+
+                    int responseCode = connection.getResponseCode();
+                    String hostUrl = "";
+                    if (responseCode == 200) {
+                        InputStream is = connection.getInputStream();
+                        byte[] responseBody = new byte[is.available()];
+                        is.read(responseBody);
+                        String out = new String(responseBody);
+                        JsonObject json = new Gson().fromJson(out, JsonObject.class);
+                        hostUrl = "https://hst.sh/raw/" + json.get("key").getAsString();
+                    } else {
+                        System.out.println("Request failed with code " + responseCode);
+                    }
+
+                    IChatComponent message = new ChatComponentText(ChatFormatting.GREEN + "Succesfully uploaded debug data!" + ChatFormatting.GOLD + ChatFormatting.BOLD + " Click here to open");
+                    message.getChatStyle().setChatClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, hostUrl));
+                    Utils.sendMessage(message);
+
+                    connection.disconnect();
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-
-                int responseCode = connection.getResponseCode();
-                String hostUrl = "";
-                if (responseCode == 200) {
-                    InputStream is = connection.getInputStream();
-                    byte[] responseBody = new byte[is.available()];
-                    is.read(responseBody);
-                    String out = new String(responseBody);
-                    JsonObject json = new Gson().fromJson(out, JsonObject.class);
-                    hostUrl = "https://hst.sh/raw/" + json.get("key").getAsString();
-                } else {
-                    System.out.println("Request failed with code " + responseCode);
-                }
-
-                IChatComponent message = new ChatComponentText(ChatFormatting.GREEN + "Succesfully uploaded debug data!" + ChatFormatting.GOLD + ChatFormatting.BOLD + " Click here to open");
-                message.getChatStyle().setChatClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, hostUrl));
-                Utils.sendMessage(message);
-
-                connection.disconnect();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }).start();
+            }).start();
+        } else {
+            Utils.sendMessage(ChatFormatting.GRAY + "Copied data to clipboard!");
+            Utils.copyToClipboard(text);
+        }
     }
 }
