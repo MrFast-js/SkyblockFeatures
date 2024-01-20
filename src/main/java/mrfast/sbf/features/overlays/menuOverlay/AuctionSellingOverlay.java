@@ -43,8 +43,10 @@ public class AuctionSellingOverlay {
             if (chestName.contains("Create")) {
                 sellingType = chestName.contains("BIN") ? "BIN" : "AUC";
                 // Draw sidebar background
-                inv.setInventorySlotContents(48, ItemUtils.menuGlass);
-                inv.setInventorySlotContents(49, ItemUtils.menuGlass);
+                if(SkyblockFeatures.config.customCreateAuctionGui) {
+                    inv.setInventorySlotContents(48, ItemUtils.menuGlass);
+                    inv.setInventorySlotContents(49, ItemUtils.menuGlass);
+                }
 
                 sidebar.render(4, 0, 150, margin * 5, (GuiContainerAccessor) event.gui);
 
