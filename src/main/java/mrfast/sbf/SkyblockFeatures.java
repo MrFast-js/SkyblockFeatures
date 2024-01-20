@@ -27,6 +27,7 @@ import mrfast.sbf.features.trackers.*;
 import mrfast.sbf.gui.ConfigGui;
 import mrfast.sbf.gui.GuiManager;
 import mrfast.sbf.gui.ProfileViewerUtils;
+import mrfast.sbf.gui.SideMenu.SideMenuManager;
 import mrfast.sbf.utils.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
@@ -128,6 +129,7 @@ public class SkyblockFeatures {
                 new OverflowManaDisplay(),
                 new ActionBarListener(),
                 new CommisionsTracker(),
+                new SideMenuManager(),
                 new FairySoulWaypoints(),
                 new AuctionSellingOverlay(),
                 new JerryTimer(),
