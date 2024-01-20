@@ -53,6 +53,10 @@ public class ConfigGui extends WindowScreen {
     static boolean quickSwapping = false;
     public static boolean listeningForKeybind = false;
 
+    public static void openConfigSearch(String query) {
+        ConfigGui.searchQuery = query;
+        mrfast.sbf.utils.GuiUtils.openGui(new ConfigGui(true));
+    }
     @Override
 	public void onScreenClose() {
         ConfigManager.saveConfig();

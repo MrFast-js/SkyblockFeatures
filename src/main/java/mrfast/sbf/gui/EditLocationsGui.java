@@ -121,8 +121,7 @@ public class EditLocationsGui extends GuiScreen {
             }
 
             if(Mouse.isButtonDown(1)) {
-                ConfigGui.searchQuery = hoveredFeature.getElement().getName();
-                mrfast.sbf.utils.GuiUtils.openGui(new ConfigGui(true));
+                ConfigGui.openConfigSearch(hoveredFeature.getElement().getName());
             }
 
             GuiUtils.drawHoveringText(renderTooltip, adjustedX, mouseY, screenWidth, screenHeight, -1, Utils.GetMC().fontRendererObj);
