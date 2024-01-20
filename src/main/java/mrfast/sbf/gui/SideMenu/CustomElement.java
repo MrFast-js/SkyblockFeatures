@@ -2,6 +2,7 @@ package mrfast.sbf.gui.SideMenu;
 
 import mrfast.sbf.mixins.transformers.GuiContainerAccessor;
 import mrfast.sbf.utils.Utils;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraftforge.fml.client.config.GuiUtils;
 import org.lwjgl.input.Mouse;
 
@@ -9,7 +10,6 @@ import java.util.Arrays;
 
 public abstract class CustomElement {
     protected int x, y, width, height, orginX, orginY;
-    public static boolean beingClicked = false;
     public static CustomElement focusedElement;
     public boolean isFocused() {
         return this.equals(focusedElement);
@@ -38,8 +38,8 @@ public abstract class CustomElement {
     public void onKeyTyped(char character,int key) {
 
     }
-
-    public void doHoverRender(int mouseX, int mouseY, GuiContainerAccessor gui) {
+    public static boolean lastMouseState = false;
+    public boolean doHoverRender(int mouseX, int mouseY, GuiContainerAccessor gui) {
         this.x = (this.orginX + gui.getGuiLeft() + gui.getWidth() + parent.x);
         this.y = (this.orginY + gui.getGuiTop() + parent.y);
         // Check if the mouse is over the element
@@ -47,11 +47,10 @@ public abstract class CustomElement {
         // Handle hover and click events
         if (isHovered) {
             onHover(mouseX, mouseY);
-            if (Mouse.isButtonDown(0) && !beingClicked) {
+            if (lastMouseState && !Mouse.isButtonDown(0) && gui.equals(SideMenuManager.mouseWentDownOn)) {
                 focusedElement = this;
                 onClick(mouseX,mouseY,0);
             }
-            beingClicked = Mouse.isButtonDown(0);
         } else {
             if(Mouse.isButtonDown(0)) {
                 if(this instanceof TextInputElement) {
@@ -59,12 +58,15 @@ public abstract class CustomElement {
                 }
             }
         }
+        return isHovered;
     }
 
     private void onHover(int mouseX, int mouseY) {
         // Display hover text or perform additional hover logic
         if (hoverText != null) {
+            GlStateManager.translate(0,0,350f);
             GuiUtils.drawHoveringText(Arrays.asList(hoverText.split("\n")), mouseX, mouseY, Utils.GetMC().displayWidth, Utils.GetMC().displayHeight, -1, Utils.GetMC().fontRendererObj);
+            GlStateManager.translate(0,0,-350f);
         }
     }
 
