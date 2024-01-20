@@ -19,8 +19,7 @@ public class CustomButtonElement extends CustomElement {
     }
 
     @Override
-    public void render(int x, int y) {
-        super.render(x, y);
+    public void render() {
         GL11.glColor4f(1f,1f,1f,1f);
 
         // Draw button background (customize as needed)

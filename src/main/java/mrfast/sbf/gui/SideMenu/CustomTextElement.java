@@ -11,8 +11,7 @@ public class CustomTextElement extends CustomElement {
     }
 
     @Override
-    public void render(int x, int y) {
-        super.render(x, y);
+    public void render() {
         // Render the text
         Utils.GetMC().fontRendererObj.drawStringWithShadow(text, this.x + 2, this.y + 2, 0xFFFFFF);
     }
