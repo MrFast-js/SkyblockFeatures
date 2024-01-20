@@ -883,6 +883,9 @@ public class ProfileViewerGui extends WindowScreen {
     public static void drawProgressbar(Integer v, Integer m, UIComponent statsArea, String label, ItemStack labelItem, List<String> hover, Boolean skill) {
         if (m == null) m = 0;
         if (v == null) v = 0;
+        if(m==-1) {
+            m = v-1;
+        }
 
         float value = v.floatValue();
         float max = m.floatValue();
@@ -916,7 +919,7 @@ public class ProfileViewerGui extends WindowScreen {
                 .enableEffect(new ScissorEffect())
                 .setX(new CenterConstraint())
                 .setChildOf(progressBarContainer);
-        boolean maxed = value >= max && value != 0;
+        boolean maxed = (value >= max && value != 0);
 
         Color color = maxed ? new Color(255, 191, 0) : new Color(0x0baa51);
 

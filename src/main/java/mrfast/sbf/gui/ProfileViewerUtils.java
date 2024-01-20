@@ -181,7 +181,7 @@ public class ProfileViewerUtils {
     public static Integer[] socialXpPerLevel = {0, 50, 100, 150, 250, 500, 750, 1000, 1250, 1500, 2000,// lvl 10
             2500, 3000, 3750, 4500, 6000, 8000, 10000, 12500, 15000, 20000,// lvl 20
             25000, 30000, 35000, 40000, 50000};// lvl 25
-    public static Integer[] dungeoneeringXpValues = { 0,
+    public static Integer[] dungeoneeringXpValues = {0,
             50, 75, 110, 160, 230, 330, 470, 670, 950, 1340, 1890, 2665, 3760, 5260,
             7380, 10300, 14400, 20000, 27600, 38000, 52500, 71500, 97000, 132000,
             180000, 243000, 328000, 445000, 600000, 800000, 1065000, 1410000, 1900000,
@@ -189,20 +189,23 @@ public class ProfileViewerUtils {
             19000000, 24000000, 30000000, 38000000, 48000000, 60000000, 75000000,
             93000000, 116250000, 200000000
     };
+
     public static int getNextCataLevelXP(int lvl) {
-        if (dungeoneeringXpValues[lvl + 1] != null) {
+        if (dungeoneeringXpValues.length > lvl+1) {
             return dungeoneeringXpValues[lvl + 1];
-        } else {
-            return -1;
         }
+        return -1;
     }
-    public static double getLeftoverCataXP(int totalXp,int lvl) {
+
+
+    public static double getLeftoverCataXP(int totalXp, int lvl) {
         double xpCost = 0;
         for (int i = 1; i <= lvl; i++) {
             xpCost += dungeoneeringXpValues[i];
         }
         return totalXp - xpCost;
     }
+
     public static Integer[] runecraftingXpPerLevel = {50, 100, 125, 160, 200, 250, 315, 400, 500, 625,// lvl 10
             785, 1000, 1250, 1600, 2000, 2465, 3125, 4000, 5000, 6200,// lvl 20
             7800, 9800, 12200, 15300, 19050};//lvl 25
@@ -724,13 +727,13 @@ public class ProfileViewerUtils {
         }
     }
 
-    public static String convertDungeonFloor(String shortId,boolean master) {
-        if(shortId.equals("e") && !master) return "Entrance";
-        if(shortId.startsWith("f") && !master) {
-            return shortId.replace("f","Floor ");
+    public static String convertDungeonFloor(String shortId, boolean master) {
+        if (shortId.equals("e") && !master) return "Entrance";
+        if (shortId.startsWith("f") && !master) {
+            return shortId.replace("f", "Floor ");
         }
-        if(shortId.startsWith("m") && master) {
-            return shortId.replace("m","Floor ");
+        if (shortId.startsWith("m") && master) {
+            return shortId.replace("m", "Floor ");
         }
         return "error";
     }
