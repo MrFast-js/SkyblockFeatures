@@ -1798,6 +1798,15 @@ public class Config extends ConfigManager {
 
     @Property(
             type = PropertyType.TOGGLE,
+            name = "Hide Menu Glass",
+            description = "Hide the hover text from menu glass, also blocks clicks on it.",
+            category = "Quality of Life",
+            subcategory = "Visual"
+    )
+    public boolean hideMenuGlass = false;
+
+    @Property(
+            type = PropertyType.TOGGLE,
             name = "Show Zealot Spawn Areas & Spawn Timer",
             description = "Draws where zealots spawn and when zealots will spawn. (this includes bruisers)",
             category = "§1§rThe End",
