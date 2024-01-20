@@ -6,6 +6,7 @@ import java.util.List;
 import mrfast.sbf.SkyblockFeatures;
 import mrfast.sbf.events.SlotClickedEvent;
 import mrfast.sbf.events.GuiContainerEvent.TitleDrawnEvent;
+import mrfast.sbf.utils.ItemUtils;
 import mrfast.sbf.utils.Utils;
 import net.minecraft.init.Blocks;
 import net.minecraft.inventory.IInventory;
@@ -59,7 +60,7 @@ public class ChronomotronSolver {
                             ItemStack glass = invSlots.get(i).getStack();
                             if (glass == null) continue;
                             if (!glass.getDisplayName().equals(chronomatronPattern.get(chronomatronMouseClicks))) {
-                                event.container.putStackInSlot(i, new ItemStack(Blocks.stained_glass_pane, 1, 15).setStackDisplayName(" "));
+                                event.container.putStackInSlot(i, ItemUtils.menuGlass);
                             }
                         }
                     }

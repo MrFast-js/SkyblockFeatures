@@ -3,6 +3,7 @@ package mrfast.sbf.features.termPractice;
 import com.mojang.realmsclient.gui.ChatFormatting;
 import mrfast.sbf.events.GuiContainerEvent;
 import mrfast.sbf.events.SlotClickedEvent;
+import mrfast.sbf.utils.ItemUtils;
 import mrfast.sbf.utils.Utils;
 import net.minecraft.client.gui.inventory.GuiChest;
 import net.minecraft.enchantment.Enchantment;
@@ -103,7 +104,7 @@ public class TerminalManager {
             orderNumber = 1;
             InventoryBasic Terminal = new InventoryBasic(ChatFormatting.GOLD + "✯ Click in order", true, 36);
             for (int i = 0; i < 36; i++) {
-                Terminal.setInventorySlotContents(i, new ItemStack(Blocks.stained_glass_pane, 1, 15).setStackDisplayName(ChatFormatting.RESET + ""));
+                Terminal.setInventorySlotContents(i, ItemUtils.menuGlass);
             }
             List<Integer> numbers = Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14);
             Collections.shuffle(numbers);
@@ -154,7 +155,7 @@ public class TerminalManager {
             terminal = new InventoryBasic(ChatFormatting.GOLD + "✯ Change all to same color", true, 45);
             clicked.clear();
             for (int i = 0; i < 45; i++) {
-                terminal.setInventorySlotContents(i, new ItemStack(Blocks.stained_glass_pane, 1, 15).setStackDisplayName(ChatFormatting.RESET + ""));
+                terminal.setInventorySlotContents(i, ItemUtils.menuGlass);
             }
 
             for (int slot : color3x3Slots) {
@@ -242,7 +243,7 @@ public class TerminalManager {
             this.name = "What starts with '" + mostRepeatedLetter + "'";
             InventoryBasic terminal = new InventoryBasic(ChatFormatting.GOLD + "✯ What starts with '" + mostRepeatedLetter + "'", true, 54);
             for (int i = 0; i < terminal.getSizeInventory(); i++) {
-                terminal.setInventorySlotContents(i, new ItemStack(Blocks.stained_glass_pane, 1, 15).setStackDisplayName(ChatFormatting.RESET + ""));
+                terminal.setInventorySlotContents(i, ItemUtils.menuGlass);
             }
             for (int i = 0; i < itemsAdded.size(); i++) {
                 int slotId = itemSlots[i];
@@ -294,7 +295,7 @@ public class TerminalManager {
             terminal = new InventoryBasic(ChatFormatting.GOLD + "✯ Correct Panes", true, 45);
             clicked.clear();
             for (int i = 0; i < 45; i++) {
-                terminal.setInventorySlotContents(i, new ItemStack(Blocks.stained_glass_pane, 1, 15).setStackDisplayName(ChatFormatting.RESET + ""));
+                terminal.setInventorySlotContents(i, ItemUtils.menuGlass);
             }
 
             int startingSlot = new Random().nextInt(paneSlots.length);
