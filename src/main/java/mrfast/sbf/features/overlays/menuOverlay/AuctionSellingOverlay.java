@@ -4,6 +4,7 @@ import com.google.gson.JsonObject;
 import com.mojang.realmsclient.gui.ChatFormatting;
 import mrfast.sbf.SkyblockFeatures;
 import mrfast.sbf.core.PricingData;
+import mrfast.sbf.gui.ConfigGui;
 import mrfast.sbf.gui.SideMenu.*;
 import mrfast.sbf.mixins.transformers.GuiContainerAccessor;
 import mrfast.sbf.mixins.transformers.GuiEditSignAccessor;
@@ -106,14 +107,15 @@ public class AuctionSellingOverlay {
                                 sellingItemName = actualItemName;
                             }
 
-                            overlay.content.addOrUpdateElement("5", priceInput);
-                            overlay.content.addOrUpdateElement("6", createSellButtonElement(priceSlot));
-                            overlay.content.addOrUpdateElement("7", createItemNameElement((GuiContainerAccessor) event.gui, actualItemName));
-                            overlay.content.addOrUpdateElement("8", createCreateElement(gui.inventorySlots.inventorySlots.get(29)));
-                            overlay.content.addOrUpdateElement("9", createDurationElement(gui.inventorySlots.inventorySlots.get(33)));
-                            overlay.content.addOrUpdateElement("10", createBackElement(gui.inventorySlots.inventorySlots.get(49)));
-                            overlay.content.addOrUpdateElement("11", createAucTypeElement(gui.inventorySlots.inventorySlots.get(48)));
-                            overlay.content.addOrUpdateElement("12", createMismatchElement((GuiContainerAccessor) event.gui, currentSellingPrice));
+                            overlay.content.addOrUpdateElement("1", priceInput);
+                            overlay.content.addOrUpdateElement("2", createSellButtonElement(priceSlot));
+                            overlay.content.addOrUpdateElement("3", createItemNameElement((GuiContainerAccessor) event.gui, actualItemName));
+                            overlay.content.addOrUpdateElement("4", createCreateElement(gui.inventorySlots.inventorySlots.get(29)));
+                            overlay.content.addOrUpdateElement("5", createDurationElement(gui.inventorySlots.inventorySlots.get(33)));
+                            overlay.content.addOrUpdateElement("6", createBackElement(gui.inventorySlots.inventorySlots.get(49)));
+                            overlay.content.addOrUpdateElement("7", createAucTypeElement(gui.inventorySlots.inventorySlots.get(48)));
+                            overlay.content.addOrUpdateElement("8", createMismatchElement((GuiContainerAccessor) event.gui, currentSellingPrice));
+                            overlay.content.addOrUpdateElement("9", createWatermarkElement());
 
                             overlay.content.render(guiLeft, guiTop, false, margin * 5, (GuiContainerAccessor) event.gui);
                         }
@@ -134,19 +136,19 @@ public class AuctionSellingOverlay {
     int margin = Utils.GetMC().fontRendererObj.FONT_HEIGHT + 1;
 
     private CustomElement createLowestBinElement(String lowestBin) {
-        return new CustomTextElement(4, 4, "Lowest BIN: §6" + lowestBin, null, null);
+        return new CustomTextElement(4, 4, "Lowest BIN: §6" + lowestBin, null, null, true);
     }
 
     private CustomElement createAvgBinElement(String avgBin) {
-        return new CustomTextElement(4, 4 + margin, "Average BIN: §6" + avgBin, null, null);
+        return new CustomTextElement(4, 4 + margin, "Average BIN: §6" + avgBin, null, null, true);
     }
 
     private CustomElement createSugListElement(Float suggestedPrice) {
-        return new CustomTextElement(4, 4 + margin * 2, "Sug. Listing Price: §b" + Utils.nf.format(suggestedPrice), "§cThis does not count item upgrades!", null);
+        return new CustomTextElement(4, 4 + margin * 2, "Sug. Listing Price: §b" + Utils.nf.format(suggestedPrice), "§cThis does not count item upgrades!", null, true);
     }
 
     private CustomElement createSellTimeElement(String time) {
-        return new CustomTextElement(4, 4 + margin * 3, "Est. Time To Sell: §a" + time, null, null);
+        return new CustomTextElement(4, 4 + margin * 3, "Est. Time To Sell: §a" + time, null, null, true);
     }
 
     private CustomElement createSellInputElement(float sellPrice) {
@@ -221,9 +223,15 @@ public class AuctionSellingOverlay {
 
     private CustomElement createItemNameElement(GuiContainerAccessor gui, String itemName) {
         int nameWidth = Utils.GetMC().fontRendererObj.getStringWidth(Utils.cleanColor(itemName));
-        int x = (gui.getWidth() / 2) - ((nameWidth + 8) / 2), y = 20;
+        int x = (gui.getWidth() / 2) - ((nameWidth + 8) / 2)+2, y = 20;
 
-        return new CustomTextElement(x, y, itemName, null, null);
+        return new CustomTextElement(x, y, itemName, null, null, true);
+    }
+
+    private CustomElement createWatermarkElement() {
+        return new CustomTextElement(176 / 2 - 10, margin * 11+3, "§7SBF", "§7Skyblock Features\n§eCustom Auction Selling Menu", () -> {
+            ConfigGui.openConfigSearch("Custom Auction Selling Menu");
+        }, false);
     }
 
     private CustomElement createMismatchElement(GuiContainerAccessor gui, long sellingPrice) {
@@ -243,13 +251,13 @@ public class AuctionSellingOverlay {
             } catch (NumberFormatException ignored) {
             }
             if (Utils.shortenNumber(sellingPrice).equals(customPrice) || Utils.expandShortenedNumber(customPrice) == sellingPrice || sellingPrice == customPriceNum) {
-                return new CustomTextElement(0, 0, "", null, null);
+                return new CustomTextElement(0, 0, "", null, null, true);
             }
 
-            return new CustomTextElement(x, y, warningText, "§cClick on set price button to set the price!", null);
+            return new CustomTextElement(x, y, warningText, "§cClick on set price button to set the price!", null, true);
         }
 
-        return new CustomTextElement(x, y, "§c§lWarning! Invalid price!", "§cYou incorrectly wrote out your items price!", null);
+        return new CustomTextElement(x, y, "§c§lWarning! Invalid price!", "§cYou incorrectly wrote out your items price!", null, true);
     }
 
 
