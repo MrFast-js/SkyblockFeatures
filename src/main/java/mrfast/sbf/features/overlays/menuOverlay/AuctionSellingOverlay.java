@@ -250,6 +250,10 @@ public class AuctionSellingOverlay {
                 customPriceNum = Float.parseFloat(customPrice.replaceAll("[^0-9]", ""));
             } catch (NumberFormatException ignored) {
             }
+            String l = customPrice.toLowerCase();
+            // stop 510k and 510 from 'matching'
+            if(l.contains("k") || l.contains("m") || l.contains("b")) customPriceNum=-1;
+
             if (Utils.shortenNumber(sellingPrice).equals(customPrice) || Utils.expandShortenedNumber(customPrice) == sellingPrice || sellingPrice == customPriceNum) {
                 return new CustomTextElement(0, 0, "", null, null, true);
             }
