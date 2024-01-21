@@ -26,30 +26,30 @@ public class VersionManager {
             UpdateTarget.deleteAndSaveInTheSameFolder(VersionManager.class),
             CurrentVersion.ofTag(SkyblockFeatures.VERSION),
             SkyblockFeatures.MODID
-            );
+    );
 
     public static void silentUpdateCheck() {
-        System.out.println("Checking for SBF updates: "+getUpdatePreference());
-        context.checkUpdate(getUpdatePreference()).thenAcceptAsync((update)->{
+        System.out.println("Checking for SBF updates: " + getUpdatePreference());
+        context.checkUpdate(getUpdatePreference()).thenAcceptAsync((update) -> {
             if (update != null) {
                 System.out.println("Found potential SBF update!");
                 potentialUpdate = update;
-                if(isClientOutdated()) {
+                if (isClientOutdated()) {
                     System.out.println("Found outdated SBF client sending update!");
                     String updatePreference = getUpdatePreference();
-                    String updateVersion = "v"+potentialUpdate.getUpdate().getVersionName().split("v")[1].trim();
+                    String updateVersion = "v" + potentialUpdate.getUpdate().getVersionName().split("v")[1].trim();
                     IChatComponent notificationText = new ChatComponentText(
-                            ChatFormatting.GREEN+"Version "+EnumChatFormatting.GOLD+EnumChatFormatting.BOLD+ updateVersion+ChatFormatting.RESET+
-                                    ChatFormatting.GREEN+" is available. "
-                                    +ChatFormatting.YELLOW+"Click to update!")
+                            ChatFormatting.GREEN + "Version " + EnumChatFormatting.GOLD + EnumChatFormatting.BOLD + updateVersion + ChatFormatting.RESET +
+                                    ChatFormatting.GREEN + " is available. "
+                                    + ChatFormatting.YELLOW + "Click to update!")
                             .setChatStyle(new ChatStyle()
                                     .setChatClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/sf update " + updatePreference))
-                                    .setChatHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ChatComponentText(ChatFormatting.GREEN+"Click to update"))));
-                    SkyblockFeatures.sentUpdateNotification=true;
-                    Utils.setTimeout(()->{
+                                    .setChatHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ChatComponentText(ChatFormatting.GREEN + "Click to update"))));
+                    SkyblockFeatures.sentUpdateNotification = true;
+                    Utils.setTimeout(() -> {
                         Utils.playSound("random.orb", 0.1);
                         Utils.sendMessage(notificationText);
-                    },1000);
+                    }, 1000);
                 }
             }
         });
@@ -57,28 +57,29 @@ public class VersionManager {
 
     public static String getUpdatePreference() {
         int type = SkyblockFeatures.config.updateCheckType;
-        if(type==0) return "full";
+        if (type == 0) return "full";
         else return "pre";
     }
+
     public static boolean isClientOutdated() {
         double currentVersionValue = getVersionValue(SkyblockFeatures.VERSION);
         String updateVersionName = potentialUpdate.getUpdate().getVersionName().split("v")[1];
         double updateVersionValue = getVersionValue(updateVersionName);
 
-        return currentVersionValue<updateVersionValue;
+        return currentVersionValue < updateVersionValue;
     }
 
     public static void checkForUpdates(String updateType) {
-        checkForUpdates(updateType,false);
+        checkForUpdates(updateType, false);
     }
 
-    public static void checkForUpdates(String updateType,boolean force) {
+    public static void checkForUpdates(String updateType, boolean force) {
         // pre full
         Utils.sendMessage(ChatFormatting.YELLOW + "Checking for updates...");
-        context.checkUpdate(updateType).thenAcceptAsync((update)->{
+        context.checkUpdate(updateType).thenAcceptAsync((update) -> {
             if (update != null) {
                 potentialUpdate = update;
-                if(checkIfNeedUpdate() || force) {
+                if (checkIfNeedUpdate() || force) {
                     doUpdate();
                 }
             } else {
@@ -91,17 +92,17 @@ public class VersionManager {
         String part1 = version.split("-")[0];
         int num1 = Integer.parseInt(part1.replaceAll("[^0-9]", ""));
 
-        if(version.contains("BETA")) {
+        if (version.contains("BETA")) {
             String part2 = version.split(part1)[1];
 
             int num2 = Integer.parseInt(part2.replaceAll("[^0-9]", ""));
 
             return num1 + ((double) num2 / 100);
         } else {
-            num1+=1;
+            num1 += 1;
         }
 
-        if(num1==12912) {
+        if (num1 == 12912) {
             return 129.7;
         }
 
@@ -184,7 +185,7 @@ public class VersionManager {
         double currentVersionValue = VersionManager.getVersionValue(SkyblockFeatures.VERSION);
         for (JsonElement githubVersion : VersionManager.getGithubVersions()) {
             String tag = githubVersion.getAsJsonObject().get("name").getAsString();
-            if(currentVersionValue == VersionManager.getVersionValue(tag)) {
+            if (currentVersionValue == VersionManager.getVersionValue(tag)) {
                 return githubVersion.getAsJsonObject();
             }
         }
