@@ -193,10 +193,6 @@ public class Utils {
     public static Minecraft GetMC() {
         return mc;
     }
-
-    public static boolean overrideDevMode = false;
-    public static boolean overrideDevModeValue = false;
-
     public static boolean isDeveloper() {
         return SkyblockFeatures.config.developerMode;
     }
