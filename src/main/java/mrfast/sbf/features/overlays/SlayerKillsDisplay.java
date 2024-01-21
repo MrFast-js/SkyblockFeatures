@@ -19,7 +19,7 @@ public class SlayerKillsDisplay {
 
     public static class SlayerKillsDisplayGui extends UIElement {
         public SlayerKillsDisplayGui() {
-            super("Slayer Kills Display", new Point(0.0f, 0.24930556f));
+            super("Slayer Kills Display", new Point(0.43854168f, 0.07037037f));
             SkyblockFeatures.GUIMANAGER.registerElement(this);
         }
 
