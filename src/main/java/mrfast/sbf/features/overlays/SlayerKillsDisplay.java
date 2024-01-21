@@ -57,8 +57,9 @@ public class SlayerKillsDisplay {
     private static boolean shouldRender() {
         boolean slayerQuestActive = false;
         for (String sidebarLine : ScoreboardUtil.getSidebarLines(false)) {
-            if(sidebarLine.equals("Slayer Quest")) {
+            if (sidebarLine.equals("Slayer Quest")) {
                 slayerQuestActive = true;
+                break;
             }
         }
         return slayerQuestActive;
@@ -67,11 +68,15 @@ public class SlayerKillsDisplay {
     private static void drawSlayerKills() {
         String killString = "";
         boolean slayerQuestActive = false;
-        for (String sidebarLine : ScoreboardUtil.getSidebarLines(false)) {
-            if(sidebarLine.equals("Slayer Quest")) slayerQuestActive = true;
-            if(sidebarLine.endsWith("Kills") && slayerQuestActive) {
-                killString = sidebarLine.replace("Kills","§7Kills").trim();
+        if(shouldRender()) {
+            for (String sidebarLine : ScoreboardUtil.getSidebarLines(false)) {
+                if (sidebarLine.equals("Slayer Quest")) slayerQuestActive = true;
+                if (sidebarLine.endsWith("Kills") && slayerQuestActive) {
+                    killString = sidebarLine.replace("Kills", "§7Kills").trim();
+                }
             }
+        } else {
+            killString = "§e1§7/§c600 §7Kills";
         }
 
         float scale = 2f;
