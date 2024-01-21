@@ -502,6 +502,15 @@ public class Config extends ConfigManager {
 
     @Property(
             type = PropertyType.TOGGLE,
+            name = "Slayer Kills Display",
+            description = "Shows the amount of kills on your screen till next slayer spawn.",
+            category = "Slayers",
+            subcategory = "Misc"
+    )
+    public boolean slayerKillDisplay = false;
+
+    @Property(
+            type = PropertyType.TOGGLE,
             name = "Highlight Thrown Beacon",
             description = "Highlights the beacon thats thrown by the enderman slayer.",
             category = "Slayers",
@@ -755,6 +764,7 @@ public class Config extends ConfigManager {
             isParent = true
     )
     public boolean betterPartyFinder = false;
+
     @Property(
             type = PropertyType.TOGGLE,
             name = "Side Menu",
