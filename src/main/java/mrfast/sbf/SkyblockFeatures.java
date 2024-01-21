@@ -110,6 +110,7 @@ public class SkyblockFeatures {
                 new DungeonsFeatures(),
                 new ItemFeatures(),
                 new CrystalHollowsMap(),
+                new SlayerKillsDisplay(),
                 new MayorJerry(),
                 new MiningFeatures(),
                 new MiscFeatures(),
