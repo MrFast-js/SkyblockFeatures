@@ -78,10 +78,7 @@ public class DebugCommand extends CommandBase {
         } catch (Exception ignored) {
 
         }
-        boolean upload = false;
-        if (args.toString().contains("-upload")) {
-            upload = true;
-        }
+        boolean upload = Arrays.toString(args).contains("-upload");
 
         switch (args[0]) {
             case "mobs":
