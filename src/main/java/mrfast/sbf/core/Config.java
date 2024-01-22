@@ -94,6 +94,16 @@ public class Config extends ConfigManager {
 
     @Property(
             type = PropertyType.TOGGLE,
+            name = "Remove Server Id From sidebar",
+            description = "Hide the §8M23D§r the sidebar",
+            category = "General",
+            subcategory = "Sidebar",
+            parentName = "Customizable Sidebar"
+    )
+    public boolean hideServerFromSidebar = false;
+
+    @Property(
+            type = PropertyType.TOGGLE,
             name = "Floor 2 Spawn Timers",
             description = "Adds timers in the world that show when the servents will spawn.",
             category = "§1§rDungeons",

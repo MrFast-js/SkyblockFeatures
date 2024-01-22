@@ -2,7 +2,10 @@ package mrfast.sbf.mixins.transformers;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
+import com.mojang.realmsclient.gui.ChatFormatting;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -27,8 +30,8 @@ import net.minecraft.util.EnumChatFormatting;
 public class MixinGuiIngame {
 
     @Inject(method = "renderScoreboard", at = @At("HEAD"), cancellable = true)
-	protected void renderScoreboard(ScoreObjective objective, ScaledResolution scaledRes, CallbackInfo ci) {
-        if(!SkyblockFeatures.config.customSidebar) return;
+    protected void renderScoreboard(ScoreObjective objective, ScaledResolution scaledRes, CallbackInfo ci) {
+        if (!SkyblockFeatures.config.customSidebar) return;
         ci.cancel();
         Minecraft mc = Utils.GetMC();
         Scoreboard scoreboard = objective.getScoreboard();
@@ -55,50 +58,62 @@ public class MixinGuiIngame {
         int l1 = scaledRes.getScaledWidth() - i - k1;
         int j = 0;
         Score hypixelLine = null;
-        for (Score score1 : collection) {
-            ScorePlayerTeam scoreplayerteam1 = scoreboard.getPlayersTeam(score1.getPlayerName());
-            String s1 = ScorePlayerTeam.formatPlayerName(scoreplayerteam1, score1.getPlayerName());
-            if(SkyblockFeatures.config.hideHypixelFromSidebar && s1.contains("www.hypixel") && score1.getScorePoints()==1) {
-                hypixelLine = score1;
+
+
+        for (Score score : collection) {
+            ScorePlayerTeam scoreplayerteam = scoreboard.getPlayersTeam(score.getPlayerName());
+            String lineText = ScorePlayerTeam.formatPlayerName(scoreplayerteam, score.getPlayerName());
+            if (SkyblockFeatures.config.hideHypixelFromSidebar && lineText.contains("www.hypixel") && score.getScorePoints() == 1) {
+                hypixelLine = score;
             }
         }
-        if(hypixelLine!=null) {
+        if (hypixelLine != null) {
             collection.remove(hypixelLine);
         }
-        
-        for (Score score1 : collection) {
-            ScorePlayerTeam scoreplayerteam1 = scoreboard.getPlayersTeam(score1.getPlayerName());
-            String s1 = ScorePlayerTeam.formatPlayerName(scoreplayerteam1, score1.getPlayerName());
+        String serverIdRegex = "\\b([0-9]{2}/[0-9]{2}/[0-9]{2})\\s*[Mm]([0-9]+[A-Za-z0-9]*)\\b";
+        Pattern serverIdPattern = Pattern.compile(serverIdRegex);
+
+        for (Score score : collection) {
+            ScorePlayerTeam scoreplayerteam = scoreboard.getPlayersTeam(score.getPlayerName());
+            String lineText = ScorePlayerTeam.formatPlayerName(scoreplayerteam, score.getPlayerName());
             ++j;
-            String s2 = EnumChatFormatting.RED + "" + score1.getScorePoints();
+            String s2 = EnumChatFormatting.RED + "" + score.getScorePoints();
             int k = j1 - j * mc.fontRendererObj.FONT_HEIGHT;
             int l = scaledRes.getScaledWidth() - k1 + 2;
 
-            if(!SkyblockFeatures.config.removeSidebarBackground) {
+            if (!SkyblockFeatures.config.removeSidebarBackground) {
                 Gui.drawRect(l1 - 2, k, l, k + mc.fontRendererObj.FONT_HEIGHT, 1342177280);
             }
-
-            if(SkyblockFeatures.config.useShadowOnSidebar) {
-                mc.fontRendererObj.drawStringWithShadow(s1, l1, k, 553648127);
-            } else {
-                mc.fontRendererObj.drawString(s1, l1, k, 553648127);
+            if(SkyblockFeatures.config.hideServerFromSidebar) {
+                Matcher serverIdMatcher = serverIdPattern.matcher(Utils.cleanColor(lineText));
+                if (serverIdMatcher.find()) {
+                    lineText = ChatFormatting.GRAY + serverIdMatcher.group(1);
+                }
             }
 
+            // Handling normal lines
+            if (SkyblockFeatures.config.useShadowOnSidebar) {
+                mc.fontRendererObj.drawStringWithShadow(lineText, l1, k, 553648127);
+            } else {
+                mc.fontRendererObj.drawString(lineText, l1, k, 553648127);
+            }
 
-            if(!SkyblockFeatures.config.removeSidebarRedNumbers) {
+            // Stop the red numbers from the side
+            if (!SkyblockFeatures.config.removeSidebarRedNumbers) {
                 mc.fontRendererObj.drawString(s2, l - mc.fontRendererObj.getStringWidth(s2), k, 553648127);
             }
 
-            if (j == collection.size())
-            {
+            if (j == collection.size()) {
                 String s3 = objective.getDisplayName();
-                if(!SkyblockFeatures.config.removeSidebarBackground) {
+                if (!SkyblockFeatures.config.removeSidebarBackground) {
                     Gui.drawRect(l1 - 2, k - mc.fontRendererObj.FONT_HEIGHT - 1, l, k - 1, 1610612736);
                     Gui.drawRect(l1 - 2, k - 1, l, k, 1342177280);
                 }
-                if(SkyblockFeatures.config.useShadowOnSidebar) mc.fontRendererObj.drawStringWithShadow(s3, l1 + i / 2 - mc.fontRendererObj.getStringWidth(s3) / 2, k - mc.fontRendererObj.FONT_HEIGHT, 553648127);
-                else mc.fontRendererObj.drawString(s3, l1 + i / 2 - mc.fontRendererObj.getStringWidth(s3) / 2, k - mc.fontRendererObj.FONT_HEIGHT, 553648127);
+                if (SkyblockFeatures.config.useShadowOnSidebar)
+                    mc.fontRendererObj.drawStringWithShadow(s3, l1 + (float) i / 2 - (float) mc.fontRendererObj.getStringWidth(s3) / 2, k - mc.fontRendererObj.FONT_HEIGHT, 553648127);
+                else
+                    mc.fontRendererObj.drawString(s3, l1 + i / 2 - mc.fontRendererObj.getStringWidth(s3) / 2, k - mc.fontRendererObj.FONT_HEIGHT, 553648127);
             }
         }
-	}
+    }
 }
