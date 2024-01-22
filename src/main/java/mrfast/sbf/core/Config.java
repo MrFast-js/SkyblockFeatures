@@ -1242,6 +1242,16 @@ public class Config extends ConfigManager {
     public boolean MythologicalHelper = true;
 
     @Property(
+            type = PropertyType.TOGGLE,
+            name = "Roughly Predict Burrows",
+            description = "Marks a position in the world as to where the pointed to burrow could be. §CWarning these are rough estimates, they are not to be depended on.",
+            category = "§1§rEvents",
+            subcategory = "Diana",
+            parentName = "Diana Mythological Helper"
+    )
+    public boolean MythologicalHelperPrediction = false;
+
+    @Property(
             type = PropertyType.COLOR,
             name = "Actual Line Color",
             description = "",

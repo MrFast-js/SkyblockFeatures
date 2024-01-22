@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import com.google.common.collect.Lists;
 import com.mojang.realmsclient.gui.ChatFormatting;
 
 import mrfast.sbf.SkyblockFeatures;
@@ -12,6 +13,7 @@ import mrfast.sbf.events.PacketEvent.ReceiveEvent;
 import mrfast.sbf.events.UseItemAbilityEvent;
 import mrfast.sbf.utils.RenderUtil;
 import mrfast.sbf.utils.Utils;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityOtherPlayerMP;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
@@ -20,6 +22,7 @@ import net.minecraft.entity.projectile.EntityFishHook;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.play.server.S2APacketParticles;
 import net.minecraft.util.*;
+import net.minecraft.world.World;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.event.world.WorldEvent;
@@ -42,7 +45,7 @@ public class MythologicalEvent {
 
     private BlockPos prevBurrow = null;
     private boolean sendNotification = true;
-    private static final List<Vec3> particles = new ArrayList<>();
+    private static List<Vec3> lavaDripParticles = new ArrayList<>();
     private static Entity fishingHook = null;
     private S2APacketParticles geyser = null;
     private Vec3 startPos = null;
@@ -120,21 +123,24 @@ public class MythologicalEvent {
             event.setCanceled(true);
         }
     }
+
     boolean spoonSearching = false;
+
     @SubscribeEvent
     public void onItemAbility(UseItemAbilityEvent event) {
-        if(event.ability.itemId.equals("ANCESTRAL_SPADE")) {
+        if (event.ability.itemId.equals("ANCESTRAL_SPADE")) {
             spoonSearching = true;
-            particles.clear();
-            Utils.setTimeout(()->{
+            lavaDripParticles.clear();
+            Utils.setTimeout(() -> {
                 spoonSearching = false;
-            },3000);
+            }, 3000);
         }
     }
+
     private boolean fromGriffinPet(Vec3i pos) {
-        for(Entity e:Utils.GetMC().theWorld.loadedEntityList) {
-            if(e instanceof EntityArmorStand && e.getDistance(pos.getX(),pos.getY(),pos.getZ())<3) {
-                if(e.isInvisible()) return true;
+        for (Entity e : Utils.GetMC().theWorld.loadedEntityList) {
+            if (e instanceof EntityArmorStand && e.getDistance(pos.getX(), pos.getY(), pos.getZ()) < 3) {
+                if (e.isInvisible()) return true;
             }
         }
         return false;
@@ -148,19 +154,19 @@ public class MythologicalEvent {
 
                 Burrow closest = getClosestBurrow(pos);
 
-                if (dist > 8 && !particles.contains(new Vec3(pos)) && spoonSearching) {
-                    if(fromGriffinPet(pos)) return;
+                if (dist > 8 && !lavaDripParticles.contains(new Vec3(pos)) && spoonSearching) {
+                    if (fromGriffinPet(pos)) return;
 
                     if (closest != null) {
-                        if (Utils.GetMC().thePlayer.getDistance(closest.pos.getX(),closest.pos.getY(),closest.pos.getZ()) < 35) {
+                        if (Utils.GetMC().thePlayer.getDistance(closest.pos.getX(), closest.pos.getY(), closest.pos.getZ()) < 35) {
                             return;
                         }
                     }
-                    particles.add(new Vec3(packet.getXCoordinate(), packet.getYCoordinate(), packet.getZCoordinate()));
+                    lavaDripParticles.add(new Vec3(packet.getXCoordinate(), packet.getYCoordinate(), packet.getZCoordinate()));
                 }
 
                 if (closest != null) {
-                    if(closest.pos.distanceSq(pos.getX(),pos.getY(),pos.getZ())==1) {
+                    if (closest.pos.distanceSq(pos.getX(), pos.getY(), pos.getZ()) == 1) {
                         closest.type = "Treasure";
                     }
                 }
@@ -170,7 +176,7 @@ public class MythologicalEvent {
 
                 Burrow closest = getClosestBurrow(pos);
 
-                if (closest != null && closest.pos.distanceSq(pos)==1) {
+                if (closest != null && closest.pos.distanceSq(pos) == 1) {
                     closest.type = "Mob";
                 }
             }
@@ -197,14 +203,15 @@ public class MythologicalEvent {
         if (unformatted.matches("^(Wow!|Yikes!|Uh oh!|Oh!|Oi!|Danger!|Woah!|Good Grief!)\\s+You\\sdug\\sout.*") ||
                 unformatted.startsWith("You dug out a Griffin Burrow") ||
                 unformatted.startsWith("You finished the Griffin burrow chain")) {
-            reset();
+            resetClosestBurrow();
         }
     }
 
-    public void reset() {
+    public void resetClosestBurrow() {
         endPos = null;
         startPos = null;
-        particles.clear();
+        lavaDripParticles.clear();
+        predictedBurrowPosition = null;
 
         Utils.setTimeout(() -> {
             Comparator<Burrow> burrowComparator = Comparator.comparingDouble(burrow -> Utils.GetMC().thePlayer.getDistanceSq(burrow.pos));
@@ -226,9 +233,9 @@ public class MythologicalEvent {
     @SubscribeEvent
     public void onRender(RenderWorldLastEvent event) {
         renderGeyserBoundingBox(event.partialTicks);
-        renderMythologicalHelper();
+        renderSpoonLine();
         renderBurrowBoundingBox(event.partialTicks);
-        renderArrowLine();
+        renderPointerArrowLine();
     }
 
     private void renderGeyserBoundingBox(float partialTicks) {
@@ -244,41 +251,77 @@ public class MythologicalEvent {
         }
     }
 
-    private void renderMythologicalHelper() {
-        if (SkyblockFeatures.config.MythologicalHelper) {
-            Vec3 prev = null;
-            try {
-                double xDif;
-                double zDif;
-                double yDif;
-                double index = 0;
-                for (Vec3 particle : particles) {
+    static Vec3 previousParticle = null;
 
+    private void renderSpoonLine() {
+        if (SkyblockFeatures.config.MythologicalHelper) {
+            try {
+                double index = 0;
+                for (Vec3 lavaDrip : lavaDripParticles) {
                     index++;
-                    if (prev == null) {
-                        prev = particle;
+                    if (previousParticle == null) {
+                        previousParticle = lavaDrip;
                         continue;
                     }
-                    GlStateManager.disableCull();
-                    RenderUtil.draw3DArrowLine(prev, particle, SkyblockFeatures.config.MythologicalHelperActualColor);
-                    GlStateManager.enableCull();
-                    xDif = prev.xCoord - particle.xCoord;
-                    zDif = prev.zCoord - particle.zCoord;
-                    yDif = prev.yCoord - particle.yCoord;
 
-                    if (index == particles.size()) {
+                    GlStateManager.disableCull();
+                    RenderUtil.draw3DArrowLine(previousParticle, lavaDrip, SkyblockFeatures.config.MythologicalHelperActualColor);
+                    GlStateManager.enableCull();
+
+                    double xLavaDripDif = previousParticle.xCoord - lavaDrip.xCoord;
+                    double yLavaDripDif = previousParticle.yCoord - lavaDrip.yCoord;
+                    double zLavaDripDif = previousParticle.zCoord - lavaDrip.zCoord;
+
+                    // Draw prediction by repeating the same last translation 300 times
+                    if (index == lavaDripParticles.size()) {
+                        Vec3 bestPredictionPosition = null;
+                        Vec3 bestSolidLinePosition = null;
+
                         for (int i = 0; i < 300; i++) {
-                            RenderUtil.draw3DArrowLine(prev, new Vec3(particle.xCoord + xDif * -(i), particle.yCoord - yDif * i, particle.zCoord + zDif * -(i)), SkyblockFeatures.config.MythologicalHelperPredictionColor);
-                            prev = new Vec3(particle.xCoord + xDif * -(i), particle.yCoord - yDif * i, particle.zCoord + zDif * -(i));
+                            Vec3 predictionPosition = lavaDrip.add(new Vec3(-xLavaDripDif * i, -yLavaDripDif * i, -zLavaDripDif * i));
+
+                            if (endPos != null && startPos != null && SkyblockFeatures.config.MythologicalHelperPrediction) {
+                                double xStartStopDif = (endPos.xCoord - startPos.xCoord) / 300d;
+                                double zStartStopDif = (endPos.zCoord - startPos.zCoord) / 300d;
+
+                                for (int j = 0; j < 500; j++) {
+                                    Vec3 solidLinePoint = startPos.add(new Vec3(xStartStopDif * j, predictionPosition.yCoord, zStartStopDif * j));
+                                    if (bestPredictionPosition == null) {
+                                        bestPredictionPosition = predictionPosition;
+                                        bestSolidLinePosition = solidLinePoint;
+                                        continue;
+                                    }
+                                    if (predictionPosition.distanceTo(solidLinePoint) < bestPredictionPosition.distanceTo(bestSolidLinePosition)) {
+                                        bestPredictionPosition = predictionPosition;
+                                        bestSolidLinePosition = solidLinePoint;
+                                    }
+                                }
+                            }
+
+                            RenderUtil.draw3DArrowLine(previousParticle, predictionPosition, SkyblockFeatures.config.MythologicalHelperPredictionColor);
+                            previousParticle = predictionPosition;
                         }
+                        if (bestPredictionPosition != null) {
+                            BlockPos height = Utils.GetMC().theWorld.getHeight(new BlockPos(bestPredictionPosition));
+                            if (height.getY() < 10) height = height.up(71);
+
+                            predictedBurrowPosition = height;
+                        }
+                        previousParticle = null;
+                        return;
                     }
-                    prev = particle;
+
+                    previousParticle = lavaDrip;
                 }
             } catch (Exception e) {
+                e.printStackTrace();
                 // Handle exception
             }
         }
     }
+
+
+    static BlockPos predictedBurrowPosition = null;
 
     private void renderBurrowBoundingBox(float partialTicks) {
         if (!Utils.inSkyblock || !SkyblockFeatures.config.MythologicalHelper) return;
@@ -286,18 +329,25 @@ public class MythologicalEvent {
         try {
             for (Burrow burrow : burrows) {
                 String type = ChatFormatting.RED + "(" + burrow.type + ")";
-                Color color = Objects.equals(burrow.type, "Treasure") ?SkyblockFeatures.config.MythologicalHelperTreasureColor:
-                        Objects.equals(burrow.type, "Mob") ?SkyblockFeatures.config.MythologicalHelperMobColor:
-                                SkyblockFeatures.config.MythologicalHelperDefaultColor;
+                Color color = SkyblockFeatures.config.MythologicalHelperDefaultColor;
+                if (Objects.equals(burrow.type, "Treasure")) {
+                    color = SkyblockFeatures.config.MythologicalHelperTreasureColor;
+                } else if (Objects.equals(burrow.type, "Mob")) {
+                    color = SkyblockFeatures.config.MythologicalHelperMobColor;
+                }
 
                 RenderUtil.drawWaypoint(burrow.pos, color, ChatFormatting.GOLD + "Burrow " + type, partialTicks, true);
+            }
+            if (predictedBurrowPosition != null) {
+                RenderUtil.drawWaypoint(predictedBurrowPosition, Color.cyan, ChatFormatting.YELLOW + "Predicted Location", partialTicks, true);
             }
         } catch (Exception ignored) {
 
         }
     }
 
-    private void renderArrowLine() {
+
+    private void renderPointerArrowLine() {
         if (startPos != null && endPos != null) {
             GlStateManager.pushMatrix();
             GlStateManager.disableDepth();
@@ -341,6 +391,7 @@ public class MythologicalEvent {
         startPos = null;
         endPos = null;
         geyser = null;
-        particles.clear();
+        predictedBurrowPosition = null;
+        lavaDripParticles.clear();
     }
 }
