@@ -62,7 +62,7 @@ public class MiscFeatures {
     @SubscribeEvent
     public void onRenderOverlayPre(RenderGameOverlayEvent.Pre event) {
         if (!Utils.inSkyblock) return;
-        if (event.type == RenderGameOverlayEvent.ElementType.AIR && SkyblockFeatures.config.hideAirDisplay && !Utils.inDungeons) {
+        if (event.type == RenderGameOverlayEvent.ElementType.AIR && SkyblockFeatures.config.hideAirDisplay) {
             event.setCanceled(true);
         }
     }
