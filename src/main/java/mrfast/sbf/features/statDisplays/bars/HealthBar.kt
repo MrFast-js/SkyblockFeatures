@@ -1,77 +1,59 @@
-package mrfast.sbf.features.statDisplays.bars;
+package mrfast.sbf.features.statDisplays.bars
 
-import mrfast.sbf.SkyblockFeatures;
-import mrfast.sbf.gui.components.Point;
-import mrfast.sbf.gui.components.UIElement;
-import mrfast.sbf.utils.Utils;
-import net.minecraft.client.gui.Gui;
+import mrfast.sbf.SkyblockFeatures
+import mrfast.sbf.gui.components.Point
+import mrfast.sbf.gui.components.UIElement
+import mrfast.sbf.utils.Utils
+import net.minecraft.client.gui.Gui
+import java.awt.Color
 
-import java.awt.*;
-
-public class HealthBar {
-    static {
-        new HealthBarGui();
+class HealthBar {
+    init {
+        HealthBarGui().register()
     }
 
-    public static class HealthBarGui extends UIElement {
-
-        public HealthBarGui() {
-            super("Health Bar", new Point(0.40605482f, 0.9166667f));
-            SkyblockFeatures.GUIMANAGER.registerElement(this);
+    class HealthBarGui : UIElement("Health Bar", Point(0.40605482f, 0.9166667f)) {
+        override fun drawElement() {
+            drawHealthBar()
         }
 
-        @Override
-        public void drawElement() {
-            drawHealthBar();
+        override fun drawElementExample() {
+            drawHealthBar()
         }
 
-        @Override
-        public void drawElementExample() {
-            drawHealthBar();
-        }
-
-        private void drawHealthBar() {
-            int max = Utils.maxHealth;
-            int health = Utils.health;
-            int absorbtion = 0;
+        private fun drawHealthBar() {
+            val max = Utils.maxHealth
+            var health = Utils.health
+            var absorption = 0
             if (health > max) {
-                absorbtion = health - max;
-                health = max;
+                absorption = health - max
+                health = max
             }
-            int total = (max + absorbtion);
-            double healthFillPerc = (double) health / total;
-            double absorbFillPerc = (double) absorbtion / total;
+            val total = max + absorption
+            val healthFillPerc = health.toDouble() / total
+            val absorbFillPerc = absorption.toDouble() / total
 
-            Color HealthColor = Color.RED;
-            Color AbsorbColor = new Color(0xFFAA00);
+            val healthColor = Color.RED
+            val absorbColor = Color(0xFFAA00)
 
-            Gui.drawRect(0, 0, 80, 10, Color.black.getRGB());
+            Gui.drawRect(0, 0, 80, 10, Color.BLACK.rgb)
 
-            Gui.drawRect(2, 2, (int) (78d * healthFillPerc), 8, HealthColor.getRGB());
-            if (absorbtion != 0) {
-                int fillPixels = (int) (78d * absorbFillPerc) + 3;
-                Gui.drawRect(Math.min(76, Math.max(2, 2 + (78 - fillPixels))), 2, 78, 8, AbsorbColor.getRGB());
+            Gui.drawRect(2, 2, (78.0 * healthFillPerc).toInt(), 8, healthColor.rgb)
+            if (absorption != 0) {
+                val fillPixels = (78.0 * absorbFillPerc).toInt() + 3
+                Gui.drawRect(
+                        minOf(76, maxOf(2, 2 + (78 - fillPixels))),
+                        2, 78, 8, absorbColor.rgb
+                )
             }
         }
 
-        @Override
-        public boolean getToggled() {
-            return SkyblockFeatures.config.HealthBar;
-        }
+        override fun getToggled(): Boolean = SkyblockFeatures.config.HealthBar
 
-        @Override
-        public boolean getRequirement() {
-            return Utils.inSkyblock;
-        }
+        override fun getRequirement(): Boolean = Utils.inSkyblock
 
-        @Override
-        public int getHeight() {
-            return 11;
-        }
+        override fun getHeight(): Int = 11
 
-        @Override
-        public int getWidth() {
-            return 81;
-        }
+        override fun getWidth(): Int = 81
     }
 }

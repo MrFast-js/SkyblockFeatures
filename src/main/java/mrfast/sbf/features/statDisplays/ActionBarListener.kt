@@ -1,107 +1,99 @@
-package mrfast.sbf.features.statDisplays;
+package mrfast.sbf.features.statDisplays
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import mrfast.sbf.SkyblockFeatures
+import mrfast.sbf.utils.Utils
+import net.minecraft.util.ChatComponentText
+import net.minecraftforge.client.event.ClientChatReceivedEvent
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
+import java.util.regex.Matcher
+import java.util.regex.Pattern
 
-import mrfast.sbf.SkyblockFeatures;
-import mrfast.sbf.utils.Utils;
-import net.minecraft.util.ChatComponentText;
-import net.minecraftforge.client.event.ClientChatReceivedEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-
-public class ActionBarListener {
-
-	public static int maxSecrets;
-	public static int secrets = -1;
-	private static final Pattern PATTERN_SECRETS = Pattern.compile("§7([0-9]+)/([0-9]+) Secrets");
-
-	public void parseSecrets(String message) {
-        Matcher matcher = PATTERN_SECRETS.matcher(message);
-        if (!matcher.find()) {
-            secrets = -1;
-			return;
-        }
-
-        secrets = Integer.parseInt(matcher.group(1));
-        maxSecrets = Integer.parseInt(matcher.group(2));
+class ActionBarListener {
+    companion object {
+        var maxSecrets: Int = 0
+        var secrets: Int = -1
+        private val PATTERN_SECRETS: Pattern = Pattern.compile("§7([0-9]+)/([0-9]+) Secrets")
     }
 
-	@SubscribeEvent
-	public void onEvent(ClientChatReceivedEvent event) {
-		if (event.type == 2) {
-			String actionBar = event.message.getFormattedText();
-			String[] actionBarSplit = actionBar.split(" ");
-			for (String piece : actionBarSplit) {
-				String trimmed = piece.trim();
-				String colorsStripped = Utils.cleanColor(trimmed).replaceAll(",", "");
+    private fun parseSecrets(message: String) {
+        val matcher: Matcher = PATTERN_SECRETS.matcher(message)
+        if (!matcher.find()) {
+            secrets = -1
+            return
+        }
 
-                if(trimmed.isEmpty()) continue;
-				String shortString = colorsStripped.substring(0, colorsStripped.length() - 1).replaceAll(",", "");
-				if(colorsStripped.endsWith("❤")) {
-					parseAndSetHealth(shortString);
-				} else if(colorsStripped.endsWith("❈")) {
-					parseAndSetDefense(shortString);
-				} else if(colorsStripped.endsWith("✎")) {
-					parseAndSetMana(shortString);
-				} else if(colorsStripped.endsWith("ʬ")) {
-					parseAndSetOverflow(shortString);
-				}
+        secrets = Integer.parseInt(matcher.group(1))
+        maxSecrets = Integer.parseInt(matcher.group(2))
+    }
 
-				actionBar = actionBar.trim();
+    @SubscribeEvent
+    fun onEvent(event: ClientChatReceivedEvent) {
+        if (event.type.toInt() == 2) {
+            var actionBar: String = event.message.formattedText
+            val actionBarSplit: List<String> = actionBar.split(" ")
 
-				event.message = new ChatComponentText(actionBar);
-			}
+            for (piece in actionBarSplit) {
+                val trimmed: String = piece.trim()
+                val colorsStripped: String = Utils.cleanColor(trimmed).replace(",", "")
 
-			parseSecrets(actionBar);
+                if (trimmed.isEmpty()) continue
+                val shortString: String = colorsStripped.substring(0, colorsStripped.length - 1).replace(",", "")
 
-			if(SkyblockFeatures.config.cleanerActionBar) {
-				String[] arr = actionBar.split(" ");
-				// Remove Numbers wit
-                for (String s : arr) {
-                    if (s.contains("❤") && SkyblockFeatures.config.hideHealthFromBar) {
-                        actionBar = actionBar.replace(s, "");
-                    }
-                    if ((s.contains("❈") || s.contains("Defense")) && SkyblockFeatures.config.hideDefenseFromBar) {
-                        actionBar = actionBar.replace(s, "");
-                    }
-                    if ((s.contains("✎") || s.contains("Mana")) && SkyblockFeatures.config.hideManaFromBar)  {
-                        actionBar = actionBar.replace(s, "");
-                    }
-					if (s.contains("ʬ") && SkyblockFeatures.config.hideOverflowManaFromBar)  {
-						actionBar = actionBar.replace(s, "");
-					}
+                when {
+                    colorsStripped.endsWith("❤") -> parseAndSetHealth(shortString)
+                    colorsStripped.endsWith("❈") -> parseAndSetDefense(shortString)
+                    colorsStripped.endsWith("✎") -> parseAndSetMana(shortString)
+                    colorsStripped.endsWith("ʬ") -> parseAndSetOverflow(shortString)
                 }
 
-				if (SkyblockFeatures.config.hideSecretsFromBar) {
-					actionBar = actionBar.replaceAll(secrets+"/"+maxSecrets+" Secrets", "");
-				}
-
-				event.message = new ChatComponentText(actionBar.trim());
+                actionBar = actionBar.trim()
+                event.message = ChatComponentText(actionBar)
             }
-		}
-	}
 
-	private void parseAndSetHealth(String actionBarSegment) throws NumberFormatException {
-		String[] split = actionBarSegment.split("/", 2);
-		int currentHealth = Integer.parseInt(split[0]);
-		int maxHealth = Integer.parseInt(split[1]);
-		Utils.health = currentHealth;
-		Utils.maxHealth = maxHealth;
-	}
+            parseSecrets(actionBar)
 
-	private void parseAndSetDefense(String actionBarSegment) throws NumberFormatException {
-        Utils.Defense = Integer.parseInt(actionBarSegment);
-	}
+            if (SkyblockFeatures.config.cleanerActionBar) {
+                val arr: List<String> = actionBar.split(" ")
 
-	private void parseAndSetMana(String actionBarSegment) throws NumberFormatException {
-		String[] split = actionBarSegment.split("/", 2);
-		int currentMana = Integer.parseInt(split[0]);
-		int maxMana = Integer.parseInt(split[1]);
-		Utils.mana = currentMana;
-		Utils.maxMana = maxMana;
-	}
+                for (s in arr) {
+                    when {
+                        s.contains("❤") && SkyblockFeatures.config.hideHealthFromBar -> actionBar = actionBar.replace(s, "")
+                        (s.contains("❈") || s.contains("Defense")) && SkyblockFeatures.config.hideDefenseFromBar -> actionBar = actionBar.replace(s, "")
+                        (s.contains("✎") || s.contains("Mana")) && SkyblockFeatures.config.hideManaFromBar -> actionBar = actionBar.replace(s, "")
+                        s.contains("ʬ") && SkyblockFeatures.config.hideOverflowManaFromBar -> actionBar = actionBar.replace(s, "")
+                    }
+                }
 
-	private void parseAndSetOverflow(String actionBarSegment) throws NumberFormatException {
-		Utils.overflowMana = Integer.parseInt(actionBarSegment);
-	}
+                if (SkyblockFeatures.config.hideSecretsFromBar) {
+                    actionBar = actionBar.replace("$secrets/$maxSecrets Secrets", "")
+                }
+
+                event.message = ChatComponentText(actionBar.trim())
+            }
+        }
+    }
+
+    private fun parseAndSetHealth(actionBarSegment: String) {
+        val split: List<String> = actionBarSegment.split("/")
+        val currentHealth: Int = split[0].toInt()
+        val maxHealth: Int = split[1].toInt()
+        Utils.health = currentHealth
+        Utils.maxHealth = maxHealth
+    }
+
+    private fun parseAndSetDefense(actionBarSegment: String) {
+        Utils.Defense = actionBarSegment.toInt()
+    }
+
+    private fun parseAndSetMana(actionBarSegment: String) {
+        val split: List<String> = actionBarSegment.split("/")
+        val currentMana: Int = split[0].toInt()
+        val maxMana: Int = split[1].toInt()
+        Utils.mana = currentMana
+        Utils.maxMana = maxMana
+    }
+
+    private fun parseAndSetOverflow(actionBarSegment: String) {
+        Utils.overflowMana = actionBarSegment.toInt()
+    }
 }

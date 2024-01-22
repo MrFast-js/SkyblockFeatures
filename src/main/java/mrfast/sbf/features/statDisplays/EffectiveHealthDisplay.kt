@@ -1,56 +1,35 @@
-package mrfast.sbf.features.statDisplays;
+package mrfast.sbf.features.statDisplays
 
-import mrfast.sbf.SkyblockFeatures;
-import mrfast.sbf.gui.components.Point;
-import mrfast.sbf.gui.components.UIElement;
-import mrfast.sbf.utils.GuiUtils;
-import mrfast.sbf.utils.Utils;
-import net.minecraft.client.Minecraft;
+import mrfast.sbf.SkyblockFeatures
+import mrfast.sbf.gui.components.Point
+import mrfast.sbf.gui.components.UIElement
+import mrfast.sbf.utils.GuiUtils
+import mrfast.sbf.utils.Utils
+import kotlin.math.roundToInt
 
-
-public class EffectiveHealthDisplay {
-
-    private static final Minecraft mc = Minecraft.getMinecraft();
-
-    static {
-        new EffectiveHealthDisplayGUI();
+class EffectiveHealthDisplay {
+    init {
+        EffectiveHealthDisplayGUI().register()
     }
 
-    public static int getEffectiveHealth() {
-        return Math.round(Utils.health * (1f+ (Utils.Defense / 100f) ));
-    }
-    public static class EffectiveHealthDisplayGUI extends UIElement {
-        public EffectiveHealthDisplayGUI() {
-            super("Effective Health Display", new Point(0.3703125f, 0.9539931f));
-            SkyblockFeatures.GUIMANAGER.registerElement(this);
+    private val effectiveHealth: Int
+        get() = (Utils.health * (1f + Utils.Defense / 100f)).roundToInt()
+
+    private inner class EffectiveHealthDisplayGUI : UIElement("Effective Health Display", Point(0.3703125f, 0.9539931f)) {
+        override fun drawElement() {
+            GuiUtils.drawText("§2${Utils.nf.format(effectiveHealth.toLong())}", 0f, 0f, GuiUtils.TextStyle.BLACK_OUTLINE)
         }
 
-        @Override
-        public void drawElement() {
-            GuiUtils.drawText("§2"+Utils.nf.format(getEffectiveHealth()), 0, 0, GuiUtils.TextStyle.BLACK_OUTLINE);
-        }
-        @Override
-        public void drawElementExample() {
-            GuiUtils.drawText("§2"+Utils.nf.format(getEffectiveHealth()), 0, 0, GuiUtils.TextStyle.BLACK_OUTLINE);
+        override fun drawElementExample() {
+            drawElement()
         }
 
-        @Override
-        public boolean getToggled() {
-            return SkyblockFeatures.config.EffectiveHealthDisplay;
-        }
+        override fun getToggled(): Boolean = SkyblockFeatures.config.EffectiveHealthDisplay
 
-        @Override
-        public boolean getRequirement() {
-            return Utils.inSkyblock;
-        }
-        @Override
-        public int getHeight() {
-            return Utils.GetMC().fontRendererObj.FONT_HEIGHT;
-        }
+        override fun getRequirement(): Boolean = Utils.inSkyblock
 
-        @Override
-        public int getWidth() {
-            return Utils.GetMC().fontRendererObj.getStringWidth(getEffectiveHealth()+"");
-        }
+        override fun getHeight(): Int = Utils.GetMC().fontRendererObj.FONT_HEIGHT
+
+        override fun getWidth(): Int = Utils.GetMC().fontRendererObj.getStringWidth(effectiveHealth.toString())
     }
 }

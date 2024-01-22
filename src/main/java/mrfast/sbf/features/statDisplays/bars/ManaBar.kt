@@ -1,71 +1,55 @@
-package mrfast.sbf.features.statDisplays.bars;
+package mrfast.sbf.features.statDisplays.bars
 
-import mrfast.sbf.SkyblockFeatures;
-import mrfast.sbf.gui.components.Point;
-import mrfast.sbf.gui.components.UIElement;
-import mrfast.sbf.utils.Utils;
-import net.minecraft.client.gui.Gui;
+import mrfast.sbf.SkyblockFeatures
+import mrfast.sbf.gui.components.Point
+import mrfast.sbf.gui.components.UIElement
+import mrfast.sbf.utils.Utils
+import net.minecraft.client.gui.Gui
+import java.awt.Color
 
-import java.awt.*;
-
-public class ManaBar {
-    static {
-        new ManaBarGui();
+class ManaBar {
+    init {
+        ManaBarGui().register()
     }
 
-    public static class ManaBarGui extends UIElement {
-        public ManaBarGui() {
-            super("Mana Bar", new Point(0.50865895f, 0.9157407f));
-            SkyblockFeatures.GUIMANAGER.registerElement(this);
+    class ManaBarGui : UIElement("Mana Bar", Point(0.50865895f, 0.9157407f)) {
+        override fun drawElement() {
+            drawManaBar()
         }
 
-        @Override
-        public void drawElement() {
-            drawManaBar();
+        override fun drawElementExample() {
+            drawManaBar()
         }
 
-        @Override
-        public void drawElementExample() {
-            drawManaBar();
-        }
+        private fun drawManaBar() {
+            val max = Utils.maxMana
+            var mana = Utils.mana
+            val overflow = Utils.overflowMana
+            val total = max + overflow
+            val manaFillPerc = mana.toDouble() / total
+            val overflowFillPerc = overflow.toDouble() / total
 
-        private void drawManaBar() {
-            int max = Utils.maxMana;
-            int mana = Utils.mana;
-            int overflow = Utils.overflowMana;
-            int total = (max + overflow);
-            double manaFillPerc = (double) mana / total;
-            double overflowFillPerc = (double) overflow / total;
+            val manaColor = Color(0x5555FF)
+            val overflowColor = Color(0x55FFFF)
 
-            Color manaColor = new Color(0x5555FF);
-            Color overflowColor = new Color(0x55FFFF);
-            Gui.drawRect(0, 0, 80, 10, Color.black.getRGB());
+            Gui.drawRect(0, 0, 80, 10, Color.BLACK.rgb)
 
-            Gui.drawRect(2, 2, (int) (78d * manaFillPerc), 8, manaColor.getRGB());
+            Gui.drawRect(2, 2, (78.0 * manaFillPerc).toInt(), 8, manaColor.rgb)
             if (overflow != 0) {
-                int fillPixels = (int) (78d * overflowFillPerc) + 3;
-                Gui.drawRect(Math.min(76, Math.max(2, 2 + (78 - fillPixels))), 2, 78, 8, overflowColor.getRGB());
+                val fillPixels = (78.0 * overflowFillPerc).toInt() + 3
+                Gui.drawRect(
+                        minOf(76, maxOf(2, 2 + (78 - fillPixels))),
+                        2, 78, 8, overflowColor.rgb
+                )
             }
         }
 
-        @Override
-        public boolean getToggled() {
-            return SkyblockFeatures.config.ManaBar;
-        }
+        override fun getToggled(): Boolean = SkyblockFeatures.config.ManaBar
 
-        @Override
-        public boolean getRequirement() {
-            return Utils.inSkyblock;
-        }
+        override fun getRequirement(): Boolean = Utils.inSkyblock
 
-        @Override
-        public int getHeight() {
-            return 11;
-        }
+        override fun getHeight(): Int = 11
 
-        @Override
-        public int getWidth() {
-            return 81;
-        }
+        override fun getWidth(): Int = 81
     }
 }

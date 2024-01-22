@@ -1,5 +1,6 @@
 package mrfast.sbf.gui.components;
 
+import mrfast.sbf.SkyblockFeatures;
 import mrfast.sbf.gui.GuiManager;
 
 /**
@@ -48,4 +49,8 @@ public abstract class UIElement {
     public abstract int getHeight();
 
     public abstract int getWidth();
+
+    public void register() {
+        SkyblockFeatures.GUIMANAGER.registerElement(this);
+    }
 }

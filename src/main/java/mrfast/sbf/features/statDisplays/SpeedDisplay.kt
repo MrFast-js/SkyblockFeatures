@@ -1,60 +1,41 @@
-package mrfast.sbf.features.statDisplays;
+package mrfast.sbf.features.statDisplays
 
-import mrfast.sbf.SkyblockFeatures;
-import mrfast.sbf.gui.components.Point;
-import mrfast.sbf.gui.components.UIElement;
-import mrfast.sbf.utils.GuiUtils;
-import mrfast.sbf.utils.Utils;
-import net.minecraft.client.Minecraft;
+import mrfast.sbf.SkyblockFeatures
+import mrfast.sbf.gui.components.Point
+import mrfast.sbf.gui.components.UIElement
+import mrfast.sbf.utils.GuiUtils
+import mrfast.sbf.utils.Utils
+import net.minecraft.client.Minecraft
 
+class SpeedDisplay {
+    var display: String = ""
 
-public class SpeedDisplay {
-
-    static {
-        new SpeedDisplayGUI();
+    init {
+        SpeedDisplayGUI().register()
     }
 
-    static String display = "123%";
-
-    public static String getSpeed() {
-        String text;
-        String walkSpeed = String.valueOf(Minecraft.getMinecraft().thePlayer.capabilities.getWalkSpeed() * 1000);
-        text = walkSpeed.substring(0, Math.min(walkSpeed.length(), 3));
-        if (text.endsWith(".")) text = text.substring(0, text.indexOf('.')); //remove trailing periods
-        return text+"%";
+    private fun updateSpeed() {
+        val walkSpeed = (Minecraft.getMinecraft().thePlayer?.capabilities?.walkSpeed ?: 0f) * 1000
+        val text = walkSpeed.toString().substring(0, minOf(walkSpeed.toString().length, 3))
+        display = if (text.endsWith(".")) text.substring(0, text.indexOf('.')) else "$text%"
     }
-    public static class SpeedDisplayGUI extends UIElement {
-        public SpeedDisplayGUI() {
-            super("Speed Display", new Point(0.375f, 0.9777778f));
-            SkyblockFeatures.GUIMANAGER.registerElement(this);
+
+    inner class SpeedDisplayGUI : UIElement("Speed Display", Point(0.375f, 0.9777778f)) {
+        override fun drawElement() {
+            updateSpeed()
+            GuiUtils.drawText(display, 0f, 0f, GuiUtils.TextStyle.BLACK_OUTLINE)
         }
 
-        @Override
-        public void drawElement() {
-            GuiUtils.drawText(getSpeed(), 0, 0, GuiUtils.TextStyle.BLACK_OUTLINE);
-        }
-        @Override
-        public void drawElementExample() {
-            GuiUtils.drawText(getSpeed(), 0, 0, GuiUtils.TextStyle.BLACK_OUTLINE);
+        override fun drawElementExample() {
+            drawElement()
         }
 
-        @Override
-        public boolean getToggled() {
-            return SkyblockFeatures.config.SpeedDisplay;
-        }
+        override fun getToggled(): Boolean = SkyblockFeatures.config.SpeedDisplay
 
-        @Override
-        public boolean getRequirement() {
-            return Utils.inSkyblock;
-        }
-        @Override
-        public int getHeight() {
-            return Utils.GetMC().fontRendererObj.FONT_HEIGHT;
-        }
+        override fun getRequirement(): Boolean = Utils.inSkyblock
 
-        @Override
-        public int getWidth() {
-            return Utils.GetMC().fontRendererObj.getStringWidth(display);
-        }
+        override fun getHeight(): Int = Utils.GetMC().fontRendererObj.FONT_HEIGHT
+
+        override fun getWidth(): Int = Utils.GetMC().fontRendererObj.getStringWidth(display)
     }
 }

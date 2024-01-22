@@ -1158,7 +1158,6 @@ public class ProfileViewerGui extends WindowScreen {
                             vault.setInventorySlotContents(index, item);
                             index++;
                         }
-
                     }
 
                     if (ProfilePlayerResponse.has("wardrobe_contents")) {

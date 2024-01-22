@@ -43,7 +43,7 @@ public class TerminalCommand extends CommandBase {
                 termId = Integer.parseInt(arg1[0].replaceAll("[^0-9]", ""));
             } catch (Exception ignored) {}
         }
-        GuiChest terminal = TerminalManager.createTerminal(termId);
+        GuiChest terminal = TerminalManager.Companion.createTerminal(termId);
         if (terminal != null) {
             GuiUtils.openGui(terminal);
         }

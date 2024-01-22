@@ -1,55 +1,41 @@
-package mrfast.sbf.features.statDisplays;
+package mrfast.sbf.features.statDisplays
 
-import mrfast.sbf.SkyblockFeatures;
-import mrfast.sbf.gui.components.Point;
-import mrfast.sbf.gui.components.UIElement;
-import mrfast.sbf.utils.GuiUtils;
-import mrfast.sbf.utils.Utils;
-import net.minecraft.client.Minecraft;
+import mrfast.sbf.SkyblockFeatures
+import mrfast.sbf.gui.components.Point
+import mrfast.sbf.gui.components.UIElement
+import mrfast.sbf.utils.GuiUtils
+import mrfast.sbf.utils.Utils
 
+class DefenseDisplay {
+    var display: String = Utils.Defense.toString()
 
-public class DefenseDisplay {
-
-    private static final Minecraft mc = Minecraft.getMinecraft();
-
-    static {
-        new DefenseDisplayGUI();
+    init {
+        DefenseDisplayGUI().register()
+        updateDisplay()
     }
 
-    static String display = Utils.Defense+"";
-    public static class DefenseDisplayGUI extends UIElement {
-        public DefenseDisplayGUI() {
-            super("Defense Display", new Point(0.5651042f, 0.8037037f));
-            SkyblockFeatures.GUIMANAGER.registerElement(this);
+    private fun updateDisplay() {
+        display = buildString {
+            append("§a").append(Utils.nf.format(Utils.Defense.toLong()))
+        }
+    }
+
+    inner class DefenseDisplayGUI : UIElement("Defense Display", Point(0.5651042f, 0.8037037f)) {
+        override fun drawElement() {
+            updateDisplay()
+            GuiUtils.drawText(display, 0f, 0f, GuiUtils.TextStyle.BLACK_OUTLINE)
         }
 
-        @Override
-        public void drawElement() {
-            GuiUtils.drawText("§a"+Utils.nf.format(Utils.Defense), 0, 0, GuiUtils.TextStyle.BLACK_OUTLINE);
-        }
-        @Override
-        public void drawElementExample() {
-            display="§a"+Utils.nf.format(Utils.Defense);
-            GuiUtils.drawText(display, 0, 0, GuiUtils.TextStyle.BLACK_OUTLINE);
+        override fun drawElementExample() {
+            drawElement()
         }
 
-        @Override
-        public boolean getToggled() {
-            return SkyblockFeatures.config.DefenseDisplay;
-        }
+        override fun getToggled(): Boolean = SkyblockFeatures.config.DefenseDisplay
 
-        @Override
-        public boolean getRequirement() {
-            return Utils.inSkyblock;
-        }
-        @Override
-        public int getHeight() {
-            return Utils.GetMC().fontRendererObj.FONT_HEIGHT;
-        }
+        override fun getRequirement(): Boolean = Utils.inSkyblock
 
-        @Override
-        public int getWidth() {
-            return Utils.GetMC().fontRendererObj.getStringWidth(display);
-        }
+        override fun getHeight(): Int = Utils.GetMC().fontRendererObj.FONT_HEIGHT
+
+        override fun getWidth(): Int = Utils.GetMC().fontRendererObj.getStringWidth(display)
     }
 }

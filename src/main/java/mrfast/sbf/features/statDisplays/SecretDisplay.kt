@@ -1,91 +1,70 @@
-package mrfast.sbf.features.statDisplays;
+package mrfast.sbf.features.statDisplays
 
+import mrfast.sbf.SkyblockFeatures
+import mrfast.sbf.gui.components.Point
+import mrfast.sbf.gui.components.UIElement
+import mrfast.sbf.utils.GuiUtils
+import mrfast.sbf.utils.Utils
+import org.jetbrains.annotations.NotNull
 
-import mrfast.sbf.utils.GuiUtils;
-import net.minecraft.client.Minecraft;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import mrfast.sbf.SkyblockFeatures;
-import mrfast.sbf.gui.components.Point;
-import mrfast.sbf.gui.components.UIElement;
-import mrfast.sbf.utils.Utils;
-import org.jetbrains.annotations.NotNull;
-
-
-public class SecretDisplay {
-    static {
-        new SecretDisplayGui();
+class SecretDisplay {
+    init {
+        SecretDisplayGui().register()
     }
 
-    public static class SecretDisplayGui extends UIElement {
-        public SecretDisplayGui() {
-            super("Dungeon Secret", new Point(0.59876317f, 0.9574074f));
-            SkyblockFeatures.GUIMANAGER.registerElement(this);
+    inner class SecretDisplayGui : UIElement("Dungeon Secret", Point(0.59876317f, 0.9574074f)) {
+        override fun drawElement() {
+            val secrets = ActionBarListener.secrets
+            val maxSecrets = ActionBarListener.maxSecrets
+
+            val text = getSecrets(secrets, maxSecrets)
+
+            GuiUtils.drawCenteredText(this, text, GuiUtils.TextStyle.BLACK_OUTLINE)
         }
 
-        @Override
-        public void drawElement() {
-            int secrets = ActionBarListener.secrets;
-            int maxSecrets = ActionBarListener.maxSecrets;
+        override fun drawElementExample() {
+            val text = arrayListOf<String>()
 
-            List<String> text = getSecrets(secrets, maxSecrets);
+            text.add("§7Secrets")
+            text.add("§c1§7/§c9")
 
-            GuiUtils.drawCenteredText(this,text,GuiUtils.TextStyle.BLACK_OUTLINE);
-        }
-        @Override
-        public void drawElementExample() {
-            ArrayList<String> text = new ArrayList<>();
-
-            text.add("§7Secrets");
-            text.add("§c1§7/§c9");
-
-            GuiUtils.drawCenteredText(this,text,GuiUtils.TextStyle.BLACK_OUTLINE);
+            GuiUtils.drawCenteredText(this, text, GuiUtils.TextStyle.BLACK_OUTLINE)
         }
 
-        @Override
-        public boolean getToggled() {
-            return SkyblockFeatures.config.SecretsDisplay;
+        override fun getToggled(): Boolean {
+            return SkyblockFeatures.config.SecretsDisplay
         }
 
-        @Override
-        public boolean getRequirement() {
-            return Utils.inDungeons && Utils.inSkyblock;
+        override fun getRequirement(): Boolean {
+            return Utils.inDungeons && Utils.inSkyblock
         }
 
-        @Override
-        public int getHeight() {
-            return Utils.GetMC().fontRendererObj.FONT_HEIGHT*2;
+        override fun getHeight(): Int {
+            return Utils.GetMC().fontRendererObj.FONT_HEIGHT * 2
         }
 
-        @Override
-        public int getWidth() {
-            return Utils.GetMC().fontRendererObj.getStringWidth("§7Secrets");
+        override fun getWidth(): Int {
+            return Utils.GetMC().fontRendererObj.getStringWidth("§7Secrets")
         }
     }
 
     @NotNull
-    private static List<String> getSecrets(int secrets, int maxSecrets) {
-        List<String> text = new ArrayList<>();
+    private fun getSecrets(secrets: Int, maxSecrets: Int): List<String> {
+        val text = ArrayList<String>()
 
-        String color;
-
-        if(secrets == maxSecrets) {
-            color = "§a";
-        } else if(secrets > maxSecrets /2) {
-            color = "§e";
-        } else {
-            color = "§c";
+        val color: String = when {
+            secrets == maxSecrets -> "§a"
+            secrets > maxSecrets / 2 -> "§e"
+            else -> "§c"
         }
 
-        text.add("§7Secrets");
+        text.add("§7Secrets")
 
-        if(secrets == -1) {
-            text.add("§7None");
+        if (secrets == -1) {
+            text.add("§7None")
         } else {
-            text.add(color+ secrets +"§7/"+color+ maxSecrets);
+            text.add("$color$secrets§7/$color$maxSecrets")
         }
-        return text;
+        return text
     }
 }

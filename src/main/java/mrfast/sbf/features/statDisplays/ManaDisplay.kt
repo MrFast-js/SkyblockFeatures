@@ -1,53 +1,41 @@
-package mrfast.sbf.features.statDisplays;
+package mrfast.sbf.features.statDisplays
 
-import mrfast.sbf.SkyblockFeatures;
-import mrfast.sbf.gui.components.Point;
-import mrfast.sbf.gui.components.UIElement;
-import mrfast.sbf.utils.GuiUtils;
-import mrfast.sbf.utils.Utils;
+import mrfast.sbf.SkyblockFeatures
+import mrfast.sbf.gui.components.Point
+import mrfast.sbf.gui.components.UIElement
+import mrfast.sbf.utils.GuiUtils
+import mrfast.sbf.utils.Utils
 
+class ManaDisplay {
+    var display: String = Utils.mana.toString() + "/" + Utils.maxMana
 
-public class ManaDisplay {
-
-    static {
-        new ManaDisplayGUI();
+    init {
+        ManaDisplayGUI().register()
+        updateDisplay()
     }
 
-    static String display = Utils.mana +"/"+Utils.maxMana;
-    public static class ManaDisplayGUI extends UIElement {
-        public ManaDisplayGUI() {
-            super("Mana Display", new Point(0.47864583f, 0.80324066f));
-            SkyblockFeatures.GUIMANAGER.registerElement(this);
+    private fun updateDisplay() {
+        display = buildString {
+            append("§9").append(Utils.nf.format(Utils.mana.toLong())).append("/").append(Utils.nf.format(Utils.maxMana.toLong()))
+        }
+    }
+
+    inner class ManaDisplayGUI : UIElement("Mana Display", Point(0.47864583f, 0.80324066f)) {
+        override fun drawElement() {
+            updateDisplay();
+            GuiUtils.drawText(display, 0f, 0f, GuiUtils.TextStyle.BLACK_OUTLINE)
         }
 
-        @Override
-        public void drawElement() {
-            GuiUtils.drawText("§9"+Utils.nf.format(Utils.mana) +"/"+Utils.nf.format(Utils.maxMana), 0, 0, GuiUtils.TextStyle.BLACK_OUTLINE);
-        }
-        @Override
-        public void drawElementExample() {
-            display="§9"+Utils.nf.format(Utils.mana) +"/"+Utils.nf.format(Utils.maxMana);
-            GuiUtils.drawText(display, 0, 0, GuiUtils.TextStyle.BLACK_OUTLINE);
+        override fun drawElementExample() {
+            drawElement()
         }
 
-        @Override
-        public boolean getToggled() {
-            return SkyblockFeatures.config.ManaDisplay;
-        }
+        override fun getToggled(): Boolean = SkyblockFeatures.config.ManaDisplay
 
-        @Override
-        public boolean getRequirement() {
-            return Utils.inSkyblock;
-        }
+        override fun getRequirement(): Boolean = Utils.inSkyblock
 
-        @Override
-        public int getHeight() {
-            return Utils.GetMC().fontRendererObj.FONT_HEIGHT;
-        }
+        override fun getHeight(): Int = Utils.GetMC().fontRendererObj.FONT_HEIGHT
 
-        @Override
-        public int getWidth() {
-            return Utils.GetMC().fontRendererObj.getStringWidth(display);
-        }
+        override fun getWidth(): Int = Utils.GetMC().fontRendererObj.getStringWidth(display)
     }
 }
