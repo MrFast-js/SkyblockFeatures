@@ -1,6 +1,7 @@
 package mrfast.sbf.features.misc;
 
 import com.mojang.realmsclient.gui.ChatFormatting;
+import mrfast.sbf.SkyblockFeatures;
 import mrfast.sbf.core.ConfigManager;
 import mrfast.sbf.core.SkyblockMobDetector;
 import mrfast.sbf.events.GuiContainerEvent;
@@ -25,21 +26,19 @@ import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import org.lwjgl.input.Keyboard;
 
-import java.awt.*;
 import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-import static mrfast.sbf.SkyblockFeatures.config;
-
 
 public class BestiaryHelper {
 
     @SubscribeEvent
     public void onRenderEntityOutlines(RenderEntityOutlineEvent event) {
-        if (!config.highlightBestiaryMobs) return;
+        if (!SkyblockFeatures.config.highlightBestiaryMobs) return;
+
 
         if (event.type == RenderEntityOutlineEvent.Type.XRAY) return;
 
@@ -48,9 +47,9 @@ public class BestiaryHelper {
             if (sbMob == null) continue;
             // Glowing doesnt render on invisible entities
             if (sbMob.skyblockMob == entity && sbMob.getSkyblockMobId() != null && !sbMob.skyblockMob.isInvisible()) {
-                if (!config.trackedBestiaryMobs.isEmpty()) {
+                if (!SkyblockFeatures.config.trackedBestiaryMobs.isEmpty()) {
                     if (isBeingTracked(sbMob.skyblockMobId)) {
-                        event.queueEntityToOutline(sbMob.skyblockMob, config.highlightBestiaryColor);
+                        event.queueEntityToOutline(sbMob.skyblockMob, SkyblockFeatures.config.highlightBestiaryColor);
                     }
                 }
             }
@@ -59,16 +58,16 @@ public class BestiaryHelper {
 
     @SubscribeEvent
     public void onWorldRender(RenderWorldLastEvent event) {
-        if (!config.highlightBestiaryMobs) return;
+        if (!SkyblockFeatures.config.highlightBestiaryMobs) return;
 
         for (Entity entity : Utils.GetMC().theWorld.loadedEntityList) {
             SkyblockMobDetector.SkyblockMob sbMob = SkyblockMobDetector.getSkyblockMob(entity);
             if (sbMob == null) continue;
             // Render outline box instead of glowing for invisible entities
             if (sbMob.skyblockMob == entity && sbMob.getSkyblockMobId() != null && sbMob.skyblockMob.isInvisible()) {
-                if (!config.trackedBestiaryMobs.isEmpty()) {
+                if (!SkyblockFeatures.config.trackedBestiaryMobs.isEmpty()) {
                     if (isBeingTracked(sbMob.skyblockMobId)) {
-                        RenderUtil.drawOutlinedFilledBoundingBox(sbMob.skyblockMob.getEntityBoundingBox(),config.highlightBestiaryColor,event.partialTicks);
+                        RenderUtil.drawOutlinedFilledBoundingBox(sbMob.skyblockMob.getEntityBoundingBox(), SkyblockFeatures.config.highlightBestiaryColor,event.partialTicks);
                     }
                 }
             }
@@ -77,7 +76,7 @@ public class BestiaryHelper {
 
     @SubscribeEvent
     public void onSlotDraw(GuiContainerEvent.DrawSlotEvent event) {
-        if (!config.highlightBestiaryMobs) return;
+        if (!SkyblockFeatures.config.highlightBestiaryMobs) return;
 
         if (event.chestName.contains("➜")) {
             if (event.slot == null || event.slot.getStack() == null) return;
@@ -87,14 +86,14 @@ public class BestiaryHelper {
             if (isBeingTracked(result)) {
                 int x = event.slot.xDisplayPosition;
                 int y = event.slot.yDisplayPosition;
-                Gui.drawRect(x, y, x + 16, y + 16, config.highlightBestiaryColor.getRGB());
+                Gui.drawRect(x, y, x + 16, y + 16, SkyblockFeatures.config.highlightBestiaryColor.getRGB());
             }
         }
     }
 
     @SubscribeEvent
     public void onMouseInput(MouseEvent event) {
-        if(!config.highlightBestiaryMobs || !config.highlightBestiaryMobsMidClick) return;
+        if(!SkyblockFeatures.config.highlightBestiaryMobs || !SkyblockFeatures.config.highlightBestiaryMobsMidClick) return;
 
         if (event.button == 2 && event.buttonstate) { // 2 corresponds to the middle mouse button
             // Get the entity the player is looking at
@@ -110,7 +109,7 @@ public class BestiaryHelper {
                 if(sbMob==null || sbMob.skyblockMobId==null) {
                     return;
                 }
-                List<String> mobs = Arrays.stream(config.trackedBestiaryMobs.split(", ")).collect(Collectors.toList());
+                List<String> mobs = Arrays.stream(SkyblockFeatures.config.trackedBestiaryMobs.split(", ")).collect(Collectors.toList());
 
                 if (isBeingTracked(sbMob.skyblockMobId)) {
                     mobs.remove(sbMob.skyblockMobId);
@@ -121,7 +120,7 @@ public class BestiaryHelper {
                     Utils.playSound("random.orb", 1f);
                     Utils.sendMessage("§aAdded " + sbMob.skyblockMobId + " to the bestiary tracker!");
                 }
-                config.trackedBestiaryMobs = mobs.toString().replace("[", "").replace("]", "");
+                SkyblockFeatures.config.trackedBestiaryMobs = mobs.toString().replace("[", "").replace("]", "");
                 ConfigManager.saveConfig();
             }
         }
@@ -161,7 +160,7 @@ public class BestiaryHelper {
 
     @SubscribeEvent
     public void onTooltip(ItemTooltipEvent event) {
-        if (!(Minecraft.getMinecraft().currentScreen instanceof GuiChest) || !config.highlightBestiaryMobs) return;
+        if (!(Minecraft.getMinecraft().currentScreen instanceof GuiChest) || !SkyblockFeatures.config.highlightBestiaryMobs) return;
 
         GuiChest chest = (GuiChest) Minecraft.getMinecraft().currentScreen;
         ContainerChest cont = (ContainerChest) chest.inventorySlots;
@@ -181,13 +180,13 @@ public class BestiaryHelper {
 
     @SubscribeEvent
     public void onSlotClick(SlotClickedEvent event) {
-        if (!config.highlightBestiaryMobs) return;
+        if (!SkyblockFeatures.config.highlightBestiaryMobs) return;
 
         if (event.chestName.contains("➜") && Keyboard.isKeyDown(Keyboard.KEY_LCONTROL)) {
             if (event.slot == null || event.slot.getStack() == null) return;
             String result = getMobName(event.slot.getStack());
 
-            List<String> mobs = Arrays.stream(config.trackedBestiaryMobs.split(", ")).collect(Collectors.toList());
+            List<String> mobs = Arrays.stream(SkyblockFeatures.config.trackedBestiaryMobs.split(", ")).collect(Collectors.toList());
 
             if (result == null) return;
             if (isBeingTracked(result)) {
@@ -201,7 +200,7 @@ public class BestiaryHelper {
                 Utils.playSound("random.orb", 1f);
                 Utils.sendMessage("§aAdded " + result + " to the bestiary tracker!");
             }
-            config.trackedBestiaryMobs = mobs.toString().replace("[", "").replace("]", "");
+            SkyblockFeatures.config.trackedBestiaryMobs = mobs.toString().replace("[", "").replace("]", "");
 
             event.setCanceled(true);
             ConfigManager.saveConfig();
@@ -209,7 +208,7 @@ public class BestiaryHelper {
     }
 
     public boolean isBeingTracked(String mob) {
-        List<String> mobs = Arrays.stream(config.trackedBestiaryMobs.split(", ")).collect(Collectors.toList());
+        List<String> mobs = Arrays.stream(SkyblockFeatures.config.trackedBestiaryMobs.split(", ")).collect(Collectors.toList());
         return mobs.contains(mob);
     }
 
