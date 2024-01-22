@@ -18,6 +18,7 @@
         <img src="https://img.shields.io/badge/Downloads-3.7k-blue?label=Downloads&logo=Github&logoColor=FFFFFF&color=04aed9&style=for-the-badge" alt="downloads">
 <!--         <img src="https://img.shields.io/github/downloads/MrFast-js/SkyblockFeatures/total?label=Downloads&logo=Github&logoColor=FFFFFF&color=04aed9&style=for-the-badge" alt="downloads"> -->
     </a>
+<a href="https://ko-fi.com/D1D1TME1T"><img src="https://ko-fi.com/img/githubbutton_sm.svg"/></a>
 </div>
 <br><br>
 
