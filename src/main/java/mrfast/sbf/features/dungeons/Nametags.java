@@ -25,7 +25,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 public class Nametags {
 
     public Minecraft mc = Minecraft.getMinecraft();
-    public static HashMap<String,String> playersAndClass = new HashMap<>();
+    public static HashMap<String, String> playersAndClass = new HashMap<>();
 
     @SubscribeEvent
     public void onWorldChange(WorldEvent.Load event) {
@@ -34,13 +34,14 @@ public class Nametags {
 
     @SubscribeEvent
     public void onRenderEntityOutlines(RenderEntityOutlineEvent event) {
-        if(Utils.GetMC().theWorld == null || !Utils.inDungeons || !SkyblockFeatures.config.glowingDungeonPlayers) return;
+        if (Utils.GetMC().theWorld == null || !Utils.inDungeons || !SkyblockFeatures.config.glowingDungeonPlayers)
+            return;
         if (event.type == RenderEntityOutlineEvent.Type.NO_XRAY) return;
 
         for (String playerName : playersAndClass.keySet()) {
-            for(EntityPlayer player:Utils.GetMC().theWorld.playerEntities) {
-                if(player.getName().equals(playerName) && !player.equals(Utils.GetMC().thePlayer)) {
-                    event.queueEntityToOutline(player,Color.GREEN);
+            for (EntityPlayer player : Utils.GetMC().theWorld.playerEntities) {
+                if (player.getName().equals(playerName) && !player.equals(Utils.GetMC().thePlayer)) {
+                    event.queueEntityToOutline(player, Color.GREEN);
                 }
             }
         }
@@ -48,7 +49,7 @@ public class Nametags {
 
     @SubscribeEvent
     public void onRender3D(RenderWorldLastEvent event) {
-        if(!Utils.inDungeons) return;
+        if (!Utils.inDungeons) return;
         try {
             List<String> sidebarLines = ScoreboardUtil.getSidebarLines();
             RenderManager renderManager = Utils.GetMC().getRenderManager();
@@ -63,9 +64,9 @@ public class Nametags {
                 for (String cleanedLine : sidebarLines) {
                     String classTag = getClassTag(cleanedLine);
                     if (classTag != null && cleanedLine.contains("[" + classTag + "] " + cutShort)) {
-                        playersAndClass.put(player.getName(),classTag);
-                        if(SkyblockFeatures.config.NameTags && !player.equals(Utils.GetMC().thePlayer)) {
-                            renderNameTag(player, ChatFormatting.YELLOW + "[" + classTag + "] " + ChatFormatting.GREEN + player.getName(), x, y, z,classTag);
+                        playersAndClass.put(player.getName(), classTag);
+                        if (SkyblockFeatures.config.NameTags && !player.equals(Utils.GetMC().thePlayer)) {
+                            renderNameTag(player, ChatFormatting.YELLOW + "[" + classTag + "] " + ChatFormatting.GREEN + player.getName(), x, y, z, classTag);
                         }
 
                         break;
@@ -79,7 +80,7 @@ public class Nametags {
 
     private String getClassTag(String cleanedLine) {
         // Example: "[M] Skyblock_Lobby" -> "M"
-        if(cleanedLine.contains("[") && cleanedLine.indexOf("[") < cleanedLine.indexOf("]")) {
+        if (cleanedLine.contains("[") && cleanedLine.indexOf("[") < cleanedLine.indexOf("]")) {
             return cleanedLine.substring(cleanedLine.indexOf("[") + 1, cleanedLine.indexOf("]"));
         }
         return null;
@@ -92,7 +93,7 @@ public class Nametags {
     private void renderNameTag(EntityPlayer player, String displayName, double x, double y, double z, String classTag) {
 
         float f = 1.6F;
-		float f1 = 0.016666668F * f;
+        float f1 = 0.016666668F * f;
 
         Entity renderViewEntity = mc.getRenderViewEntity();
 
@@ -110,7 +111,7 @@ public class Nametags {
         GlStateManager.pushMatrix();
         GlStateManager.pushAttrib();
 
-        GlStateManager.translate(x, y+distanceScale, z);
+        GlStateManager.translate(x, y + distanceScale, z);
         GL11.glNormal3f(0.0F, 1.0F, 0.0F);
         GlStateManager.rotate(-mc.getRenderManager().playerViewY, 0.0F, 1.0F, 0.0F);
         GlStateManager.rotate(mc.getRenderManager().playerViewX, 1.0F, 0.0F, 0.0F);
