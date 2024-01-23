@@ -6,17 +6,10 @@ import gg.essential.elementa.state.BasicState;
 import gg.essential.elementa.state.State;
 import gg.essential.universal.UGraphics;
 import gg.essential.universal.UMatrixStack;
-import mrfast.sbf.gui.ProfileViewerGui;
+import mrfast.sbf.gui.ProfileViewer.ProfileViewerGui;
 import mrfast.sbf.utils.RenderUtil;
 import mrfast.sbf.utils.Utils;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.renderer.entity.RenderItem;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
 
 public class ItemStackComponent extends UIComponent {
     private final State<ItemStack> state;

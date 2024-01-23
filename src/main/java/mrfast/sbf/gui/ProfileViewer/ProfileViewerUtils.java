@@ -1,11 +1,9 @@
-package mrfast.sbf.gui;
+package mrfast.sbf.gui.ProfileViewer;
 
 import java.awt.Color;
-import java.awt.image.BufferedImage;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 import com.google.common.collect.Lists;
@@ -16,15 +14,14 @@ import com.mojang.realmsclient.gui.ChatFormatting;
 
 import gg.essential.elementa.UIComponent;
 import gg.essential.elementa.components.UIBlock;
-import gg.essential.elementa.components.UIImage;
 import gg.essential.elementa.components.UIRoundedRectangle;
 import gg.essential.elementa.components.UIText;
 import gg.essential.elementa.constraints.*;
 import gg.essential.elementa.constraints.animation.AnimatingConstraints;
 import gg.essential.elementa.constraints.animation.Animations;
 import gg.essential.elementa.utils.Vector2f;
-import mrfast.sbf.gui.ProfileViewerGui.SkillInfo;
-import mrfast.sbf.gui.ProfileViewerGui.hotmUpgrade;
+import mrfast.sbf.gui.ProfileViewer.ProfileViewerGui.SkillInfo;
+import mrfast.sbf.gui.ProfileViewer.ProfileViewerGui.hotmUpgrade;
 import mrfast.sbf.gui.components.ItemStackComponent;
 import mrfast.sbf.utils.Utils;
 import net.minecraft.init.Blocks;
@@ -38,6 +35,7 @@ import net.minecraft.util.EnumChatFormatting;
 public class ProfileViewerUtils {
     static Map<String, Map<Integer, Integer>> SLAYER_XP = new HashMap<>();
     static NumberFormat nf = NumberFormat.getInstance();
+    public static String[] loadingStages = new String[]{"§cLoading", "§cLoading.", "§cLoading..", "§cLoading..."};
 
     public static SkillInfo getSkillInfo(Double xp, String skillName) {
         SkillInfo output = new SkillInfo(0, 0, 0, new ArrayList<>());
@@ -273,23 +271,6 @@ public class ProfileViewerUtils {
         comp.animateTo(animation);
     }
 
-    public static UIComponent createPet(CompletableFuture<BufferedImage> texture, int lvl, Color color) {
-        UIComponent background = new UIRoundedRectangle(5f).setColor(color).setWidth(new PixelConstraint(128f / 5)).setHeight(new PixelConstraint(128f / 5));
-        new UIImage(texture).setChildOf(background).setX(new CenterConstraint()).setY(new CenterConstraint()).setWidth(new PixelConstraint(128f / 5)).setHeight(new PixelConstraint(120f / 5));
-        new UIText("LVL " + lvl).setChildOf(background).setY(new SiblingConstraint(2f)).setX(new CenterConstraint()).setTextScale(new PixelConstraint(0.5f));
-        return background;
-    }
-
-    public static Color getPetColor(String tier) {
-        Color color = new Color(0x929292);
-        if (tier.equals("UNCOMMON")) color = new Color(0x40bb40);
-        if (tier.equals("RARE")) color = new Color(0x4444f3);
-        if (tier.equals("EPIC")) color = new Color(0xa305a3);
-        if (tier.equals("LEGENDARY")) color = new Color(0xd88f07);
-        if (tier.equals("MYTHIC")) color = new Color(0xFF55FF);
-        return color;
-    }
-
     public static int hotmXpToLevel(int xp) {
         Map<Integer, Integer> hotmXp = new HashMap<>();
         hotmXp.put(1, 0);
@@ -322,7 +303,7 @@ public class ProfileViewerUtils {
     }
 
     public static List<String> getLoreFromPos(Vector2f pos) {
-        for (hotmUpgrade pair : ProfileViewerGui.tooltips) {
+        for (hotmUpgrade pair : ProfileViewerGui.hotmUpgradeTooltips) {
             if (pair.pos.getX() == pos.getX() && pair.pos.getY() == pos.getY()) {
                 return pair.hover;
             }
@@ -331,7 +312,7 @@ public class ProfileViewerUtils {
     }
 
     public static ItemStack getStackFromPos(Vector2f pos) {
-        for (hotmUpgrade pair : ProfileViewerGui.tooltips) {
+        for (hotmUpgrade pair : ProfileViewerGui.hotmUpgradeTooltips) {
             if (pair.pos.getX() == pos.getX() && pair.pos.getY() == pos.getY()) {
                 return pair.stack;
             }
@@ -347,7 +328,7 @@ public class ProfileViewerUtils {
     }
 
     public static void loadToolTips() {
-        ProfileViewerGui.tooltips = new ArrayList<>(Arrays.asList(
+        ProfileViewerGui.hotmUpgradeTooltips = new ArrayList<>(Arrays.asList(
                 newHotmUpgrade(Lists.newArrayList(EnumChatFormatting.RED + "Mining Speed",
                         "§7Level " + ProfileViewerGui.miningSpeed + "§8/50",
                         "",
@@ -708,7 +689,7 @@ public class ProfileViewerUtils {
 
                 try {
                     boolean exists = false;
-                    for (hotmUpgrade upgrade : ProfileViewerGui.tooltips) {
+                    for (hotmUpgrade upgrade : ProfileViewerGui.hotmUpgradeTooltips) {
                         if (upgrade.pos.getX() == vec.getX() && upgrade.pos.getY() == vec.getY()) {
                             exists = true;
                             break;

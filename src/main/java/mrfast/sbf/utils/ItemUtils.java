@@ -175,7 +175,7 @@ public class ItemUtils {
     }
 
 
-    public static ItemStack updateLore(ItemStack itemStack, List<String> lore2) {
+    public static void updateLore(ItemStack itemStack, List<String> lore2) {
         NBTTagCompound itemNbt = itemStack.getTagCompound();
         if (itemNbt == null) {
             itemNbt = new NBTTagCompound();
@@ -195,7 +195,6 @@ public class ItemUtils {
         itemNbt.setTag("display", displayNbt);
         itemStack.setTagCompound(itemNbt);
 
-        return itemStack;
     }
 
 

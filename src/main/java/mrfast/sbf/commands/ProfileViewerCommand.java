@@ -5,7 +5,7 @@ import java.util.List;
 import com.google.common.collect.Lists;
 import com.mojang.realmsclient.gui.ChatFormatting;
 
-import mrfast.sbf.gui.ProfileViewerGui;
+import mrfast.sbf.gui.ProfileViewer.ProfileViewerGui;
 import mrfast.sbf.utils.NetworkUtils;
 import mrfast.sbf.utils.GuiUtils;
 import mrfast.sbf.utils.Utils;

@@ -1,18 +1,11 @@
-package mrfast.sbf.gui;
+package mrfast.sbf.gui.ProfileViewer;
 
 import java.awt.Color;
-import java.awt.image.BufferedImage;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.Map.Entry;
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.stream.Collectors;
-
-import javax.imageio.ImageIO;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -35,7 +28,6 @@ import gg.essential.elementa.components.UIText;
 import gg.essential.elementa.components.UIWrappedText;
 import gg.essential.elementa.components.inspector.Inspector;
 import gg.essential.elementa.constraints.CenterConstraint;
-import gg.essential.elementa.constraints.ChildBasedSizeConstraint;
 import gg.essential.elementa.constraints.PixelConstraint;
 import gg.essential.elementa.constraints.RelativeConstraint;
 import gg.essential.elementa.constraints.SiblingConstraint;
@@ -49,6 +41,8 @@ import gg.essential.vigilance.gui.settings.DropDownComponent;
 import gg.essential.vigilance.utils.ResourceImageFactory;
 import kotlin.Unit;
 import mrfast.sbf.SkyblockFeatures;
+import mrfast.sbf.gui.ProfileViewer.Pages.CollectionsPage;
+import mrfast.sbf.gui.ProfileViewer.Pages.PetsPage;
 import mrfast.sbf.utils.*;
 import mrfast.sbf.utils.ItemUtils.Inventory;
 import mrfast.sbf.core.PricingData;
@@ -68,11 +62,12 @@ import org.jetbrains.annotations.NotNull;
 public class ProfileViewerGui extends WindowScreen {
     //  The player in the specified profile from hypixel
     static JsonObject ProfilePlayerResponse = null;
+    static ProfileViewerPage selectedPage = null;
     // General hypixel info, non skyblock relating
     static JsonObject HypixelPlayerResponse = null;
 
     //  The specified profile's data
-    JsonObject ProfileResponse = null;
+    public static JsonObject ProfileResponse = null;
     //  The users profile's according to hypixel
 
     JsonArray hypixelProfilesResponse = null;
@@ -83,9 +78,8 @@ public class ProfileViewerGui extends WindowScreen {
     static HashMap<UIComponent, List<String>> dungeonHoverables = new HashMap<>();
     static HashMap<UIComponent, List<String>> riftHoverables = new HashMap<>();
 
-    String[] loadingStages = new String[]{"§cLoading", "§cLoading.", "§cLoading..", "§cLoading..."};
     String playerLocation = "";
-    String selectedProfileUUID = "";
+    public static String selectedProfileUUID = "";
     GameProfile profile;
     public static List<String> renderTooltip = null;
     static boolean quickSwapping = false;
@@ -103,13 +97,9 @@ public class ProfileViewerGui extends WindowScreen {
     public void onDrawScreen(UMatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
         super.onDrawScreen(matrixStack, mouseX, mouseY, partialTicks);
         getWindow().draw(matrixStack);
-        HashMap<UIComponent, List<String>> hoverables = null;
 
-        if (selectedCategory.equals("General")) hoverables = generalHoverables;
-        if (selectedCategory.equals("Skills")) hoverables = HOTMHoverables;
-        if (selectedCategory.equals("Pets")) hoverables = petHoverables;
-        if (selectedCategory.equals("Dungeons")) hoverables = dungeonHoverables;
-        if (selectedCategory.equals("Rift")) hoverables = riftHoverables;
+        if(selectedPage==null) return;
+        HashMap<UIComponent, List<String>> hoverables = selectedPage.hoverables;
 
         try {
             if (hoverables != null) {
@@ -193,7 +183,7 @@ public class ProfileViewerGui extends WindowScreen {
     UIComponent statsAreaContainer = null;
     static int screenHeight = Utils.GetMC().currentScreen.height;
     static double fontScale = screenHeight / 540d;
-    String playerUuid;
+    public static String playerUuid;
     public static Color clear = new Color(0, 0, 0, 0);
 
     public ProfileViewerGui(Boolean doAnimation, String username, String profileString) {
@@ -202,6 +192,7 @@ public class ProfileViewerGui extends WindowScreen {
         screenHeight = Utils.GetMC().currentScreen.height;
         fontScale = (screenHeight / 540d);
         selectedCategory = "";
+        selectedPage = null;
 
         new Thread(() -> {
             String uuidString = NetworkUtils.getUUID(username, true);
@@ -279,7 +270,7 @@ public class ProfileViewerGui extends WindowScreen {
                     double loadingIndex = 0;
                     while (ProfilePlayerResponse == null) {
                         try {
-                            ((UIText) loadingText).setText(loadingStages[(int) Math.floor(loadingIndex)]);
+                            ((UIText) loadingText).setText(ProfileViewerUtils.loadingStages[(int) Math.floor(loadingIndex)]);
                             loadingIndex += 0.5;
                             loadingIndex %= 3;
                             Thread.sleep(100);
@@ -499,6 +490,11 @@ public class ProfileViewerGui extends WindowScreen {
 
         soopyProfiles = new JsonObject();
         if (Utils.isDeveloper()) System.out.println("getting profiles");
+
+        // Go ahead and cache skycrypt data
+        new Thread(()->{
+            JsonObject SkycryptProfiles = NetworkUtils.getJSONResponse("https://sky.shiiyu.moe/api/v2/profile/" + NetworkUtils.getName(playerUuid)).get("profiles").getAsJsonObject();
+        }).start();
 
         new Thread(() -> {
             try {
@@ -798,8 +794,8 @@ public class ProfileViewerGui extends WindowScreen {
         ((ScrollComponent) statsAreaContainer).setVerticalScrollBarComponent(scrollbar, true);
 
         titleText.setTextScale(new PixelConstraint((float) (3.0 * fontScale)));
-        loadCollectionsCategories();
 
+        CollectionsPage.loadCollectionsCategories();
         loadNetworth(profileUUID, playerUuid, Purse, Bank, networthComponent);
     }
 
@@ -870,7 +866,6 @@ public class ProfileViewerGui extends WindowScreen {
             ((UIText) networthComponent).setText(g + "Networth: " + bold + networth);
             generalHoverables.put(networthComponent, networthTooltip);
         });
-        networthThread.setUncaughtExceptionHandler(new ExceptionHandler());
         networthThread.start();
     }
 
@@ -883,8 +878,8 @@ public class ProfileViewerGui extends WindowScreen {
     public static void drawProgressbar(Integer v, Integer m, UIComponent statsArea, String label, ItemStack labelItem, List<String> hover, Boolean skill) {
         if (m == null) m = 0;
         if (v == null) v = 0;
-        if(m==-1) {
-            m = v-1;
+        if (m == -1) {
+            m = v - 1;
         }
 
         float value = v.floatValue();
@@ -1402,7 +1397,7 @@ public class ProfileViewerGui extends WindowScreen {
                     if (!selectedCategory.equals("Dungeons")) break;
 
                     try {
-                        ((UIText) loadingText).setText(loadingStages[(int) Math.floor(loadingIndex)]);
+                        ((UIText) loadingText).setText(ProfileViewerUtils.loadingStages[(int) Math.floor(loadingIndex)]);
                         loadingIndex += 0.5;
                         loadingIndex %= 3;
                         Thread.sleep(100);
@@ -1567,8 +1562,8 @@ public class ProfileViewerGui extends WindowScreen {
                 new UIText(g + "Tier: " + bold + hotmTier + "/7").setY(new SiblingConstraint(2f)).setChildOf(left);
                 new UIText(g + "Token Of The Mountain: " + bold + (tokensSpent) + "/17").setY(new SiblingConstraint(2f)).setChildOf(left);
                 new UIText(g + "Peak Of The Mountain: " + bold + potm + "/7").setY(new SiblingConstraint(2f)).setChildOf(left);
-                new UIText(g + "Mithril Powder: " + ChatFormatting.GREEN + ChatFormatting.BOLD + nf.format(mithrilPowderAvailable) + ChatFormatting.DARK_GREEN + ChatFormatting.BOLD+ " / " + nf.format(mithrilPowderAvailable + mithrilPowderSpent)).setY(new SiblingConstraint(2f)).setChildOf(left);
-                new UIText(g + "Gemstone Powder: " + ChatFormatting.LIGHT_PURPLE + ChatFormatting.BOLD + nf.format(gemstonePowderAvailable) + ChatFormatting.DARK_PURPLE + ChatFormatting.BOLD+ " / " + nf.format(gemstonePowderAvailable + gemstonePowderSpent)).setY(new SiblingConstraint(2f)).setChildOf(left);
+                new UIText(g + "Mithril Powder: " + ChatFormatting.GREEN + ChatFormatting.BOLD + nf.format(mithrilPowderAvailable) + ChatFormatting.DARK_GREEN + ChatFormatting.BOLD + " / " + nf.format(mithrilPowderAvailable + mithrilPowderSpent)).setY(new SiblingConstraint(2f)).setChildOf(left);
+                new UIText(g + "Gemstone Powder: " + ChatFormatting.LIGHT_PURPLE + ChatFormatting.BOLD + nf.format(gemstonePowderAvailable) + ChatFormatting.DARK_PURPLE + ChatFormatting.BOLD + " / " + nf.format(gemstonePowderAvailable + gemstonePowderSpent)).setY(new SiblingConstraint(2f)).setChildOf(left);
 
                 String pickaxeAbility = "None";
                 try {
@@ -1638,97 +1633,11 @@ public class ProfileViewerGui extends WindowScreen {
         }
 
         if (categoryName.equals("Pets")) {
-            UIComponent loadingText = new UIText(ChatFormatting.RED + "Loading")
-                    .setTextScale(new PixelConstraint(2f))
-                    .setChildOf(statsAreaContainer)
-                    .setX(new CenterConstraint())
-                    .setY(new CenterConstraint());
-
-            new Thread(() -> {
-                // Wait for soopy before displaying the page
-                double loadingIndex = 0;
-                JsonObject SkycryptProfiles = NetworkUtils.getJSONResponse("https://sky.shiiyu.moe/api/v2/profile/"+NetworkUtils.getName(playerUuid)).get("profiles").getAsJsonObject();
-
-                while (SkycryptProfiles.entrySet().isEmpty()) {
-                    try {
-                        ((UIText) loadingText).setText(loadingStages[(int) Math.floor(loadingIndex)]);
-                        loadingIndex += 0.5;
-                        loadingIndex %= 3;
-                        Thread.sleep(100);
-                    } catch (Exception ignored) {
-                    }
-                }
-                System.out.println(selectedProfileUUID+" ");
-                for (Entry<String, JsonElement> stringJsonElementEntry : SkycryptProfiles.entrySet()) {
-                    System.out.println(stringJsonElementEntry.getKey());
-                }
-                JsonObject skycryptPetsObject = SkycryptProfiles.get(selectedProfileUUID).getAsJsonObject()
-                        .get("data").getAsJsonObject()
-                        .get("pets").getAsJsonObject();
-                JsonArray skycryptPetList = skycryptPetsObject.get("pets").getAsJsonArray();
-                loadingText.parent.removeChild(loadingText);
-
-                float index = -1;
-
-                UIComponent otherPetsContainer = new UIBlock(clear).setY(new SiblingConstraint(10f)).setHeight(new ChildBasedSizeConstraint()).setWidth(new RelativeConstraint(1f)).setChildOf(statsAreaContainer);
-                new UIText(bold + "Active Pet").setChildOf(otherPetsContainer).setY(new PixelConstraint(2f)).setX(new PixelConstraint(1f)).setTextScale(new PixelConstraint((float) (1f * fontScale)));
-
-                for (JsonElement petElement : skycryptPetList) {
-                    if (petElement == null) continue;
-                    JsonObject pet = petElement.getAsJsonObject();
-                    String texturePath = pet.get("texture_path").getAsString();
-                    CompletableFuture<BufferedImage> imageFuture = new CompletableFuture<>();
-                    List<String> tooltip = parseLore(pet.get("lore").getAsString());
-
-                    // Download the image from the remote URL using CompletableFuture and URLConnection
-                    CompletableFuture.runAsync(() -> {
-                        try {
-                            URL imageUrl = new URL("https://sky.shiiyu.moe" + texturePath);
-                            HttpURLConnection connection = (HttpURLConnection) imageUrl.openConnection();
-                            connection.setRequestProperty("User-Agent", "Mozilla/5.0");
-
-                            BufferedImage image = ImageIO.read(connection.getInputStream());
-
-                            imageFuture.complete(image);
-                        } catch (Exception e) {
-                            imageFuture.completeExceptionally(e);
-                        }
-                    });
-
-                    String name = pet.get("display_name").getAsString();
-                    int lvl = pet.get("level").getAsJsonObject().get("level").getAsInt();
-                    String coloredName = ChatFormatting.GRAY+"[Lvl 0] Unknown Pet";
-                    String tier = pet.get("tier").getAsString();
-                    try {
-                        coloredName = ChatFormatting.GRAY + "[Lvl " + lvl + "] " + ItemRarity.getRarityFromName(tier).getBaseColor() + name;
-                    } catch (Exception ignored) {
-                    }
-                    tooltip.add(0, coloredName);
-
-                    if (index == -1) {
-                        index++;
-                        UIComponent petComponent = ProfileViewerUtils.createPet(imageFuture, lvl, ProfileViewerUtils.getPetColor(tier))
-                                .setChildOf(otherPetsContainer)
-                                .setX(new PixelConstraint(0f))
-                                .setY(new SiblingConstraint(3f));
-
-                        new UIText(bold + "Other pets").setChildOf(otherPetsContainer).setY(new SiblingConstraint(13f)).setX(new PixelConstraint(1f)).setTextScale(new PixelConstraint((float) (1f * fontScale)));
-                        petHoverables.put(petComponent, tooltip);
-                        continue;
-                    }
-                    float x = (float) ((index - (Math.floor(index / 16f) * 16)) * 30f);
-                    float y = (float) (Math.floor(index / 16f) * 35f) + 63;
-                    UIComponent petComponent = ProfileViewerUtils.createPet(imageFuture, lvl, ProfileViewerUtils.getPetColor(tier)).setChildOf(otherPetsContainer).setX(new PixelConstraint(x)).setY(new PixelConstraint(y));
-
-                    petHoverables.put(petComponent, tooltip);
-                    otherPetsContainer.setHeight(new PixelConstraint(45f * (Math.round((float) petHoverables.size() / 16) + 1)));
-                    index++;
-                }
-            }).start();
+            setPage(new PetsPage(statsAreaContainer));
         }
 
         if (categoryName.equals("Collections")) {
-            setCollectionsScreen();
+            setPage(new CollectionsPage(statsAreaContainer));
         }
 
         if (categoryName.equals("Rift")) {
@@ -2067,104 +1976,19 @@ public class ProfileViewerGui extends WindowScreen {
         return sortedPets;
     }
 
-    private static JsonObject collectionsData = null;
-    private static final HashMap<String, JsonObject> categoryDataCache = new HashMap<>();
-    private static UIComponent statsAreaContainerNew;
+    public static JsonObject collectionsData = null;
 
-    public void loadCollectionsCategories() {
-        if (Utils.isDeveloper()) System.out.println("Loading collections");
-
-        if (collectionsData == null) {
-            // Fetch the collections data only if it's not already cached
-            collectionsData = NetworkUtils.getJSONResponse("https://api.hypixel.net/v2/resources/skyblock/collections#CollectionsForPV", new String[]{}, true, false).getAsJsonObject();
-        }
-
-        statsAreaContainerNew = new UIBlock(Color.red)
-                .setWidth(new RelativeConstraint(0.75f))
-                .setHeight(new RelativeConstraint(0.75f));
-
-        new Thread(() -> {
-            String[] categories = {"Farming", "Mining", "Combat", "Foraging", "Fishing", "Rift"};
-            int totalHeight = 0;
-
-            for (String category : categories) {
-                if (!collectionsData.get("success").getAsBoolean()) {
-                    if (Utils.isDeveloper()) System.out.println("Error: ");
-                    return;
-                }
-
-                JsonObject collections = collectionsData.get("collections").getAsJsonObject();
-
-                JsonObject categoryObject = categoryDataCache.computeIfAbsent(category, key -> collections.get(key.toUpperCase()).getAsJsonObject());
-
-                UIComponent categoryComponent = new UIBlock(clear)
-                        .setChildOf(statsAreaContainerNew)
-                        .setY(new SiblingConstraint(10f))
-                        .setHeight(new PixelConstraint(20f))
-                        .setWidth(new RelativeConstraint(1f));
-
-                new UIText(category, true)
-                        .setChildOf(categoryComponent)
-                        .setTextScale(new PixelConstraint((float) (fontScale * 1.3f)))
-                        .setX(new PixelConstraint(0f))
-                        .setY(new PixelConstraint(0f));
-
-                UIComponent container = new UIBlock(clear)
-                        .setChildOf(categoryComponent)
-                        .setY(new SiblingConstraint(3f))
-                        .setHeight(new RelativeConstraint(1f))
-                        .setWidth(new RelativeConstraint(1f));
-
-                int categoryHeight = loadCollectionsCategory(categoryObject, container);
-                categoryComponent.setHeight(new PixelConstraint(categoryHeight + 23));
-                totalHeight += categoryHeight + 23; // Add 23 to account for the height of the category header
-            }
-
-            statsAreaContainerNew.setHeight(new PixelConstraint(totalHeight)); // Set the parent component's height
-
-            if (Utils.isDeveloper()) System.out.println("LOADED COLLECTIONS");
-        }).start();
+    public void setPage(ProfileViewerPage page) {
+        selectedPage = page;
+        this.statsAreaContainer = selectedPage.mainComponent;
+        selectedPage.loadPage();
     }
 
-    public void setCollectionsScreen() {
-        statsAreaContainer.clearChildren();
-
-        UIComponent loadingText = new UIText(ChatFormatting.RED + "Loading")
-                .setTextScale(new PixelConstraint(2f))
-                .setChildOf(statsAreaContainer)
-                .setX(new CenterConstraint())
-                .setY(new CenterConstraint());
-
-        new Thread(() -> {
-            double loadingIndex = 0;
-            while (statsAreaContainerNew.getChildren().size() < 7) {
-                if (!selectedCategory.equals("Collections")) break;
-
-                if (statsAreaContainerNew.getChildren().size() == 6) {
-                    loadingText.parent.removeChild(loadingText);
-                    statsAreaContainer.clearChildren();
-                    statsAreaContainerNew.getChildren().forEach((e) -> {
-                        statsAreaContainer.addChild(e);
-                    });
-                    break;
-                } else {
-                    try {
-                        ((UIText) loadingText).setText(loadingStages[(int) Math.floor(loadingIndex)]);
-                        loadingIndex += 0.5;
-                        loadingIndex %= 3;
-                        Thread.sleep(100);
-                    } catch (Exception ignored) {
-                    }
-                }
-            }
-        }).start();
-    }
-
-    HashMap<String, String> coopNames = new HashMap<>();
+    public static HashMap<String, String> coopNames = new HashMap<>();
 
     public static class CoopCollector {
         long total;
-        String username;
+        public String username;
 
         public CoopCollector(String u, Long t) {
             total = t;
@@ -2176,235 +2000,6 @@ public class ProfileViewerGui extends WindowScreen {
         }
     }
 
-    public int loadCollectionsCategory(JsonObject category, UIComponent component) {
-        JsonObject items = category.get("items").getAsJsonObject();
-
-        int maxItemsPerRow = 11;
-        int numRows = (int) Math.ceil((double) items.entrySet().size() / maxItemsPerRow);
-        int itemSpacing = 5;
-        int totalHeight = numRows * (20 + itemSpacing) - itemSpacing; // Calculate total height for all rows
-
-        int xStart = 0;
-        int yStart = 0; // Initial y-position
-        int rowWidth = 0; // Keep track of the current row's width
-        int index = 0;
-        int row = 0;
-
-        for (Entry<String, JsonElement> item : items.entrySet()) {
-            if (index >= maxItemsPerRow) {
-                // Move to the next row
-                rowWidth = 0; // Reset the current row's width
-                index = 0;
-                row++;
-            }
-
-            String itemId = item.getKey().replaceAll(":", "-");
-            if (itemId.equals("MUSHROOM_COLLECTION")) itemId = "BROWN_MUSHROOM";
-
-            ItemStack stack = ItemUtils.getSkyblockItem(itemId);
-
-            List<String> lore = new ArrayList<>();
-            List<CoopCollector> collectors = new ArrayList<>();
-            JsonObject members = ProfileResponse.get("members").getAsJsonObject();
-            long total = 0L;
-
-            for (Entry<String, JsonElement> member : members.entrySet()) {
-                if (!coopNames.containsKey(member.getKey())) {
-                    String name = NetworkUtils.getName(member.getKey());
-                    ChatFormatting color = Objects.equals(name, Utils.GetMC().thePlayer.getName()) ? ChatFormatting.GOLD : ChatFormatting.GREEN;
-                    String formattedName = color + NetworkUtils.getName(member.getKey());
-
-                    coopNames.put(member.getKey(), formattedName);
-                }
-
-
-                long value = 0L;
-                try {
-                    value = member.getValue().getAsJsonObject().get("collection").getAsJsonObject().get(item.getKey()).getAsLong();
-                } catch (Exception e) {
-                    // TODO: handle exception
-                }
-                total += value;
-                collectors.add(new CoopCollector(coopNames.get(member.getKey()), value));
-            }
-            // Create a list of CoopCollector objects
-            // Sort the list based on the 'total' field in descending order
-            collectors = collectors.stream()
-                    .sorted(Comparator.comparingLong(CoopCollector::getTotal).reversed())
-                    .collect(Collectors.toList());
-
-            CollectionTier rank = getCollectionTier(item.getValue().getAsJsonObject(), total);
-            String itemName = Utils.cleanColor(stack.getDisplayName());
-
-            lore.add("§7Total Collected: §e" + Utils.nf.format(total));
-
-            if (!rank.maxed) {
-                lore.add("");
-                lore.add("§7Progress to " + itemName + " " + (rank.tier + 1) + ": §e" + (Math.floor((double) total / (rank.untilNext + total) * 1000) / 10) + "§6%");
-                lore.add(stringProgressBar(total, (int) (rank.untilNext + total)));
-            }
-
-            lore.add("");
-            lore.add("§7Contributions:");
-
-            for (CoopCollector collector : collectors) {
-                lore.add(collector.username + "§7: §e" + Utils.nf.format(collector.total) + Utils.percentOf(collector.total, total));
-            }
-
-            // Calculate the position for the current item
-            int xPos = xStart + rowWidth;
-            int yPos = yStart + row * (20 + itemSpacing);
-            Color color = new Color(100, 100, 100, 200);
-            if (rank.maxed) color = new Color(218, 165, 32, 200);
-
-            int itemWidth = 20;
-            UIComponent backgroundSlot = new UIRoundedRectangle(3f)
-                    .setChildOf(component)
-                    .setHeight(new PixelConstraint(20f))
-                    .setWidth(new PixelConstraint(itemWidth))
-                    .setX(new PixelConstraint(xPos))
-                    .setY(new PixelConstraint(yPos))
-                    .setColor(color);
-
-            stack = ItemUtils.updateLore(stack, lore);
-
-            stack.setStackDisplayName("§e" + itemName + " " + rank.tier);
-
-            UIComponent itemStackComponent = new ItemStackComponent(stack)
-                    .setHeight(new PixelConstraint(20f))
-                    .setWidth(new PixelConstraint(itemWidth))
-                    .setX(new CenterConstraint())
-                    .setY(new CenterConstraint());
-
-            backgroundSlot.addChild(itemStackComponent);
-
-            // Update the current row's width and index for the next item
-            rowWidth += itemWidth + itemSpacing;
-            index++;
-        }
-
-        return totalHeight;
-    }
-
-    public String stringProgressBar(long total2, long total) {
-        double percent = (double) total2 / total;
-        String progessed = "§2§l§m §2§l§m ";
-        String unprogessed = "§f§l§m §f§l§m ";
-        int times = (int) (percent * 20);
-        StringBuilder out = new StringBuilder();
-        for (int i = 0; i < 20; i++) {
-            if (i < times) out.append(progessed);
-            else {
-                out.append(unprogessed);
-            }
-        }
-        return out + "§r §e" + Utils.nf.format(total2) + "§6/§e" + Utils.shortenNumber(total);
-    }
-
-    public static class CollectionTier {
-        boolean maxed;
-        int tier;
-        int untilNext;
-        Double progress;
-
-        CollectionTier(boolean maxed, int tier, int untilNext, Double progress) {
-            this.maxed = maxed;
-            this.tier = tier;
-            this.untilNext = untilNext;
-            this.progress = progress;
-        }
-    }
-
-    public CollectionTier getCollectionTier(JsonObject itemObj, long total) {
-        JsonArray tiers = itemObj.get("tiers").getAsJsonArray();
-        int maxTiers = itemObj.get("maxTiers").getAsInt();
-        boolean maxed = false;
-        int tier = -1;
-        int untilNext = -1;
-        double progress = 0.0;
-
-        for (int i = 0; i < tiers.size(); i++) {
-            JsonObject tierObj = tiers.get(i).getAsJsonObject();
-            int amountRequired = tierObj.get("amountRequired").getAsInt();
-
-            if (total >= amountRequired) {
-                if (i == maxTiers - 1) {
-                    // Maxed out the last tier
-                    maxed = true;
-                    tier = i + 1;
-                    untilNext = -1;
-                    progress = 1.0;
-                } else {
-                    // Reached a tier, but not maxed
-                    maxed = false;
-                    tier = i + 1;
-                    untilNext = (int) (tiers.get(i + 1).getAsJsonObject().get("amountRequired").getAsInt() - total);
-                    progress = (double) (total - amountRequired) / (double) (untilNext);
-                }
-            } else {
-                // Not yet reached this tier
-                tier = i;
-                untilNext = (int) (amountRequired - total);
-                progress = (double) total / (double) (amountRequired);
-                break;
-            }
-        }
-
-        return new CollectionTier(maxed, tier, untilNext, progress);
-    }
-
-
-    public static List<String> parseLore(String lore) {
-        List<String> loreList = new ArrayList<>();
-        String[] loreRows = lore.split("<span class=\"lore-row wrap\">");
-
-        for (String loreRow : loreRows) {
-            String cleanedLoreRow = ProfileViewerUtils.cleanLoreRow(loreRow);
-            if (cleanedLoreRow.contains("-----") || cleanedLoreRow.contains("MAX LEVEL")) {
-                loreList.add(cleanedLoreRow);
-                break;
-            } else if (!cleanedLoreRow.isEmpty()) {
-                String[] splitLore = splitLongLoreRow(cleanedLoreRow);
-                loreList.addAll(Arrays.asList(splitLore));
-            }
-        }
-
-        return loreList;
-    }
-
-    public static String[] splitLongLoreRow(String loreRow) {
-        if (loreRow.length() <= 34) {
-            return new String[]{loreRow};
-        } else {
-            List<String> splitLoreList = new ArrayList<>();
-            int index = 0;
-            String formattingColor = "";
-            while (index < loreRow.length()) {
-                int endIndex = Math.min(index + 34, loreRow.length());
-                if (endIndex < loreRow.length() && !Character.isWhitespace(loreRow.charAt(endIndex))) {
-                    while (endIndex > index && !Character.isWhitespace(loreRow.charAt(endIndex))) {
-                        endIndex--;
-                    }
-                }
-                String splitLore = loreRow.substring(index, endIndex);
-                if (formattingColor.isEmpty() && splitLore.startsWith(" ")) {
-                    splitLore = "§7" + splitLore.trim();
-                } else if (!formattingColor.isEmpty()) {
-                    splitLore = formattingColor + splitLore;
-                }
-                splitLoreList.add(splitLore);
-                index = endIndex;
-
-                if (index < loreRow.length() && loreRow.charAt(index) == '§') {
-                    formattingColor = loreRow.substring(index, index + 2);
-                    index += 2;
-                } else {
-                    formattingColor = "";
-                }
-            }
-            return splitLoreList.toArray(new String[0]);
-        }
-    }
 
     Integer totalDungeonRuns = 0;
 
@@ -2585,7 +2180,7 @@ public class ProfileViewerGui extends WindowScreen {
     public static Integer miningSpeedBoost = 0;
     public static Integer frontLoaded = 0;
 
-    static List<hotmUpgrade> tooltips = null;
+    static List<hotmUpgrade> hotmUpgradeTooltips = null;
 
     public static class hotmUpgrade {
         public Vector2f pos;
@@ -2598,13 +2193,13 @@ public class ProfileViewerGui extends WindowScreen {
         }
     }
 
-    public static class ExceptionHandler implements Thread.UncaughtExceptionHandler {
-        @Override
-        public void uncaughtException(Thread t, Throwable e) {
-            e.printStackTrace();
-            // do something with the exception
+    public static class ProfileViewerPage {
+        public UIComponent mainComponent;
+        public HashMap<UIComponent, List<String>> hoverables = new HashMap<>();
+
+        public ProfileViewerPage(UIComponent main) {
+            this.mainComponent = main;
         }
+        public void loadPage() {}
     }
-
-
 }

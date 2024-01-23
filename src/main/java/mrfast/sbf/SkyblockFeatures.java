@@ -27,7 +27,7 @@ import mrfast.sbf.features.termPractice.TerminalManager;
 import mrfast.sbf.features.trackers.*;
 import mrfast.sbf.gui.ConfigGui;
 import mrfast.sbf.gui.GuiManager;
-import mrfast.sbf.gui.ProfileViewerUtils;
+import mrfast.sbf.gui.ProfileViewer.ProfileViewerUtils;
 import mrfast.sbf.gui.SideMenu.MenuOverlayManager;
 import mrfast.sbf.utils.*;
 import net.minecraft.client.Minecraft;
