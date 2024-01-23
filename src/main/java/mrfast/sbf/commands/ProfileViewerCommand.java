@@ -14,7 +14,7 @@ import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.util.BlockPos;
 
-public class pvCommand extends CommandBase {
+public class ProfileViewerCommand extends CommandBase {
 
     @Override
     public String getCommandName() {

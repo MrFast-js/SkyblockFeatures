@@ -49,14 +49,6 @@ public class MiscFeatures {
         if (SkyblockFeatures.config.hideArrows && event.entity instanceof EntityArrow) {
             event.setCanceled(true);
         }
-        if (SkyblockFeatures.config.hidePlayersNearNPC) {
-            if(Utils.isNPC(event.entity)) return;
-            for (Entity entity : Utils.GetMC().theWorld.loadedEntityList) {
-                if (Utils.isNPC(entity) && event.entity instanceof EntityPlayer && entity.getDistanceToEntity(event.entity) < 3 && entity != event.entity) {
-                    event.setCanceled(true);
-                }
-            }
-        }
     }
 
     @SubscribeEvent

@@ -17,7 +17,6 @@ import mrfast.sbf.SkyblockFeatures;
 import mrfast.sbf.events.PacketEvent;
 import mrfast.sbf.gui.components.Point;
 import mrfast.sbf.gui.components.UIElement;
-import net.minecraft.block.BlockSkull;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiPlayerTabOverlay;
 import net.minecraft.client.gui.GuiScreen;
@@ -44,7 +43,6 @@ import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class DungeonsFeatures {
-
     private static final Minecraft mc = Minecraft.getMinecraft();
     public static Entity livid = null;
     public static boolean dungeonStarted = false;
@@ -55,7 +53,7 @@ public class DungeonsFeatures {
     @SubscribeEvent
     public void onTick(TickEvent.ClientTickEvent event) {
         if (!Utils.inDungeons || !dungeonStarted) return;
-        if (!SkyblockFeatures.config.boxStarredMobs && !SkyblockFeatures.config.hideNonStarredMobs) return;
+        if (!SkyblockFeatures.config.glowingStarredMobs && !SkyblockFeatures.config.hideNonStarredMobs) return;
 
         ticks++;
         if (ticks % 20 == 0) {
@@ -74,7 +72,7 @@ public class DungeonsFeatures {
     public void onRenderEntityOutlines(RenderEntityOutlineEvent event) {
         if (Utils.GetMC().theWorld == null || !Utils.inDungeons || SkyblockInfo.getLocation() == null) return;
         if (event.type == RenderEntityOutlineEvent.Type.XRAY) return;
-        if (!SkyblockFeatures.config.boxStarredMobs) return;
+        if (!SkyblockFeatures.config.glowingStarredMobs) return;
 
         if (dungeonStarted && !inSpecialRoom) {
             starredMobs.forEach((sbMob, starred) -> {
@@ -200,31 +198,6 @@ public class DungeonsFeatures {
             }
         }
 
-        if (text.contains("Granted you ") && text.contains("and") && SkyblockFeatures.config.blessingViewer) {
-            int stat1 = 0;
-            try {
-                stat1 = Integer.parseInt(text.split(" ")[2]);
-            } catch (Exception e) {
-                // TODO: handle exception
-            }
-            String stat1Type = text.split(" ")[3];
-            if (blessings.get(stat1Type) == null) blessings.put(stat1Type, stat1);
-            else {
-                blessings.replace(stat1Type, blessings.get(stat1Type), blessings.get(stat1Type) + stat1);
-            }
-            int stat2 = 0;
-            try {
-                stat2 = Integer.parseInt(text.split(" ")[6]);
-            } catch (Exception e) {
-                // TODO: handle exception
-            }
-            String stat2Type = text.split(" ")[7];
-            if (blessings.get(stat2Type) == null) blessings.put(stat2Type, stat2);
-            else {
-                blessings.replace(stat2Type, blessings.get(stat2Type), blessings.get(stat2Type) + stat2);
-            }
-        }
-
         if (!SkyblockFeatures.config.quickStart) return;
 
         if (text.contains("§6> §e§lEXTRA STATS §6<")) {
@@ -259,64 +232,6 @@ public class DungeonsFeatures {
                 count = 0;
                 event.setCanceled(true);
             }
-        }
-    }
-
-    static {
-        new BlessingViewerGui();
-    }
-
-    public static class BlessingViewerGui extends UIElement {
-
-        public BlessingViewerGui() {
-            super("Blessings Viewer", new Point(0.2f, 0.0f));
-            SkyblockFeatures.GUIMANAGER.registerElement(this);
-        }
-
-        @Override
-        public void drawElement() {
-            if (Utils.inDungeons && getToggled()) {
-                int i = 0;
-                GuiPlayerTabOverlay tabList = Minecraft.getMinecraft().ingameGUI.getTabList();
-                String footer = tabList.footer.getFormattedText();
-                GuiUtils.drawText("§d§lBlessings", 0, 0);
-                i++;
-                for (String line : new ArrayList<>(Arrays.asList(footer.split("\n")))) {
-                    if (line.contains("Blessing")) {
-                        GuiUtils.drawText("§d" + Utils.cleanColor(line), 0, i * Utils.GetMC().fontRendererObj.FONT_HEIGHT);
-                        i++;
-                    }
-                }
-            }
-        }
-
-        @Override
-        public void drawElementExample() {
-            GuiUtils.drawText("§d§lBlessings", 0, 0);
-            GuiUtils.drawText("§dBlessing of Power XI", 0, Utils.GetMC().fontRendererObj.FONT_HEIGHT);
-            GuiUtils.drawText("§dBlessing of Life XIII", 0, 2 * Utils.GetMC().fontRendererObj.FONT_HEIGHT);
-            GuiUtils.drawText("§dBlessing of Wisdom V", 0, 3 * Utils.GetMC().fontRendererObj.FONT_HEIGHT);
-            GuiUtils.drawText("§dBlessing of Stone VII", 0, 4 * Utils.GetMC().fontRendererObj.FONT_HEIGHT);
-        }
-
-        @Override
-        public boolean getToggled() {
-            return SkyblockFeatures.config.blessingViewer;
-        }
-
-        @Override
-        public boolean getRequirement() {
-            return Utils.inDungeons && Utils.inSkyblock;
-        }
-
-        @Override
-        public int getHeight() {
-            return Utils.GetMC().fontRendererObj.FONT_HEIGHT * 5;
-        }
-
-        @Override
-        public int getWidth() {
-            return Utils.GetMC().fontRendererObj.getStringWidth("§dBlessing of Life XIII") + 12;
         }
     }
 

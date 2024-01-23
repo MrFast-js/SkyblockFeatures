@@ -19,7 +19,6 @@ import net.minecraft.item.Item;
 
 @Mixin(ItemRenderer.class)
 public class MixinItemRenderer {
-
     @Inject(method = "renderItemInFirstPerson(F)V",at = @At(value = "INVOKE",shift = At.Shift.AFTER, target = "Lnet/minecraft/client/renderer/GlStateManager;pushMatrix()V"))
     public void transformFirstPersonItem(CallbackInfo ci) {
         if(!SkyblockFeatures.config.smallItems) return;

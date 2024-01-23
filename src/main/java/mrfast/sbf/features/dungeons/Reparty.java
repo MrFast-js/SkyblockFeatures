@@ -13,13 +13,12 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 
 public class Reparty {
+// TODO setup this file as a party API rather than reparty
     private boolean waitingForInvite = false;
     private String partyLeader= null;
-    private long startTime = 0;
 
     private boolean isPartyLeader = false;
     private final List<String> memberList = new ArrayList<>();
-    private static long lastRepartyTime = 0;
     private boolean lookingForLine = false;
 
     @SubscribeEvent
@@ -27,73 +26,33 @@ public class Reparty {
         if (event.type == 2) return;
         String message = event.message.getUnformattedText();
 
-        if(event.message.getFormattedText().contains("§6> §e§lEXTRA STATS §6<") && SkyblockFeatures.config.autoReparty) {
-            Reparty.doReparty();
-        }
-
-        if(SkyblockFeatures.config.autoAcceptReparty) {
-            if (waitingForInvite && message.contains(partyLeader+" has invited you to join their party!")) {
-                Utils.GetMC().thePlayer.sendChatMessage("/party accept " + partyLeader);
-                resetListener();
-            }
-
-            if (message.contains(" has disbanded the party")) {
-                String[] parts = message.split(" has disbanded the party");
-                partyLeader = clearRanks(parts[0]);
-                waitingForInvite = true;
-                startTime = System.currentTimeMillis();
-            }
-        }
-
         long currentTime = System.currentTimeMillis();
-        if (lastRepartyTime > 0 && currentTime - lastRepartyTime <= 20000) {
-            if (message.contains("Party Leader:")) {
-                memberList.clear();
-                String partyLeader = extractPartyLeader(message);
-                isPartyLeader = partyLeader.contains(Utils.GetMC().thePlayer.getName());
-            }
-            if (isPartyLeader && message.contains("Party Moderators:")) {
-                memberList.addAll(extractMemberNames(message));
-                lookingForLine = true;
-            }
-            if (isPartyLeader && message.contains("Party Members:")) {
-                memberList.addAll(extractMemberNames(message));
-                lookingForLine = true;
-            }
-            if(lookingForLine && message.equals("-----------------------------------------------------")) {
+
+        if (message.contains("Party Leader:")) {
+            memberList.clear();
+            String partyLeader = extractPartyLeader(message);
+            isPartyLeader = partyLeader.contains(Utils.GetMC().thePlayer.getName());
+        }
+        if (isPartyLeader && message.contains("Party Moderators:")) {
+            memberList.addAll(extractMemberNames(message));
+            lookingForLine = true;
+        }
+        if (isPartyLeader && message.contains("Party Members:")) {
+            memberList.addAll(extractMemberNames(message));
+            lookingForLine = true;
+        }
+        if(lookingForLine && message.equals("-----------------------------------------------------")) {
+            Utils.setTimeout(()->{
+                Utils.GetMC().thePlayer.sendChatMessage("/p disband");
+            }, 250);
+            lookingForLine = false;
+            for(int i=0;i<memberList.size();i++) {
+                int a = i;
                 Utils.setTimeout(()->{
-                    Utils.GetMC().thePlayer.sendChatMessage("/p disband");
-                }, 250);
-                lookingForLine = false;
-                for(int i=0;i<memberList.size();i++) {
-                    int a = i;
-                    Utils.setTimeout(()->{
-                        Utils.GetMC().thePlayer.sendChatMessage("/p "+memberList.get(a));
-                    }, (a+2)*350);
-                }
+                    Utils.GetMC().thePlayer.sendChatMessage("/p "+memberList.get(a));
+                }, (a+2)*350);
             }
         }
-
-    }
-
-    @SubscribeEvent
-    public void onClientTick(TickEvent.ClientTickEvent event) {
-        if (event.phase == TickEvent.Phase.END && SkyblockFeatures.config.autoAcceptReparty) {
-            if (waitingForInvite && hasTimeExpired()) {
-                resetListener();
-            }
-        }
-    }
-
-    private void resetListener() {
-        waitingForInvite = false;
-        partyLeader = null;
-        startTime = 0;
-    }
-
-    private boolean hasTimeExpired() {
-        long currentTime = System.currentTimeMillis();
-        return (currentTime - startTime) >= 60000; // 60 seconds = 60000 milliseconds
     }
 
     private String extractPartyLeader(String message) {
@@ -123,11 +82,4 @@ public class Reparty {
         Matcher matcher = pattern.matcher(input);
         return matcher.replaceAll("");
     }
-
-
-    public static void doReparty() {
-        Utils.GetMC().thePlayer.sendChatMessage("/p list");
-        lastRepartyTime = System.currentTimeMillis();
-    }
-
 }

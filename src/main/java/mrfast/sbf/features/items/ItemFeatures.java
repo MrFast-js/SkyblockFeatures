@@ -1,5 +1,6 @@
 package mrfast.sbf.features.items;
 
+import mrfast.sbf.commands.DebugCommand;
 import org.lwjgl.input.Keyboard;
 
 import com.google.gson.JsonObject;
@@ -15,6 +16,8 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+
+import java.util.Objects;
 
 public class ItemFeatures {
 
@@ -66,7 +69,7 @@ public class ItemFeatures {
                 Double valuePer = PricingData.lowestBINs.get(auctionIdentifier);
 
                 if (SkyblockFeatures.config.showEstimatedPrice && valuePer != null) {
-                    long total = ItemUtils.getEstimatedItemValue(item);//Math.floor(valuePer+starValue+enchantValue) * item.stackSize;
+                    long total = ItemUtils.getEstimatedItemValue(item);
                     event.toolTip.add("§bEstimated Value: §6" + Utils.nf.format(total * item.stackSize));
                 }
 

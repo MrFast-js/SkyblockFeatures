@@ -49,11 +49,12 @@ public class CommisionsTracker {
                 for (String commission : commissions) {
                     commission = Utils.cleanColor(commission);
                     if (commission.contains("Forges")) continue;
+
                     Pattern regex = Pattern.compile("(\\d+(?:\\.\\d+)?)");
                     Matcher matcher = regex.matcher(commission);
-                    if (commission.contains("2x")) {
-                        matcher = regex.matcher(commission.replace("2x", ""));
-                    }
+
+                    // Stop the 2x from being accounted in the percentage
+                    commission = commission.replace("2x","");
 
                     if (matcher.find()) {
                         String[] a = commission.split(" ");
@@ -79,8 +80,8 @@ public class CommisionsTracker {
         public void drawElementExample() {
             ArrayList<String> text = new ArrayList<>();
             text.add(ChatFormatting.BLUE + "Commissions");
-            text.add(" Upper Mines Titanium: " + ChatFormatting.LIGHT_PURPLE + "[" + ChatFormatting.GREEN + "7" + ChatFormatting.GOLD + "/" + ChatFormatting.GREEN + "10" + ChatFormatting.LIGHT_PURPLE + "]");
-            text.add(" Goblin Raid: " + ChatFormatting.LIGHT_PURPLE + "[" + ChatFormatting.GREEN + "0" + ChatFormatting.GOLD + "/" + ChatFormatting.GREEN + "1" + ChatFormatting.LIGHT_PURPLE + "]");
+            text.add(ChatFormatting.AQUA+" Upper Mines Titanium: " + ChatFormatting.LIGHT_PURPLE + "[" + ChatFormatting.GREEN + "7" + ChatFormatting.GOLD + "/" + ChatFormatting.GREEN + "10" + ChatFormatting.LIGHT_PURPLE + "]");
+            text.add(ChatFormatting.AQUA+" Goblin Raid: " + ChatFormatting.LIGHT_PURPLE + "[" + ChatFormatting.GREEN + "0" + ChatFormatting.GOLD + "/" + ChatFormatting.GREEN + "1" + ChatFormatting.LIGHT_PURPLE + "]");
 
             GuiUtils.drawTextLines(text, 0, 0, GuiUtils.TextStyle.BLACK_OUTLINE);
         }
@@ -134,8 +135,8 @@ public class CommisionsTracker {
             return 1;
         }
         if (str.contains("Mithril")) {
-            if (str.contains("Miner")) return 500;
-            return 350;
+            if (str.contains("Miner")) return 350;
+            return 250;
         }
         if (str.contains("Titanium")) {
             if (str.contains("Miner")) return 15;

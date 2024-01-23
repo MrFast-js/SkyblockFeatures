@@ -99,7 +99,7 @@ public class MiscOverlays {
 
         @Override
         public boolean getToggled() {
-            return SkyblockFeatures.config.dayTracker;
+            return SkyblockFeatures.config.crystalHollowsDayDisplay;
         }
 
         @Override

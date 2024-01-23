@@ -6,6 +6,7 @@ import mrfast.sbf.API.ItemAbilityAPI;
 import mrfast.sbf.commands.*;
 import mrfast.sbf.core.*;
 import mrfast.sbf.events.*;
+import mrfast.sbf.features.DeveloperFeatures;
 import mrfast.sbf.features.dungeons.*;
 import mrfast.sbf.features.dungeons.solvers.*;
 import mrfast.sbf.features.dungeons.solvers.terminals.ClickInOrderSolver;
@@ -116,6 +117,7 @@ public class SkyblockFeatures {
                 new MiscFeatures(),
                 new DamageOverlays(),
                 new Nametags(),
+                new DeveloperFeatures(),
                 new SkyblockMobDetector(),
                 new ItemAbilityAPI(),
                 new FireVeilTimer(),
@@ -136,16 +138,14 @@ public class SkyblockFeatures {
                 new AuctionSellingOverlay(),
                 new JerryTimer(),
                 new GiftTracker(),
-                new CropCounter(),
                 new ClickInOrderSolver(),
                 new TerminalManager(),
-                new HideGlass(),
+                new HideMenuGlass(),
                 new AuctionFeatures(),
                 new CapeUtils(),
                 new MinionOverlay(),
                 new AutomatonTracker(),
                 new GemstoneMiningOverlay(),
-                new TreecapCooldown(),
                 new LividFinder(),
                 new IceTreasureTracker(),
                 new EnderNodeTracker(),
@@ -154,20 +154,16 @@ public class SkyblockFeatures {
                 new PlayerDiguiser(),
                 new AutoAuctionFlip(),
                 new MetalDetectorSolver(),
-                new ChronomotronSolver(),
-                new UltrasequencerSolver(),
                 new TradingOverlay(),
                 new MiscOverlays(),
                 new TrevorHelper(),
                 new GhostTracker(),
-                new CreeperSolver(),
                 new PowderTracker(),
                 new DwarvenMap(),
                 new GrandmaWolfTimer(),
                 new EntityOutlineRenderer(),
                 new RelicFinderWaypoints(),
-                new DynamicFullbright(),
-                new GardenFeatures(),
+                new PestHighlighter(),
                 new HighlightCropArea(),
                 new FireFreezeDisplay(),
                 new MythologicalEvent(),
@@ -218,7 +214,7 @@ public class SkyblockFeatures {
         System.out.println("You have started Skyblock Features up " + timestarted + " times!");
 
         if (DataManager.dataJson.has("lastStartedVersion")) {
-            if (!((String) DataManager.getData("lastStartedVersion")).equals(SkyblockFeatures.VERSION)) {
+            if (!DataManager.getData("lastStartedVersion").equals(SkyblockFeatures.VERSION)) {
                 sendUpdateChangelogs = true;
             }
         }
@@ -259,11 +255,10 @@ public class SkyblockFeatures {
         commands.add(new ShrugCommand());
         commands.add(new FlipsCommand());
         commands.add(new DungeonsCommand());
-        commands.add(new RepartyCommand());
         commands.add(new DungeonPlayerInfoCommand());
         commands.add(new PingCommand());
         commands.add(new FakePlayerCommand());
-        commands.add(new pvCommand());
+        commands.add(new ProfileViewerCommand());
         if (Utils.isDeveloper()) {
             commands.add(new ColorTestCommand());
         }

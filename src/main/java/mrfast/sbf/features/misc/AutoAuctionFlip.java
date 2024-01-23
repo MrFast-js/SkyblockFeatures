@@ -10,7 +10,7 @@ import mrfast.sbf.core.PricingData;
 import mrfast.sbf.core.SkyblockInfo;
 import mrfast.sbf.events.SlotClickedEvent;
 import mrfast.sbf.events.SocketMessageEvent;
-import mrfast.sbf.features.items.HideGlass;
+import mrfast.sbf.features.items.HideMenuGlass;
 import mrfast.sbf.gui.components.Point;
 import mrfast.sbf.gui.components.UIElement;
 import mrfast.sbf.utils.NetworkUtils;
@@ -105,30 +105,16 @@ public class AutoAuctionFlip {
 
     @SubscribeEvent
     public void onClick(SlotClickedEvent event) {
-        if (Utils.GetMC().currentScreen instanceof GuiChest) {
+        if (Utils.inDungeons || !SkyblockFeatures.config.autoAuctionFlipEasyBuy) return;
 
+        if (Utils.GetMC().currentScreen instanceof GuiChest && event.item!=null) {
             GuiChest gui = (GuiChest) Utils.GetMC().currentScreen;
             ContainerChest chest = (ContainerChest) gui.inventorySlots;
             IInventory inv = chest.getLowerChestInventory();
             String chestName = inv.getDisplayName().getUnformattedText().trim();
-            try {
-                if (!chestName.contains("Ultrasequencer")) {
-                    if (HideGlass.isEmptyGlassPane(event.item)) {
-                        event.setCanceled(true);
-                    }
-                }
-            } catch (Exception e) {
-                // TODO: handle exception
-            }
-            if (Utils.inDungeons || !SkyblockFeatures.config.autoAuctionFlipEasyBuy) return;
 
-            try {
-                if (!HideGlass.isEmptyGlassPane(event.item)) {
-                    return;
-                }
-            } catch (Exception e) {
-                // TODO: handle exception
-            }
+
+            if (!HideMenuGlass.Companion.isMenuGlassPane(event.item)) return;
 
             if (chestName.contains("BIN Auction View") && !clicking) {
                 clicking = true;

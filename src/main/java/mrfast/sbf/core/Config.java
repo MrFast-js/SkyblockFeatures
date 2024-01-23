@@ -247,7 +247,7 @@ public class Config extends ConfigManager {
     @Property(
             type = PropertyType.TOGGLE,
             name = "Blaze Solver",
-            description = "Highlights the correct blazes to shoot.",
+            description = "Highlights which blaze to shoot, aswell as the next blaze",
             category = "§1§rDungeons",
             subcategory = "Solvers"
     )
@@ -292,30 +292,12 @@ public class Config extends ConfigManager {
 
     @Property(
             type = PropertyType.TOGGLE,
-            name = "Creeper Solver",
-            description = "Highlights the lanterns to shoot in Creeper puzzle.",
-            category = "§1§rDungeons",
-            subcategory = "Solvers"
-    )
-    public boolean creeperSolver = false;
-
-    @Property(
-            type = PropertyType.TOGGLE,
             name = "Crypt Display",
             description = "Big count of how many crypts have been killed",
             category = "§1§rDungeons",
             subcategory = "Miscellaneous"
     )
     public boolean cryptCount = false;
-
-    @Property(
-            type = PropertyType.TOGGLE,
-            name = "Blessings Viewer",
-            description = "Displays the current blessings in a dungeons",
-            category = "§1§rDungeons",
-            subcategory = "Miscellaneous"
-    )
-    public boolean blessingViewer = false;
 
     @Property(
             type = PropertyType.TOGGLE,
@@ -553,7 +535,7 @@ public class Config extends ConfigManager {
     @Property(
             type = PropertyType.TOGGLE,
             name = "Ender Node Tracker",
-            description = "Tracks the items you get from ender nodes",
+            description = "Tracks the items and loot you get from ender nodes",
             category = "§1§rThe End",
             subcategory = "Trackers"
     )
@@ -561,12 +543,12 @@ public class Config extends ConfigManager {
 
     @Property(
             type = PropertyType.TOGGLE,
-            name = "Day Tracker",
-            description = "Tracks the day in the Crystal Hollows",
+            name = "Current Day Display",
+            description = "Displays the current day of your lobby in the Crystal Hollows",
             category = "Mining",
             subcategory = "Trackers"
     )
-    public boolean dayTracker = false;
+    public boolean crystalHollowsDayDisplay = false;
 
     @Property(
             type = PropertyType.TOGGLE,
@@ -806,7 +788,7 @@ public class Config extends ConfigManager {
     @Property(
             type = PropertyType.KEYBIND,
             name = "Refresh Parties",
-            description = "Refreshes the Party Finder menu so new parties show up.",
+            description = "Press this key to refresh the Party Finder menu so new parties show up.",
             category = "§1§rDungeons",
             subcategory = "Party Finder",
             parentName = "Better Party Finder Menu"
@@ -858,7 +840,7 @@ public class Config extends ConfigManager {
             subcategory = "Miscellaneous",
             isParent = true
     )
-    public boolean boxStarredMobs = false;
+    public boolean glowingStarredMobs = false;
     @Property(
             type = PropertyType.COLOR,
             name = "Starred Mobs Color",
@@ -925,6 +907,16 @@ public class Config extends ConfigManager {
             isParent = true
     )
     public boolean highlightOdanta = false;
+
+    @Property(
+            type = PropertyType.COLOR,
+            name = "§1§rOdonta Color",
+            description = "",
+            category = "Render",
+            subcategory = "Highlights",
+            parentName = "Fairy Soul Helper"
+    )
+    public Color odantaColor = Color.CYAN;
 
     @Property(
             type = PropertyType.TOGGLE,
@@ -1060,47 +1052,6 @@ public class Config extends ConfigManager {
 
     @Property(
             type = PropertyType.TOGGLE,
-            name = "Normal Fullbright",
-            description = "Normal classic full bright everywhere",
-            category = "Render",
-            subcategory = "Fullbright"
-    )
-    public boolean fullbright = false;
-
-    @Property(
-            type = PropertyType.TOGGLE,
-            name = "Dynamic Fullbright",
-            description = "Turns on Fullbright in §aCrystal Hollows§r,§aYour Island§r,§aDungeons",
-            category = "Render",
-            subcategory = "Fullbright",
-            isParent = true
-    )
-    public boolean DynamicFullbright = false;
-
-    @Property(
-            type = PropertyType.SLIDER,
-            name = "Enabled Value",
-            description = "Value of brightness to set when in the certain locations",
-            category = "Render",
-            subcategory = "Fullbright",
-            min = 1,
-            parentName = "Dynamic Fullbright"
-    )
-    public int DynamicFullbrightDisabled = 100;
-
-    @Property(
-            type = PropertyType.SLIDER,
-            name = "Disabled Value",
-            description = "Value of brightness to set when everywhere else",
-            category = "Render",
-            subcategory = "Fullbright",
-            min = 1,
-            parentName = "Dynamic Fullbright"
-    )
-    public int DynamicFullbrightElsewhere = 1;
-
-    @Property(
-            type = PropertyType.TOGGLE,
             name = "Hide All Nametags",
             description = "Stops all nametags from renderering",
             category = "Render",
@@ -1110,41 +1061,12 @@ public class Config extends ConfigManager {
 
     @Property(
             type = PropertyType.TOGGLE,
-            name = "Hide Players Near NPC's",
-            description = "Disables Players from rendering near NPC's",
-            category = "Render",
-            subcategory = "Hide Things"
-    )
-    public boolean hidePlayersNearNPC = false;
-
-    @Property(
-            type = PropertyType.TOGGLE,
             name = "Hide Arrows",
             description = "Stops arrows from being rendered.",
             category = "Render",
             subcategory = "Hide Things"
     )
     public boolean hideArrows = false;
-
-    @Property(
-            type = PropertyType.TOGGLE,
-            name = "Treecapitator Cooldown",
-            description = "Displays the cooldown for the treecapitator",
-            category = "Quality of Life",
-            subcategory = "Foraging",
-            isParent = true
-    )
-    public boolean treecapCooldown = false;
-
-    @Property(
-            type = PropertyType.TOGGLE,
-            name = "Only show if held",
-            description = "Only show cooldown if the treecap is held rather than just in hotbar.",
-            category = "Quality of Life",
-            subcategory = "Foraging",
-            parentName = "Treecapitator Cooldown"
-    )
-    public boolean treecapHeld = false;
 
     @Property(
             type = PropertyType.TOGGLE,
@@ -1166,17 +1088,8 @@ public class Config extends ConfigManager {
 
     @Property(
             type = PropertyType.TOGGLE,
-            name = "Use Smooth Font",
-            description = "Uses a smoother font to render text. §cRequires restart",
-            category = "§2§rCustomization",
-            subcategory = "§1§rGui"
-    )
-    public boolean customFont = false;
-
-    @Property(
-            type = PropertyType.TOGGLE,
             name = "§6§lFurfSky§r Themed",
-            description = "Uses §6§lFurfSky§r textures for the Gui",
+            description = "Uses §6§lFurfSky§r textures for the SBF Config Gui",
             category = "§2§rCustomization",
             subcategory = "§1§rGui"
     )
@@ -1318,15 +1231,6 @@ public class Config extends ConfigManager {
 
     @Property(
             type = PropertyType.TOGGLE,
-            name = "Crop Counter",
-            description = "Shows the amount of crops on the hoe your holding",
-            category = "§1§rFarming",
-            subcategory = "Garden"
-    )
-    public boolean Counter = false;
-
-    @Property(
-            type = PropertyType.TOGGLE,
             name = "Highlight Pests",
             description = "Shows where pests are in your garden",
             category = "§1§rFarming",
@@ -1334,6 +1238,7 @@ public class Config extends ConfigManager {
             isParent = true
     )
     public boolean highlightPests = false;
+
     @Property(
             type = PropertyType.COLOR,
             name = "Pest Highlight Color",
@@ -1343,6 +1248,7 @@ public class Config extends ConfigManager {
             parentName = "Highlight Pests"
     )
     public Color highlightPestColor = Color.red;
+
     @Property(
             type = PropertyType.TOGGLE,
             name = "Show Pests Through Walls",
@@ -1356,39 +1262,12 @@ public class Config extends ConfigManager {
 
     @Property(
             type = PropertyType.TOGGLE,
-            name = "Composter Overlay",
-            description = "Shows extra info inside of the composter menu",
-            category = "§1§rFarming",
-            subcategory = "Garden"
-    )
-    public boolean composterOverlay = false;
-
-    @Property(
-            type = PropertyType.TOGGLE,
             name = "Trevor The Trapper Helper",
             description = "Shows the biome and location of the hunted mob",
             category = "General",
             subcategory = "Other"
     )
     public boolean trevorHelper = true;
-
-    @Property(
-            type = PropertyType.TOGGLE,
-            name = "Auto Accept Reparty",
-            description = "Auto joins part when someone does reparty",
-            category = "Quality of Life",
-            subcategory = "Dungeons"
-    )
-    public boolean autoAcceptReparty = false;
-
-    @Property(
-            type = PropertyType.TOGGLE,
-            name = "Auto Reparty",
-            description = "Auto does reparty when the dungeon ends",
-            category = "Quality of Life",
-            subcategory = "Dungeons"
-    )
-    public boolean autoReparty = false;
     @Property(
             type = PropertyType.TOGGLE,
             name = "Hide Far Entitys in hub",
@@ -1409,7 +1288,7 @@ public class Config extends ConfigManager {
 
     @Property(
             type = PropertyType.TOGGLE,
-            name = "NameTags",
+            name = "Better Dungeon Nametags",
             description = "Render better nametags in dungeons",
             category = "§1§rDungeons",
             subcategory = "Miscellaneous"
@@ -1461,16 +1340,6 @@ public class Config extends ConfigManager {
 
     @Property(
             type = PropertyType.TOGGLE,
-            name = "Center Player on Dungeon Map",
-            description = "Locks your player to the center of the dungeon map",
-            category = "§1§rDungeons",
-            subcategory = "Dungeon Map",
-            parentName = "Dungeon Map"
-    )
-    public boolean dungeonMapCenter = false;
-
-    @Property(
-            type = PropertyType.TOGGLE,
             name = "Render Player Names",
             description = "Draws names above the players",
             category = "§1§rDungeons",
@@ -1511,7 +1380,7 @@ public class Config extends ConfigManager {
     @Property(
             type = PropertyType.TOGGLE,
             name = "Glowing Dungeon Teammates",
-            description = "Make your teamates glow based on their class in dungeons.",
+            description = "Make your teamates glow in dungeons.",
             category = "Render",
             subcategory = "1.9 Glow Effect"
     )
@@ -1617,6 +1486,7 @@ public class Config extends ConfigManager {
             isParent = true
     )
     public boolean highlightCobblestone = false;
+
     @Property(
             type = PropertyType.COLOR,
             name = "Cobblestone Color",
@@ -1790,15 +1660,6 @@ public class Config extends ConfigManager {
 
     @Property(
             type = PropertyType.TOGGLE,
-            name = "Chat Timestamps",
-            description = "Add Chat Timestamps to Messages",
-            category = "General",
-            subcategory = "§1§rChat"
-    )
-    public boolean timestamps = false;
-
-    @Property(
-            type = PropertyType.TOGGLE,
             name = "Better Trading",
             description = "Toggle this feature to get better trading features",
             category = "General",
@@ -1826,15 +1687,6 @@ public class Config extends ConfigManager {
             parentName = "Better Trading"
     )
     public boolean hideExpired = true;
-
-    @Property(
-            type = PropertyType.TOGGLE,
-            name = "Enchanting Solvers",
-            description = "Solvers for ultrasequencer and chronomotron",
-            category = "Quality of Life",
-            subcategory = "Solvers"
-    )
-    public boolean enchantingSolvers = false;
 
     @Property(
             type = PropertyType.TOGGLE,
@@ -1905,15 +1757,6 @@ public class Config extends ConfigManager {
 
     @Property(
             type = PropertyType.TOGGLE,
-            name = "Garden Visitor Overlay",
-            description = "Shows the extra information inside the Garden Visitor Gui.",
-            category = "§1§rFarming",
-            subcategory = "Garden"
-    )
-    public boolean GardenVisitorOverlay = false;
-
-    @Property(
-            type = PropertyType.TOGGLE,
             name = "Blocks to Destroy Overlay",
             description = "Shows the blocks needed to destroy when clearing a plot in the garden.",
             category = "§1§rFarming",
@@ -1960,15 +1803,6 @@ public class Config extends ConfigManager {
             parentName = "Highlight Glowing Mushrooms"
     )
     public Color highlightMushroomsColor = Color.green;
-
-    @Property(
-            type = PropertyType.TOGGLE,
-            name = "1.12 Crop Hitbox",
-            description = "Applys full sized hitbox for crops",
-            category = "§1§rFarming",
-            subcategory = "Garden"
-    )
-    public boolean cropBox = false;
 
     @Property(
             type = PropertyType.TOGGLE,
@@ -2103,7 +1937,7 @@ public class Config extends ConfigManager {
             category = "Miscellaneous",
             subcategory = "Minion"
     )
-    public boolean minionOverlay = false;
+    public boolean minionOverlay = true;
 
     @Property(
             type = PropertyType.TOGGLE,
@@ -2121,7 +1955,7 @@ public class Config extends ConfigManager {
             category = "Miscellaneous",
             subcategory = "Minion"
     )
-    public boolean minionLastCollected = false;
+    public boolean minionLastCollected = true;
 
     @Property(
             type = PropertyType.TOGGLE,
@@ -2253,7 +2087,7 @@ public class Config extends ConfigManager {
             subcategory = "Auction Utils",
             parentName = "Highlight Auctions Status"
     )
-    public Color lostAuctionColor = new Color(0xf4a261);
+    public Color lostAuctionColor = new Color(0xF48361);
 
     @Property(
             type = PropertyType.TOGGLE,
@@ -2525,55 +2359,6 @@ public class Config extends ConfigManager {
     )
     public boolean toggleSprint = false;
 
-    @Property(
-            type = PropertyType.NUMBER,
-            name = "composterSpeedLvl",
-            description = "",
-            category = "General",
-            subcategory = "Item Fov",
-            hidden = true
-    )
-    public int speedLvl = 0;
-
-    @Property(
-            type = PropertyType.NUMBER,
-            name = "composterMultiLvl",
-            description = "",
-            category = "General",
-            subcategory = "Item Fov",
-            hidden = true
-    )
-    public int multiLvl = 0;
-
-    @Property(
-            type = PropertyType.NUMBER,
-            name = "composterFuelLvl",
-            description = "",
-            category = "General",
-            subcategory = "Item Fov",
-            hidden = true
-    )
-    public int fuelLvl = 0;
-
-    @Property(
-            type = PropertyType.NUMBER,
-            name = "composterOrgLvl",
-            description = "",
-            category = "General",
-            subcategory = "Item Fov",
-            hidden = true
-    )
-    public int orgLvl = 0;
-
-    @Property(
-            type = PropertyType.NUMBER,
-            name = "composterCostLvl",
-            description = "",
-            category = "General",
-            subcategory = "Hidden",
-            hidden = true
-    )
-    public int costLvl = 0;
     @Property(
             type = PropertyType.TEXT,
             name = "temporaryAuthKey",

@@ -96,7 +96,7 @@ public class FairySoulWaypoints {
                         if (((EntityArmorStand) entity).getEquipmentInSlot(0) != null && SkyblockFeatures.config.highlightOdanta) {
                             String id = ((EntityArmorStand) entity).getEquipmentInSlot(0).serializeNBT().getCompoundTag("tag").getCompoundTag("SkullOwner").getCompoundTag("Properties").toString();
                             if (id.contains("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvOWZkODA2ZGVmZGZkZjU5YjFmMjYwOWM4ZWUzNjQ2NjZkZTY2MTI3YTYyMzQxNWI1NDMwYzkzNThjNjAxZWY3YyJ9fX0=")) {
-                                highlightBlock(new Color(85, 255, 255), entity.posX - 0.5D, 0.5D + entity.posY, entity.posZ - 0.5D, 1.0D, event.partialTicks);
+                                highlightBlock(SkyblockFeatures.config.odantaColor, entity.posX - 0.5D, 0.5D + entity.posY, entity.posZ - 0.5D, 1.0D, event.partialTicks);
                             }
                         }
                     }

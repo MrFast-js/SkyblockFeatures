@@ -5,7 +5,7 @@ import com.mojang.realmsclient.gui.ChatFormatting;
 import mrfast.sbf.SkyblockFeatures;
 import mrfast.sbf.events.GuiContainerEvent;
 import mrfast.sbf.events.SlotClickedEvent;
-import mrfast.sbf.features.items.HideGlass;
+import mrfast.sbf.features.items.HideMenuGlass;
 import mrfast.sbf.gui.components.Point;
 import mrfast.sbf.gui.components.UIElement;
 import mrfast.sbf.utils.NetworkUtils;
@@ -511,7 +511,7 @@ public class PartyFinderFeatures {
         ContainerChest cont = (ContainerChest) chest.inventorySlots;
         String name = cont.getLowerChestInventory().getName();
 
-        if (!HideGlass.isEmptyGlassPane(event.itemStack) && event.itemStack.getItem() instanceof ItemSkull && event.itemStack.getDisplayName().contains("'s Party")) {
+        if (!HideMenuGlass.Companion.isMenuGlassPane(event.itemStack) && event.itemStack.getItem() instanceof ItemSkull && event.itemStack.getDisplayName().contains("'s Party")) {
             hoverItemStack = event.itemStack;
         }
         if ("Party Finder".equals(name) && event.itemStack.getItem() instanceof ItemSkull) {
@@ -531,7 +531,7 @@ public class PartyFinderFeatures {
         ContainerChest cont = (ContainerChest) chest.inventorySlots;
         String name = cont.getLowerChestInventory().getName();
 
-        if (!"Party Finder".equals(name) || hoverItemStack == null || HideGlass.isEmptyGlassPane(hoverItemStack)) {
+        if (!"Party Finder".equals(name) || hoverItemStack == null || HideMenuGlass.Companion.isMenuGlassPane(hoverItemStack)) {
             return;
         }
 

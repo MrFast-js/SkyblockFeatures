@@ -68,10 +68,7 @@ public class DungeonMap {
         GlStateManager.pushMatrix();
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 
-        if (SkyblockFeatures.config.dungeonMapCenter) {
-            GlStateManager.translate(128 - selfHeadPositionX - 64, 128 - selfHeadPositionY - 64, 0);
-        }
-        GlStateManager.scale(1f,1f,0f);
+        GlStateManager.scale(1f, 1f, 0f);
         Minecraft.getMinecraft().entityRenderer.getMapItemRenderer().renderMap(mapData, true);
 
         if (DungeonsFeatures.dungeonStarted) {
@@ -305,13 +302,7 @@ public class DungeonMap {
                             if (skin != DefaultPlayerSkin.getDefaultSkin(player.getUniqueID())) {
                                 closePlayerPosition.put(shortName, new MapPosition(x, z, rotation));
                                 float r = player.rotationYawHead;
-                                if (SkyblockFeatures.config.dungeonMapCenter) {
-                                    GlStateManager.translate(-(128 - selfHeadPositionX - 64), -(128 - selfHeadPositionY - 64), 0);
-                                    DrawHead(64d, 64d, skin, r, shortName);
-                                    GlStateManager.translate((128 - selfHeadPositionX - 64), (128 - selfHeadPositionY - 64), 0);
-                                } else {
-                                    DrawHead(x, z, skin, r, shortName);
-                                }
+                                DrawHead(x, z, skin, r, shortName);
                                 GlStateManager.translate(-(128 - selfHeadPositionX - 64), -(128 - selfHeadPositionY - 64), 0);
                                 GlStateManager.translate((128 - selfHeadPositionX - 64), (128 - selfHeadPositionY - 64), 0);
                             }
