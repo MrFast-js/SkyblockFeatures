@@ -62,7 +62,7 @@ class DeveloperFeatures {
                             val cont = container as ContainerChest
                             val name = cont.lowerChestInventory.displayName.unformattedText.trim()
                             val inventoryContents = buildString {
-                                append("Chest Name: $name")
+                                append("Chest Name: $name\n")
                                 for (i in 0 until container.inventory.size) {
                                     val stack = container.inventory[i] ?: continue;
                                     append(prettyPrintNBTtoString(stack.serializeNBT()))
