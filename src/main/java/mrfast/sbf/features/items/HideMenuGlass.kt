@@ -63,27 +63,26 @@ class HideMenuGlass {
         }
     }
 
-    companion object {
-        var mc = Minecraft.getMinecraft()
-        fun isMenuGlassPane(itemStack: ItemStack?): Boolean {
-            return itemStack != null &&
-                    (itemStack.item === Item.getItemFromBlock(Blocks.stained_glass_pane) || itemStack.item === Item.getItemFromBlock(Blocks.glass_pane)) &&
-                    itemStack.hasDisplayName() && itemStack.metadata == 15 && Utils.cleanColor(itemStack.displayName.trim { it <= ' ' }).isEmpty()
-        }
-
-        fun getPixelColor(): Int {
+fun getPixelColor(): Int {
             try {
                 // Define the path to the chest texture
                 val chestTextureLocation = ResourceLocation("minecraft", "textures/gui/container/generic_54.png")
 
                 // Load the texture as an image
-                val resource = Minecraft.getMinecraft().resourceManager.getResource(chestTextureLocation)
+                val resource = Utils.GetMC().resourceManager.getResource(chestTextureLocation)
                 val chestImage = ImageIO.read(resource.inputStream)
                 return chestImage.getRGB(5, 5)
             } catch (e: IOException) {
                 e.printStackTrace()
             }
             return -1 // Return -1 if an error occurs
+        }
+
+    companion object {
+        fun isMenuGlassPane(itemStack: ItemStack?): Boolean {
+            return itemStack != null &&
+                    (itemStack.item === Item.getItemFromBlock(Blocks.stained_glass_pane) || itemStack.item === Item.getItemFromBlock(Blocks.glass_pane)) &&
+                    itemStack.hasDisplayName() && itemStack.metadata == 15 && Utils.cleanColor(itemStack.displayName.trim { it <= ' ' }).isEmpty()
         }
     }
 }
