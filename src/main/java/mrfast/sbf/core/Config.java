@@ -1584,10 +1584,29 @@ public class Config extends ConfigManager {
             type = PropertyType.TOGGLE,
             name = "Commissions Tracker",
             description = "Tracks your progress on commissions",
-            category = "Quality of Life",
+            category = "Commissions",
             subcategory = "Mining"
     )
     public boolean CommisionsTracker = true;
+    @Property(
+            type = PropertyType.TOGGLE,
+            name = "Highlight Completed Commissions",
+            description = "Draws a color of your choosing behind commissions that are completed/unclaimed.",
+            category = "Commissions",
+            subcategory = "Mining",
+            isParent = true
+    )
+    public boolean highlightCompletedCommissions = true;
+
+    @Property(
+            type = PropertyType.COLOR,
+            name = "Completion Color",
+            description = "",
+            category = "Commissions",
+            subcategory = "Mining",
+            parentName = "Highlight Completed Commissions"
+    )
+    public Color highlightCompletedCommissionsColor = Color.GREEN;
 
     @Property(
             type = PropertyType.TOGGLE,

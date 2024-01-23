@@ -130,6 +130,7 @@ public class SkyblockFeatures {
                 new OverflowManaDisplay(),
                 new ActionBarListener(),
                 new CommisionsTracker(),
+                new CommissionHighlighter(),
                 new MenuOverlayManager(),
                 new FairySoulWaypoints(),
                 new AuctionSellingOverlay(),

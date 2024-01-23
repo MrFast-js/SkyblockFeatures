@@ -57,11 +57,11 @@ public class CommisionsTracker {
 
                     if (matcher.find()) {
                         String[] a = commission.split(" ");
-                        String amount = Math.round(getTotal(commission) * (Double.valueOf(matcher.group(1)) / 100)) + "";
+                        String amount = Math.round(getCommissionTotal(commission) * (Double.valueOf(matcher.group(1)) / 100)) + "";
                         String mid = ChatFormatting.LIGHT_PURPLE + "[" +
                                 ChatFormatting.GREEN + amount +
                                 ChatFormatting.GOLD + "/" +
-                                ChatFormatting.GREEN + getTotal(commission) +
+                                ChatFormatting.GREEN + getCommissionTotal(commission) +
                                 ChatFormatting.LIGHT_PURPLE + "]";
                         commission = commission.replace(a[a.length - 1], mid);
                     } else if (commission.contains("DONE")) {
@@ -107,7 +107,7 @@ public class CommisionsTracker {
     }
 
 
-    public static int getTotal(String str) {
+    public static int getCommissionTotal(String str) {
         if (CrystalHollowsMap.inCrystalHollows) {
             if (str.contains("Hard Stone Miner") || str.contains("Gemstone Collector")) return 1000;
             if (str.contains("Chest Looter")) return 3;

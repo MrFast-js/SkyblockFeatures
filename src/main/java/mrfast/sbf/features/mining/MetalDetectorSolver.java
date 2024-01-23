@@ -29,7 +29,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
 
 public class MetalDetectorSolver {
-    // Provided by NEU
+    // Treasure locations provided by NEU
     List<Vec3> treasureLocations = new ArrayList<>(Arrays.asList(
             new Vec3(-38, -22, 26),
             new Vec3(38, -22, -26),
