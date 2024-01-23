@@ -542,6 +542,7 @@ public class ProfileViewerUtils {
         } else {
             upgrade.stack = new ItemStack(Items.coal).setStackDisplayName(hover.get(0));
         }
+        hover.remove(0);
         if (!unlocked) {
             hover.add("");
             hover.add("§7Cost");
@@ -559,6 +560,7 @@ public class ProfileViewerUtils {
         } else {
             upgrade.stack = new ItemStack(Blocks.coal_block).setStackDisplayName(hover.get(0));
         }
+        hover.remove(0);
         if (!unlocked) {
             hover.add("");
             hover.add("§7Cost");
@@ -577,6 +579,7 @@ public class ProfileViewerUtils {
         } else {
             upgrade.stack = new ItemStack(Items.coal).setStackDisplayName(hover.get(0));
         }
+        hover.remove(0);
         if (!unlocked) {
             hover.add("");
             hover.add("§7Cost");
@@ -590,8 +593,12 @@ public class ProfileViewerUtils {
     // Peak
     public static SkillsPage.hotmUpgrade newHotmUpgrade4(List<String> hover, Vector2f pos, Boolean unlocked) {
         SkillsPage.hotmUpgrade upgrade = new SkillsPage.hotmUpgrade(hover, pos);
-        if (unlocked) upgrade.stack = new ItemStack(Blocks.redstone_block).setStackDisplayName(hover.get(0));
-        else upgrade.stack = new ItemStack(Blocks.bedrock).setStackDisplayName(hover.get(0));
+        if (unlocked) {
+            upgrade.stack = new ItemStack(Blocks.redstone_block).setStackDisplayName(hover.get(0));
+        } else {
+            upgrade.stack = new ItemStack(Blocks.bedrock).setStackDisplayName(hover.get(0));
+        }
+        hover.remove(0);
         if (!unlocked) {
             hover.add("");
             hover.add("§7Cost");
@@ -928,7 +935,7 @@ public class ProfileViewerUtils {
         System.out.println("set slayer experience");
     }
 
-    public static UIComponent createTimecharm(ItemStack item, String id, JsonObject timecharmObj, UIComponent parent,HashMap hoverable) {
+    public static UIComponent createTimecharm(ItemStack item, String id, JsonObject timecharmObj, UIComponent parent, HashMap hoverable) {
         boolean unlocked = timecharmObj != null;
         UIComponent border = new UIRoundedRectangle(5f)
                 .setColor(unlocked ? Color.WHITE : Color.gray)
