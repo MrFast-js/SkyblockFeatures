@@ -20,8 +20,8 @@ import gg.essential.elementa.constraints.*;
 import gg.essential.elementa.constraints.animation.AnimatingConstraints;
 import gg.essential.elementa.constraints.animation.Animations;
 import gg.essential.elementa.utils.Vector2f;
+import mrfast.sbf.gui.ProfileViewer.Pages.SkillsPage;
 import mrfast.sbf.gui.ProfileViewer.ProfileViewerGui.SkillInfo;
-import mrfast.sbf.gui.ProfileViewer.ProfileViewerGui.hotmUpgrade;
 import mrfast.sbf.gui.components.ItemStackComponent;
 import mrfast.sbf.utils.Utils;
 import net.minecraft.init.Blocks;
@@ -189,7 +189,7 @@ public class ProfileViewerUtils {
     };
 
     public static int getNextCataLevelXP(int lvl) {
-        if (dungeoneeringXpValues.length > lvl+1) {
+        if (dungeoneeringXpValues.length > lvl + 1) {
             return dungeoneeringXpValues[lvl + 1];
         }
         return -1;
@@ -303,7 +303,7 @@ public class ProfileViewerUtils {
     }
 
     public static List<String> getLoreFromPos(Vector2f pos) {
-        for (hotmUpgrade pair : ProfileViewerGui.hotmUpgradeTooltips) {
+        for (SkillsPage.hotmUpgrade pair : SkillsPage.hotmUpgradeTooltips) {
             if (pair.pos.getX() == pos.getX() && pair.pos.getY() == pos.getY()) {
                 return pair.hover;
             }
@@ -312,7 +312,7 @@ public class ProfileViewerUtils {
     }
 
     public static ItemStack getStackFromPos(Vector2f pos) {
-        for (hotmUpgrade pair : ProfileViewerGui.hotmUpgradeTooltips) {
+        for (SkillsPage.hotmUpgrade pair : SkillsPage.hotmUpgradeTooltips) {
             if (pair.pos.getX() == pos.getX() && pair.pos.getY() == pos.getY()) {
                 return pair.stack;
             }
@@ -328,26 +328,26 @@ public class ProfileViewerUtils {
     }
 
     public static void loadToolTips() {
-        ProfileViewerGui.hotmUpgradeTooltips = new ArrayList<>(Arrays.asList(
+        SkillsPage.hotmUpgradeTooltips = new ArrayList<>(Arrays.asList(
                 newHotmUpgrade(Lists.newArrayList(EnumChatFormatting.RED + "Mining Speed",
-                        "§7Level " + ProfileViewerGui.miningSpeed + "§8/50",
+                        "§7Level " + SkillsPage.miningSpeed + "§8/50",
                         "",
-                        "§7Grants §a+" + (ProfileViewerGui.miningSpeed * 20) + EnumChatFormatting.GOLD + " ⸕ Mining",
-                        EnumChatFormatting.GOLD + "Speed§7."), new Vector2f(3f, 6f), ProfileViewerGui.miningSpeed > 0),
+                        "§7Grants §a+" + (SkillsPage.miningSpeed * 20) + EnumChatFormatting.GOLD + " ⸕ Mining",
+                        EnumChatFormatting.GOLD + "Speed§7."), new Vector2f(3f, 6f), SkillsPage.miningSpeed > 0),
 
                 newHotmUpgrade(Lists.newArrayList(EnumChatFormatting.RED + "Mining Fortune",
-                        "§7Level " + ProfileViewerGui.miningFortune + "§8/50",
+                        "§7Level " + SkillsPage.miningFortune + "§8/50",
                         "",
-                        "§7Grants §a+" + (ProfileViewerGui.miningFortune * 5) + EnumChatFormatting.GOLD + " ☘ Mining",
-                        EnumChatFormatting.GOLD + "Fortune§7."), new Vector2f(3f, 5f), ProfileViewerGui.miningFortune > 0),
+                        "§7Grants §a+" + (SkillsPage.miningFortune * 5) + EnumChatFormatting.GOLD + " ☘ Mining",
+                        EnumChatFormatting.GOLD + "Fortune§7."), new Vector2f(3f, 5f), SkillsPage.miningFortune > 0),
 
                 newHotmUpgrade(Lists.newArrayList(EnumChatFormatting.RED + "Titanium Insanium",
-                        "§7Level " + ProfileViewerGui.tittyInsane + "§8/50",
+                        "§7Level " + SkillsPage.tittyInsane + "§8/50",
                         "",
                         "§7When mining Mithril Ore, you",
-                        "§7have a §a" + (2d + (ProfileViewerGui.tittyInsane * 0.1)) + "% " + "§7chance to",
+                        "§7have a §a" + (2d + (SkillsPage.tittyInsane * 0.1)) + "% " + "§7chance to",
                         "§7convert the block into Titanium",
-                        "§7Ore."), new Vector2f(2f, 5f), ProfileViewerGui.tittyInsane > 0),
+                        "§7Ore."), new Vector2f(2f, 5f), SkillsPage.tittyInsane > 0),
 
                 newHotmUpgrade2(Lists.newArrayList(
                         EnumChatFormatting.RED + "Mining Speed Boost",
@@ -355,128 +355,128 @@ public class ProfileViewerUtils {
                         "§7Pickaxe Ability: Mining Speed Boost",
                         "§7Grants §a300% " + EnumChatFormatting.GOLD + "⸕ Mining",
                         EnumChatFormatting.GOLD + "Speed §7for §a" + "20s" + EnumChatFormatting.GRAY,
-                        "§8Cooldown: §a120s"), new Vector2f(1f, 5f), ProfileViewerGui.miningSpeedBoost > 0),
+                        "§8Cooldown: §a120s"), new Vector2f(1f, 5f), SkillsPage.miningSpeedBoost > 0),
 
                 newHotmUpgrade(Lists.newArrayList(EnumChatFormatting.RED + "Luck of the Cave",
-                        "§7Level " + ProfileViewerGui.luckofcave + "§8/45",
+                        "§7Level " + SkillsPage.luckofcave + "§8/45",
                         "",
                         "§7Increases the chance for you to",
                         "§7trigger rare occurrences in",
-                        "§2Dwarven Mines §7by §a" + (6 + ProfileViewerGui.luckofcave - 1) + "%§7."), new Vector2f(1f, 4f), ProfileViewerGui.luckofcave > 0),
+                        "§2Dwarven Mines §7by §a" + (6 + SkillsPage.luckofcave - 1) + "%§7."), new Vector2f(1f, 4f), SkillsPage.luckofcave > 0),
 
                 newHotmUpgrade(Lists.newArrayList(EnumChatFormatting.RED + "Daily Powder",
-                        "§7Level " + ProfileViewerGui.dailyPowder + "§8/100",
+                        "§7Level " + SkillsPage.dailyPowder + "§8/100",
                         "",
-                        "§7Gains §a" + (400 + (ProfileViewerGui.dailyPowder - 1) * 36) + " Powder§7 from the",
+                        "§7Gains §a" + (400 + (SkillsPage.dailyPowder - 1) * 36) + " Powder§7 from the",
                         "§7first ore you mine every day.",
-                        "§7Works for all Powder types."), new Vector2f(3f, 4f), ProfileViewerGui.dailyPowder > 0),
+                        "§7Works for all Powder types."), new Vector2f(3f, 4f), SkillsPage.dailyPowder > 0),
 
                 newHotmUpgrade(Lists.newArrayList(EnumChatFormatting.RED + "Efficient Miner",
-                        "§7Level " + ProfileViewerGui.effMiner + "§8/100",
+                        "§7Level " + SkillsPage.effMiner + "§8/100",
                         "",
                         "§7When mining ores, you have a",
-                        "§a" + ProfileViewerGui.effMinerStat + "%§7 chance to mine §a" + Math.round(ProfileViewerGui.effMinerStat2), "§7adjacent ores."), new Vector2f(3f, 3f), ProfileViewerGui.effMiner > 0),
+                        "§a" + SkillsPage.effMinerStat + "%§7 chance to mine §a" + Math.round(SkillsPage.effMinerStat2), "§7adjacent ores."), new Vector2f(3f, 3f), SkillsPage.effMiner > 0),
 
                 newHotmUpgrade4(Lists.newArrayList("§cPeak of the Mountain",
-                        "§7Level " + ProfileViewerGui.potm + "§8/7"), new Vector2f(3f, 2f), ProfileViewerGui.potm > 0),
+                        "§7Level " + SkillsPage.potm + "§8/7"), new Vector2f(3f, 2f), SkillsPage.potm > 0),
 
                 newHotmUpgrade(Lists.newArrayList(EnumChatFormatting.RED + "Mole",
-                        "§7Level " + ProfileViewerGui.mole + "§8/190",
+                        "§7Level " + SkillsPage.mole + "§8/190",
                         "",
                         "§7When mining hard stone, you have",
-                        "§7a §a" + ProfileViewerGui.finalOutput + "% §7chance to mine §a" + Math.round(ProfileViewerGui.moleStat),
-                        "§7adjacent ores."), new Vector2f(3f, 1f), ProfileViewerGui.mole > 0),
+                        "§7a §a" + SkillsPage.finalOutput + "% §7chance to mine §a" + Math.round(SkillsPage.moleStat),
+                        "§7adjacent ores."), new Vector2f(3f, 1f), SkillsPage.mole > 0),
 
                 newHotmUpgrade(Lists.newArrayList(EnumChatFormatting.RED + "Powder Buff",
-                        "§7Level " + ProfileViewerGui.powderBuff + "§8/50",
+                        "§7Level " + SkillsPage.powderBuff + "§8/50",
                         "",
-                        "§7Gain §a" + ProfileViewerGui.powderBuff + "% " + "§7more Mithril",
-                        "§7Powder and Gemstone Powder§7."), new Vector2f(3f, 0f), ProfileViewerGui.powderBuff > 0),
+                        "§7Gain §a" + SkillsPage.powderBuff + "% " + "§7more Mithril",
+                        "§7Powder and Gemstone Powder§7."), new Vector2f(3f, 0f), SkillsPage.powderBuff > 0),
 
                 newHotmUpgrade3(Lists.newArrayList(EnumChatFormatting.RED + "Goblin Killer",
                         "§7Killing a §6Golden Goblin",
                         "§6§7gives §2200 §7extra §2Mithril",
                         "§2Powder§7, while killing other",
                         "§7Goblins gives some based on",
-                        "§7their wits."), new Vector2f(1f, 2f), ProfileViewerGui.goblinKiller > 0),
+                        "§7their wits."), new Vector2f(1f, 2f), SkillsPage.goblinKiller > 0),
 
                 newHotmUpgrade(Lists.newArrayList(EnumChatFormatting.RED + "Seasoned Mineman",
-                        "§7Level " + ProfileViewerGui.seasonMine + "§8/100",
+                        "§7Level " + SkillsPage.seasonMine + "§8/100",
                         "",
-                        "§7Grants §3+" + EnumChatFormatting.DARK_AQUA + (ProfileViewerGui.seasonMine * 0.1 + 5) + "☯ Mining Wisdom§7."), new Vector2f(2f, 3f), ProfileViewerGui.seasonMine > 0),
+                        "§7Grants §3+" + EnumChatFormatting.DARK_AQUA + (SkillsPage.seasonMine * 0.1 + 5) + "☯ Mining Wisdom§7."), new Vector2f(2f, 3f), SkillsPage.seasonMine > 0),
 
                 newHotmUpgrade(Lists.newArrayList(EnumChatFormatting.RED + "Lonesome Miner",
-                        "§7Level " + ProfileViewerGui.lonesomeMiner + "§8/45",
+                        "§7Level " + SkillsPage.lonesomeMiner + "§8/45",
                         "",
                         "§7Increases §c❁ Strength, §9☣ Crit",
                         "§9Chance, §9☠ Crit Damage, §a❈",
                         "§aDefense, and §c❤ Health",
-                        "§c§7statistics gain by §a" + (ProfileViewerGui.lonesomeMiner * .5 + 5) + "%§7",
-                        "§7while in the Crystal Hollows."), new Vector2f(1f, 1f), ProfileViewerGui.lonesomeMiner > 0),
+                        "§c§7statistics gain by §a" + (SkillsPage.lonesomeMiner * .5 + 5) + "%§7",
+                        "§7while in the Crystal Hollows."), new Vector2f(1f, 1f), SkillsPage.lonesomeMiner > 0),
 
                 newHotmUpgrade(Lists.newArrayList(EnumChatFormatting.RED + "Professional",
-                        "§7Level " + ProfileViewerGui.professional + "§8/140",
+                        "§7Level " + SkillsPage.professional + "§8/140",
                         "",
-                        "§7Gain §a+" + (ProfileViewerGui.professional * 5 + 50) + "§6 ⸕ Mining",
-                        "§6Speed§7 when mining Gemstones."), new Vector2f(2f, 1f), ProfileViewerGui.professional > 0),
+                        "§7Gain §a+" + (SkillsPage.professional * 5 + 50) + "§6 ⸕ Mining",
+                        "§6Speed§7 when mining Gemstones."), new Vector2f(2f, 1f), SkillsPage.professional > 0),
 
                 newHotmUpgrade(Lists.newArrayList(EnumChatFormatting.RED + "Mining Speed 2",
-                        "§7Level " + ProfileViewerGui.miningSpeed2 + "§8/50",
+                        "§7Level " + SkillsPage.miningSpeed2 + "§8/50",
                         "",
-                        "§7Grants §a+" + (ProfileViewerGui.miningSpeed2 * 40) + EnumChatFormatting.GOLD + " ⸕ Mining",
-                        "§6Speed§7."), new Vector2f(1f, 0f), ProfileViewerGui.miningSpeed2 > 0),
+                        "§7Grants §a+" + (SkillsPage.miningSpeed2 * 40) + EnumChatFormatting.GOLD + " ⸕ Mining",
+                        "§6Speed§7."), new Vector2f(1f, 0f), SkillsPage.miningSpeed2 > 0),
 
                 newHotmUpgrade(Lists.newArrayList(EnumChatFormatting.RED + "Quick Forge",
-                        "§7Level " + ProfileViewerGui.quickForge + "§8/20",
+                        "§7Level " + SkillsPage.quickForge + "§8/20",
                         "",
                         "§7Decreases the time it takes to",
-                        "§7forge by §a" + (ProfileViewerGui.quickForge * 0.5 + 10) + "%"), new Vector2f(4f, 5f), ProfileViewerGui.quickForge > 0),
+                        "§7forge by §a" + (SkillsPage.quickForge * 0.5 + 10) + "%"), new Vector2f(4f, 5f), SkillsPage.quickForge > 0),
 
                 newHotmUpgrade(Lists.newArrayList(EnumChatFormatting.RED + "Fortunate",
-                        "§7Level " + ProfileViewerGui.fortunate + "§8/20",
+                        "§7Level " + SkillsPage.fortunate + "§8/20",
                         "",
-                        "§7Gain §a+" + (ProfileViewerGui.fortunate * 5) + " §6☘ Mining",
-                        "§6Fortune§7 when mining Gemstone."), new Vector2f(4f, 1f), ProfileViewerGui.fortunate > 0),
+                        "§7Gain §a+" + (SkillsPage.fortunate * 5) + " §6☘ Mining",
+                        "§6Fortune§7 when mining Gemstone."), new Vector2f(4f, 1f), SkillsPage.fortunate > 0),
 
                 newHotmUpgrade(Lists.newArrayList(EnumChatFormatting.RED + "Great Explorer",
-                        "§7Level " + ProfileViewerGui.greatExplorer + "§8/20",
+                        "§7Level " + SkillsPage.greatExplorer + "§8/20",
                         "",
-                        "§7Grants §a+" + (ProfileViewerGui.greatExplorer * 4 + 16) + "% " + EnumChatFormatting.GRAY + "chance to",
-                        "§7find treasure."), new Vector2f(5f, 1f), ProfileViewerGui.greatExplorer > 0),
+                        "§7Grants §a+" + (SkillsPage.greatExplorer * 4 + 16) + "% " + EnumChatFormatting.GRAY + "chance to",
+                        "§7find treasure."), new Vector2f(5f, 1f), SkillsPage.greatExplorer > 0),
 
                 newHotmUpgrade(Lists.newArrayList(EnumChatFormatting.RED + "Mining Fortune 2",
-                        "§7Level " + ProfileViewerGui.miningFortune2 + "§8/50",
+                        "§7Level " + SkillsPage.miningFortune2 + "§8/50",
                         "",
-                        "§7Grants §a+§a" + (ProfileViewerGui.miningFortune2 * 5) + "§7 §6☘ Mining",
-                        "§6Fortune§7."), new Vector2f(5f, 0f), ProfileViewerGui.miningFortune2 > 0),
+                        "§7Grants §a+§a" + (SkillsPage.miningFortune2 * 5) + "§7 §6☘ Mining",
+                        "§6Fortune§7."), new Vector2f(5f, 0f), SkillsPage.miningFortune2 > 0),
 
                 newHotmUpgrade(Lists.newArrayList(EnumChatFormatting.RED + "Orbiter",
-                        "§7Level " + ProfileViewerGui.orbit + "§8/80",
+                        "§7Level " + SkillsPage.orbit + "§8/80",
                         "",
                         "§7When mining ores, you have a",
-                        EnumChatFormatting.GREEN + Utils.round(ProfileViewerGui.orbit * 0.1 + 0.2, 1) + "%" + EnumChatFormatting.GRAY + " chance to get a random",
-                        "§7amount of experience orbs."), new Vector2f(4f, 3f), ProfileViewerGui.orbit > 0),
+                        EnumChatFormatting.GREEN + Utils.round(SkillsPage.orbit * 0.1 + 0.2, 1) + "%" + EnumChatFormatting.GRAY + " chance to get a random",
+                        "§7amount of experience orbs."), new Vector2f(4f, 3f), SkillsPage.orbit > 0),
 
                 newHotmUpgrade3(Lists.newArrayList(EnumChatFormatting.RED + "Front Loaded",
                         "§7Grants §a+100 §6⸕ Mining Speed",
                         "§7and §6☘ Mining Fortune §7as",
                         "§7well as §a+2 base powder §7for",
                         "§7the first §e2,500 §7ores you",
-                        "§7mine in a day."), new Vector2f(5f, 3f), ProfileViewerGui.frontLoaded > 0),
+                        "§7mine in a day."), new Vector2f(5f, 3f), SkillsPage.frontLoaded > 0),
 
                 newHotmUpgrade3(Lists.newArrayList(EnumChatFormatting.RED + "Precision Mining",
                         "§7When mining ore, a particle",
                         "§7target appears on the block that",
                         "§7increases your §6⸕ Mining Speed",
-                        "§7by §a30% §7when aiming at it."), new Vector2f(6f, 3f), ProfileViewerGui.precision > 0),
+                        "§7by §a30% §7when aiming at it."), new Vector2f(6f, 3f), SkillsPage.precision > 0),
 
                 newHotmUpgrade3(Lists.newArrayList(EnumChatFormatting.RED + "Crystallized",
-                        "§7Level " + ProfileViewerGui.crystallized + "§8/30",
+                        "§7Level " + SkillsPage.crystallized + "§8/30",
                         "",
-                        "§7Grants §a+§a" + (ProfileViewerGui.crystallized * 6 + 14) + "§7 §6⸕ Mining",
-                        "§6Speed §7and a §a" + (ProfileViewerGui.crystallized * 6 + 14) + "%§7 §7chance",
+                        "§7Grants §a+§a" + (SkillsPage.crystallized * 6 + 14) + "§7 §6⸕ Mining",
+                        "§6Speed §7and a §a" + (SkillsPage.crystallized * 6 + 14) + "%§7 §7chance",
                         "§7to deal §a+1 §7extra damage near",
-                        "§7§5Fallen Stars§7."), new Vector2f(5f, 4f), ProfileViewerGui.crystallized > 0),
+                        "§7§5Fallen Stars§7."), new Vector2f(5f, 4f), SkillsPage.crystallized > 0),
 
                 newHotmUpgrade2(Lists.newArrayList(EnumChatFormatting.RED + "Maniac Miner",
                         "",
@@ -485,7 +485,7 @@ public class ProfileViewerUtils {
                         "§7§a+1 §6⸕ Mining Speed §7for",
                         "§7every §b10 Mana §7spent, for",
                         "§7§a15s§7.",
-                        "§8Cooldown: §a59s"), new Vector2f(6f, 1f), ProfileViewerGui.maniacMiner > 0),
+                        "§8Cooldown: §a59s"), new Vector2f(6f, 1f), SkillsPage.maniacMiner > 0),
 
                 newHotmUpgrade2(Lists.newArrayList(EnumChatFormatting.RED + "Pickobulus",
                         "",
@@ -493,7 +493,7 @@ public class ProfileViewerUtils {
                         "§7Throw your pickaxe to create an",
                         "§7explosion on impact, mining all",
                         "§7ores within a §a2 block §7radius",
-                        "§7Cooldown: §a110s"), new Vector2f(5f, 5f), ProfileViewerGui.pickoblus > 0),
+                        "§7Cooldown: §a110s"), new Vector2f(5f, 5f), SkillsPage.pickoblus > 0),
 
                 newHotmUpgrade(Lists.newArrayList(EnumChatFormatting.RED + "Star Powder",
                         "",
@@ -501,9 +501,9 @@ public class ProfileViewerUtils {
                         "§7Mining Mithril Ore near §5Fallen",
                         "§5Crystals§7 gives §a3x§7 Mithril",
                         "§7Powder",
-                        "§7Cooldown: §a110s"), new Vector2f(5f, 2), ProfileViewerGui.starPowder > 0),
+                        "§7Cooldown: §a110s"), new Vector2f(5f, 2), SkillsPage.starPowder > 0),
 
-                newHotmUpgrade3(Lists.newArrayList("§cMining Madness", "§7Grants §a+50 §6⸕ Mining Speed", "§7and §6☘ Mining Fortune§7."), new Vector2f(1f, 3f), ProfileViewerGui.miningMadness > 0),
+                newHotmUpgrade3(Lists.newArrayList("§cMining Madness", "§7Grants §a+50 §6⸕ Mining Speed", "§7and §6☘ Mining Fortune§7."), new Vector2f(1f, 3f), SkillsPage.miningMadness > 0),
 
                 newHotmUpgrade3(Lists.newArrayList(
                         "§cSky Mall",
@@ -521,7 +521,7 @@ public class ProfileViewerUtils {
                         "§8 ■ §7§a10x §7chance to find Goblins",
                         "    §7while mining.",
                         "§8 ■ §7Gain §a5x §9Titanium §7drops."
-                ), new Vector2f(0f, 3f), ProfileViewerGui.skymall > 0),
+                ), new Vector2f(0f, 3f), SkillsPage.skymall > 0),
 
                 newHotmUpgrade2(Lists.newArrayList(EnumChatFormatting.RED + "Vein Seeker",
                         "",
@@ -529,14 +529,14 @@ public class ProfileViewerUtils {
                         "§7Points in the direction of the",
                         "§7nearest vein and grants §a+3",
                         "§7§6Mining Spread§7 for §a14s",
-                        "§8Cooldown: §a60s"), new Vector2f(0f, 1f), ProfileViewerGui.veinSeeker > 0)
+                        "§8Cooldown: §a60s"), new Vector2f(0f, 1f), SkillsPage.veinSeeker > 0)
         ));
     }
 
 
     // Repeatable upgrades
-    public static hotmUpgrade newHotmUpgrade(List<String> hover, Vector2f pos, Boolean unlocked) {
-        hotmUpgrade upgrade = new hotmUpgrade(hover, pos);
+    public static SkillsPage.hotmUpgrade newHotmUpgrade(List<String> hover, Vector2f pos, Boolean unlocked) {
+        SkillsPage.hotmUpgrade upgrade = new SkillsPage.hotmUpgrade(hover, pos);
         if (unlocked) {
             upgrade.stack = new ItemStack(Items.emerald).setStackDisplayName(hover.get(0));
         } else {
@@ -552,8 +552,8 @@ public class ProfileViewerUtils {
     }
 
     // Pickaxe ability
-    public static hotmUpgrade newHotmUpgrade2(List<String> hover, Vector2f pos, Boolean unlocked) {
-        hotmUpgrade upgrade = new hotmUpgrade(hover, pos);
+    public static SkillsPage.hotmUpgrade newHotmUpgrade2(List<String> hover, Vector2f pos, Boolean unlocked) {
+        SkillsPage.hotmUpgrade upgrade = new SkillsPage.hotmUpgrade(hover, pos);
         if (unlocked) {
             upgrade.stack = new ItemStack(Blocks.emerald_block).setStackDisplayName(hover.get(0));
         } else {
@@ -570,8 +570,8 @@ public class ProfileViewerUtils {
     }
 
     // One time upgrades
-    public static hotmUpgrade newHotmUpgrade3(List<String> hover, Vector2f pos, Boolean unlocked) {
-        hotmUpgrade upgrade = new hotmUpgrade(hover, pos);
+    public static SkillsPage.hotmUpgrade newHotmUpgrade3(List<String> hover, Vector2f pos, Boolean unlocked) {
+        SkillsPage.hotmUpgrade upgrade = new SkillsPage.hotmUpgrade(hover, pos);
         if (unlocked) {
             upgrade.stack = new ItemStack(Items.diamond).setStackDisplayName(hover.get(0));
         } else {
@@ -588,8 +588,8 @@ public class ProfileViewerUtils {
     }
 
     // Peak
-    public static hotmUpgrade newHotmUpgrade4(List<String> hover, Vector2f pos, Boolean unlocked) {
-        hotmUpgrade upgrade = new hotmUpgrade(hover, pos);
+    public static SkillsPage.hotmUpgrade newHotmUpgrade4(List<String> hover, Vector2f pos, Boolean unlocked) {
+        SkillsPage.hotmUpgrade upgrade = new SkillsPage.hotmUpgrade(hover, pos);
         if (unlocked) upgrade.stack = new ItemStack(Blocks.redstone_block).setStackDisplayName(hover.get(0));
         else upgrade.stack = new ItemStack(Blocks.bedrock).setStackDisplayName(hover.get(0));
         if (!unlocked) {
@@ -624,59 +624,59 @@ public class ProfileViewerUtils {
         if (ProfileViewerGui.ProfilePlayerResponse.get("mining_core").getAsJsonObject().has("nodes")) {
             hotmNodes = ProfileViewerGui.ProfilePlayerResponse.get("mining_core").getAsJsonObject().get("nodes").getAsJsonObject();
         }
-        if (hotmNodes.has("mining_speed")) ProfileViewerGui.miningSpeed = hotmNodes.get("mining_speed").getAsInt();
+        if (hotmNodes.has("mining_speed")) SkillsPage.miningSpeed = hotmNodes.get("mining_speed").getAsInt();
         if (hotmNodes.has("mining_fortune"))
-            ProfileViewerGui.miningFortune = hotmNodes.get("mining_fortune").getAsInt();
+            SkillsPage.miningFortune = hotmNodes.get("mining_fortune").getAsInt();
         if (hotmNodes.has("titanium_insanium"))
-            ProfileViewerGui.tittyInsane = hotmNodes.get("titanium_insanium").getAsInt();
-        if (hotmNodes.has("random_event")) ProfileViewerGui.luckofcave = hotmNodes.get("random_event").getAsInt();
-        if (hotmNodes.has("daily_powder")) ProfileViewerGui.dailyPowder = hotmNodes.get("daily_powder").getAsInt();
+            SkillsPage.tittyInsane = hotmNodes.get("titanium_insanium").getAsInt();
+        if (hotmNodes.has("random_event")) SkillsPage.luckofcave = hotmNodes.get("random_event").getAsInt();
+        if (hotmNodes.has("daily_powder")) SkillsPage.dailyPowder = hotmNodes.get("daily_powder").getAsInt();
         if (hotmNodes.has("efficient_miner")) {
-            ProfileViewerGui.effMiner = hotmNodes.get("efficient_miner").getAsInt();
-            ProfileViewerGui.effMinerStat = (float) (ProfileViewerGui.effMiner * 0.4 + 10.4);
-            ProfileViewerGui.effMinerStat2 = (float) (ProfileViewerGui.effMiner * .06 + 0.31);
+            SkillsPage.effMiner = hotmNodes.get("efficient_miner").getAsInt();
+            SkillsPage.effMinerStat = (float) (SkillsPage.effMiner * 0.4 + 10.4);
+            SkillsPage.effMinerStat2 = (float) (SkillsPage.effMiner * .06 + 0.31);
         }
-        if (hotmNodes.has("special_0")) ProfileViewerGui.potm = hotmNodes.get("special_0").getAsInt();
+        if (hotmNodes.has("special_0")) SkillsPage.potm = hotmNodes.get("special_0").getAsInt();
         if (hotmNodes.has("fallen_star_bonus"))
-            ProfileViewerGui.crystallized = hotmNodes.get("fallen_star_bonus").getAsInt();
-        if (hotmNodes.has("professional")) ProfileViewerGui.professional = hotmNodes.get("professional").getAsInt();
-        if (hotmNodes.has("forge_time")) ProfileViewerGui.quickForge = hotmNodes.get("forge_time").getAsInt();
-        if (hotmNodes.has("experience_orbs")) ProfileViewerGui.orbit = hotmNodes.get("experience_orbs").getAsInt();
+            SkillsPage.crystallized = hotmNodes.get("fallen_star_bonus").getAsInt();
+        if (hotmNodes.has("professional")) SkillsPage.professional = hotmNodes.get("professional").getAsInt();
+        if (hotmNodes.has("forge_time")) SkillsPage.quickForge = hotmNodes.get("forge_time").getAsInt();
+        if (hotmNodes.has("experience_orbs")) SkillsPage.orbit = hotmNodes.get("experience_orbs").getAsInt();
         if (hotmNodes.has("mining_fortune_2"))
-            ProfileViewerGui.miningFortune2 = hotmNodes.get("mining_fortune_2").getAsInt();
-        if (hotmNodes.has("mining_speed_2")) ProfileViewerGui.miningSpeed2 = hotmNodes.get("mining_speed_2").getAsInt();
+            SkillsPage.miningFortune2 = hotmNodes.get("mining_fortune_2").getAsInt();
+        if (hotmNodes.has("mining_speed_2")) SkillsPage.miningSpeed2 = hotmNodes.get("mining_speed_2").getAsInt();
         if (hotmNodes.has("lonesome_miner"))
-            ProfileViewerGui.lonesomeMiner = hotmNodes.get("lonesome_miner").getAsInt();
-        if (hotmNodes.has("fortunate")) ProfileViewerGui.fortunate = hotmNodes.get("fortunate").getAsInt();
+            SkillsPage.lonesomeMiner = hotmNodes.get("lonesome_miner").getAsInt();
+        if (hotmNodes.has("fortunate")) SkillsPage.fortunate = hotmNodes.get("fortunate").getAsInt();
         if (hotmNodes.has("great_explorer"))
-            ProfileViewerGui.greatExplorer = hotmNodes.get("great_explorer").getAsInt();
+            SkillsPage.greatExplorer = hotmNodes.get("great_explorer").getAsInt();
         if (hotmNodes.has("mining_experience"))
-            ProfileViewerGui.seasonMine = hotmNodes.get("mining_experience").getAsInt();
-        if (hotmNodes.has("powder_buff")) ProfileViewerGui.powderBuff = hotmNodes.get("powder_buff").getAsInt();
-        if (hotmNodes.has("daily_powder")) ProfileViewerGui.dailyPowder = hotmNodes.get("daily_powder").getAsInt();
-        if (hotmNodes.has("daily_effect")) ProfileViewerGui.skymall = hotmNodes.get("daily_effect").getAsInt();
+            SkillsPage.seasonMine = hotmNodes.get("mining_experience").getAsInt();
+        if (hotmNodes.has("powder_buff")) SkillsPage.powderBuff = hotmNodes.get("powder_buff").getAsInt();
+        if (hotmNodes.has("daily_powder")) SkillsPage.dailyPowder = hotmNodes.get("daily_powder").getAsInt();
+        if (hotmNodes.has("daily_effect")) SkillsPage.skymall = hotmNodes.get("daily_effect").getAsInt();
         if (hotmNodes.has("mining_madness"))
-            ProfileViewerGui.miningMadness = hotmNodes.get("mining_madness").getAsInt();
-        if (hotmNodes.has("vein_seeker")) ProfileViewerGui.veinSeeker = hotmNodes.get("vein_seeker").getAsInt();
+            SkillsPage.miningMadness = hotmNodes.get("mining_madness").getAsInt();
+        if (hotmNodes.has("vein_seeker")) SkillsPage.veinSeeker = hotmNodes.get("vein_seeker").getAsInt();
         if (hotmNodes.has("precision_mining"))
-            ProfileViewerGui.precision = hotmNodes.get("precision_mining").getAsInt();
-        if (hotmNodes.has("star_powder")) ProfileViewerGui.starPowder = hotmNodes.get("star_powder").getAsInt();
-        if (hotmNodes.has("pickaxe_toss")) ProfileViewerGui.pickoblus = hotmNodes.get("pickaxe_toss").getAsInt();
-        if (hotmNodes.has("maniac_miner")) ProfileViewerGui.maniacMiner = hotmNodes.get("maniac_miner").getAsInt();
+            SkillsPage.precision = hotmNodes.get("precision_mining").getAsInt();
+        if (hotmNodes.has("star_powder")) SkillsPage.starPowder = hotmNodes.get("star_powder").getAsInt();
+        if (hotmNodes.has("pickaxe_toss")) SkillsPage.pickoblus = hotmNodes.get("pickaxe_toss").getAsInt();
+        if (hotmNodes.has("maniac_miner")) SkillsPage.maniacMiner = hotmNodes.get("maniac_miner").getAsInt();
         if (hotmNodes.has("mining_speed_boost"))
-            ProfileViewerGui.miningSpeedBoost = hotmNodes.get("mining_speed_boost").getAsInt();
-        if (hotmNodes.has("goblin_killer")) ProfileViewerGui.goblinKiller = hotmNodes.get("goblin_killer").getAsInt();
-        if (hotmNodes.has("front_loaded")) ProfileViewerGui.frontLoaded = hotmNodes.get("front_loaded").getAsInt();
+            SkillsPage.miningSpeedBoost = hotmNodes.get("mining_speed_boost").getAsInt();
+        if (hotmNodes.has("goblin_killer")) SkillsPage.goblinKiller = hotmNodes.get("goblin_killer").getAsInt();
+        if (hotmNodes.has("front_loaded")) SkillsPage.frontLoaded = hotmNodes.get("front_loaded").getAsInt();
 
         if (hotmNodes.has("mole")) {
-            ProfileViewerGui.mole = hotmNodes.get("mole").getAsInt();
-            ProfileViewerGui.moleStat = (float) (ProfileViewerGui.mole.doubleValue() * 0.051);
-            double moleperkstat = (double) ProfileViewerGui.mole / 20 - 0.55 + 50;
+            SkillsPage.mole = hotmNodes.get("mole").getAsInt();
+            SkillsPage.moleStat = (float) (SkillsPage.mole.doubleValue() * 0.051);
+            double moleperkstat = (double) SkillsPage.mole / 20 - 0.55 + 50;
             double moleperkstat2 = (double) Math.round(moleperkstat * 100) / 100;
 
-            ProfileViewerGui.finalOutput = Math.round((float) (moleperkstat2 % 1) * 100);
-            if (ProfileViewerGui.finalOutput == 0) {
-                ProfileViewerGui.finalOutput = 100;
+            SkillsPage.finalOutput = Math.round((float) (moleperkstat2 % 1) * 100);
+            if (SkillsPage.finalOutput == 0) {
+                SkillsPage.finalOutput = 100;
             }
         }
 
@@ -689,7 +689,7 @@ public class ProfileViewerUtils {
 
                 try {
                     boolean exists = false;
-                    for (hotmUpgrade upgrade : ProfileViewerGui.hotmUpgradeTooltips) {
+                    for (SkillsPage.hotmUpgrade upgrade : SkillsPage.hotmUpgradeTooltips) {
                         if (upgrade.pos.getX() == vec.getX() && upgrade.pos.getY() == vec.getY()) {
                             exists = true;
                             break;
@@ -928,7 +928,7 @@ public class ProfileViewerUtils {
         System.out.println("set slayer experience");
     }
 
-    public static UIComponent createTimecharm(ItemStack item, String id, JsonObject timecharmObj, UIComponent parent) {
+    public static UIComponent createTimecharm(ItemStack item, String id, JsonObject timecharmObj, UIComponent parent,HashMap hoverable) {
         boolean unlocked = timecharmObj != null;
         UIComponent border = new UIRoundedRectangle(5f)
                 .setColor(unlocked ? Color.WHITE : Color.gray)
@@ -991,7 +991,7 @@ public class ProfileViewerUtils {
             hover.add(ChatFormatting.GREEN + "Obtained on " + joinedString);
         }
 
-        ProfileViewerGui.riftHoverables.put(border, hover);
+        hoverable.put(border, hover);
         return border;
     }
 
