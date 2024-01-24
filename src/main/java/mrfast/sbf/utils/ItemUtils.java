@@ -136,6 +136,13 @@ public class ItemUtils {
         return stack;
     }
 
+    public static boolean isMenuGlassPane(ItemStack itemStack) {
+        return itemStack != null &&
+                (itemStack.getItem() == Item.getItemFromBlock(Blocks.stained_glass_pane) || itemStack.getItem() == Item.getItemFromBlock(Blocks.glass_pane)) &&
+                itemStack.hasDisplayName() && itemStack.getMetadata() == 15 && Utils.cleanColor(itemStack.getDisplayName().trim()).isEmpty();
+    }
+
+
     public static class CustomItemData {
         public String internalname;
         public String itemid;

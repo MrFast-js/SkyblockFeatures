@@ -5,12 +5,9 @@ import com.mojang.realmsclient.gui.ChatFormatting;
 import mrfast.sbf.SkyblockFeatures;
 import mrfast.sbf.events.GuiContainerEvent;
 import mrfast.sbf.events.SlotClickedEvent;
-import mrfast.sbf.features.items.HideMenuGlass;
-import mrfast.sbf.gui.components.Point;
-import mrfast.sbf.gui.components.UIElement;
-import mrfast.sbf.utils.NetworkUtils;
 import mrfast.sbf.utils.GuiUtils;
 import mrfast.sbf.utils.ItemUtils;
+import mrfast.sbf.utils.NetworkUtils;
 import mrfast.sbf.utils.Utils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
@@ -394,88 +391,6 @@ public class PartyFinderFeatures {
         }).start();
     }
 
-
-    static {
-        new PartyDisplayGui();
-    }
-
-    public static class PartyDisplayGui extends UIElement {
-        public PartyDisplayGui() {
-            super("Dungeon Party Display", new Point(0.0f, 0.3941395f));
-            SkyblockFeatures.GUIMANAGER.registerElement(this);
-        }
-
-        @Override
-        public void drawElement() {
-            if (partyFinderMonkeys.isEmpty()) return;
-
-            List<String> stillNeededClasses = new ArrayList<>(neededClasses);
-            List<String> lines = new ArrayList<>(Collections.singletonList(
-                    "§9§lDungeon Party"
-            ));
-            // Sort by when monkey joined
-            List<PartyFinderMonkey> sorted = new ArrayList<>(partyFinderMonkeys.values());
-            sorted.sort((a, b) -> Math.toIntExact(b.addedAt - a.addedAt));
-            for (PartyFinderMonkey monkey : sorted) {
-                stillNeededClasses.remove(monkey.selectedClass);
-                boolean dupe = partyFinderMonkeys.values().stream().anyMatch((a) -> !a.name.equals(monkey.name) && Objects.equals(a.selectedClass, monkey.selectedClass));
-                if (SkyblockFeatures.config.dungeonPartyDisplayDupes && dupe) dupe = false;
-
-                String name = monkey.name;
-                if (Objects.equals(name, Utils.GetMC().thePlayer.getName())) name = "§5" + name;
-
-                String formattedString = " §a[" + (dupe ? "§c" : "§6") + monkey.selectedClass.charAt(0) + "§a] " + name;
-                if (!monkey.level.isEmpty()) formattedString += " §7(" + monkey.level + ")";
-
-                lines.add(formattedString);
-            }
-            for (int i = 0; i < 5 - partyFinderMonkeys.values().size(); i++) {
-                try {
-                    String formatted = " §a[§6" + stillNeededClasses.get(i).charAt(0) + "§a] §cNone";
-                    lines.add(formatted);
-                } catch (Exception ignored) {
-                }
-            }
-            GuiUtils.drawTextLines(lines, 0, 0, GuiUtils.TextStyle.DROP_SHADOW);
-        }
-
-        @Override
-        public void drawElementExample() {
-            String playerName = Utils.GetMC().thePlayer.getName();
-            String[] lines = {
-                    "§9§lDungeon Party",
-                    " §a[§6M§a] §d" + playerName + " §7(50)",
-                    " §a[§6A§a] §d" + playerName + " §7(50)",
-                    " §a[§6T§a] §d" + playerName + " §7(50)",
-                    " §a[§6H§a] §d" + playerName + " §7(50)",
-                    " §a[§6B§a] §cNone",
-            };
-            GuiUtils.drawTextLines(Arrays.asList(lines), 0, 0, GuiUtils.TextStyle.DROP_SHADOW);
-        }
-
-        @Override
-        public boolean getToggled() {
-            return SkyblockFeatures.config.dungeonPartyDisplay;
-        }
-
-        @Override
-        public boolean getRequirement() {
-            return Utils.inSkyblock;
-        }
-
-        @Override
-        public int getHeight() {
-            return (Utils.GetMC().fontRendererObj.FONT_HEIGHT + 1) * 6;
-        }
-
-        @Override
-        public int getWidth() {
-            String playerName = Utils.GetMC().thePlayer.getName();
-
-            return Utils.GetMC().fontRendererObj.getStringWidth(" §a[§6H§a] §d" + playerName + " §7(50)");
-        }
-    }
-
     boolean canRefresh = true;
 
     @SubscribeEvent
@@ -511,7 +426,7 @@ public class PartyFinderFeatures {
         ContainerChest cont = (ContainerChest) chest.inventorySlots;
         String name = cont.getLowerChestInventory().getName();
 
-        if (!HideMenuGlass.Companion.isMenuGlassPane(event.itemStack) && event.itemStack.getItem() instanceof ItemSkull && event.itemStack.getDisplayName().contains("'s Party")) {
+        if (event.itemStack.getItem() instanceof ItemSkull && event.itemStack.getDisplayName().contains("'s Party")) {
             hoverItemStack = event.itemStack;
         }
         if ("Party Finder".equals(name) && event.itemStack.getItem() instanceof ItemSkull) {
@@ -531,7 +446,7 @@ public class PartyFinderFeatures {
         ContainerChest cont = (ContainerChest) chest.inventorySlots;
         String name = cont.getLowerChestInventory().getName();
 
-        if (!"Party Finder".equals(name) || hoverItemStack == null || HideMenuGlass.Companion.isMenuGlassPane(hoverItemStack)) {
+        if (!"Party Finder".equals(name) || hoverItemStack == null || ItemUtils.isMenuGlassPane(hoverItemStack)) {
             return;
         }
 

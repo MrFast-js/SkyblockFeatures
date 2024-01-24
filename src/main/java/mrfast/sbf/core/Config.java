@@ -1,6 +1,6 @@
 package mrfast.sbf.core;
 
-import mrfast.sbf.features.dungeons.TrashHighlighter;
+import mrfast.sbf.features.items.TrashHighlighter;
 import mrfast.sbf.utils.Utils;
 import org.lwjgl.input.Keyboard;
 
@@ -182,15 +182,6 @@ public class Config extends ConfigManager {
 
     @Property(
             type = PropertyType.TOGGLE,
-            name = "Quick Close Chest",
-            description = "Press any key or click to close secret chest screen",
-            category = "§1§rDungeons",
-            subcategory = "Miscellaneous"
-    )
-    public boolean quickCloseChest = false;
-
-    @Property(
-            type = PropertyType.TOGGLE,
             name = "Highlight Doors",
             description = "Highlights wither door and blood doors",
             category = "§1§rDungeons",
@@ -243,81 +234,6 @@ public class Config extends ConfigManager {
             parentName = "Click in order Terminal solver"
     )
     public Color clickInOrderSolverNext2 = new Color(0, 250, 250);
-
-    @Property(
-            type = PropertyType.TOGGLE,
-            name = "Blaze Solver",
-            description = "Highlights which blaze to shoot, aswell as the next blaze",
-            category = "§1§rDungeons",
-            subcategory = "Solvers"
-    )
-    public boolean blazeSolver = false;
-
-    @Property(
-            type = PropertyType.TOGGLE,
-            name = "Water Board Solver",
-            description = "Highlights the correct levers to flip to solve for the water puzzle.",
-            category = "§1§rDungeons",
-            subcategory = "Solvers"
-    )
-    public boolean WaterBoardSolver = false;
-
-    @Property(
-            type = PropertyType.TOGGLE,
-            name = "Three Weirdo Solver",
-            description = "Highlights the correct chest to solve for the riddle puzzle.",
-            category = "§1§rDungeons",
-            subcategory = "Solvers"
-    )
-    public boolean ThreeWeirdosSolver = false;
-
-    @Property(
-            type = PropertyType.TOGGLE,
-            name = "Teleport Pad Solver",
-            description = "Highlights teleport pads that you have stepped on",
-            category = "§1§rDungeons",
-            subcategory = "Solvers",
-            isParent = true
-    )
-    public boolean teleportPadSolver = false;
-    @Property(
-            type = PropertyType.COLOR,
-            name = "Stepped On Color",
-            description = "",
-            category = "§1§rDungeons",
-            subcategory = "Solvers",
-            parentName = "Teleport Pad Solver"
-    )
-    public Color teleportPadSolverColor = Color.red;
-
-    @Property(
-            type = PropertyType.TOGGLE,
-            name = "Crypt Display",
-            description = "Big count of how many crypts have been killed",
-            category = "§1§rDungeons",
-            subcategory = "Miscellaneous"
-    )
-    public boolean cryptCount = false;
-
-    @Property(
-            type = PropertyType.TOGGLE,
-            name = "Highlight Bats",
-            description = "Draws a box around bats to make bats easier to find",
-            category = "§1§rDungeons",
-            subcategory = "Miscellaneous",
-            isParent = true
-    )
-    public boolean highlightBats = false;
-
-    @Property(
-            type = PropertyType.COLOR,
-            name = "Bat Highlight Color",
-            description = "",
-            category = "§1§rDungeons",
-            subcategory = "Miscellaneous",
-            parentName = "Highlight Bats"
-    )
-    public Color highlightBatColor = Color.green;
 
     @Property(
             type = PropertyType.TOGGLE,
@@ -1061,15 +977,6 @@ public class Config extends ConfigManager {
 
     @Property(
             type = PropertyType.TOGGLE,
-            name = "Hide Arrows",
-            description = "Stops arrows from being rendered.",
-            category = "Render",
-            subcategory = "Hide Things"
-    )
-    public boolean hideArrows = false;
-
-    @Property(
-            type = PropertyType.TOGGLE,
             name = "On-Screen Clock",
             description = "Display a clock",
             category = "Miscellaneous",
@@ -1262,32 +1169,6 @@ public class Config extends ConfigManager {
 
     @Property(
             type = PropertyType.TOGGLE,
-            name = "Trevor The Trapper Helper",
-            description = "Shows the biome and location of the hunted mob",
-            category = "General",
-            subcategory = "Other"
-    )
-    public boolean trevorHelper = true;
-    @Property(
-            type = PropertyType.TOGGLE,
-            name = "Hide Far Entitys in hub",
-            description = "",
-            category = "Render",
-            subcategory = "Hide Things"
-    )
-    public boolean HideFarEntity = false;
-
-    @Property(
-            type = PropertyType.TOGGLE,
-            name = "Damage Tint",
-            description = "Makes your screen get more red the lower in health you are",
-            category = "Quality of Life",
-            subcategory = "Visual"
-    )
-    public boolean damagetint = false;
-
-    @Property(
-            type = PropertyType.TOGGLE,
             name = "Better Dungeon Nametags",
             description = "Render better nametags in dungeons",
             category = "§1§rDungeons",
@@ -1406,15 +1287,6 @@ public class Config extends ConfigManager {
 
     @Property(
             type = PropertyType.TOGGLE,
-            name = "Treasure Chest Solver",
-            description = "Highlights the particles to look at when opening a treasure chest.",
-            category = "Mining",
-            subcategory = "Solvers"
-    )
-    public boolean treasureChestSolver = false;
-
-    @Property(
-            type = PropertyType.TOGGLE,
             name = "Automaton Loot Tracker",
             description = "Tracks the loot from Automatons. Starts after a Automaton is killed",
             category = "Mining",
@@ -1431,23 +1303,6 @@ public class Config extends ConfigManager {
     )
     public boolean gemstoneTracker = false;
 
-    @Property(
-            type = PropertyType.TOGGLE,
-            name = "Ghost Loot Tracker",
-            description = "Tracks the loot gained from killing Ghosts",
-            category = "Mining",
-            subcategory = "Trackers"
-    )
-    public boolean ghostTracker = false;
-
-    @Property(
-            type = PropertyType.TOGGLE,
-            name = "Powder Mining Tracker",
-            description = "Tracks the stats from mining gemstones like Coins per hour",
-            category = "Mining",
-            subcategory = "Trackers"
-    )
-    public boolean powderTracker = false;
 
     @Property(
             type = PropertyType.TOGGLE,
@@ -1527,23 +1382,6 @@ public class Config extends ConfigManager {
     )
     public boolean CrystalHollowsMapTrail = true;
 
-    @Property(
-            type = PropertyType.TOGGLE,
-            name = "Dwarven Mines Map",
-            description = "Show a map of the dwarven map",
-            category = "Mining",
-            subcategory = "Maps"
-    )
-    public boolean dwarvenMinesMap = false;
-
-    @Property(
-            type = PropertyType.TOGGLE,
-            name = "Mines of Divan Metal Detector Solver",
-            description = "Shows where the treasure chest is in the Mines of Divan",
-            category = "Mining",
-            subcategory = "Solvers"
-    )
-    public boolean MetalDetectorSolver = false;
 
     @Property(
             type = PropertyType.TOGGLE,
@@ -1806,15 +1644,6 @@ public class Config extends ConfigManager {
 
     @Property(
             type = PropertyType.TOGGLE,
-            name = "Hide Air Display",
-            description = "Prevents the game from rendering the air bubbles while underwater.",
-            category = "Quality of Life",
-            subcategory = "Visual"
-    )
-    public boolean hideAirDisplay = false;
-
-    @Property(
-            type = PropertyType.TOGGLE,
             name = "Hide Geyser Particles",
             description = "Hides the annoying particles in the §6Blazing Volcano.",
             category = "Render",
@@ -1830,24 +1659,6 @@ public class Config extends ConfigManager {
             subcategory = "Highlights"
     )
     public boolean geyserBoundingBox = false;
-
-    @Property(
-            type = PropertyType.TOGGLE,
-            name = "No Fire",
-            description = "Removes first-person fire overlay when you are burning.",
-            category = "Render",
-            subcategory = "Hide Things"
-    )
-    public boolean noFire = false;
-
-    @Property(
-            type = PropertyType.TOGGLE,
-            name = "No Hurtcam",
-            description = "Removes the screen shake when you are hurt.",
-            category = "Quality of Life",
-            subcategory = "Visual"
-    )
-    public boolean noHurtcam = false;
 
     @Property(
             type = PropertyType.TOGGLE,
@@ -2348,16 +2159,6 @@ public class Config extends ConfigManager {
             risky = true
     )
     public boolean autoPartyChat = false;
-
-    @Property(
-            type = PropertyType.TOGGLE,
-            name = "toggle sprint",
-            description = "",
-            category = "General",
-            subcategory = "Item Fov",
-            hidden = true
-    )
-    public boolean toggleSprint = false;
 
     @Property(
             type = PropertyType.TEXT,

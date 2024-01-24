@@ -31,6 +31,8 @@ public class Utils {
 
     public static boolean inSkyblock = false;
     public static boolean inDungeons = false;
+    public static boolean inActiveDungeon = false;
+    public static boolean inDungeonBoss = false;
     public static int health = 0;
     public static int maxHealth = 0;
     public static int mana = 0;
@@ -68,7 +70,10 @@ public class Utils {
         if (shortenedNumber.isEmpty()) return 0;
         char lastChar = shortenedNumber.charAt(shortenedNumber.length() - 1);
         float number = 0;
-        try {number = Float.parseFloat(shortenedNumber.substring(0, shortenedNumber.length() - 1));} catch (NumberFormatException ignored) {}
+        try {
+            number = Float.parseFloat(shortenedNumber.substring(0, shortenedNumber.length() - 1));
+        } catch (NumberFormatException ignored) {
+        }
 
         switch (lastChar) {
             case 'k':
@@ -193,6 +198,7 @@ public class Utils {
     public static Minecraft GetMC() {
         return mc;
     }
+
     public static boolean isDeveloper() {
         return SkyblockFeatures.config.developerMode;
     }

@@ -1,4 +1,4 @@
-package mrfast.sbf.features.dungeons;
+package mrfast.sbf.features.items;
 
 import com.mojang.realmsclient.gui.ChatFormatting;
 import mrfast.sbf.SkyblockFeatures;

@@ -40,7 +40,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class GiftTracker {
-    public static ArrayList<Entity> saintJerryGifts = new ArrayList<Entity>();
+    public static ArrayList<Entity> saintJerryGifts = new ArrayList<>();
     static int uniqueGiftsGiven = 0;
     static int winterYear = 0;
 

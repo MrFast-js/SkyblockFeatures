@@ -15,7 +15,6 @@ import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class FireFreezeHelper {
-
     String bossDialogue = "[BOSS] The Professor: Oh? You found my Guardians' one weakness?";
 
     static String display = "";

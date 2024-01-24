@@ -100,14 +100,6 @@ public class DungeonsFeatures {
     public void onRender3D(RenderWorldLastEvent event) {
         if (!Utils.inDungeons) return;
 
-        if (SkyblockFeatures.config.highlightBats) {
-            for (Entity entity : mc.theWorld.loadedEntityList) {
-                if (entity instanceof EntityBat && !entity.isInvisible()) {
-                    RenderUtil.drawOutlinedFilledBoundingBox(entity.getEntityBoundingBox(), SkyblockFeatures.config.highlightBatColor, event.partialTicks);
-                }
-            }
-        }
-
         if (mc.theWorld != null && SkyblockFeatures.config.highlightDoors) {
             for (TileEntity entity : mc.theWorld.loadedTileEntityList) {
                 if (entity instanceof TileEntitySkull) {
@@ -232,35 +224,6 @@ public class DungeonsFeatures {
                 count = 0;
                 event.setCanceled(true);
             }
-        }
-    }
-
-    @SubscribeEvent
-    public void onKeyInput(GuiScreenEvent.KeyboardInputEvent keyboardInputEvent) {
-        GuiScreen screen = Minecraft.getMinecraft().currentScreen;
-        if (!SkyblockFeatures.config.quickCloseChest || !Utils.inDungeons) return;
-
-        if (screen instanceof GuiChest) {
-            ContainerChest ch = (ContainerChest) ((GuiChest) screen).inventorySlots;
-            if (!("Large Chest".equals(ch.getLowerChestInventory().getName()) || "Chest".equals(ch.getLowerChestInventory().getName())))
-                return;
-
-            Minecraft.getMinecraft().thePlayer.closeScreen();
-        }
-    }
-
-    @SubscribeEvent
-    public void onMouseInput(GuiScreenEvent.MouseInputEvent.Pre mouseInputEvent) {
-        GuiScreen screen = Minecraft.getMinecraft().currentScreen;
-        if (!SkyblockFeatures.config.quickCloseChest || !Utils.inDungeons) return;
-        if (Mouse.getEventButton() == -1) return;
-
-        if (screen instanceof GuiChest) {
-            ContainerChest ch = (ContainerChest) ((GuiChest) screen).inventorySlots;
-            if (!("Large Chest".equals(ch.getLowerChestInventory().getName()) || "Chest".equals(ch.getLowerChestInventory().getName())))
-                return;
-
-            Minecraft.getMinecraft().thePlayer.closeScreen();
         }
     }
 

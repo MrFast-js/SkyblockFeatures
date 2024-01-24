@@ -10,7 +10,6 @@ import mrfast.sbf.core.PricingData;
 import mrfast.sbf.core.SkyblockInfo;
 import mrfast.sbf.events.SlotClickedEvent;
 import mrfast.sbf.events.SocketMessageEvent;
-import mrfast.sbf.features.items.HideMenuGlass;
 import mrfast.sbf.gui.components.Point;
 import mrfast.sbf.gui.components.UIElement;
 import mrfast.sbf.utils.NetworkUtils;
@@ -114,7 +113,7 @@ public class AutoAuctionFlip {
             String chestName = inv.getDisplayName().getUnformattedText().trim();
 
 
-            if (!HideMenuGlass.Companion.isMenuGlassPane(event.item)) return;
+            if (!ItemUtils.isMenuGlassPane(event.item)) return;
 
             if (chestName.contains("BIN Auction View") && !clicking) {
                 clicking = true;

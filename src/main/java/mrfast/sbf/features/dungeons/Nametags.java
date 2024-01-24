@@ -23,8 +23,6 @@ import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class Nametags {
-
-    public Minecraft mc = Minecraft.getMinecraft();
     public static HashMap<String, String> playersAndClass = new HashMap<>();
 
     @SubscribeEvent
@@ -54,7 +52,7 @@ public class Nametags {
             List<String> sidebarLines = ScoreboardUtil.getSidebarLines();
             RenderManager renderManager = Utils.GetMC().getRenderManager();
 
-            for (EntityPlayer player : mc.theWorld.playerEntities) {
+            for (EntityPlayer player : Utils.GetMC().theWorld.playerEntities) {
                 double x = interpolate(player.lastTickPosX, player.posX, event.partialTicks) - renderManager.viewerPosX;
                 double y = interpolate(player.lastTickPosY, player.posY, event.partialTicks) - renderManager.viewerPosY;
                 double z = interpolate(player.lastTickPosZ, player.posZ, event.partialTicks) - renderManager.viewerPosZ;
@@ -95,7 +93,7 @@ public class Nametags {
         float f = 1.6F;
         float f1 = 0.016666668F * f;
 
-        Entity renderViewEntity = mc.getRenderViewEntity();
+        Entity renderViewEntity = Utils.GetMC().getRenderViewEntity();
 
         double distanceScale = Math.max(1, renderViewEntity.getPositionVector().distanceTo(player.getPositionVector()) / 10F);
 

@@ -17,7 +17,6 @@ import mrfast.sbf.features.misc.*;
 import mrfast.sbf.features.overlays.*;
 import mrfast.sbf.features.overlays.maps.CrimsonMap;
 import mrfast.sbf.features.overlays.maps.CrystalHollowsMap;
-import mrfast.sbf.features.overlays.maps.DwarvenMap;
 import mrfast.sbf.features.overlays.menuOverlay.*;
 import mrfast.sbf.features.render.*;
 import mrfast.sbf.features.statDisplays.*;
@@ -33,16 +32,13 @@ import mrfast.sbf.utils.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.inventory.GuiContainer;
-import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.command.ICommand;
 import net.minecraft.event.HoverEvent;
 import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IChatComponent;
 import net.minecraftforge.client.ClientCommandHandler;
 import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
@@ -98,7 +94,7 @@ public class SkyblockFeatures {
         // Features to load
         List<Object> features = Arrays.asList(
                 this,
-                new ChatEventListener(),
+                new ClientChatEventListener(),
                 new DataManager(),
                 GUIMANAGER,
                 new SkyblockInfo(),
@@ -112,10 +108,7 @@ public class SkyblockFeatures {
                 new ItemFeatures(),
                 new CrystalHollowsMap(),
                 new SlayerKillsDisplay(),
-                new MayorJerry(),
-                new MiningFeatures(),
-                new MiscFeatures(),
-                new DamageOverlays(),
+                new EnderNodeHighlight(),
                 new Nametags(),
                 new DeveloperFeatures(),
                 new SkyblockMobDetector(),
@@ -132,15 +125,12 @@ public class SkyblockFeatures {
                 new OverflowManaDisplay(),
                 new ActionBarListener(),
                 new CommisionsTracker(),
-                new CommissionHighlighter(),
                 new MenuOverlayManager(),
                 new FairySoulWaypoints(),
                 new AuctionSellingOverlay(),
-                new JerryTimer(),
                 new GiftTracker(),
                 new ClickInOrderSolver(),
                 new TerminalManager(),
-                new HideMenuGlass(),
                 new AuctionFeatures(),
                 new CapeUtils(),
                 new MinionOverlay(),
@@ -153,22 +143,14 @@ public class SkyblockFeatures {
                 new MissingTalismans(),
                 new PlayerDiguiser(),
                 new AutoAuctionFlip(),
-                new MetalDetectorSolver(),
                 new TradingOverlay(),
                 new MiscOverlays(),
-                new TrevorHelper(),
-                new GhostTracker(),
-                new PowderTracker(),
-                new DwarvenMap(),
                 new GrandmaWolfTimer(),
                 new EntityOutlineRenderer(),
-                new RelicFinderWaypoints(),
                 new PestHighlighter(),
                 new HighlightCropArea(),
                 new FireFreezeDisplay(),
-                new MythologicalEvent(),
-                new TeleportPadSolver(),
-                new WaterBoardSolver(),
+                new MythologicalHelper(),
                 new ShadowAssasinFeatures(),
                 new SlayerFeatures(),
                 new CrimsonMap(),
@@ -177,8 +159,6 @@ public class SkyblockFeatures {
                 new HealthBar(),
                 new ManaBar(),
                 new FinalDestinationOverlay(),
-                new BlazeSolver(),
-                new ThreeWeirdosSolver(),
                 new SkyblockInfo(),
                 new GlowingItems(),
                 new Reparty(),
@@ -316,12 +296,10 @@ public class SkyblockFeatures {
         ticks++;
     }
 
-    private final static KeyBinding toggleSprint = new KeyBinding("Toggle Sprint", 0, "Skyblock Features");
 
     @EventHandler
     public void initKeybinds(FMLInitializationEvent event) {
         MinecraftForge.EVENT_BUS.register(this);
-        ClientRegistry.registerKeyBinding(toggleSprint);
     }
 
     // Stop the escape key from closing the gui if listening for a keybind
@@ -340,21 +318,6 @@ public class SkyblockFeatures {
             if (event.message.contains("Checking for auction flips") && !SkyblockFeatures.config.aucFlipperEnabled)
                 return;
             Utils.sendMessage(event.message);
-        }
-    }
-
-    @SubscribeEvent
-    public void onTick2(TickEvent.ClientTickEvent e) {
-        if (toggleSprint.isPressed()) {
-            if (config.toggleSprint) {
-                Utils.sendMessage(EnumChatFormatting.RED + "Togglesprint disabled.");
-            } else {
-                Utils.sendMessage(EnumChatFormatting.GREEN + "Togglesprint enabled.");
-            }
-            config.toggleSprint = !config.toggleSprint;
-        }
-        if (config.toggleSprint) {
-            KeyBinding.setKeyBindState(mc.gameSettings.keyBindSprint.getKeyCode(), true);
         }
     }
 }

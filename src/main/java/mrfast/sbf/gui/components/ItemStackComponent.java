@@ -11,6 +11,12 @@ import mrfast.sbf.utils.RenderUtil;
 import mrfast.sbf.utils.Utils;
 import net.minecraft.item.ItemStack;
 
+/**
+ * Modified from Skytils 0.x under GNU Affero General Public License v3.0
+ * https://github.com/Skytils/SkytilsMod/tree/0.x
+ *
+ * @author Sychic
+ */
 public class ItemStackComponent extends UIComponent {
     private final State<ItemStack> state;
 
@@ -53,6 +59,4 @@ public class ItemStackComponent extends UIComponent {
             ProfileViewerGui.renderTooltip = item.getTooltip(Utils.GetMC().thePlayer, false);
         }
     }
-
-
 }

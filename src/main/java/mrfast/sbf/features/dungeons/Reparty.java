@@ -14,8 +14,6 @@ import net.minecraftforge.fml.common.gameevent.TickEvent;
 
 public class Reparty {
 // TODO setup this file as a party API rather than reparty
-    private boolean waitingForInvite = false;
-    private String partyLeader= null;
 
     private boolean isPartyLeader = false;
     private final List<String> memberList = new ArrayList<>();

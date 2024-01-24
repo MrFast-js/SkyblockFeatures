@@ -16,7 +16,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import java.util.Arrays;
 import java.util.List;
 
-public class ChatEventListener {
+public class ClientChatEventListener {
     boolean firstLaunch = true;
 
     @SubscribeEvent(receiveCanceled = true, priority = EventPriority.HIGHEST)
@@ -42,7 +42,7 @@ public class ChatEventListener {
             Utils.GetMC().thePlayer.sendChatMessage("/chat p");
             Utils.setTimeout(() -> {
                 Utils.sendMessage(EnumChatFormatting.YELLOW + "Auto Joined Party Chat.");
-            }, 10);
+            }, 100);
         }
 
         // Welcome message
