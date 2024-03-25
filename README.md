@@ -1,3 +1,6 @@
+## This Mod has reached it's end of life. Due to certain reasons, this mod was forced to shutdown. Please check out my [new mod, Skyblock-Tweaks,](https://github.com/MrFast-js/Skyblock-Tweaks/), which is work in progress.
+
+
 <div align="center"><img src='https://user-images.githubusercontent.com/78495381/210632546-691f468d-f4e7-4b82-b1ff-8ea37591d957.png' alt=""/></div>
 
 <div align="center">
